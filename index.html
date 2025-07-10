@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>BDAutomator Account Manager</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'rpg-gold': '#FFD700',
+            'rpg-dark': '#1a1a1a',
+            'rpg-darker': '#0a0a0a'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { 
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+      font-family: 'Courier New', monospace;
+    }
+    .rpg-border {
+      border: 2px solid #FFD700;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    }
+    .rpg-glow {
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    }
+    .tab {
+      background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+      border: 1px solid #FFD700;
+      color: #FFD700;
+      transition: all 0.3s ease;
+    }
+    .tab:hover {
+      background: linear-gradient(145deg, #FFD700, #B8860B);
+      color: #000;
+      transform: translateY(-2px);
+    }
+    .tab.active {
+      background: linear-gradient(145deg, #FFD700, #B8860B);
+      color: #000;
+      font-weight: bold;
+    }
+    .rpg-button {
+      background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+      border: 2px solid #FFD700;
+      color: #FFD700;
+      transition: all 0.3s ease;
+    }
+    .rpg-button:hover {
+      background: linear-gradient(145deg, #FFD700, #B8860B);
+      color: #000;
+      transform: translateY(-2px);
+    }
+    .rpg-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .output {
+      background: #000;
+      color: #00FF00;
+      font-family: 'Courier New', monospace;
+      border: 1px solid #FFD700;
+    }
+    .webview-container {
+      border: 2px solid #FFD700;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-rpg-gold p-6">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold mb-2 text-rpg-gold rpg-glow">⚔️ BDAutomator Account Manager ⚔️</h1>
+      <div class="w-32 h-1 bg-rpg-gold mx-auto rpg-glow"></div>
+    </div>
+
+    <!-- Account Management Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <!-- Account List -->
+      <div class="lg:col-span-2">
+        <div class="rpg-border rounded-lg p-6 bg-rpg-dark">
+          <h2 class="text-2xl font-bold mb-4 text-rpg-gold">🏰 Account Legion</h2>
+          <div id="account-list" class="space-y-4"></div>
+        </div>
+      </div>
+
+      <!-- Add Account Form -->
+      <div class="rpg-border rounded-lg p-6 bg-rpg-dark">
+        <h2 id="form-title" class="text-2xl font-bold mb-4 text-rpg-gold">➕ Add New Warrior</h2>
+        <form id="account-form" class="space-y-4">
+          <input type="hidden" id="account-id">
+          <div>
+            <label class="block text-rpg-gold mb-2">👤 Username:</label>
+            <input type="text" id="username" required 
+                   class="w-full p-3 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded focus:outline-none focus:rpg-glow">
+          </div>
+          <div>
+            <label class="block text-rpg-gold mb-2">🔐 Password:</label>
+            <input type="password" id="password" required 
+                   class="w-full p-3 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded focus:outline-none focus:rpg-glow">
+          </div>
+          <div class="flex space-x-2">
+            <button type="submit" id="save-btn" 
+                    class="rpg-button px-6 py-2 rounded font-bold">➕ Add Warrior</button>
+            <button type="button" id="cancel-btn" style="display:none;" 
+                    class="rpg-button px-6 py-2 rounded font-bold">❌ Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Tabbed Interface -->
+    <div class="rpg-border rounded-lg bg-rpg-dark">
+      <div id="tab-bar" class="flex border-b border-rpg-gold p-2"></div>
+      <div id="tab-content" class="min-h-[600px]"></div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html> 
