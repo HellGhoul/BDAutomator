@@ -7,17 +7,23 @@ let outputs = {};
 let webviews = {};
 let activeTab = null;
 let automationState = {}; // { [id]: 'running' | 'paused' | undefined }
+let unscrollState = {}; // { [id]: 'running' | 'paused' | undefined }
 
 function renderAccounts() {
   const list = document.getElementById('account-list');
   list.innerHTML = '';
   accounts.forEach(acc => {
     const state = automationState[acc.id];
+    const unscrollStateValue = unscrollState[acc.id];
     const isRunning = running[acc.id];
     const isPaused = state === 'paused';
     const isActive = state === 'running';
+    const isUnscrollRunning = unscrollStateValue === 'running';
+    const isUnscrollPaused = unscrollStateValue === 'paused';
     const toggleLabel = isActive ? 'Pause' : (isPaused ? 'Resume' : 'Pause');
     const toggleIcon = isActive ? '⏸️' : (isPaused ? '▶️' : '⏸️');
+    const unscrollToggleLabel = isUnscrollRunning ? 'Pause' : (isUnscrollPaused ? 'Resume' : 'Unscroll');
+    const unscrollToggleIcon = isUnscrollRunning ? '⏸️' : (isUnscrollPaused ? '▶️' : '📜');
     const div = document.createElement('div');
     div.className = `rpg-border rounded-lg p-4 ${isRunning ? 'bg-green-900/20' : 'bg-rpg-darker'} transition-all duration-300`;
     div.innerHTML = `
@@ -28,6 +34,7 @@ function renderAccounts() {
             <h3 class="text-xl font-bold text-rpg-gold">${acc.username}</h3>
             <p class="text-sm text-gray-400">Level: ${acc.options ? JSON.stringify(acc.options) : '{}'} </p>
             ${isActive ? '<p class="text-sm text-green-400">🤖 Auto: ON</p>' : isPaused ? '<p class="text-sm text-yellow-400">⏸️ Paused</p>' : ''}
+            ${isUnscrollRunning ? '<p class="text-sm text-blue-400">📜 Unscroll: ON</p>' : isUnscrollPaused ? '<p class="text-sm text-yellow-400">⏸️ Unscroll Paused</p>' : ''}
           </div>
         </div>
         <div class="flex space-x-2">
@@ -39,6 +46,8 @@ function renderAccounts() {
                   class="rpg-button px-3 py-1 rounded text-sm ${isRunning ? 'opacity-50 cursor-not-allowed' : ''}">⚡ Run</button>
           <button onclick="toggleAutomation('${acc.id}')" ${(isRunning && !isPaused) || isPaused ? '' : 'disabled'} 
                   class="rpg-button px-3 py-1 rounded text-sm ${(isActive || isPaused) ? 'bg-green-900/50 border-green-500 text-green-300' : ''}">${toggleIcon} ${toggleLabel}</button>
+          <button onclick="toggleUnscroll('${acc.id}')" 
+                  class="rpg-button px-3 py-1 rounded text-sm ${(isUnscrollRunning || isUnscrollPaused) ? 'bg-blue-900/50 border-blue-500 text-blue-300' : ''}">${unscrollToggleIcon} ${unscrollToggleLabel}</button>
           <button onclick="stopAccount('${acc.id}')" ${isRunning ? '' : 'disabled'} 
                   class="rpg-button px-3 py-1 rounded text-sm ${isRunning ? '' : 'opacity-50 cursor-not-allowed'} bg-red-900/50 border-red-500 text-red-300 hover:bg-red-700">⏹️ Stop</button>
         </div>
@@ -90,11 +99,14 @@ async function loadAccounts() {
   if (!Array.isArray(accounts)) accounts = [];
   outputs = {};
   automationState = {};
+  unscrollState = {};
   renderAccounts();
   for (const acc of accounts) {
     running[acc.id] = await ipcRenderer.invoke('is-running', acc.id);
-    // Default to not running/paused
     automationState[acc.id] = running[acc.id] ? 'running' : undefined;
+    // Check if unscroll is running
+    const isUnscrollRunning = await ipcRenderer.invoke('is-unscroll-running', acc.id);
+    unscrollState[acc.id] = isUnscrollRunning ? 'running' : undefined;
   }
   renderAccounts();
   renderTabs();
@@ -108,7 +120,10 @@ function getConfigFromForm() {
     charm: document.getElementById('config-charm').checked,
     pieceGear: document.getElementById('config-pieceGear').checked,
     jewel: document.getElementById('config-jewel').checked,
+    rune: document.getElementById('config-rune').checked,
+    epicGear: document.getElementById('config-epicGear').checked,
     magicScroll: document.getElementById('config-magicScroll').checked,
+    monsterScroll: document.getElementById('config-monsterScroll').checked,
     staminaPotion: document.getElementById('config-staminaPotion').checked,
     ancientPotion: document.getElementById('config-ancientPotion').checked,
     itemList: document.getElementById('config-itemList').value.trim()
@@ -121,7 +136,10 @@ function setConfigToForm(config) {
   document.getElementById('config-charm').checked = !!config.charm;
   document.getElementById('config-pieceGear').checked = !!config.pieceGear;
   document.getElementById('config-jewel').checked = !!config.jewel;
+  document.getElementById('config-rune').checked = !!config.rune;
+  document.getElementById('config-epicGear').checked = !!config.epicGear;
   document.getElementById('config-magicScroll').checked = !!config.magicScroll;
+  document.getElementById('config-monsterScroll').checked = !!config.monsterScroll;
   document.getElementById('config-staminaPotion').checked = !!config.staminaPotion;
   document.getElementById('config-ancientPotion').checked = !!config.ancientPotion;
   document.getElementById('config-itemList').value = config.itemList || '';
@@ -174,10 +192,34 @@ window.toggleAutomation = async function(id) {
   renderTabs();
 };
 
+window.toggleUnscroll = async function(id) {
+  const state = unscrollState[id];
+  if (state === 'running') {
+    await ipcRenderer.send('pause-unscroll', { accountId: id });
+    unscrollState[id] = 'paused';
+    appendOutput(id, '⏸️ Unscroll paused - Warrior is resting.\n');
+  } else if (state === 'paused') {
+    await ipcRenderer.send('resume-unscroll', { accountId: id });
+    unscrollState[id] = 'running';
+    appendOutput(id, '▶️ Unscroll resumed - Warrior is unscrolling!\n');
+  } else {
+    // Start unscroll
+    await ipcRenderer.invoke('start-unscroll', accounts.find(a => a.id === id));
+    unscrollState[id] = 'running';
+    appendOutput(id, '📜 Unscroll started - Warrior is unscrolling!\n');
+  }
+  renderAccounts();
+  renderTabs();
+};
+
 window.stopAccount = async function(id) {
   if (automationState[id] === 'running' || automationState[id] === 'paused') {
     await ipcRenderer.invoke('stop-automation', id);
     automationState[id] = undefined;
+  }
+  if (unscrollState[id] === 'running' || unscrollState[id] === 'paused') {
+    await ipcRenderer.invoke('stop-unscroll', id);
+    unscrollState[id] = undefined;
   }
   running[id] = false;
   renderAccounts();
@@ -238,6 +280,22 @@ ipcRenderer.on('automation-exit', (event, { accountId }) => {
   renderAccounts();
   renderTabs();
   appendOutput(accountId, '[Puppeteer] Automation process ended.\n');
+});
+
+// Listen for unscroll output
+ipcRenderer.on('unscroll-output', (event, { id, output }) => {
+  appendOutput(id, output);
+});
+
+ipcRenderer.on('unscroll-log', (event, { accountId, log }) => {
+  appendOutput(accountId, `[Unscroll] ${log}\n`);
+});
+
+ipcRenderer.on('unscroll-exit', (event, { accountId }) => {
+  unscrollState[accountId] = undefined;
+  renderAccounts();
+  renderTabs();
+  appendOutput(accountId, '[Unscroll] Unscroll process ended.\n');
 });
 
 // Listen for webview execution commands

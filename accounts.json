@@ -27,8 +27,11 @@
       "charm": true,
       "pieceGear": true,
       "jewel": true,
-      "magicScroll": true,
-      "staminaPotion": true,
+      "rune": true,
+      "epicGear": false,
+      "magicScroll": false,
+      "monsterScroll": true,
+      "staminaPotion": false,
       "ancientPotion": false,
       "itemList": "Ancient Potion"
     }
@@ -38,14 +41,17 @@
     "username": "houl_ghell",
     "password": "09081508",
     "config": {
-      "all": true,
-      "recipe": false,
-      "charm": false,
-      "pieceGear": false,
-      "jewel": false,
-      "magicScroll": false,
-      "staminaPotion": false,
-      "ancientPotion": false,
+      "all": false,
+      "recipe": true,
+      "charm": true,
+      "pieceGear": true,
+      "jewel": true,
+      "rune": true,
+      "epicGear": true,
+      "magicScroll": true,
+      "monsterScroll": true,
+      "staminaPotion": true,
+      "ancientPotion": true,
       "itemList": ""
     }
   }

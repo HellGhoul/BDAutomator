@@ -8,6 +8,7 @@ let win;
 let automationProcesses = {}; // { accountId: childProcess }
 let automationWindows = {}; // { accountId: BrowserWindow }
 let puppeteerProcesses = {};
+let unscrollProcesses = {};
 const ACCOUNTS_FILE = path.join(__dirname, 'accounts.json');
 
 function createWindow() {
@@ -107,4 +108,53 @@ ipcMain.on('resume-automation', (event, { accountId }) => {
   if (child) {
     child.send({ type: 'resume' });
   }
+});
+
+ipcMain.handle('start-unscroll', async (event, account) => {
+  if (unscrollProcesses[account.id]) return false; // Already running
+
+  const child = fork(path.join(__dirname, 'unscroll-script.js'));
+  unscrollProcesses[account.id] = child;
+
+  // Send credentials and config to child
+  child.send({ username: account.username, password: account.password, config: account.config });
+
+  // Listen for logs or status from child
+  child.on('message', (msg) => {
+    win.webContents.send('unscroll-log', { accountId: account.id, log: msg });
+  });
+
+  child.on('exit', () => {
+    delete unscrollProcesses[account.id];
+    win.webContents.send('unscroll-exit', { accountId: account.id });
+  });
+
+  return true;
+});
+
+ipcMain.on('pause-unscroll', (event, { accountId }) => {
+  const child = unscrollProcesses[accountId];
+  if (child) {
+    child.send({ type: 'pause' });
+  }
+});
+
+ipcMain.on('resume-unscroll', (event, { accountId }) => {
+  const child = unscrollProcesses[accountId];
+  if (child) {
+    child.send({ type: 'resume' });
+  }
+});
+
+ipcMain.handle('stop-unscroll', (event, accountId) => {
+  if (unscrollProcesses[accountId]) {
+    unscrollProcesses[accountId].kill();
+    delete unscrollProcesses[accountId];
+    return true;
+  }
+  return false;
+});
+
+ipcMain.handle('is-unscroll-running', (event, accountId) => {
+  return !!unscrollProcesses[accountId];
 }); 

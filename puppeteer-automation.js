@@ -34,10 +34,10 @@ async function runAutomation({ username, password, config }) {
     await checkPaused();
     await page.goto(url, { waitUntil: 'networkidle2' });
     process.send && process.send('Navigated to ' + url);
-    await new Promise(resolve => setTimeout(resolve, 200));
+    await new Promise(resolve => setTimeout(resolve, 100));
   }
 
-  async function waitForElement(selector, timeout = 200) {
+  async function waitForElement(selector, timeout = 100) {
     await checkPaused();
     await page.waitForSelector(selector, { timeout });
     process.send && process.send('waitForElement: ' + selector);
@@ -54,7 +54,7 @@ async function runAutomation({ username, password, config }) {
     } else {
       await page.click(selector);
       process.send && process.send('clickElement: ' + selector);
-      await new Promise(resolve => setTimeout(resolve, 200));
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
   }
 
@@ -64,6 +64,17 @@ async function runAutomation({ username, password, config }) {
     const text = await page.evaluate(el => el.textContent, el);
     process.send && process.send('getTextContent: ' + selector + ' => ' + text);
     return text;
+  }
+
+  // Helper function to wait for XPath
+  async function waitForXPath(xpath, timeout = 10000) {
+    const start = Date.now();
+    while (Date.now() - start < timeout) {
+      const elements = await page.$x(xpath);
+      if (elements.length > 0) return elements[0];
+      await new Promise(res => setTimeout(res, 200));
+    }
+    throw new Error('XPath not found: ' + xpath);
   }
 
   // Login
@@ -80,16 +91,18 @@ async function runAutomation({ username, password, config }) {
   async function nextAttack() {
     process.send && process.send('⚔️ Processing battle result...');
     try {
-      await waitForElement('body > div.main > strong',200);
+      await waitForElement('body > div.main > strong',100);
       const text = await getTextContent('body > div.main > strong');
       if ((text && text.includes('Congratulations! You won the battle!')) || (text && text.includes('You lost the battle.'))) {
         process.send && process.send('🔄 Battle ended, continuing...');
-        await waitForElement('body > div.main > form > input',200);
+        await waitForElement('body > div.main > form > input',100);
         await clickElement('body > div.main > form > input', { waitForNav: true });
         await nextAttack();
       } else if (text && text.includes('Congratulations! You KILLED')) {
         process.send && process.send('💀 Monster killed!');
         let nameFull = '';
+        let quality = '';
+        // Try to get item name
         try {
           await waitForElement('body > div.main > a', 100);
           nameFull = await getTextContent('body > div.main > a');
@@ -97,32 +110,51 @@ async function runAutomation({ username, password, config }) {
         } catch (error) {
           process.send && process.send('No loot link found');
         }
-        if (nameFull.toLowerCase().includes("magic scroll")|| config.all) {
-          process.send && process.send('💎 Valuable loot found!');
-          await waitForElement('body > div.main > form:nth-child(3) > input',200);
-          await clickElement("body > div.main > form:nth-child(3) > input", { waitForNav: true });
-          await choosing();
+        // Try to get item quality
+        if(config.epicGear){try {
+          await waitForElement('body > div.main > span:nth-child(16)', 100);
+          quality = await getTextContent('body > div.main > span:nth-child(16)');
+        } catch (error) {
+          try {
+            await waitForElement('body > div.main > span:nth-child(18)', 100);
+            quality = await getTextContent('body > div.main > span:nth-child(18)');
+          } catch {
+          // Do nothing
+          }
+        }}
+
+        if (config.all
+          || (config.pieceGear && nameFull.toLocaleLowerCase().includes("a piece of"))
+          || (config.recipe && nameFull.toLocaleLowerCase().includes("recipe"))
+          || (config.charm && nameFull.toLocaleLowerCase().includes("charm"))
+          || (config.jewel && (nameFull.toLocaleLowerCase().includes("jewel")||nameFull.toLocaleLowerCase().includes("elixir")))
+          || (config.rune && (nameFull.toLocaleLowerCase().includes("rune ")||nameFull.toLocaleLowerCase().includes("level ")))
+          || (config.epicGear && (nameFull.toLocaleLowerCase().includes("(iv)")||nameFull.toLocaleLowerCase().includes("(v)")||quality.toLocaleLowerCase().includes("epic")||quality.toLocaleLowerCase().includes("mythic")||quality.toLocaleLowerCase().includes("heroic")))
+          || (config.magicScroll && nameFull.toLocaleLowerCase().includes("magic scroll"))
+          || (config.monsterScroll && nameFull.toLocaleLowerCase().includes("s magic scroll"))
+          || (config.staminaPotion && nameFull.toLocaleLowerCase().includes("stamina potion"))
+          || (config.ancientPotion && nameFull.toLocaleLowerCase().includes("ancient potion"))
+        ) {
+            process.send && process.send('💎 Valuable loot found!');
+            await waitForElement('body > div.main > form:nth-child(3) > input',100);
+            await clickElement("body > div.main > form:nth-child(3) > input", { waitForNav: true });
+            await choosing();
         } else {
           try {
-            await waitForElement("body > div.main > form:nth-child(17) > input", 100);
-            await clickElement("body > div.main > form:nth-child(17) > input", { waitForNav: true });
+            const xpath = '/html/body/div[4]/form[2]/input';
+            await page.waitForSelector('xpath//' + xpath, { timeout: 10000 });
+            const [element] = await page.$$('xpath//' + xpath);
+            if (!element) throw new Error('Element not found');
+            await Promise.all([
+              page.waitForNavigation({ waitUntil: 'networkidle2' }),
+              element.click()
+            ]);
+
             await choosing();
-          } catch {
-            try {
-              await waitForElement("body > div.main > form:nth-child(15) > input", 100);
-              await clickElement("body > div.main > form:nth-child(15) > input", { waitForNav: true });
-              await choosing();
-            } catch {
-              try {
-                await waitForElement("body > div.main > form:nth-child(13) > input", 100);
-                await clickElement("body > div.main > form:nth-child(13) > input", { waitForNav: true });
-                await choosing();
-              } catch {
-                await waitForElement("body > div.main > form:nth-child(11) > input", 100);
-                await clickElement("body > div.main > form:nth-child(11) > input", { waitForNav: true });
-                await choosing();
-              }
-            }
+
+          } catch (e) {
+            process.send && process.send('Error with XPath! ' + e);
+            // Optionally handle the case where the XPath is not found
           }
         }
       }
@@ -134,12 +166,12 @@ async function runAutomation({ username, password, config }) {
   async function firstAttack() {
     process.send && process.send('⚔️ Starting first attack...');
     try {
-      await waitForElement('body > div.main > form > input', 200);
+      await waitForElement('body > div.main > form > input', 100);
       await clickElement('body > div.main > form > input', { waitForNav: true });
       await nextAttack();
     } catch {
       try {
-        await waitForElement('body > div.main > div.list.small > form > input', 200);
+        await waitForElement('body > div.main > div.list.small > form > input', 100);
         await clickElement('body > div.main > div.list.small > form > input', { waitForNav: true });
         await firstAttack();
       } catch {
@@ -150,7 +182,7 @@ async function runAutomation({ username, password, config }) {
 
   async function choosing() {
     process.send && process.send('🎯 Selecting target...');
-    await waitForElement('.unit.round',200);
+    await waitForElement('.unit.round',100);
     await clickElement('.unit.round', { waitForNav: true });
     await firstAttack();
   }

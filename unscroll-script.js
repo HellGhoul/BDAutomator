@@ -1,153 +1,132 @@
-const { TIMEOUT } = require('dns');
 const puppeteer = require('puppeteer');
+const fs = require('fs');
 
-(async () => {
-  const browser = await puppeteer.launch({ headless: false,ignoreHTTPSErrors: true });
+let paused = false;
+let pausePromise = null;
+let pauseResolve = null;
+
+function checkPaused() {
+  if (!paused) return Promise.resolve();
+  if (!pausePromise) {
+    pausePromise = new Promise(resolve => { pauseResolve = resolve; });
+  }
+  return pausePromise;
+}
+
+async function runUnscroll({ username, password, config }) {
+  process.send && process.send('Received unscroll config: ' + JSON.stringify(config));
+  const browser = await puppeteer.launch({ headless: false, ignoreHTTPSErrors: true });
   const page = await browser.newPage();
-  await page.goto('https://blackdragon.mobi/');
-  //Load collectible list
-  var fs = require('fs');
-  var text = fs.readFileSync("./collectibles.txt", 'utf-8');
-  var collectibles = text.split('\n');
-  // Make sure we got a filename on the command line.
-if (process.argv.length < 3) {
-  console.log('Usage: node ' + process.argv[1] + ' FILENAME');
-  process.exit(1);
-}
-// Read the file and print its contents.
-const ini = require('ini');
-const credentials = {
-  user: {
-      username: 'myUsername',
-      password: 'myPassword'
+  process.send && process.send('Browser launched for unscroll');
+
+  // Load collectibles (if needed)
+  let collectibles = [];
+  try {
+    const text = fs.readFileSync('./collectibles.txt', 'utf-8');
+    collectibles = text.split('\n');
+    process.send && process.send('Collectibles loaded for unscroll');
+  } catch (e) {
+    process.send && process.send('Could not load collectibles.txt for unscroll');
   }
-};
-var fs = require('fs')
-  , filename = process.argv[2];
-  const  data = fs.readFileSync(filename, 'utf-8');
-  const  config = ini.parse(data);
 
-  await page.focus('input[name=username]');
-  await page.keyboard.type(config.user.username);
-  await page.focus('input[name=password]');
-  await page.keyboard.type(config.user.password);
-    // Click the login button and wait for navigation
-    await Promise.all([
-      page.waitForNavigation({ waitUntil: 'networkidle2' }), // Ensures the next page is loaded
-      page.click('.button')
-  ]);
-// Done Login
-await page.waitForSelector("body > div.list.center.small > a:nth-child(6)");
-await page.click("body > div.list.center.small > a:nth-child(6)");
+  // Helper functions
+  async function navigateTo(url) {
+    await checkPaused();
+    await page.goto(url, { waitUntil: 'networkidle2' });
+    process.send && process.send('Navigated to ' + url);
+    await new Promise(resolve => setTimeout(resolve, 200));
+  }
 
-await page.waitForSelector("body > div.main > div.block > table > tbody > tr:nth-child(27) > td:nth-child(2) > a");
-await page.click("body > div.main > div.block > table > tbody > tr:nth-child(27) > td:nth-child(2) > a");
-do{
+  async function waitForElement(selector, timeout = 200) {
+    await checkPaused();
+    await page.waitForSelector(selector, { timeout });
+    process.send && process.send('waitForElement: ' + selector);
+  }
 
+  async function clickElement(selector, { waitForNav = false } = {}) {
+    await checkPaused();
+    if (waitForNav) {
+      await Promise.all([
+        page.waitForNavigation({ waitUntil: 'networkidle2' }),
+        page.click(selector)
+      ]);
+      process.send && process.send('clickElement (with navigation): ' + selector);
+    } else {
+      await page.click(selector);
+      process.send && process.send('clickElement: ' + selector);
+      await new Promise(resolve => setTimeout(resolve, 200));
+    }
+  }
 
-await page.waitForSelector("body > div.main > div.block > form > p > input");
-await page.click("body > div.main > div.block > form > p > input");
+  async function getTextContent(selector) {
+    const el = await page.$(selector);
+    if (!el) return '';
+    const text = await page.evaluate(el => el.textContent, el);
+    process.send && process.send('getTextContent: ' + selector + ' => ' + text);
+    return text;
+  }
 
-await page.waitForNavigation();
-await page.waitForSelector("body > div.main > div.block > form > p > input.button");
-await page.click("body > div.main > div.block > form > p > input.button");
+  // Login
+  await navigateTo('https://blackdragon.mobi/');
+  await waitForElement('input[name=username]');
+  await page.type('input[name=username]', username);
+  await waitForElement('input[name=password]');
+  await page.type('input[name=password]', password);
+  await waitForElement('.button');
+  await clickElement('.button', { waitForNav: true });
+  process.send && process.send('Logged in for unscroll');
 
+  // Navigate to unscroll page
+  await waitForElement("body > div.list.center.small > a:nth-child(6)");
+  await clickElement("body > div.list.center.small > a:nth-child(6)", { waitForNav: true });
 
-await page.waitForNavigation();
-await page.waitForSelector("body > div.main > div.nav > a:nth-child(1)");
-await page.click("body > div.main > div.nav > a:nth-child(1)");
-}while(true);
-async function nextAttack(){   
-  await page.waitForNavigation();
-  await page.waitForSelector('body > div.main > strong');
-  let element = await page.$('body > div.main > strong');
-  let text = await page.evaluate(el => el.textContent, element);
-  let clipText = text.substr(0, 27) ;
-  if(text=='Congratulations! You won the battle!'||text=='You lost the battle.'){
-    
-    await page.waitForSelector("body > div.main > form > input");
-    await page.click("body > div.main > form > input", {timeout: 100});
-    await nextAttack();
-  }else if(clipText=="Congratulations! You KILLED"){
-    // If kill the monster
-    const nameFull ="";
+  await waitForElement("body > div.main > div.block > table > tbody > tr:nth-child(27) > td:nth-child(2) > a");
+  await clickElement("body > div.main > div.block > table > tbody > tr:nth-child(27) > td:nth-child(2) > a", { waitForNav: true });
+
+  // Main unscroll loop
+  do {
+    await checkPaused();
+    await waitForElement("body > div.main > div.block > form > p > input");
+    await clickElement("body > div.main > div.block > form > p > input", { waitForNav: true });
+
+    await waitForElement("body > div.main > div.block > form > p > input.button");
+    await clickElement("body > div.main > div.block > form > p > input.button", { waitForNav: true });
+
+    await waitForElement("body > div.main > div.nav > a:nth-child(1)");
+    await clickElement("body > div.main > div.nav > a:nth-child(1)", { waitForNav: true });
+  } while (true);
+
+  // Clean up on stop
+  process.on('SIGTERM', async () => {
+    process.send && process.send('🛑 Unscroll stopped by user');
+    await browser.close();
+    process.exit(0);
+  });
+}
+
+// Listen for pause/resume messages
+process.on('message', (msg) => {
+  if (msg && msg.type === 'pause') {
+    paused = true;
+    process.send && process.send('⏸️ Unscroll paused by user');
+  } else if (msg && msg.type === 'resume') {
+    paused = false;
+    if (pauseResolve) pauseResolve();
+    pausePromise = null;
+    pauseResolve = null;
+    process.send && process.send('▶️ Unscroll resumed by user');
+  }
+});
+
+// Only start unscroll if the message contains username and password (initial run)
+process.on('message', async (data) => {
+  if (data && data.username && data.password) {
     try {
-      await page.waitForSelector("body > div.main > a", { timeout: 100 });
-      nameFull =  await page.$eval('body > div.main > a', el => el.innerText);
-  } catch (error) {
-  }  
-
-    const nameClip = nameFull.substr(0, 5) ;
-    if(nameClip == "Rune "||nameFull.toLowerCase().includes("magic scroll") || nameFull == ""){
-      const isGet = true;
-    }else{
-      const isGet = false;
+      await runUnscroll(data);
+      process.exit(0);
+    } catch (err) {
+      process.send && process.send('Error: ' + err.message);
+      process.exit(1);
     }
-    if(true){
-
-          await page.waitForSelector('body > div.main > form:nth-child(3) > input');
-          await page.click("body > div.main > form:nth-child(3) > input");
-        
-
-      await console.log(nameFull); // test
-      choosing();
-    }else{
-      try{          
-      await page.waitForSelector("body > div.main > form:nth-child(17) > input", {timeout:100});
-      await page.waitForSelector('body > div.main > form:nth-child(17) > input');
-      await page.click("body > div.main > form:nth-child(17) > input");
-      choosing();
-    }
-      catch{
-
-        try{        
-          await page.waitForSelector("body > div.main > form:nth-child(15) > input", {timeout:100});
-          await page.waitForSelector('body > div.main > form:nth-child(15) > input');
-          await page.click("body > div.main > form:nth-child(15) > input");
-          choosing();}
-          catch{
-            try {
-              await page.waitForSelector("body > div.main > form:nth-child(13) > input", {timeout:100});
-              await page.waitForSelector('body > div.main > form:nth-child(13) > input');
-              await page.click("body > div.main > form:nth-child(13) > input");
-              choosing();
-            }
-              catch{
-                
-              await page.waitForSelector("body > div.main > form:nth-child(11) > input", {timeout:100});
-            await page.waitForSelector('body > div.main > form:nth-child(11) > input');
-            await page.click("body > div.main > form:nth-child(11) > input");}
-            choosing();
-          }}
-      }
   }
-}
-
-async function firstAttack(){
-  try{
-    await page.waitForSelector("body > div.main > form > input", {timeout: 200});
-    await page.click("body > div.main > form > input");
-    await nextAttack();
-  }
-  catch{
-    try{
-      await page.waitForSelector("body > div.main > div.list.small > form > input", {timeout: 500});
-      await page.click("body > div.main > div.list.small > form > input");
-      await firstAttack();
-    }catch{
-      await nextAttack();
-    }
-
-  }
-}
-
-
-async function choosing(){
-  
-  await page.waitForSelector(".unit.round");
-  await page.click(".unit.round");
-  
-  firstAttack();
-}
-  choosing();
-})();
+});
