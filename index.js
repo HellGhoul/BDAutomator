@@ -82,22 +82,19 @@ async function nextAttack() {
       
       let nameFull = "";
       try {
-        console.log("here");
         await waitForElement("body > div.main > a", 100);
-
-        console.log("here2");
         nameFull = await getTextContent('body > div.main > a');
+        console.log('📦 Item Dropped: ' + nameFull);
       } catch (error) {
         console.log('No loot link found');
       }
 
-      if (nameFull && (nameFull.startsWith("Rune ") || nameFull.toLowerCase().includes("magic scroll") || nameFull === "")) {
-        console.log('📦 Collecting loot...');
+      if (nameFull.toLowerCase().includes("magic scroll")) {
+        console.log('💎 Valuable loot found!');
         await waitForElement('body > div.main > form:nth-child(3) > input');
         await clickElement("body > div.main > form:nth-child(3) > input");
         await choosing();
       } else {
-        console.log('💎 Valuable loot found!');
         try {
           await waitForElement("body > div.main > form:nth-child(17) > input", 100);
           await clickElement("body > div.main > form:nth-child(17) > input");

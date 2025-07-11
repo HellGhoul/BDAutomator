@@ -64,11 +64,11 @@ async function runAutomation({ username, password }) {
   async function nextAttack() {
     process.send && process.send('⚔️ Processing battle result...');
     try {
-      await waitForElement('body > div.main > strong',2000);
+      await waitForElement('body > div.main > strong',200);
       const text = await getTextContent('body > div.main > strong');
       if ((text && text.includes('Congratulations! You won the battle!')) || (text && text.includes('You lost the battle.'))) {
         process.send && process.send('🔄 Battle ended, continuing...');
-        await waitForElement('body > div.main > form > input',2000);
+        await waitForElement('body > div.main > form > input',200);
         await clickElement('body > div.main > form > input', { waitForNav: true });
         await nextAttack();
       } else if (text && text.includes('Congratulations! You KILLED')) {
@@ -77,13 +77,38 @@ async function runAutomation({ username, password }) {
         try {
           await waitForElement('body > div.main > a', 100);
           nameFull = await getTextContent('body > div.main > a');
+          process.send && process.send(nameFull);
         } catch (error) {
           process.send && process.send('No loot link found');
         }
-        process.send && process.send('📦 Collecting loot...');
-        await waitForElement('body > div.main > form:nth-child(3) > input',2000);
-        await clickElement('body > div.main > form:nth-child(3) > input', { waitForNav: true });
-        await choosing();
+        if (nameFull.toLowerCase().includes("magic scroll")) {
+          process.send && process.send('💎 Valuable loot found!');
+          await waitForElement('body > div.main > form:nth-child(3) > input',200);
+          await clickElement("body > div.main > form:nth-child(3) > input", { waitForNav: true });
+          await choosing();
+        } else {
+          try {
+            await waitForElement("body > div.main > form:nth-child(17) > input", 100);
+            await clickElement("body > div.main > form:nth-child(17) > input", { waitForNav: true });
+            await choosing();
+          } catch {
+            try {
+              await waitForElement("body > div.main > form:nth-child(15) > input", 100);
+              await clickElement("body > div.main > form:nth-child(15) > input", { waitForNav: true });
+              await choosing();
+            } catch {
+              try {
+                await waitForElement("body > div.main > form:nth-child(13) > input", 100);
+                await clickElement("body > div.main > form:nth-child(13) > input", { waitForNav: true });
+                await choosing();
+              } catch {
+                await waitForElement("body > div.main > form:nth-child(11) > input", 100);
+                await clickElement("body > div.main > form:nth-child(11) > input", { waitForNav: true });
+                await choosing();
+              }
+            }
+          }
+        }
       }
     } catch (error) {
       process.send && process.send('❌ Error in nextAttack: ' + error.message);
@@ -93,12 +118,12 @@ async function runAutomation({ username, password }) {
   async function firstAttack() {
     process.send && process.send('⚔️ Starting first attack...');
     try {
-      await waitForElement('body > div.main > form > input', 1000);
+      await waitForElement('body > div.main > form > input', 200);
       await clickElement('body > div.main > form > input', { waitForNav: true });
       await nextAttack();
     } catch {
       try {
-        await waitForElement('body > div.main > div.list.small > form > input', 500);
+        await waitForElement('body > div.main > div.list.small > form > input', 200);
         await clickElement('body > div.main > div.list.small > form > input', { waitForNav: true });
         await firstAttack();
       } catch {
@@ -109,7 +134,7 @@ async function runAutomation({ username, password }) {
 
   async function choosing() {
     process.send && process.send('🎯 Selecting target...');
-    await waitForElement('.unit.round',2000);
+    await waitForElement('.unit.round',200);
     await clickElement('.unit.round', { waitForNav: true });
     await firstAttack();
   }
