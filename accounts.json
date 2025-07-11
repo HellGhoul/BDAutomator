@@ -5,12 +5,15 @@
     "password": "0908152508",
     "options": {},
     "config": {
-      "all": true,
+      "all": false,
       "recipe": false,
       "charm": false,
       "pieceGear": false,
       "jewel": false,
+      "rune": false,
+      "epicGear": false,
       "magicScroll": false,
+      "monsterScroll": true,
       "staminaPotion": false,
       "ancientPotion": false,
       "itemList": ""
@@ -25,9 +28,9 @@
       "all": false,
       "recipe": true,
       "charm": true,
-      "pieceGear": true,
-      "jewel": true,
-      "rune": true,
+      "pieceGear": false,
+      "jewel": false,
+      "rune": false,
       "epicGear": false,
       "magicScroll": false,
       "monsterScroll": true,
@@ -52,6 +55,44 @@
       "monsterScroll": true,
       "staminaPotion": true,
       "ancientPotion": true,
+      "itemList": ""
+    }
+  },
+  {
+    "id": "1430iwww1",
+    "username": "-gardna-",
+    "password": "09081508",
+    "config": {
+      "all": false,
+      "recipe": true,
+      "charm": false,
+      "pieceGear": false,
+      "jewel": false,
+      "rune": false,
+      "epicGear": false,
+      "magicScroll": false,
+      "monsterScroll": false,
+      "staminaPotion": false,
+      "ancientPotion": false,
+      "itemList": ""
+    }
+  },
+  {
+    "id": "ohnyhn9bu",
+    "username": "hongty",
+    "password": "09081508",
+    "config": {
+      "all": true,
+      "recipe": false,
+      "charm": false,
+      "pieceGear": false,
+      "jewel": false,
+      "rune": false,
+      "epicGear": false,
+      "magicScroll": false,
+      "monsterScroll": false,
+      "staminaPotion": false,
+      "ancientPotion": false,
       "itemList": ""
     }
   }

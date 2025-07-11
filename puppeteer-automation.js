@@ -34,10 +34,10 @@ async function runAutomation({ username, password, config }) {
     await checkPaused();
     await page.goto(url, { waitUntil: 'networkidle2' });
     process.send && process.send('Navigated to ' + url);
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 50));
   }
 
-  async function waitForElement(selector, timeout = 100) {
+  async function waitForElement(selector, timeout = 50) {
     await checkPaused();
     await page.waitForSelector(selector, { timeout });
     process.send && process.send('waitForElement: ' + selector);
@@ -54,7 +54,7 @@ async function runAutomation({ username, password, config }) {
     } else {
       await page.click(selector);
       process.send && process.send('clickElement: ' + selector);
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 50));
     }
   }
 
@@ -64,17 +64,6 @@ async function runAutomation({ username, password, config }) {
     const text = await page.evaluate(el => el.textContent, el);
     process.send && process.send('getTextContent: ' + selector + ' => ' + text);
     return text;
-  }
-
-  // Helper function to wait for XPath
-  async function waitForXPath(xpath, timeout = 10000) {
-    const start = Date.now();
-    while (Date.now() - start < timeout) {
-      const elements = await page.$x(xpath);
-      if (elements.length > 0) return elements[0];
-      await new Promise(res => setTimeout(res, 200));
-    }
-    throw new Error('XPath not found: ' + xpath);
   }
 
   // Login
@@ -91,11 +80,11 @@ async function runAutomation({ username, password, config }) {
   async function nextAttack() {
     process.send && process.send('⚔️ Processing battle result...');
     try {
-      await waitForElement('body > div.main > strong',100);
+      await waitForElement('body > div.main > strong',200);
       const text = await getTextContent('body > div.main > strong');
       if ((text && text.includes('Congratulations! You won the battle!')) || (text && text.includes('You lost the battle.'))) {
         process.send && process.send('🔄 Battle ended, continuing...');
-        await waitForElement('body > div.main > form > input',100);
+        await waitForElement('body > div.main > form > input',50);
         await clickElement('body > div.main > form > input', { waitForNav: true });
         await nextAttack();
       } else if (text && text.includes('Congratulations! You KILLED')) {
@@ -104,7 +93,7 @@ async function runAutomation({ username, password, config }) {
         let quality = '';
         // Try to get item name
         try {
-          await waitForElement('body > div.main > a', 100);
+          await waitForElement('body > div.main > a', 50);
           nameFull = await getTextContent('body > div.main > a');
           process.send && process.send(nameFull);
         } catch (error) {
@@ -112,11 +101,11 @@ async function runAutomation({ username, password, config }) {
         }
         // Try to get item quality
         if(config.epicGear){try {
-          await waitForElement('body > div.main > span:nth-child(16)', 100);
+          await waitForElement('body > div.main > span:nth-child(16)', 50);
           quality = await getTextContent('body > div.main > span:nth-child(16)');
         } catch (error) {
           try {
-            await waitForElement('body > div.main > span:nth-child(18)', 100);
+            await waitForElement('body > div.main > span:nth-child(18)', 50);
             quality = await getTextContent('body > div.main > span:nth-child(18)');
           } catch {
           // Do nothing
@@ -136,13 +125,13 @@ async function runAutomation({ username, password, config }) {
           || (config.ancientPotion && nameFull.toLocaleLowerCase().includes("ancient potion"))
         ) {
             process.send && process.send('💎 Valuable loot found!');
-            await waitForElement('body > div.main > form:nth-child(3) > input',100);
+            await waitForElement('body > div.main > form:nth-child(3) > input',50);
             await clickElement("body > div.main > form:nth-child(3) > input", { waitForNav: true });
             await choosing();
         } else {
           try {
             const xpath = '/html/body/div[4]/form[2]/input';
-            await page.waitForSelector('xpath//' + xpath, { timeout: 10000 });
+            await page.waitForSelector('xpath//' + xpath, { timeout: 100 });
             const [element] = await page.$$('xpath//' + xpath);
             if (!element) throw new Error('Element not found');
             await Promise.all([
@@ -166,12 +155,12 @@ async function runAutomation({ username, password, config }) {
   async function firstAttack() {
     process.send && process.send('⚔️ Starting first attack...');
     try {
-      await waitForElement('body > div.main > form > input', 100);
+      await waitForElement('body > div.main > form > input', 50);
       await clickElement('body > div.main > form > input', { waitForNav: true });
       await nextAttack();
     } catch {
       try {
-        await waitForElement('body > div.main > div.list.small > form > input', 100);
+        await waitForElement('body > div.main > div.list.small > form > input', 50);
         await clickElement('body > div.main > div.list.small > form > input', { waitForNav: true });
         await firstAttack();
       } catch {
@@ -182,7 +171,7 @@ async function runAutomation({ username, password, config }) {
 
   async function choosing() {
     process.send && process.send('🎯 Selecting target...');
-    await waitForElement('.unit.round',100);
+    await waitForElement('.unit.round',50);
     await clickElement('.unit.round', { waitForNav: true });
     await firstAttack();
   }
