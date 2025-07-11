@@ -100,6 +100,33 @@ async function loadAccounts() {
   renderTabs();
 }
 
+// Add helper to get config from form
+function getConfigFromForm() {
+  return {
+    all: document.getElementById('config-all').checked,
+    recipe: document.getElementById('config-recipe').checked,
+    charm: document.getElementById('config-charm').checked,
+    pieceGear: document.getElementById('config-pieceGear').checked,
+    jewel: document.getElementById('config-jewel').checked,
+    magicScroll: document.getElementById('config-magicScroll').checked,
+    staminaPotion: document.getElementById('config-staminaPotion').checked,
+    ancientPotion: document.getElementById('config-ancientPotion').checked,
+    itemList: document.getElementById('config-itemList').value.trim()
+  };
+}
+// Add helper to set form from config
+function setConfigToForm(config) {
+  document.getElementById('config-all').checked = !!config.all;
+  document.getElementById('config-recipe').checked = !!config.recipe;
+  document.getElementById('config-charm').checked = !!config.charm;
+  document.getElementById('config-pieceGear').checked = !!config.pieceGear;
+  document.getElementById('config-jewel').checked = !!config.jewel;
+  document.getElementById('config-magicScroll').checked = !!config.magicScroll;
+  document.getElementById('config-staminaPotion').checked = !!config.staminaPotion;
+  document.getElementById('config-ancientPotion').checked = !!config.ancientPotion;
+  document.getElementById('config-itemList').value = config.itemList || '';
+}
+
 window.editAccount = function(id) {
   const acc = accounts.find(a => a.id === id);
   if (!acc) return;
@@ -108,6 +135,7 @@ window.editAccount = function(id) {
   document.getElementById('username').value = acc.username;
   document.getElementById('password').value = acc.password;
   document.getElementById('account-id').value = acc.id;
+  setConfigToForm(acc.config || {});
   document.getElementById('save-btn').innerHTML = '⚔️ Update Warrior';
   document.getElementById('cancel-btn').style.display = '';
 };
@@ -162,6 +190,7 @@ document.getElementById('account-form').onsubmit = async function(e) {
   const username = document.getElementById('username').value.trim();
   const password = document.getElementById('password').value.trim();
   let id = document.getElementById('account-id').value;
+  const config = getConfigFromForm();
   if (!username || !password) return;
 
   if (editingId) {
@@ -170,13 +199,13 @@ document.getElementById('account-form').onsubmit = async function(e) {
     if (idx !== -1) {
       accounts[idx].username = username;
       accounts[idx].password = password;
-      // Add more options here if needed
+      accounts[idx].config = config;
     }
     editingId = null;
   } else {
     // Add
     id = Math.random().toString(36).substr(2, 9);
-    accounts.push({ id, username, password, options: {} });
+    accounts.push({ id, username, password, config });
   }
   await ipcRenderer.invoke('save-accounts', accounts);
   document.getElementById('account-form').reset();

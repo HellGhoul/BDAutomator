@@ -13,7 +13,8 @@ function checkPaused() {
   return pausePromise;
 }
 
-async function runAutomation({ username, password }) {
+async function runAutomation({ username, password, config }) {
+  process.send && process.send('Received config: ' + JSON.stringify(config));
   const browser = await puppeteer.launch({ headless: false, ignoreHTTPSErrors: true });
   const page = await browser.newPage();
   process.send && process.send('Browser launched');
@@ -96,7 +97,7 @@ async function runAutomation({ username, password }) {
         } catch (error) {
           process.send && process.send('No loot link found');
         }
-        if (nameFull.toLowerCase().includes("magic scroll")) {
+        if (nameFull.toLowerCase().includes("magic scroll")|| config.all) {
           process.send && process.send('💎 Valuable loot found!');
           await waitForElement('body > div.main > form:nth-child(3) > input',200);
           await clickElement("body > div.main > form:nth-child(3) > input", { waitForNav: true });

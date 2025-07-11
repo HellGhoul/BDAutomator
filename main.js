@@ -46,8 +46,8 @@ ipcMain.handle('start-automation', async (event, account) => {
   const child = fork(path.join(__dirname, 'puppeteer-automation.js'));
   puppeteerProcesses[account.id] = child;
 
-  // Send credentials to child
-  child.send({ username: account.username, password: account.password });
+  // Send credentials and config to child
+  child.send({ username: account.username, password: account.password, config: account.config });
 
   // Listen for logs or status from child
   child.on('message', (msg) => {

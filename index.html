@@ -104,6 +104,20 @@
             <input type="password" id="password" required 
                    class="w-full p-3 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded focus:outline-none focus:rpg-glow">
           </div>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="flex items-center space-x-2 text-rpg-gold"><input type="checkbox" id="config-all"> <span>All</span></label>
+            <label class="flex items-center space-x-2 text-rpg-gold"><input type="checkbox" id="config-recipe"> <span>Recipe</span></label>
+            <label class="flex items-center space-x-2 text-rpg-gold"><input type="checkbox" id="config-charm"> <span>Charm</span></label>
+            <label class="flex items-center space-x-2 text-rpg-gold"><input type="checkbox" id="config-pieceGear"> <span>Piece Gear</span></label>
+            <label class="flex items-center space-x-2 text-rpg-gold"><input type="checkbox" id="config-jewel"> <span>Jewel</span></label>
+            <label class="flex items-center space-x-2 text-rpg-gold"><input type="checkbox" id="config-magicScroll"> <span>Magic Scroll</span></label>
+            <label class="flex items-center space-x-2 text-rpg-gold"><input type="checkbox" id="config-staminaPotion"> <span>Stamina Potion</span></label>
+            <label class="flex items-center space-x-2 text-rpg-gold"><input type="checkbox" id="config-ancientPotion"> <span>Ancient Potion</span></label>
+          </div>
+          <div>
+            <label class="block text-rpg-gold mb-2">📝 Item List (comma or line break separated):</label>
+            <textarea id="config-itemList" rows="2" class="w-full p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded focus:outline-none focus:rpg-glow"></textarea>
+          </div>
           <div class="flex space-x-2">
             <button type="submit" id="save-btn" 
                     class="rpg-button px-6 py-2 rounded font-bold">➕ Add Warrior</button>

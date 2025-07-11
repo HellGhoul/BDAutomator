@@ -3,12 +3,50 @@
     "id": "k6iu6wpbf",
     "username": "hell_water",
     "password": "0908152508",
-    "options": {}
+    "options": {},
+    "config": {
+      "all": true,
+      "recipe": false,
+      "charm": false,
+      "pieceGear": false,
+      "jewel": false,
+      "magicScroll": false,
+      "staminaPotion": false,
+      "ancientPotion": false,
+      "itemList": ""
+    }
   },
   {
     "id": "a3xn9md33",
     "username": "hell_fire",
     "password": "0908152508",
-    "options": {}
+    "options": {},
+    "config": {
+      "all": false,
+      "recipe": true,
+      "charm": true,
+      "pieceGear": true,
+      "jewel": true,
+      "magicScroll": true,
+      "staminaPotion": true,
+      "ancientPotion": false,
+      "itemList": "Ancient Potion"
+    }
+  },
+  {
+    "id": "jdych9uaw",
+    "username": "houl_ghell",
+    "password": "09081508",
+    "config": {
+      "all": true,
+      "recipe": false,
+      "charm": false,
+      "pieceGear": false,
+      "jewel": false,
+      "magicScroll": false,
+      "staminaPotion": false,
+      "ancientPotion": false,
+      "itemList": ""
+    }
   }
 ]
