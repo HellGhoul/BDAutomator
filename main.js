@@ -93,4 +93,18 @@ ipcMain.handle('stop-automation', (event, accountId) => {
 
 ipcMain.handle('is-automation-running', (event, accountId) => {
   return !!automationWindows[accountId];
+});
+
+ipcMain.on('pause-automation', (event, { accountId }) => {
+  const child = puppeteerProcesses[accountId];
+  if (child) {
+    child.send({ type: 'pause' });
+  }
+});
+
+ipcMain.on('resume-automation', (event, { accountId }) => {
+  const child = puppeteerProcesses[accountId];
+  if (child) {
+    child.send({ type: 'resume' });
+  }
 }); 

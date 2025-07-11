@@ -1,6 +1,18 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 
+let paused = false;
+let pausePromise = null;
+let pauseResolve = null;
+
+function checkPaused() {
+  if (!paused) return Promise.resolve();
+  if (!pausePromise) {
+    pausePromise = new Promise(resolve => { pauseResolve = resolve; });
+  }
+  return pausePromise;
+}
+
 async function runAutomation({ username, password }) {
   const browser = await puppeteer.launch({ headless: false, ignoreHTTPSErrors: true });
   const page = await browser.newPage();
@@ -18,17 +30,20 @@ async function runAutomation({ username, password }) {
 
   // Helper functions mimicking index.js
   async function navigateTo(url) {
+    await checkPaused();
     await page.goto(url, { waitUntil: 'networkidle2' });
     process.send && process.send('Navigated to ' + url);
     await new Promise(resolve => setTimeout(resolve, 200));
   }
 
   async function waitForElement(selector, timeout = 200) {
+    await checkPaused();
     await page.waitForSelector(selector, { timeout });
     process.send && process.send('waitForElement: ' + selector);
   }
 
   async function clickElement(selector, { waitForNav = false } = {}) {
+    await checkPaused();
     if (waitForNav) {
       await Promise.all([
         page.waitForNavigation({ waitUntil: 'networkidle2' }),
@@ -154,12 +169,28 @@ async function runAutomation({ username, password }) {
   });
 }
 
+process.on('message', (msg) => {
+  if (msg && msg.type === 'pause') {
+    paused = true;
+    process.send && process.send('⏸️ Paused by user');
+  } else if (msg && msg.type === 'resume') {
+    paused = false;
+    if (pauseResolve) pauseResolve();
+    pausePromise = null;
+    pauseResolve = null;
+    process.send && process.send('▶️ Resumed by user');
+  }
+});
+
+// Only start automation if the message contains username and password (initial run)
 process.on('message', async (data) => {
-  try {
-    await runAutomation(data);
-    process.exit(0);
-  } catch (err) {
-    process.send && process.send('Error: ' + err.message);
-    process.exit(1);
+  if (data && data.username && data.password) {
+    try {
+      await runAutomation(data);
+      process.exit(0);
+    } catch (err) {
+      process.send && process.send('Error: ' + err.message);
+      process.exit(1);
+    }
   }
 });

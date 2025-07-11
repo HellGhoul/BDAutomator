@@ -6,22 +6,28 @@ let editingId = null;
 let outputs = {};
 let webviews = {};
 let activeTab = null;
-let automationRunning = {}; // Track automation state per account
+let automationState = {}; // { [id]: 'running' | 'paused' | undefined }
 
 function renderAccounts() {
   const list = document.getElementById('account-list');
   list.innerHTML = '';
   accounts.forEach(acc => {
+    const state = automationState[acc.id];
+    const isRunning = running[acc.id];
+    const isPaused = state === 'paused';
+    const isActive = state === 'running';
+    const toggleLabel = isActive ? 'Pause' : (isPaused ? 'Resume' : 'Pause');
+    const toggleIcon = isActive ? '⏸️' : (isPaused ? '▶️' : '⏸️');
     const div = document.createElement('div');
-    div.className = `rpg-border rounded-lg p-4 ${running[acc.id] ? 'bg-green-900/20' : 'bg-rpg-darker'} transition-all duration-300`;
+    div.className = `rpg-border rounded-lg p-4 ${isRunning ? 'bg-green-900/20' : 'bg-rpg-darker'} transition-all duration-300`;
     div.innerHTML = `
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center space-x-3">
-          <span class="text-2xl">${running[acc.id] ? '⚔️' : '🛡️'}</span>
+          <span class="text-2xl">${isRunning ? '⚔️' : '🛡️'}</span>
           <div>
             <h3 class="text-xl font-bold text-rpg-gold">${acc.username}</h3>
             <p class="text-sm text-gray-400">Level: ${acc.options ? JSON.stringify(acc.options) : '{}'} </p>
-            ${automationRunning[acc.id] ? '<p class="text-sm text-green-400">🤖 Auto: ON</p>' : ''}
+            ${isActive ? '<p class="text-sm text-green-400">🤖 Auto: ON</p>' : isPaused ? '<p class="text-sm text-yellow-400">⏸️ Paused</p>' : ''}
           </div>
         </div>
         <div class="flex space-x-2">
@@ -29,12 +35,12 @@ function renderAccounts() {
                   class="rpg-button px-3 py-1 rounded text-sm">✏️ Edit</button>
           <button onclick="deleteAccount('${acc.id}')" 
                   class="rpg-button px-3 py-1 rounded text-sm bg-red-900/50 border-red-500 text-red-300 hover:bg-red-700">🗑️ Delete</button>
-          <button onclick="runAccount('${acc.id}')" ${running[acc.id] ? 'disabled' : ''} 
-                  class="rpg-button px-3 py-1 rounded text-sm ${running[acc.id] ? 'opacity-50 cursor-not-allowed' : ''}">⚡ Run</button>
-          <button onclick="toggleAutomation('${acc.id}')" ${!running[acc.id] ? 'disabled' : ''} 
-                  class="rpg-button px-3 py-1 rounded text-sm ${automationRunning[acc.id] ? 'bg-green-900/50 border-green-500 text-green-300' : ''}">🤖 ${automationRunning[acc.id] ? 'Stop Auto' : 'Start Auto'}</button>
-          <button onclick="stopAccount('${acc.id}')" ${running[acc.id] ? '' : 'disabled'} 
-                  class="rpg-button px-3 py-1 rounded text-sm ${running[acc.id] ? '' : 'opacity-50 cursor-not-allowed'} bg-red-900/50 border-red-500 text-red-300 hover:bg-red-700">⏹️ Stop</button>
+          <button onclick="runAccount('${acc.id}')" ${isRunning ? 'disabled' : ''} 
+                  class="rpg-button px-3 py-1 rounded text-sm ${isRunning ? 'opacity-50 cursor-not-allowed' : ''}">⚡ Run</button>
+          <button onclick="toggleAutomation('${acc.id}')" ${(isRunning && !isPaused) || isPaused ? '' : 'disabled'} 
+                  class="rpg-button px-3 py-1 rounded text-sm ${(isActive || isPaused) ? 'bg-green-900/50 border-green-500 text-green-300' : ''}">${toggleIcon} ${toggleLabel}</button>
+          <button onclick="stopAccount('${acc.id}')" ${isRunning ? '' : 'disabled'} 
+                  class="rpg-button px-3 py-1 rounded text-sm ${isRunning ? '' : 'opacity-50 cursor-not-allowed'} bg-red-900/50 border-red-500 text-red-300 hover:bg-red-700">⏹️ Stop</button>
         </div>
       </div>
     `;
@@ -83,11 +89,12 @@ async function loadAccounts() {
   accounts = await ipcRenderer.invoke('get-accounts');
   if (!Array.isArray(accounts)) accounts = [];
   outputs = {};
-  automationRunning = {};
+  automationState = {};
   renderAccounts();
   for (const acc of accounts) {
     running[acc.id] = await ipcRenderer.invoke('is-running', acc.id);
-    automationRunning[acc.id] = await ipcRenderer.invoke('is-automation-running', acc.id);
+    // Default to not running/paused
+    automationState[acc.id] = running[acc.id] ? 'running' : undefined;
   }
   renderAccounts();
   renderTabs();
@@ -117,37 +124,32 @@ window.runAccount = async function(id) {
   outputs[acc.id] = '';
   renderAccounts();
   running[acc.id] = true;
+  automationState[acc.id] = 'running';
   renderAccounts();
   renderTabs();
   appendOutput(id, '⚔️ Warrior summoned to battle! (Window opened)\n');
-  // Open a new window for this account (handled by main.js)
   await ipcRenderer.invoke('start-automation', acc);
 };
 
 window.toggleAutomation = async function(id) {
-  console.log('toggleAutomation called for', id);
-  const acc = accounts.find(a => a.id === id);
-  if (!acc) return;
-  if (automationRunning[id]) {
-    // Stop automation
-    await ipcRenderer.send('stop-auto-script', { accountId: id });
-    automationRunning[id] = false;
-    appendOutput(id, '🤖 Automation stopped - Warrior resting.\n');
-  } else {
-    // Start automation in the automation window
-    await ipcRenderer.send('start-auto-script', { accountId: id });
-    automationRunning[id] = true;
-    appendOutput(id, '🤖 Automation started - Warrior is auto-fighting!\n');
+  const state = automationState[id];
+  if (state === 'running') {
+    await ipcRenderer.send('pause-automation', { accountId: id });
+    automationState[id] = 'paused';
+    appendOutput(id, '⏸️ Automation paused - Warrior is resting.\n');
+  } else if (state === 'paused') {
+    await ipcRenderer.send('resume-automation', { accountId: id });
+    automationState[id] = 'running';
+    appendOutput(id, '▶️ Automation resumed - Warrior is auto-fighting!\n');
   }
   renderAccounts();
   renderTabs();
 };
 
 window.stopAccount = async function(id) {
-  // Stop automation first if running
-  if (automationRunning[id]) {
+  if (automationState[id] === 'running' || automationState[id] === 'paused') {
     await ipcRenderer.invoke('stop-automation', id);
-    automationRunning[id] = false;
+    automationState[id] = undefined;
   }
   running[id] = false;
   renderAccounts();
@@ -202,7 +204,7 @@ ipcRenderer.on('automation-log', (event, { accountId, log }) => {
 });
 
 ipcRenderer.on('automation-exit', (event, { accountId }) => {
-  automationRunning[accountId] = false;
+  automationState[accountId] = undefined;
   running[accountId] = false;
   renderAccounts();
   renderTabs();
