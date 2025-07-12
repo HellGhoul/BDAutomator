@@ -118,7 +118,7 @@ async function runAutomation({ username, password, config }) {
           || (config.charm && nameFull.toLocaleLowerCase().includes("charm"))
           || (config.jewel && (nameFull.toLocaleLowerCase().includes("jewel")||nameFull.toLocaleLowerCase().includes("elixir")))
           || (config.rune && (nameFull.toLocaleLowerCase().includes("rune ")||nameFull.toLocaleLowerCase().includes("level ")))
-          || (config.epicGear && (nameFull.toLocaleLowerCase().includes("(iv)")||nameFull.toLocaleLowerCase().includes("(v)")||quality.toLocaleLowerCase().includes("epic")||quality.toLocaleLowerCase().includes("mythic")||quality.toLocaleLowerCase().includes("heroic")))
+          || (config.epicGear && (nameFull.toLocaleLowerCase().includes("(vi)")||nameFull.toLocaleLowerCase().includes("(v)")||quality.toLocaleLowerCase().includes("epic")||quality.toLocaleLowerCase().includes("mythic")||quality.toLocaleLowerCase().includes("heroic")))
           || (config.magicScroll && nameFull.toLocaleLowerCase().includes("magic scroll"))
           || (config.monsterScroll && nameFull.toLocaleLowerCase().includes("s magic scroll"))
           || (config.staminaPotion && nameFull.toLocaleLowerCase().includes("stamina potion"))
@@ -164,16 +164,30 @@ async function runAutomation({ username, password, config }) {
         await clickElement('body > div.main > div.list.small > form > input', { waitForNav: true });
         await firstAttack();
       } catch {
-        await nextAttack();
+        try {
+          await nextAttack();
+        } catch (error) {
+          await navigateTo('https://blackdragon.mobi/maps/view');
+          process.send && process.send('✅ Arrived at maps page, starting target selection...');
+          await choosing();
+        }
       }
     }
   }
 
   async function choosing() {
-    process.send && process.send('🎯 Selecting target...');
-    await waitForElement('.unit.round',50);
-    await clickElement('.unit.round', { waitForNav: true });
-    await firstAttack();
+    try {
+      process.send && process.send('🎯 Selecting target...');
+      await waitForElement('.unit.round',50);
+      await clickElement('.unit.round', { waitForNav: true });
+      await firstAttack();
+    } catch (error) {
+      process.send && process.send('❌ Error in choosing: ' + error.message);
+      process.send && process.send('🗺️ Navigating to maps page...');
+      await navigateTo('https://blackdragon.mobi/maps/view');
+      process.send && process.send('✅ Arrived at maps page, starting target selection...');
+      await choosing();
+    }
   }
 
   // Start automation
