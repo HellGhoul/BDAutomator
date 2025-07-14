@@ -34,10 +34,10 @@ async function runAutomation({ username, password, config }) {
     await checkPaused();
     await page.goto(url, { waitUntil: 'networkidle2' });
     process.send && process.send('Navigated to ' + url);
-    await new Promise(resolve => setTimeout(resolve, 50));
+    await new Promise(resolve => setTimeout(resolve, 20));
   }
 
-  async function waitForElement(selector, timeout = 50) {
+  async function waitForElement(selector, timeout = 20) {
     await checkPaused();
     await page.waitForSelector(selector, { timeout });
     process.send && process.send('waitForElement: ' + selector);
@@ -54,7 +54,7 @@ async function runAutomation({ username, password, config }) {
     } else {
       await page.click(selector);
       process.send && process.send('clickElement: ' + selector);
-      await new Promise(resolve => setTimeout(resolve, 50));
+      await new Promise(resolve => setTimeout(resolve, 20));
     }
   }
 
@@ -80,11 +80,11 @@ async function runAutomation({ username, password, config }) {
   async function nextAttack() {
     process.send && process.send('⚔️ Processing battle result...');
     try {
-      await waitForElement('body > div.main > strong',200);
+      await waitForElement('body > div.main > strong',20);
       const text = await getTextContent('body > div.main > strong');
       if ((text && text.includes('Congratulations! You won the battle!')) || (text && text.includes('You lost the battle.'))) {
         process.send && process.send('🔄 Battle ended, continuing...');
-        await waitForElement('body > div.main > form > input',50);
+        await waitForElement('body > div.main > form > input',20);
         await clickElement('body > div.main > form > input', { waitForNav: true });
         await nextAttack();
       } else if (text && text.includes('Congratulations! You KILLED')) {
@@ -93,7 +93,7 @@ async function runAutomation({ username, password, config }) {
         let quality = '';
         // Try to get item name
         try {
-          await waitForElement('body > div.main > a', 50);
+          await waitForElement('body > div.main > a', 20);
           nameFull = await getTextContent('body > div.main > a');
           process.send && process.send(nameFull);
         } catch (error) {
@@ -101,11 +101,11 @@ async function runAutomation({ username, password, config }) {
         }
         // Try to get item quality
         if(config.epicGear){try {
-          await waitForElement('body > div.main > span:nth-child(16)', 50);
+          await waitForElement('body > div.main > span:nth-child(16)', 20);
           quality = await getTextContent('body > div.main > span:nth-child(16)');
         } catch (error) {
           try {
-            await waitForElement('body > div.main > span:nth-child(18)', 50);
+            await waitForElement('body > div.main > span:nth-child(18)', 20);
             quality = await getTextContent('body > div.main > span:nth-child(18)');
           } catch {
           // Do nothing
@@ -113,6 +113,8 @@ async function runAutomation({ username, password, config }) {
         }}
 
         if (config.all
+          || nameFull.toLocaleLowerCase().includes("gold bar")
+          || nameFull.toLocaleLowerCase().includes("revival")
           || (config.pieceGear && nameFull.toLocaleLowerCase().includes("a piece of"))
           || (config.recipe && nameFull.toLocaleLowerCase().includes("recipe"))
           || (config.charm && nameFull.toLocaleLowerCase().includes("charm"))
@@ -125,13 +127,13 @@ async function runAutomation({ username, password, config }) {
           || (config.ancientPotion && nameFull.toLocaleLowerCase().includes("ancient potion"))
         ) {
             process.send && process.send('💎 Valuable loot found!');
-            await waitForElement('body > div.main > form:nth-child(3) > input',50);
+            await waitForElement('body > div.main > form:nth-child(3) > input',20);
             await clickElement("body > div.main > form:nth-child(3) > input", { waitForNav: true });
             await choosing();
         } else {
           try {
             const xpath = '/html/body/div[4]/form[2]/input';
-            await page.waitForSelector('xpath//' + xpath, { timeout: 100 });
+            await page.waitForSelector('xpath//' + xpath, { timeout: 20 });
             const [element] = await page.$$('xpath//' + xpath);
             if (!element) throw new Error('Element not found');
             await Promise.all([
@@ -148,19 +150,21 @@ async function runAutomation({ username, password, config }) {
         }
       }
     } catch (error) {
-      process.send && process.send('❌ Error in nextAttack: ' + error.message);
+      await navigateTo('https://blackdragon.mobi/maps/view');
+      process.send && process.send('✅ Arrived at maps page, starting target selection...');
+      await choosing();
     }
   }
 
   async function firstAttack() {
     process.send && process.send('⚔️ Starting first attack...');
     try {
-      await waitForElement('body > div.main > form > input', 50);
+      await waitForElement('body > div.main > form > input', 20);
       await clickElement('body > div.main > form > input', { waitForNav: true });
       await nextAttack();
     } catch {
       try {
-        await waitForElement('body > div.main > div.list.small > form > input', 50);
+        await waitForElement('body > div.main > div.list.small > form > input', 20);
         await clickElement('body > div.main > div.list.small > form > input', { waitForNav: true });
         await firstAttack();
       } catch {
@@ -177,9 +181,14 @@ async function runAutomation({ username, password, config }) {
 
   async function choosing() {
     try {
-      process.send && process.send('🎯 Selecting target...');
-      await waitForElement('.unit.round',50);
-      await clickElement('.unit.round', { waitForNav: true });
+      //process.send && process.send('🎯 Selecting target...');
+      //await waitForElement('.unit.round',20);
+      //await clickElement('.unit.round', { waitForNav: true });
+      const elements = await page.$$('.unit.round');
+      await Promise.all([
+        page.waitForNavigation({ waitUntil: 'networkidle2' }),
+        elements[1].click()
+      ]);
       await firstAttack();
     } catch (error) {
       process.send && process.send('❌ Error in choosing: ' + error.message);

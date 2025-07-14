@@ -50,7 +50,7 @@
       "pieceGear": true,
       "jewel": true,
       "rune": true,
-      "epicGear": true,
+      "epicGear": false,
       "magicScroll": false,
       "monsterScroll": true,
       "staminaPotion": true,
