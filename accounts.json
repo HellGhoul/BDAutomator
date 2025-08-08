@@ -1,25 +1,5 @@
 [
   {
-    "id": "k6iu6wpbf",
-    "username": "hell_water",
-    "password": "0908152508",
-    "options": {},
-    "config": {
-      "all": true,
-      "recipe": false,
-      "charm": false,
-      "pieceGear": false,
-      "jewel": false,
-      "rune": false,
-      "epicGear": false,
-      "magicScroll": false,
-      "monsterScroll": true,
-      "staminaPotion": false,
-      "ancientPotion": false,
-      "itemList": ""
-    }
-  },
-  {
     "id": "a3xn9md33",
     "username": "hell_fire",
     "password": "0908152508",
@@ -41,13 +21,13 @@
   },
   {
     "id": "jdych9uaw",
-    "username": "houl_ghell",
+    "username": "wuchang",
     "password": "09081508",
     "config": {
       "all": false,
       "recipe": true,
       "charm": true,
-      "pieceGear": true,
+      "pieceGear": false,
       "jewel": true,
       "rune": true,
       "epicGear": false,

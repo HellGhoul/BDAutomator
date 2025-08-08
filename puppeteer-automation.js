@@ -118,8 +118,8 @@ async function runAutomation({ username, password, config }) {
           || (config.pieceGear && nameFull.toLocaleLowerCase().includes("a piece of"))
           || (config.recipe && nameFull.toLocaleLowerCase().includes("recipe"))
           || (config.charm && nameFull.toLocaleLowerCase().includes("charm"))
-          || (config.jewel && (nameFull.toLocaleLowerCase().includes("jewel")||nameFull.toLocaleLowerCase().includes("elixir")))
-          || (config.rune && (nameFull.toLocaleLowerCase().includes("rune ")||nameFull.toLocaleLowerCase().includes("level ")))
+          || (config.jewel && (nameFull.toLocaleLowerCase().includes("jewel")||nameFull.toLocaleLowerCase().includes("elixir"))) //||nameFull.toLocaleLowerCase().includes("elixir")
+          || (config.rune && (nameFull.toLocaleLowerCase().includes("rune ")||nameFull.toLocaleLowerCase().includes("level "))) // ||nameFull.toLocaleLowerCase().includes("level ")
           || (config.epicGear && (nameFull.toLocaleLowerCase().includes("(vi)")||nameFull.toLocaleLowerCase().includes("(v)")||quality.toLocaleLowerCase().includes("epic")||quality.toLocaleLowerCase().includes("mythic")||quality.toLocaleLowerCase().includes("heroic")))
           || (config.magicScroll && nameFull.toLocaleLowerCase().includes("magic scroll"))
           || (config.monsterScroll && nameFull.toLocaleLowerCase().includes("s magic scroll"))
@@ -180,14 +180,40 @@ async function runAutomation({ username, password, config }) {
   }
 
   async function choosing() {
+    //
+    var isTargetmonster = true;
+    if(isTargetmonster){
+      try{
+        //await navigateTo('https://blackdragon.mobi/maps/view');
+        await clickElement('a img[src*="/hell_hydra.jpg"]', { waitForNav: true });
+        await firstAttack();
+      }
+      catch(error){
+        try{
+          //await navigateTo('https://blackdragon.mobi/maps/view');
+          await clickElement('a img[src*="/ancient_behemoth.jpg"]', { waitForNav: true });
+          await firstAttack();
+        }catch(error){
+          try{
+            //await navigateTo('https://blackdragon.mobi/maps/view');
+            await clickElement('a img[src*="/behemoth.jpg"]', { waitForNav: true });
+            await firstAttack();
+          }catch(error){
+            await navigateTo('https://blackdragon.mobi/maps/view');
+            await choosing();
+          }
+        }
+      }
+
+    }
+    else
+    {
+    //
     try {
-      //process.send && process.send('🎯 Selecting target...');
-      //await waitForElement('.unit.round',20);
-      //await clickElement('.unit.round', { waitForNav: true });
       const elements = await page.$$('.unit.round');
       await Promise.all([
         page.waitForNavigation({ waitUntil: 'networkidle2' }),
-        elements[1].click()
+        elements[0].click()
       ]);
       await firstAttack();
     } catch (error) {
@@ -197,6 +223,9 @@ async function runAutomation({ username, password, config }) {
       process.send && process.send('✅ Arrived at maps page, starting target selection...');
       await choosing();
     }
+    }
+
+
   }
 
   // Start automation
