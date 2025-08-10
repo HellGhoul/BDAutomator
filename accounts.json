@@ -26,14 +26,14 @@
     "config": {
       "all": false,
       "recipe": true,
-      "charm": true,
+      "charm": false,
       "pieceGear": false,
-      "jewel": true,
-      "rune": true,
+      "jewel": false,
+      "rune": false,
       "epicGear": false,
       "magicScroll": false,
       "monsterScroll": true,
-      "staminaPotion": true,
+      "staminaPotion": false,
       "ancientPotion": true,
       "itemList": ""
     }

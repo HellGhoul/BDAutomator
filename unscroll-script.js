@@ -64,6 +64,7 @@ async function runUnscroll({ username, password, config }) {
     for (const el of monsterElements) {
       const img = el.querySelector('img.round');
       const name = el.querySelector('strong')?.innerText?.trim();
+      const url = el.querySelector('a')?.href?.trim();
   
       // Extract location after <small>@</small>
       let location = null;
@@ -78,11 +79,16 @@ async function runUnscroll({ username, password, config }) {
         }
       }
   
-      if (img && name && location && img.src.split('/').pop() != "diamond_dragon.jpg" && img.src.split('/').pop() != "ghost_behemoth.jpg") {
+      if (img && name && location 
+      && img.src.split('/').pop() != "diamond_dragon.jpg" 
+      && img.src.split('/').pop() != "blood_dragon.jpg"  
+      && img.src.split('/').pop() != "supreme_archangel.jpg"
+      && img.src.split('/').pop() != "hell_baron.jpg") {
         result.push({
           name,
           location,
           fileName: "/"+ img.src.split('/').pop(),
+          url
         });
       }
     }
@@ -101,7 +107,7 @@ async function runUnscroll({ username, password, config }) {
     for(const monster of monsterList){
       console.log(monster);
       if (monster.location != previousMap){
-        await teleportMap(monster.location);
+        await teleportMap(monster.location,monster.url);
       }else{
         
         await navigateTo('https://blackdragon.mobi/maps/view');
@@ -112,32 +118,37 @@ async function runUnscroll({ username, password, config }) {
     }
     await autoBossHunt();
   }
-  async function teleportMap(mapName){
+  async function teleportMap(mapName,url){
   
-    await navigateTo('https://blackdragon.mobi/credits/use/id=teleport');
+    await navigateTo(url);
+
     //await waitForElement("body > div.main > div.list.center > form > input");
-    await clickElement("body > div.main > div.list.center > form > input", { waitForNav: true });
+    try{
+      await clickElement("body > div.main > div.list.center > form > input", { waitForNav: true });
+    }catch{
+
+    }
   
-    await page.evaluate((mapName) => {
-      const select = document.querySelector('select[name="map"]');
-      if (!select) return;
+    //await page.evaluate((mapName) => {
+    //  const select = document.querySelector('select[name="map"]');
+    //  if (!select) return;
   
-      for (const option of select.options) {
-        if (option.textContent.trim().startsWith(mapName)) {
-          select.value = option.value;
-          const event = new Event('change', { bubbles: true });
-          select.dispatchEvent(event);
-          break;
-        }
-      }
-    }, mapName); // 👈 Pass mapName into the browser context
+    //  for (const option of select.options) {
+    //    if (option.textContent.trim().startsWith(mapName)) {
+    //      select.value = option.value;
+    //      const event = new Event('change', { bubbles: true });
+    //      select.dispatchEvent(event);
+    //      break;
+    //    }
+    //  }
+    //}, mapName); // 👈 Pass mapName into the browser context
     //await waitForElement("body > div.main > div.block > form > p > input");
     await clickElement("body > div.main > div.block > form > p > input", { waitForNav: true });
   }
   async function selectBoss(bossName) {
     try{
       //await waitForElement('a img[src*="'+bossName+'"]');
-      await clickElement('a img[src*="'+bossName+'"]', { waitForNav: true });
+      await clickElement('a img[src*="'+bossName+'"]', { waitForNav: false });
       await firstAttack();
     }catch{
       return;
@@ -168,11 +179,11 @@ async function runUnscroll({ username, password, config }) {
         }
         // Try to get item quality
         if(config.epicGear){try {
-          //await waitForElement('body > div.main > span:nth-child(16)', 20);
+          await waitForElement('body > div.main > span:nth-child(16)', 20);
           quality = await getTextContent('body > div.main > span:nth-child(16)');
         } catch (error) {
           try {
-            //await waitForElement('body > div.main > span:nth-child(18)', 20);
+            await waitForElement('body > div.main > span:nth-child(18)', 20);
             quality = await getTextContent('body > div.main > span:nth-child(18)');
           } catch {
           // Do nothing
@@ -194,13 +205,14 @@ async function runUnscroll({ username, password, config }) {
           || (config.ancientPotion && nameFull.toLocaleLowerCase().includes("ancient potion"))
         ) {
             process.send && process.send('💎 Valuable loot found!');
-            //await waitForElement('body > div.main > form:nth-child(3) > input',20);
-            await clickElement("body > div.main > form:nth-child(3) > input", { waitForNav: true });
+            //await waitForElement('body > div.main > form:nth-child(3) > input',20);            
+            await waitForElement('body > div.main > form:nth-child(3) > input',20);
+            await clickElement("body > div.main > form:nth-child(3) > input", { waitForNav: false });
             return;
         } else {
           try {
             const xpath = '/html/body/div[4]/form[2]/input';
-            //await page.waitForSelector('xpath//' + xpath, { timeout: 20 });
+            await page.waitForSelector('xpath//' + xpath, { timeout: 20 });
             const [element] = await page.$$('xpath//' + xpath);
             if (!element) throw new Error('Element not found');
             await Promise.all([
@@ -245,7 +257,7 @@ async function runUnscroll({ username, password, config }) {
   }
   // Login
   await navigateTo('https://blackdragon.mobi/');
-  await waitForElement('input[name=username]');
+  await waitForElement('input[name=username]',1000);
   await page.type('input[name=username]', username);
   await waitForElement('input[name=password]');
   await page.type('input[name=password]', password);

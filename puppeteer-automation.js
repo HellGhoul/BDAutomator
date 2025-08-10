@@ -37,7 +37,7 @@ async function runAutomation({ username, password, config }) {
     await new Promise(resolve => setTimeout(resolve, 20));
   }
 
-  async function waitForElement(selector, timeout = 20) {
+  async function  waitForElement(selector, timeout = 20) {
     await checkPaused();
     await page.waitForSelector(selector, { timeout });
     process.send && process.send('waitForElement: ' + selector);
@@ -68,11 +68,11 @@ async function runAutomation({ username, password, config }) {
 
   // Login
   await navigateTo('https://blackdragon.mobi/');
-  await waitForElement('input[name=username]');
+  await waitForElement('input[name=username]',1000);
   await page.type('input[name=username]', username);
-  await waitForElement('input[name=password]');
+  await waitForElement('input[name=password]',1000);
   await page.type('input[name=password]', password);
-  await waitForElement('.button');
+  await waitForElement('.button',10);
   await clickElement('.button', { waitForNav: true });
   process.send && process.send('Logged in');
 
@@ -128,7 +128,7 @@ async function runAutomation({ username, password, config }) {
         ) {
             process.send && process.send('💎 Valuable loot found!');
             await waitForElement('body > div.main > form:nth-child(3) > input',20);
-            await clickElement("body > div.main > form:nth-child(3) > input", { waitForNav: true });
+            await clickElement("body > div.main > form:nth-child(3) > input", { waitForNav: false });
             await choosing();
         } else {
           try {
@@ -159,12 +159,12 @@ async function runAutomation({ username, password, config }) {
   async function firstAttack() {
     process.send && process.send('⚔️ Starting first attack...');
     try {
-      await waitForElement('body > div.main > form > input', 20);
+      //await waitForElement('body > div.main > form > input', 10);
       await clickElement('body > div.main > form > input', { waitForNav: true });
       await nextAttack();
     } catch {
       try {
-        await waitForElement('body > div.main > div.list.small > form > input', 20);
+        //await waitForElement('body > div.main > div.list.small > form > input', 10);
         await clickElement('body > div.main > div.list.small > form > input', { waitForNav: true });
         await firstAttack();
       } catch {
@@ -185,13 +185,13 @@ async function runAutomation({ username, password, config }) {
     if(isTargetmonster){
       try{
         //await navigateTo('https://blackdragon.mobi/maps/view');
-        await clickElement('a img[src*="/hell_hydra.jpg"]', { waitForNav: true });
+        await clickElement('a img[src*="/diamond_dragon.jpg"]', { waitForNav: false });
         await firstAttack();
       }
       catch(error){
         try{
           //await navigateTo('https://blackdragon.mobi/maps/view');
-          await clickElement('a img[src*="/ancient_behemoth.jpg"]', { waitForNav: true });
+          await clickElement('a img[src*="/gold_dragon.jpg"]', { waitForNav: false });
           await firstAttack();
         }catch(error){
           try{
