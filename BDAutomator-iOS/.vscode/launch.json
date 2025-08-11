@@ -1,0 +1,24 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug iOS App",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Debug-iphonesimulator/BDAutomator.app/BDAutomator",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Build iOS App",
+            "stopOnEntry": false,
+            "debugServer": 4711
+        },
+        {
+            "name": "Attach to iOS App",
+            "type": "lldb",
+            "request": "attach",
+            "program": "${workspaceFolder}/build/Debug-iphonesimulator/BDAutomator.app/BDAutomator",
+            "stopOnEntry": false,
+            "debugServer": 4711
+        }
+    ]
+}
