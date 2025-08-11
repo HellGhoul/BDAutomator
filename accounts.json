@@ -27,7 +27,7 @@
       "all": false,
       "recipe": true,
       "charm": false,
-      "pieceGear": false,
+      "pieceGear": true,
       "jewel": false,
       "rune": false,
       "epicGear": false,

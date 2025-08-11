@@ -185,13 +185,13 @@ async function runAutomation({ username, password, config }) {
     if(isTargetmonster){
       try{
         //await navigateTo('https://blackdragon.mobi/maps/view');
-        await clickElement('a img[src*="/diamond_dragon.jpg"]', { waitForNav: false });
+        await clickElement('a img[src*="/ghost_behemoth.jpg"]', { waitForNav: false });
         await firstAttack();
       }
       catch(error){
         try{
           //await navigateTo('https://blackdragon.mobi/maps/view');
-          await clickElement('a img[src*="/gold_dragon.jpg"]', { waitForNav: false });
+          await clickElement('a img[src*="/ancient_behemoth.jpg"]', { waitForNav: false });
           await firstAttack();
         }catch(error){
           try{
