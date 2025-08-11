@@ -69,6 +69,20 @@
     .webview-container {
       border: 2px solid #FFD700;
     }
+    .encyclopedia-card {
+      background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+      border: 1px solid #FFD700;
+      transition: all 0.3s ease;
+    }
+    .encyclopedia-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+    }
+    .encyclopedia-header {
+      background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
+      border: 2px solid #FFD700;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    }
   </style>
 </head>
 <body class="min-h-screen text-rpg-gold p-6">
@@ -76,7 +90,22 @@
     <!-- Header -->
     <div class="text-center mb-8">
       <h1 class="text-4xl font-bold mb-2 text-rpg-gold rpg-glow">⚔️ BDAutomator Account Manager ⚔️</h1>
-      <div class="w-32 h-1 bg-rpg-gold mx-auto rpg-glow"></div>
+      <div class="w-32 h-1 bg-rpg-gold mx-auto rpg-glow mb-6"></div>
+      
+      <!-- Encyclopedia Button -->
+      <div class="encyclopedia-header rounded-lg p-4 mb-6">
+        <div class="flex items-center justify-center space-x-4">
+          <span class="text-2xl">📚</span>
+          <button id="encyclopedia-btn" onclick="openEncyclopedia()" 
+                  class="rpg-button px-8 py-3 rounded-lg text-lg font-bold rpg-glow">
+            📚 Open Encyclopedia
+          </button>
+          <span class="text-2xl">📚</span>
+        </div>
+        <div class="text-sm text-gray-400 mt-2">
+          Crawl game data • Search items • Filter by categories • Build your knowledge base
+        </div>
+      </div>
     </div>
 
     <!-- Account Management Section -->
@@ -135,6 +164,146 @@
     <div class="rpg-border rounded-lg bg-rpg-dark">
       <div id="tab-bar" class="flex border-b border-rpg-gold p-2"></div>
       <div id="tab-content" class="min-h-[600px]"></div>
+    </div>
+  </div>
+
+  <!-- Encyclopedia Modal -->
+  <div id="encyclopedia-modal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50">
+    <div class="min-h-screen flex items-center justify-center p-4">
+      <div class="encyclopedia-header rounded-lg w-full max-w-7xl max-h-[90vh] overflow-hidden">
+        <!-- Encyclopedia Header -->
+        <div class="p-6 border-b border-rpg-gold">
+          <div class="flex items-center justify-between">
+            <h2 class="text-3xl font-bold text-rpg-gold">📚 Game Encyclopedia</h2>
+            <button onclick="closeEncyclopedia()" class="rpg-button px-4 py-2 rounded text-xl">✕</button>
+          </div>
+          <p class="text-gray-400 mt-2">Your comprehensive game knowledge database</p>
+        </div>
+
+        <!-- Encyclopedia Content -->
+        <div class="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+          <!-- Crawling Section -->
+          <div class="mb-8">
+            <h3 class="text-2xl font-bold mb-4 text-rpg-gold">🕷️ Data Crawling</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Crawl Configuration -->
+              <div class="rpg-border rounded-lg p-4 bg-rpg-darker">
+                <h4 class="text-lg font-bold mb-3 text-rpg-gold">Crawl Configuration</h4>
+                <div class="space-y-3">
+                  <div>
+                    <label class="block text-rpg-gold mb-1">Game Account:</label>
+                    <select id="crawl-account" class="w-full p-2 bg-rpg-dark border border-rpg-gold text-rpg-gold rounded">
+                      <option value="">Select an account...</option>
+                    </select>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <label class="flex items-center space-x-2 text-rpg-gold">
+                      <input type="checkbox" id="crawl-items" checked> <span>Items</span>
+                    </label>
+                    <label class="flex items-center space-x-2 text-rpg-gold">
+                      <input type="checkbox" id="crawl-monsters" checked> <span>Monsters</span>
+                    </label>
+                    <label class="flex items-center space-x-2 text-rpg-gold">
+                      <input type="checkbox" id="crawl-skills" checked> <span>Skills</span>
+                    </label>
+                    <label class="flex items-center space-x-2 text-rpg-gold">
+                      <input type="checkbox" id="crawl-quests" checked> <span>Quests</span>
+                    </label>
+                  </div>
+                  <button onclick="startCrawling()" id="start-crawl-btn" 
+                          class="rpg-button w-full py-2 rounded">🚀 Start Crawling</button>
+                </div>
+              </div>
+
+              <!-- Crawl Status -->
+              <div class="rpg-border rounded-lg p-4 bg-rpg-darker">
+                <h4 class="text-lg font-bold mb-3 text-rpg-gold">Crawl Status</h4>
+                <div id="crawl-status" class="space-y-2">
+                  <div class="text-gray-400">No crawling in progress</div>
+                </div>
+                <div id="crawl-progress" class="mt-4 hidden">
+                  <div class="w-full bg-rpg-dark rounded-full h-2">
+                    <div id="progress-bar" class="bg-rpg-gold h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                  </div>
+                  <div class="text-sm text-gray-400 mt-2 text-center">
+                    <span id="progress-text">0%</span> Complete
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Data Query Section -->
+          <div class="mb-8">
+            <h3 class="text-2xl font-bold mb-4 text-rpg-gold">🔍 Data Query</h3>
+            
+            <!-- Search Bar -->
+            <div class="mb-6">
+              <div class="flex space-x-4">
+                <input type="text" id="encyclopedia-search" placeholder="Search encyclopedia..." 
+                       class="flex-1 p-3 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded focus:outline-none focus:rpg-glow">
+                <button onclick="searchEncyclopedia()" class="rpg-button px-6 py-3 rounded">🔍 Search</button>
+              </div>
+            </div>
+
+            <!-- Category Filters -->
+            <div class="mb-6">
+              <div class="flex flex-wrap gap-4">
+                <button onclick="filterEncyclopedia('items')" class="rpg-button px-4 py-2 rounded">📦 Items</button>
+                <button onclick="filterEncyclopedia('monsters')" class="rpg-button px-4 py-2 rounded">👹 Monsters</button>
+                <button onclick="filterEncyclopedia('skills')" class="rpg-button px-4 py-2 rounded">⚡ Skills</button>
+                <button onclick="filterEncyclopedia('quests')" class="rpg-button px-4 py-2 rounded">📋 Quests</button>
+                <button onclick="filterEncyclopedia('recipes')" class="rpg-button px-4 py-2 rounded">📖 Recipes</button>
+                <button onclick="loadAllEncyclopediaData()" class="rpg-button px-4 py-2 rounded">🔄 Refresh All</button>
+              </div>
+            </div>
+
+            <!-- Advanced Filters -->
+            <div class="mb-6">
+              <h4 class="text-lg font-bold mb-3 text-rpg-gold">Advanced Filters</h4>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-rpg-gold mb-1">Item Type:</label>
+                  <select id="filter-item-type" class="w-full p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded">
+                    <option value="">All Types</option>
+                    <option value="weapon">Weapon</option>
+                    <option value="armor">Armor</option>
+                    <option value="consumable">Consumable</option>
+                    <option value="material">Material</option>
+                    <option value="recipe">Recipe</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-rpg-gold mb-1">Rarity:</label>
+                  <select id="filter-rarity" class="w-full p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded">
+                    <option value="">All Rarities</option>
+                    <option value="common">Common</option>
+                    <option value="uncommon">Uncommon</option>
+                    <option value="rare">Rare</option>
+                    <option value="epic">Epic</option>
+                    <option value="legendary">Legendary</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-rpg-gold mb-1">Level Range:</label>
+                  <div class="flex space-x-2">
+                    <input type="number" id="filter-level-min" placeholder="Min" 
+                           class="flex-1 p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded">
+                    <input type="number" id="filter-level-max" placeholder="Max" 
+                           class="flex-1 p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded">
+                  </div>
+                </div>
+              </div>
+              <button onclick="applyAdvancedFilters()" class="rpg-button px-6 py-2 rounded mt-3">Apply Filters</button>
+            </div>
+
+            <!-- Content Display -->
+            <div id="encyclopedia-content" class="min-h-[400px]">
+              <div class="text-center text-gray-400 mt-8">Use search or filters to view encyclopedia data</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 

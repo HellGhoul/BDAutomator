@@ -8,6 +8,15 @@ let webviews = {};
 let activeTab = null;
 let automationState = {}; // { [id]: 'running' | 'paused' | undefined }
 let unscrollState = {}; // { [id]: 'running' | 'paused' | undefined }
+let encyclopediaData = {
+  items: [],
+  monsters: [],
+  skills: [],
+  quests: [],
+  stats: null
+};
+let isCrawling = false;
+let crawlProgress = 0;
 
 function renderAccounts() {
   const list = document.getElementById('account-list');
@@ -63,13 +72,20 @@ function renderTabs() {
   tabBar.innerHTML = '';
   tabContent.innerHTML = '';
 
-  // Only show the terminal/output tab
+  // Terminal/Output tab
   const outputTab = document.createElement('div');
-  outputTab.className = `tab px-4 py-2 rounded-t-lg active`;
+  outputTab.className = `tab px-4 py-2 rounded-t-lg ${activeTab === 'output' ? 'active' : ''}`;
   outputTab.innerHTML = '📜 Terminal/Output';
   outputTab.onclick = () => switchTab('output');
   tabBar.appendChild(outputTab);
 
+  // Render tab content
+  renderOutputTab();
+}
+
+function renderOutputTab() {
+  const tabContent = document.getElementById('tab-content');
+  
   // Terminal tab content (newest logs on top)
   const outDiv = document.createElement('div');
   outDiv.className = 'output p-4 h-[600px] overflow-y-auto';
@@ -110,6 +126,323 @@ async function loadAccounts() {
   }
   renderAccounts();
   renderTabs();
+  
+  // Load initial encyclopedia data
+  await loadAllEncyclopediaData();
+  
+  // Populate crawl account dropdown
+  populateCrawlAccountDropdown();
+}
+
+// Encyclopedia Modal Functions
+window.openEncyclopedia = function() {
+  document.getElementById('encyclopedia-modal').classList.remove('hidden');
+  loadAllEncyclopediaData();
+};
+
+window.closeEncyclopedia = function() {
+  document.getElementById('encyclopedia-modal').classList.add('hidden');
+};
+
+function populateCrawlAccountDropdown() {
+  const dropdown = document.getElementById('crawl-account');
+  if (!dropdown) return;
+  
+  dropdown.innerHTML = '<option value="">Select an account...</option>';
+  accounts.forEach(acc => {
+    const option = document.createElement('option');
+    option.value = acc.id;
+    option.textContent = acc.username;
+    dropdown.appendChild(option);
+  });
+}
+
+window.startCrawling = async function() {
+  const accountId = document.getElementById('crawl-account').value;
+  if (!accountId) {
+    alert('Please select an account to use for crawling');
+    return;
+  }
+
+  const account = accounts.find(a => a.id === accountId);
+  if (!account) {
+    alert('Selected account not found');
+    return;
+  }
+
+  // Get crawl options
+  const crawlOptions = {
+    items: document.getElementById('crawl-items').checked,
+    monsters: document.getElementById('crawl-monsters').checked,
+    skills: document.getElementById('crawl-skills').checked,
+    quests: document.getElementById('crawl-quests').checked
+  };
+
+  // Check if at least one option is selected
+  if (!Object.values(crawlOptions).some(v => v)) {
+    alert('Please select at least one data type to crawl');
+    return;
+  }
+
+  try {
+    isCrawling = true;
+    crawlProgress = 0;
+    updateCrawlUI();
+    
+    // Start encyclopedia crawling
+    await ipcRenderer.invoke('start-encyclopedia-crawl', account, crawlOptions);
+    
+    // Update UI
+    document.getElementById('start-crawl-btn').disabled = true;
+    document.getElementById('start-crawl-btn').textContent = '🕷️ Crawling...';
+    
+  } catch (error) {
+    console.error('Error starting crawl:', error);
+    alert('Failed to start crawling: ' + error.message);
+    isCrawling = false;
+    updateCrawlUI();
+  }
+};
+
+function updateCrawlUI() {
+  const statusDiv = document.getElementById('crawl-status');
+  const progressDiv = document.getElementById('crawl-progress');
+  const startBtn = document.getElementById('start-crawl-btn');
+  
+  if (isCrawling) {
+    statusDiv.innerHTML = `
+      <div class="text-green-400">🕷️ Crawling in progress...</div>
+      <div class="text-sm text-gray-400">Gathering game data...</div>
+    `;
+    progressDiv.classList.remove('hidden');
+    startBtn.disabled = true;
+    startBtn.textContent = '🕷️ Crawling...';
+  } else {
+    statusDiv.innerHTML = `
+      <div class="text-gray-400">No crawling in progress</div>
+    `;
+    progressDiv.classList.add('hidden');
+    startBtn.disabled = false;
+    startBtn.textContent = '🚀 Start Crawling';
+  }
+}
+
+function updateCrawlProgress(progress) {
+  crawlProgress = progress;
+  const progressBar = document.getElementById('progress-bar');
+  const progressText = document.getElementById('progress-text');
+  
+  if (progressBar && progressText) {
+    progressBar.style.width = `${progress}%`;
+    progressText.textContent = `${progress}%`;
+  }
+}
+
+// Encyclopedia functions
+window.searchEncyclopedia = async function() {
+  const query = document.getElementById('encyclopedia-search').value.trim();
+  if (!query) return;
+
+  try {
+    const results = await ipcRenderer.invoke('search-encyclopedia', query);
+    displayEncyclopediaResults(results, `Search results for: "${query}"`);
+  } catch (error) {
+    console.error('Search error:', error);
+  }
+};
+
+window.filterEncyclopedia = async function(type) {
+  try {
+    let data = [];
+    let title = '';
+    
+    switch (type) {
+      case 'items':
+        data = await ipcRenderer.invoke('get-encyclopedia-items');
+        title = 'Items';
+        break;
+      case 'monsters':
+        data = await ipcRenderer.invoke('get-encyclopedia-monsters');
+        title = 'Monsters';
+        break;
+      case 'skills':
+        data = await ipcRenderer.invoke('get-encyclopedia-skills');
+        title = 'Skills';
+        break;
+      case 'quests':
+        data = await ipcRenderer.invoke('get-encyclopedia-quests');
+        title = 'Quests';
+        break;
+      case 'recipes':
+        data = await ipcRenderer.invoke('get-encyclopedia-items', { type: 'recipe' });
+        title = 'Recipes';
+        break;
+    }
+    
+    displayEncyclopediaResults({ [type]: data }, title);
+  } catch (error) {
+    console.error('Filter error:', error);
+  }
+};
+
+window.applyAdvancedFilters = async function() {
+  try {
+    const itemType = document.getElementById('filter-item-type').value;
+    const rarity = document.getElementById('filter-rarity').value;
+    const levelMin = document.getElementById('filter-level-min').value;
+    const levelMax = document.getElementById('filter-level-max').value;
+    
+    const filters = {};
+    if (itemType) filters.type = itemType;
+    if (rarity) filters.rarity = rarity;
+    if (levelMin) filters.levelMin = parseInt(levelMin);
+    if (levelMax) filters.levelMax = parseInt(levelMax);
+    
+    const data = await ipcRenderer.invoke('get-encyclopedia-items', filters);
+    displayEncyclopediaResults({ items: data }, `Filtered Items (${data.length})`);
+  } catch (error) {
+    console.error('Advanced filter error:', error);
+  }
+};
+
+window.loadAllEncyclopediaData = async function() {
+  try {
+    const [items, monsters, skills, quests, stats] = await Promise.all([
+      ipcRenderer.invoke('get-encyclopedia-items'),
+      ipcRenderer.invoke('get-encyclopedia-monsters'),
+      ipcRenderer.invoke('get-encyclopedia-skills'),
+      ipcRenderer.invoke('get-encyclopedia-quests'),
+      ipcRenderer.invoke('get-encyclopedia-stats')
+    ]);
+    
+    encyclopediaData = { items, monsters, skills, quests, stats };
+  } catch (error) {
+    console.error('Error loading encyclopedia data:', error);
+  }
+};
+
+function displayEncyclopediaResults(results, title) {
+  const contentSection = document.getElementById('encyclopedia-content');
+  if (!contentSection) return;
+
+  let html = `<h3 class="text-2xl font-bold mb-4 text-rpg-gold">${title}</h3>`;
+  
+  if (results.items && results.items.length > 0) {
+    html += renderItemsGrid(results.items);
+  }
+  if (results.monsters && results.monsters.length > 0) {
+    html += renderMonstersGrid(results.monsters);
+  }
+  if (results.skills && results.skills.length > 0) {
+    html += renderSkillsGrid(results.skills);
+  }
+  if (results.quests && results.quests.length > 0) {
+    html += renderQuestsGrid(results.quests);
+  }
+  
+  if (results.total === 0 || (!results.items && !results.monsters && !results.skills && !results.quests)) {
+    html = '<div class="text-center text-gray-400 mt-8">No results found</div>';
+  }
+  
+  contentSection.innerHTML = html;
+}
+
+function renderItemsGrid(items) {
+  return `
+    <div class="mb-6">
+      <h4 class="text-xl font-bold mb-3 text-rpg-gold">Items (${items.length})</h4>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        ${items.map(item => `
+          <div class="encyclopedia-card p-4 rounded-lg">
+            <div class="flex items-center space-x-3 mb-2">
+              <span class="text-2xl">📦</span>
+              <h5 class="font-bold text-rpg-gold">${item.name}</h5>
+            </div>
+            <div class="text-sm space-y-1">
+              <p><span class="text-gray-400">Type:</span> ${item.type}</p>
+              <p><span class="text-gray-400">Rarity:</span> ${item.rarity}</p>
+              <p><span class="text-gray-400">Level:</span> ${item.level}</p>
+              ${item.description ? `<p class="text-gray-300">${item.description}</p>` : ''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function renderMonstersGrid(monsters) {
+  return `
+    <div class="mb-6">
+      <h4 class="text-xl font-bold mb-3 text-rpg-gold">Monsters (${monsters.length})</h4>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        ${monsters.map(monster => `
+          <div class="encyclopedia-card p-4 rounded-lg">
+            <div class="flex items-center space-x-3 mb-2">
+              <span class="text-2xl">👹</span>
+              <h5 class="font-bold text-rpg-gold">${monster.name}</h5>
+            </div>
+            <div class="text-sm space-y-1">
+              <p><span class="text-gray-400">Level:</span> ${monster.level}</p>
+              <p><span class="text-gray-400">HP:</span> ${monster.hp}</p>
+              <p><span class="text-gray-400">Attack:</span> ${monster.attack}</p>
+              <p><span class="text-gray-400">Defense:</span> ${monster.defense}</p>
+              <p><span class="text-gray-400">Location:</span> ${monster.location}</p>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function renderSkillsGrid(skills) {
+  return `
+    <div class="mb-6">
+      <h4 class="text-xl font-bold mb-3 text-rpg-gold">Skills (${skills.length})</h4>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        ${skills.map(skill => `
+          <div class="encyclopedia-card p-4 rounded-lg">
+            <div class="flex items-center space-x-3 mb-2">
+              <span class="text-2xl">⚡</span>
+              <h5 class="font-bold text-rpg-gold">${skill.name}</h5>
+            </div>
+            <div class="text-sm space-y-1">
+              <p><span class="text-gray-400">Type:</span> ${skill.type}</p>
+              <p><span class="text-gray-400">Level:</span> ${skill.level}</p>
+              <p><span class="text-gray-400">Cooldown:</span> ${skill.cooldown}s</p>
+              ${skill.description ? `<p class="text-gray-300">${skill.description}</p>` : ''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function renderQuestsGrid(quests) {
+  return `
+    <div class="mb-6">
+      <h4 class="text-xl font-bold mb-3 text-rpg-gold">Quests (${quests.length})</h4>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        ${quests.map(quest => `
+          <div class="encyclopedia-card p-4 rounded-lg">
+            <div class="flex items-center space-x-3 mb-2">
+              <span class="text-2xl">📋</span>
+              <h5 class="font-bold text-rpg-gold">${quest.name}</h5>
+            </div>
+            <div class="text-sm space-y-1">
+              <p><span class="text-gray-400">Type:</span> ${quest.type}</p>
+              <p><span class="text-gray-400">Level Req:</span> ${quest.level_requirement}</p>
+              <p><span class="text-gray-400">NPC:</span> ${quest.npc}</p>
+              <p><span class="text-gray-400">Location:</span> ${quest.location}</p>
+              ${quest.description ? `<p class="text-gray-300">${quest.description}</p>` : ''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
 }
 
 // Add helper to get config from form
@@ -129,6 +462,7 @@ function getConfigFromForm() {
     itemList: document.getElementById('config-itemList').value.trim()
   };
 }
+
 // Add helper to set form from config
 function setConfigToForm(config) {
   document.getElementById('config-all').checked = !!config.all;
@@ -296,6 +630,25 @@ ipcRenderer.on('unscroll-exit', (event, { accountId }) => {
   renderAccounts();
   renderTabs();
   appendOutput(accountId, '[Unscroll] Unscroll process ended.\n');
+});
+
+// Listen for encyclopedia output
+ipcRenderer.on('encyclopedia-log', (event, { accountId, log, stats, sessionId }) => {
+  appendOutput(accountId, `[Encyclopedia] ${log}\n`);
+  
+  // Update crawl progress if this is from encyclopedia
+  if (log.includes('completed') || log.includes('successfully')) {
+    isCrawling = false;
+    updateCrawlUI();
+    // Refresh encyclopedia data
+    loadAllEncyclopediaData();
+  }
+});
+
+ipcRenderer.on('encyclopedia-exit', (event, { accountId }) => {
+  isCrawling = false;
+  updateCrawlUI();
+  appendOutput(accountId, '[Encyclopedia] Encyclopedia crawling process ended.\n');
 });
 
 // Listen for webview execution commands
