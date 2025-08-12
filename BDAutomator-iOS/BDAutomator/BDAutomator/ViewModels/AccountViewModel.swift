@@ -3,10 +3,10 @@ import Combine
 import CoreData
 
 class AccountViewModel: ObservableObject {
-    @Published var accounts: [Account] = []
-    @Published var selectedAccount: Account?
+    @Published var accounts: [NSManagedObject] = []
+    @Published var selectedAccount: NSManagedObject?
     @Published var isAddingAccount = false
-    @Published var editingAccount: Account?
+    @Published var editingAccount: NSManagedObject?
     
     private let coreDataManager = CoreDataManager.shared
     private var cancellables = Set<AnyCancellable>()
@@ -27,36 +27,38 @@ class AccountViewModel: ObservableObject {
         isAddingAccount = false
     }
     
-    func updateAccount(_ account: Account, username: String, password: String, config: [String: Any]) {
-        account.username = username
-        account.password = password
+    func updateAccount(_ account: NSManagedObject, username: String, password: String, config: [String: Any]) {
+        account.setValue(username, forKey: "username")
+        account.setValue(password, forKey: "password")
         
-        account.config.all = config["all"] as? Bool ?? false
-        account.config.recipe = config["recipe"] as? Bool ?? false
-        account.config.charm = config["charm"] as? Bool ?? false
-        account.config.pieceGear = config["pieceGear"] as? Bool ?? false
-        account.config.jewel = config["jewel"] as? Bool ?? false
-        account.config.rune = config["rune"] as? Bool ?? false
-        account.config.epicGear = config["epicGear"] as? Bool ?? false
-        account.config.magicScroll = config["magicScroll"] as? Bool ?? false
-        account.config.monsterScroll = config["monsterScroll"] as? Bool ?? false
-        account.config.staminaPotion = config["staminaPotion"] as? Bool ?? false
-        account.config.ancientPotion = config["ancientPotion"] as? Bool ?? false
-        account.config.itemList = config["itemList"] as? String ?? ""
+        if let accountConfig = account.value(forKey: "config") as? NSManagedObject {
+            accountConfig.setValue(config["all"] as? Bool ?? false, forKey: "all")
+            accountConfig.setValue(config["recipe"] as? Bool ?? false, forKey: "recipe")
+            accountConfig.setValue(config["charm"] as? Bool ?? false, forKey: "charm")
+            accountConfig.setValue(config["pieceGear"] as? Bool ?? false, forKey: "pieceGear")
+            accountConfig.setValue(config["jewel"] as? Bool ?? false, forKey: "jewel")
+            accountConfig.setValue(config["rune"] as? Bool ?? false, forKey: "rune")
+            accountConfig.setValue(config["epicGear"] as? Bool ?? false, forKey: "epicGear")
+            accountConfig.setValue(config["magicScroll"] as? Bool ?? false, forKey: "magicScroll")
+            accountConfig.setValue(config["monsterScroll"] as? Bool ?? false, forKey: "monsterScroll")
+            accountConfig.setValue(config["staminaPotion"] as? Bool ?? false, forKey: "staminaPotion")
+            accountConfig.setValue(config["ancientPotion"] as? Bool ?? false, forKey: "ancientPotion")
+            accountConfig.setValue(config["itemList"] as? String ?? "", forKey: "itemList")
+        }
         
         coreDataManager.save()
         editingAccount = nil
         loadAccounts()
     }
     
-    func deleteAccount(_ account: Account) {
+    func deleteAccount(_ account: NSManagedObject) {
         if let index = accounts.firstIndex(of: account) {
             accounts.remove(at: index)
             coreDataManager.deleteAccount(account)
         }
     }
     
-    func selectAccount(_ account: Account) {
+    func selectAccount(_ account: NSManagedObject) {
         selectedAccount = account
     }
     
@@ -79,33 +81,34 @@ class AccountViewModel: ObservableObject {
         ]
     }
     
-    func getConfigFromAccount(_ account: Account) -> [String: Any] {
-        guard let config = account.config else { return getDefaultConfig() }
+    func getConfigFromAccount(_ account: NSManagedObject) -> [String: Any] {
+        guard let config = account.value(forKey: "config") as? NSManagedObject else { return getDefaultConfig() }
         
         return [
-            "all": config.all,
-            "recipe": config.recipe,
-            "charm": config.charm,
-            "pieceGear": config.pieceGear,
-            "jewel": config.jewel,
-            "rune": config.rune,
-            "epicGear": config.epicGear,
-            "magicScroll": config.magicScroll,
-            "monsterScroll": config.monsterScroll,
-            "staminaPotion": config.staminaPotion,
-            "ancientPotion": config.ancientPotion,
-            "itemList": config.itemList
+            "all": config.value(forKey: "all") as? Bool ?? false,
+            "recipe": config.value(forKey: "recipe") as? Bool ?? false,
+            "charm": config.value(forKey: "charm") as? Bool ?? false,
+            "pieceGear": config.value(forKey: "pieceGear") as? Bool ?? false,
+            "jewel": config.value(forKey: "jewel") as? Bool ?? false,
+            "rune": config.value(forKey: "rune") as? Bool ?? false,
+            "epicGear": config.value(forKey: "epicGear") as? Bool ?? false,
+            "magicScroll": config.value(forKey: "magicScroll") as? Bool ?? false,
+            "monsterScroll": config.value(forKey: "monsterScroll") as? Bool ?? false,
+            "staminaPotion": config.value(forKey: "staminaPotion") as? Bool ?? false,
+            "ancientPotion": config.value(forKey: "ancientPotion") as? Bool ?? false,
+            "itemList": config.value(forKey: "itemList") as? String ?? ""
         ]
     }
     
     // MARK: - Account Status
     
-    func getAccountStatus(_ account: Account) -> String {
-        return account.automationStatus
+    func getAccountStatus(_ account: NSManagedObject) -> String {
+        return account.value(forKey: "automationStatus") as? String ?? "stopped"
     }
     
-    func getAccountStatusColor(_ account: Account) -> String {
-        switch account.automationStatus {
+    func getAccountStatusColor(_ account: NSManagedObject) -> String {
+        let status = getAccountStatus(account)
+        switch status {
         case "running":
             return "green"
         case "paused":
@@ -124,9 +127,21 @@ class AccountViewModel: ObservableObject {
                !password.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
     
-    func isUsernameTaken(_ username: String, excluding account: Account? = nil) -> Bool {
+    func isUsernameTaken(_ username: String, excluding currentAccount: NSManagedObject? = nil) -> Bool {
         return accounts.contains { account in
-            account.username.lowercased() == username.lowercased() && account != excluding
+            let accountUsername = account.value(forKey: "username") as? String ?? ""
+            return accountUsername.lowercased() == username.lowercased() && account != currentAccount
         }
     }
+    
+    // MARK: - Helper Methods
+    
+    func getAccountUsername(_ account: NSManagedObject) -> String {
+        return account.value(forKey: "username") as? String ?? ""
+    }
+    
+    func getAccountLastLogin(_ account: NSManagedObject) -> Date? {
+        return account.value(forKey: "lastLogin") as? Date
+    }
 }
+

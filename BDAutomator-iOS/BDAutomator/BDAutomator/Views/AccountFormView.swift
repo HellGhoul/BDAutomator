@@ -2,7 +2,7 @@ import SwiftUI
 
 enum AccountFormMode {
     case add
-    case edit(Account)
+    case edit(NSManagedObject)
 }
 
 struct AccountFormView: View {
@@ -45,8 +45,8 @@ struct AccountFormView: View {
                     endPoint: .bottomTrailing
                 )
             )
+            .navigationTitle(mode == .add ? "Add New Warrior" : "Edit Warrior")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {
@@ -68,11 +68,11 @@ struct AccountFormView: View {
     
     private var headerView: some View {
         VStack(spacing: 8) {
-            Image(systemName: mode == .add ? "person.badge.plus" : "person.badge.gear")
+            Image(systemName: isAddMode ? "person.badge.plus" : "person.badge.gear")
                 .font(.largeTitle)
                 .foregroundColor(.yellow)
             
-            Text(mode == .add ? "Add New Warrior" : "Edit Warrior")
+            Text(isAddMode ? "Add New Warrior" : "Edit Warrior")
                 .font(.title2)
                 .fontWeight(.bold)
                 .foregroundColor(.yellow)
@@ -144,8 +144,8 @@ struct AccountFormView: View {
         VStack(spacing: 12) {
             Button(action: saveAccount) {
                 HStack {
-                    Image(systemName: mode == .add ? "plus.circle.fill" : "checkmark.circle.fill")
-                    Text(mode == .add ? "Add Warrior" : "Update Warrior")
+                    Image(systemName: isAddMode ? "plus.circle.fill" : "checkmark.circle.fill")
+                    Text(isAddMode ? "Add Warrior" : "Update Warrior")
                         .fontWeight(.semibold)
                 }
                 .foregroundColor(.black)
@@ -162,7 +162,7 @@ struct AccountFormView: View {
                 .shadow(color: .yellow.opacity(0.3), radius: 4)
             }
             
-            if mode == .edit {
+            if !isAddMode {
                 Button(action: { dismiss() }) {
                     Text("Cancel")
                         .fontWeight(.medium)
@@ -181,13 +181,20 @@ struct AccountFormView: View {
     
     // MARK: - Helper Methods
     
+    private var isAddMode: Bool {
+        if case .add = mode {
+            return true
+        }
+        return false
+    }
+    
     private func setupForm() {
         switch mode {
         case .add:
             config = accountViewModel.getDefaultConfig()
         case .edit(let account):
-            username = account.username
-            password = account.password
+            username = accountViewModel.getAccountUsername(account)
+            password = account.value(forKey: "password") as? String ?? ""
             config = accountViewModel.getConfigFromAccount(account)
         }
     }
@@ -214,7 +221,7 @@ struct AccountFormView: View {
             return
         }
         
-        if case .add = mode {
+        if isAddMode {
             if accountViewModel.isUsernameTaken(username) {
                 validationMessage = "Username already exists"
                 showingValidationAlert = true
@@ -295,6 +302,5 @@ struct AccountFormView_Previews: PreviewProvider {
             accountViewModel: AccountViewModel(),
             mode: .add
         )
-        .preferredColorScheme(.dark)
     }
 }

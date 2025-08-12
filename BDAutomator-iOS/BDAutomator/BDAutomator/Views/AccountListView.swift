@@ -4,14 +4,14 @@ struct AccountListView: View {
     @ObservedObject var accountViewModel: AccountViewModel
     @ObservedObject var automationService: WebKitAutomationService
     @State private var showingAddAccount = false
-    @State private var showingEditAccount: Account?
+    @State private var showingEditAccount: NSManagedObject?
     
     var body: some View {
         VStack(spacing: 16) {
             // Account List
             ScrollView {
                 LazyVStack(spacing: 12) {
-                    ForEach(accountViewModel.accounts, id: \.id) { account in
+                    ForEach(accountViewModel.accounts, id: \.self) { account in
                         AccountCard(
                             account: account,
                             accountViewModel: accountViewModel,
@@ -62,7 +62,7 @@ struct AccountListView: View {
 }
 
 struct AccountCard: View {
-    let account: Account
+    let account: NSManagedObject
     @ObservedObject var accountViewModel: AccountViewModel
     @ObservedObject var automationService: WebKitAutomationService
     let onEdit: () -> Void
@@ -72,12 +72,12 @@ struct AccountCard: View {
             // Header
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(account.username)
+                    Text(accountViewModel.getAccountUsername(account))
                         .font(.title3)
                         .fontWeight(.bold)
                         .foregroundColor(.yellow)
                     
-                    Text("Last Login: \(account.lastLogin?.formatted() ?? "Never")")
+                    Text("Last Login: \(accountViewModel.getAccountLastLogin(account)?.formatted() ?? "Never")")
                         .font(.caption)
                         .foregroundColor(.gray)
                 }
@@ -95,7 +95,7 @@ struct AccountCard: View {
             }
             
             // Configuration Summary
-            if let config = account.config {
+            if let config = account.value(forKey: "config") as? NSManagedObject {
                 ConfigurationSummaryView(config: config)
             }
             
@@ -159,7 +159,8 @@ struct AccountCard: View {
     }
     
     private var statusColor: Color {
-        switch account.automationStatus {
+        let status = accountViewModel.getAccountStatus(account)
+        switch status {
         case "running":
             return .green
         case "paused":
@@ -177,7 +178,7 @@ struct AccountCard: View {
 }
 
 struct ConfigurationSummaryView: View {
-    let config: AccountConfig
+    let config: NSManagedObject
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -187,15 +188,15 @@ struct ConfigurationSummaryView: View {
                 .foregroundColor(.yellow)
             
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 3), spacing: 4) {
-                ConfigItemView(name: "Recipe", isEnabled: config.recipe)
-                ConfigItemView(name: "Charm", isEnabled: config.charm)
-                ConfigItemView(name: "Gear", isEnabled: config.pieceGear)
-                ConfigItemView(name: "Jewel", isEnabled: config.jewel)
-                ConfigItemView(name: "Rune", isEnabled: config.rune)
-                ConfigItemView(name: "Epic", isEnabled: config.epicGear)
-                ConfigItemView(name: "Scroll", isEnabled: config.magicScroll)
-                ConfigItemView(name: "Monster", isEnabled: config.monsterScroll)
-                ConfigItemView(name: "Potion", isEnabled: config.staminaPotion)
+                ConfigItemView(name: "Recipe", isEnabled: config.value(forKey: "recipe") as? Bool ?? false)
+                ConfigItemView(name: "Charm", isEnabled: config.value(forKey: "charm") as? Bool ?? false)
+                ConfigItemView(name: "Gear", isEnabled: config.value(forKey: "pieceGear") as? Bool ?? false)
+                ConfigItemView(name: "Jewel", isEnabled: config.value(forKey: "jewel") as? Bool ?? false)
+                ConfigItemView(name: "Rune", isEnabled: config.value(forKey: "rune") as? Bool ?? false)
+                ConfigItemView(name: "Epic", isEnabled: config.value(forKey: "epicGear") as? Bool ?? false)
+                ConfigItemView(name: "Scroll", isEnabled: config.value(forKey: "magicScroll") as? Bool ?? false)
+                ConfigItemView(name: "Monster", isEnabled: config.value(forKey: "monsterScroll") as? Bool ?? false)
+                ConfigItemView(name: "Potion", isEnabled: config.value(forKey: "staminaPotion") as? Bool ?? false)
             }
         }
     }

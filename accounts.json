@@ -28,7 +28,7 @@
       "recipe": true,
       "charm": false,
       "pieceGear": true,
-      "jewel": false,
+      "jewel": true,
       "rune": false,
       "epicGear": false,
       "magicScroll": false,

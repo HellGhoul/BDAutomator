@@ -3,7 +3,7 @@ import WebKit
 
 struct AutomationView: View {
     @ObservedObject var automationService: WebKitAutomationService
-    let selectedAccount: Account?
+    let selectedAccount: NSManagedObject?
     
     @State private var webView: WKWebView?
     @State private var showingWebView = false
@@ -69,7 +69,7 @@ struct AutomationView: View {
                             .font(.caption)
                             .foregroundColor(.gray)
                         
-                        Text(account.username)
+                        Text(account.value(forKey: "username") as? String ?? "Unknown")
                             .font(.headline)
                             .foregroundColor(.yellow)
                     }
@@ -389,6 +389,7 @@ struct WebViewContainer: View {
     }
 }
 
+#if os(iOS)
 struct WebViewRepresentable: UIViewRepresentable {
     let webView: WKWebView
     
@@ -400,6 +401,19 @@ struct WebViewRepresentable: UIViewRepresentable {
         // No updates needed
     }
 }
+#elseif os(macOS)
+struct WebViewRepresentable: NSViewRepresentable {
+    let webView: WKWebView
+    
+    func makeNSView(context: Context) -> WKWebView {
+        return webView
+    }
+    
+    func updateNSView(_ nsView: WKWebView, context: Context) {
+        // No updates needed
+    }
+}
+#endif
 
 struct AutomationView_Previews: PreviewProvider {
     static var previews: some View {
@@ -407,6 +421,5 @@ struct AutomationView_Previews: PreviewProvider {
             automationService: WebKitAutomationService(),
             selectedAccount: nil
         )
-        .preferredColorScheme(.dark)
     }
 }

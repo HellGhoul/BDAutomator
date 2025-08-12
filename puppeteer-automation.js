@@ -181,7 +181,7 @@ async function runAutomation({ username, password, config }) {
 
   async function choosing() {
     //
-    var isTargetmonster = false;
+    var isTargetmonster = true;
     if(isTargetmonster){
       try{
         //await navigateTo('https://blackdragon.mobi/maps/view');

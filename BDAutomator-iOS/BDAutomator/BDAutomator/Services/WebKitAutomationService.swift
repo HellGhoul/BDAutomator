@@ -9,7 +9,7 @@ class WebKitAutomationService: NSObject, ObservableObject {
     
     private var webView: WKWebView?
     private var automationTimer: Timer?
-    private var currentAccount: Account?
+    private var currentAccount: NSManagedObject?
     private var collectibles: [String] = []
     
     // MARK: - Initialization
@@ -30,8 +30,11 @@ class WebKitAutomationService: NSObject, ObservableObject {
     
     func setupWebView() -> WKWebView {
         let configuration = WKWebViewConfiguration()
+        
+        #if os(iOS)
         configuration.allowsInlineMediaPlayback = true
         configuration.mediaTypesRequiringUserActionForPlayback = []
+        #endif
         
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = self
@@ -51,14 +54,15 @@ class WebKitAutomationService: NSObject, ObservableObject {
     
     // MARK: - Automation Control
     
-    func startAutomation(for account: Account) {
+    func startAutomation(for account: NSManagedObject) {
         guard !isRunning else { return }
         
         currentAccount = account
         isRunning = true
         currentStatus = "Starting automation..."
         
-        addLog("🚀 Starting automation for \(account.username)")
+        let username = account.value(forKey: "username") as? String ?? "Unknown"
+        addLog("🚀 Starting automation for \(username)")
         
         // Navigate to game
         let url = URL(string: "https://blackdragon.mobi/")!
@@ -117,9 +121,12 @@ class WebKitAutomationService: NSObject, ObservableObject {
         
         addLog("🔐 Logging in...")
         
+        let username = account.value(forKey: "username") as? String ?? ""
+        let password = account.value(forKey: "password") as? String ?? ""
+        
         let loginScript = """
-        document.querySelector('input[name=username]').value = '\(account.username)';
-        document.querySelector('input[name=password]').value = '\(account.password)';
+        document.querySelector('input[name=username]').value = '\(username)';
+        document.querySelector('input[name=password]').value = '\(password)';
         document.querySelector('.button').click();
         """
         

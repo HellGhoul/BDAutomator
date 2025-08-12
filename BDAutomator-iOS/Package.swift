@@ -20,6 +20,7 @@ let package = Package(
             path: "BDAutomator/BDAutomator"),
         .testTarget(
             name: "BDAutomatorTests",
-            dependencies: ["BDAutomator"]),
+            dependencies: ["BDAutomator"],
+            path: "Tests/BDAutomatorTests"),
     ]
 )
