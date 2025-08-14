@@ -14,17 +14,17 @@ function checkPaused() {
 }
 
 async function runUnscroll({ username, password, config }) {
-  process.send && process.send('Received boss hunt config: ' + JSON.stringify(config));
+  //process.send && process.send('Received boss hunt config: ' + JSON.stringify(config));
   const browser = await puppeteer.launch({ headless: false, ignoreHTTPSErrors: true });
   const page = await browser.newPage();
-  process.send && process.send('Browser launched for boss hunt');
+  //process.send && process.send('Browser launched for boss hunt');
 
 
   // Helper functions
   async function navigateTo(url) {
     await checkPaused();
     await page.goto(url, { waitUntil: 'networkidle2' });
-    process.send && process.send('Navigated to ' + url);
+    //process.send && process.send('Navigated to ' + url);
     await new Promise(resolve => setTimeout(resolve, 20));
   }
 
@@ -50,7 +50,7 @@ async function runUnscroll({ username, password, config }) {
     const el = await page.$(selector);
     if (!el) return '';
     const text = await page.evaluate(el => el.textContent, el);
-    process.send && process.send('getTextContent: ' + selector + ' => ' + text);
+    //process.send && process.send('getTextContent: ' + selector + ' => ' + text);
     return text;
   }
   async function getBossList(){
@@ -61,7 +61,7 @@ async function runUnscroll({ username, password, config }) {
     const monsterElements = Array.from(document.querySelectorAll('div.list'));
     const result = [];
   
-    for (const el of monsterElements) {
+    for (const el of monsterElements.reverse()) {
       const img = el.querySelector('img.round');
       const name = el.querySelector('strong')?.innerText?.trim();
       const url = el.querySelector('a')?.href?.trim();
@@ -90,6 +90,7 @@ async function runUnscroll({ username, password, config }) {
           fileName: "/"+ img.src.split('/').pop(),
           url
         });
+        break;
       }
     }
 
@@ -115,6 +116,7 @@ async function runUnscroll({ username, password, config }) {
       previousMap = monster.location;
       
       await selectBoss(monster.fileName);
+      break;
     }
     await autoBossHunt();
   }
@@ -156,26 +158,26 @@ async function runUnscroll({ username, password, config }) {
   }
 
   async function nextAttack() {
-    process.send && process.send('⚔️ Processing battle result...');
+    //process.send && process.send('⚔️ Processing battle result...');
     try {
       await waitForElement('body > div.main > strong',20);
       const text = await getTextContent('body > div.main > strong');
       if ((text && text.includes('Congratulations! You won the battle!')) || (text && text.includes('You lost the battle.'))) {
-        process.send && process.send('🔄 Battle ended, continuing...');
+        //process.send && process.send('🔄 Battle ended, continuing...');
         //await waitForElement('body > div.main > form > input',20);
         await clickElement('body > div.main > form > input', { waitForNav: true });
         await nextAttack();
       } else if (text && text.includes('Congratulations! You KILLED')) {
-        process.send && process.send('💀 Monster killed!');
+        //process.send && process.send('💀 Monster killed!');
         let nameFull = '';
         let quality = '';
         // Try to get item name
         try {
           await waitForElement('body > div.main > a', 20);
           nameFull = await getTextContent('body > div.main > a');
-          process.send && process.send(nameFull);
+          //process.send && process.send(nameFull);
         } catch (error) {
-          process.send && process.send('No loot link found');
+          //process.send && process.send('No loot link found');
         }
         // Try to get item quality
         if(config.epicGear){try {
@@ -197,17 +199,17 @@ async function runUnscroll({ username, password, config }) {
           || (config.recipe && nameFull.toLocaleLowerCase().includes("recipe"))
           || (config.charm && nameFull.toLocaleLowerCase().includes("charm"))
           || (config.jewel && (nameFull.toLocaleLowerCase().includes("jewel")||nameFull.toLocaleLowerCase().includes("elixir")))
-          || (config.rune && (nameFull.toLocaleLowerCase().includes("rune ")||nameFull.toLocaleLowerCase().includes("level ")))
+          || (config.rune && (nameFull.toLocaleLowerCase().includes("rune ")))//||nameFull.toLocaleLowerCase().includes("level ")))
           || (config.epicGear && (nameFull.toLocaleLowerCase().includes("(vi)")||nameFull.toLocaleLowerCase().includes("(v)")||quality.toLocaleLowerCase().includes("epic")||quality.toLocaleLowerCase().includes("mythic")||quality.toLocaleLowerCase().includes("heroic")))
           || (config.magicScroll && nameFull.toLocaleLowerCase().includes("magic scroll"))
           || (config.monsterScroll && nameFull.toLocaleLowerCase().includes("s magic scroll"))
           || (config.staminaPotion && nameFull.toLocaleLowerCase().includes("stamina potion"))
           || (config.ancientPotion && nameFull.toLocaleLowerCase().includes("ancient potion"))
         ) {
-            process.send && process.send('💎 Valuable loot found!');
+            process.send && process.send('💎 Found:' + nameFull);
             //await waitForElement('body > div.main > form:nth-child(3) > input',20);            
-            await waitForElement('body > div.main > form:nth-child(3) > input',20);
-            await clickElement("body > div.main > form:nth-child(3) > input", { waitForNav: false });
+            //await waitForElement('body > div.main > form:nth-child(3) > input',20);
+            await clickElement("body > div.main > form:nth-child(3) > input", { waitForNav: true });
             return;
         } else {
           try {
@@ -223,7 +225,7 @@ async function runUnscroll({ username, password, config }) {
             return;
 
           } catch (e) {
-            process.send && process.send('Error with XPath! ' + e);
+            //process.send && process.send('Error with XPath! ' + e);
             // Optionally handle the case where the XPath is not found
           }
         }
@@ -234,7 +236,7 @@ async function runUnscroll({ username, password, config }) {
   }
 
   async function firstAttack() {
-    process.send && process.send('⚔️ Starting first attack...');
+    //process.send && process.send('⚔️ Starting first attack...');
     try {
       //await waitForElement('body > div.main > form > input', 20);
       await clickElement('body > div.main > form > input', { waitForNav: true });
@@ -249,7 +251,7 @@ async function runUnscroll({ username, password, config }) {
           await nextAttack();
         } catch (error) {
           await navigateTo('https://blackdragon.mobi/maps/view');
-          process.send && process.send('✅ Arrived at maps page, starting target selection...');
+          //process.send && process.send('✅ Arrived at maps page, starting target selection...');
           return;
         }
       }
@@ -263,7 +265,7 @@ async function runUnscroll({ username, password, config }) {
   await page.type('input[name=password]', password);
   await waitForElement('.button');
   await clickElement('.button', { waitForNav: true });
-  process.send && process.send('Logged in for unscroll');
+  //process.send && process.send('Logged in for unscroll');
 
   await autoBossHunt();
 
@@ -271,7 +273,7 @@ async function runUnscroll({ username, password, config }) {
   
   // Clean up on stop
   process.on('SIGTERM', async () => {
-    process.send && process.send('🛑 Boss Hunt stopped by user');
+    //process.send && process.send('🛑 Boss Hunt stopped by user');
     await browser.close();
     process.exit(0);
   });
@@ -281,13 +283,13 @@ async function runUnscroll({ username, password, config }) {
 process.on('message', (msg) => {
   if (msg && msg.type === 'pause') {
     paused = true;
-    process.send && process.send('⏸️ Boss Hunt paused by user');
+    //process.send && process.send('⏸️ Boss Hunt paused by user');
   } else if (msg && msg.type === 'resume') {
     paused = false;
     if (pauseResolve) pauseResolve();
     pausePromise = null;
     pauseResolve = null;
-    process.send && process.send('▶️ Boss Hunt resumed by user');
+    //process.send && process.send('▶️ Boss Hunt resumed by user');
   }
 });
 
@@ -298,7 +300,7 @@ process.on('message', async (data) => {
       await runUnscroll(data);
       process.exit(0);
     } catch (err) {
-      process.send && process.send('Error: ' + err.message);
+      //  process.send && process.send('Error: ' + err.message);
       process.exit(1);
     }
   }

@@ -34,7 +34,7 @@ async function runAutomation({ username, password, config }) {
     await checkPaused();
     await page.goto(url, { waitUntil: 'networkidle2' });
     process.send && process.send('Navigated to ' + url);
-    await new Promise(resolve => setTimeout(resolve, 20));
+    //await new Promise(resolve => setTimeout(resolve, 20));
   }
 
   async function  waitForElement(selector, timeout = 20) {
@@ -119,7 +119,7 @@ async function runAutomation({ username, password, config }) {
           || (config.recipe && nameFull.toLocaleLowerCase().includes("recipe"))
           || (config.charm && nameFull.toLocaleLowerCase().includes("charm"))
           || (config.jewel && (nameFull.toLocaleLowerCase().includes("jewel")||nameFull.toLocaleLowerCase().includes("elixir"))) //||nameFull.toLocaleLowerCase().includes("elixir")
-          || (config.rune && (nameFull.toLocaleLowerCase().includes("rune ")||nameFull.toLocaleLowerCase().includes("level "))) // ||nameFull.toLocaleLowerCase().includes("level ")
+          || (config.rune && (nameFull.toLocaleLowerCase().includes("rune ")))//||nameFull.toLocaleLowerCase().includes("level "))) // ||nameFull.toLocaleLowerCase().includes("level ")
           || (config.epicGear && (nameFull.toLocaleLowerCase().includes("(vi)")||nameFull.toLocaleLowerCase().includes("(v)")||quality.toLocaleLowerCase().includes("epic")||quality.toLocaleLowerCase().includes("mythic")||quality.toLocaleLowerCase().includes("heroic")))
           || (config.magicScroll && nameFull.toLocaleLowerCase().includes("magic scroll"))
           || (config.monsterScroll && nameFull.toLocaleLowerCase().includes("s magic scroll"))
@@ -181,6 +181,10 @@ async function runAutomation({ username, password, config }) {
 
   async function choosing() {
     //
+    try{
+      await checkHealRecovery();
+    }
+    catch{}
     var isTargetmonster = true;
     if(isTargetmonster){
       try{
@@ -224,6 +228,46 @@ async function runAutomation({ username, password, config }) {
       await choosing();
     }
     }
+
+
+  }
+  async function checkHealRecovery() {
+    const xpath = '/html/body/div[2]/a/div';
+    const [element] = await page.$$('xpath//' + xpath); 
+    // Get text content
+    const str = await page.evaluate(el => el.textContent, element);
+
+    const slashIndex = str.indexOf('/');
+
+      const beforeSlash = str.substring(0, slashIndex); // "1,920,000"
+      const num = Number(beforeSlash.replace(/,/g, "")); // 1920000
+    
+    if (num > 1500000){
+      return;
+    }
+    // Inventory
+    await navigateTo('https://blackdragon.mobi/items/index/c=71012');    
+    try{
+      await waitForElement('body > div.main > div:nth-child(1) > a:nth-child(3)',20);
+      await clickElement("body > div.main > div:nth-child(1) > a:nth-child(3)", { waitForNav: false });
+    }catch{}
+
+    await navigateTo('https://blackdragon.mobi/credits/use/id=health/c=93047');    
+    
+    await clickElement("body > div.main > div.list.center > form > input", { waitForNav: true });
+
+    await clickElement("body > div.main > div:nth-child(3) > form > p > input.button", { waitForNav: true });
+
+    await clickElement("body > div.main > div.list > form > input.button", { waitForNav: true });
+
+    //Go to inventory
+    await navigateTo('https://blackdragon.mobi/items/index/c=71012');   
+    
+    await waitForElement('body > div.main > div:nth-child(1) > a:nth-child(5)',20);
+    await clickElement("body > div.main > div:nth-child(1) > a:nth-child(5)", { waitForNav: false }); 
+
+
+    await navigateTo('https://blackdragon.mobi/maps/view');
 
 
   }

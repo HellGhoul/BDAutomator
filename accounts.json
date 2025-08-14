@@ -26,10 +26,10 @@
     "config": {
       "all": false,
       "recipe": true,
-      "charm": false,
+      "charm": true,
       "pieceGear": true,
-      "jewel": true,
-      "rune": false,
+      "jewel": false,
+      "rune": true,
       "epicGear": false,
       "magicScroll": false,
       "monsterScroll": true,
