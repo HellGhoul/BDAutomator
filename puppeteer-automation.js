@@ -185,7 +185,7 @@ async function runAutomation({ username, password, config }) {
       await checkHealRecovery();
     }
     catch{}
-    var isTargetmonster = true;
+    var isTargetmonster = false;
     if(isTargetmonster){
       try{
         //await navigateTo('https://blackdragon.mobi/maps/view');

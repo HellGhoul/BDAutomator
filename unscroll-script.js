@@ -149,6 +149,9 @@ async function runUnscroll({ username, password, config }) {
   }
   async function selectBoss(bossName) {
     try{
+      await checkHealRecovery();
+    }catch{}
+    try{
       //await waitForElement('a img[src*="'+bossName+'"]');
       await clickElement('a img[src*="'+bossName+'"]', { waitForNav: false });
       await firstAttack();
@@ -156,6 +159,48 @@ async function runUnscroll({ username, password, config }) {
       return;
     }
   }
+
+  async function checkHealRecovery() {
+    const xpath = '/html/body/div[2]/a/div';
+    const [element] = await page.$$('xpath//' + xpath); 
+    // Get text content
+    const str = await page.evaluate(el => el.textContent, element);
+
+    const slashIndex = str.indexOf('/');
+
+      const beforeSlash = str.substring(0, slashIndex); // "1,920,000"
+      const num = Number(beforeSlash.replace(/,/g, "")); // 1920000
+    
+    if (num > 1500000){
+      return;
+    }
+    // Inventory
+    await navigateTo('https://blackdragon.mobi/items/index/c=71012');    
+    try{
+      await waitForElement('body > div.main > div:nth-child(1) > a:nth-child(3)',20);
+      await clickElement("body > div.main > div:nth-child(1) > a:nth-child(3)", { waitForNav: false });
+    }catch{}
+
+    await navigateTo('https://blackdragon.mobi/credits/use/id=health/c=93047');    
+    
+    await clickElement("body > div.main > div.list.center > form > input", { waitForNav: true });
+
+    await clickElement("body > div.main > div:nth-child(3) > form > p > input.button", { waitForNav: true });
+
+    await clickElement("body > div.main > div.list > form > input.button", { waitForNav: true });
+
+    //Go to inventory
+    await navigateTo('https://blackdragon.mobi/items/index/c=71012');   
+    
+    await waitForElement('body > div.main > div:nth-child(1) > a:nth-child(5)',20);
+    await clickElement("body > div.main > div:nth-child(1) > a:nth-child(5)", { waitForNav: false }); 
+
+
+    await navigateTo('https://blackdragon.mobi/maps/view');
+
+
+  }
+
 
   async function nextAttack() {
     //process.send && process.send('⚔️ Processing battle result...');
