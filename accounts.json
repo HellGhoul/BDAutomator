@@ -16,7 +16,7 @@
       "monsterScroll": true,
       "staminaPotion": false,
       "ancientPotion": false,
-      "itemList": "Ancient Potion"
+      "monsterList": "Ancient Potion"
     }
   },
   {
@@ -27,7 +27,7 @@
       "all": false,
       "recipe": true,
       "charm": true,
-      "pieceGear": false,
+      "pieceGear": true,
       "jewel": false,
       "rune": true,
       "epicGear": false,
@@ -35,31 +35,13 @@
       "monsterScroll": true,
       "staminaPotion": false,
       "ancientPotion": true,
-      "itemList": ""
+      "monsterList": "hell_hydra,night_dragon,ghost_behemoth",
+      "hpThreshold": "1500000"
     }
   },
   {
-    "id": "1430iwww1",
-    "username": "-gardna-",
-    "password": "09081508",
-    "config": {
-      "all": true,
-      "recipe": true,
-      "charm": false,
-      "pieceGear": false,
-      "jewel": false,
-      "rune": false,
-      "epicGear": false,
-      "magicScroll": false,
-      "monsterScroll": false,
-      "staminaPotion": false,
-      "ancientPotion": false,
-      "itemList": ""
-    }
-  },
-  {
-    "id": "ohnyhn9bu",
-    "username": "hongty",
+    "id": "bb41q9eno",
+    "username": "wangchu",
     "password": "09081508",
     "config": {
       "all": false,
@@ -68,69 +50,13 @@
       "pieceGear": true,
       "jewel": true,
       "rune": true,
-      "epicGear": true,
-      "magicScroll": false,
-      "monsterScroll": true,
-      "staminaPotion": true,
-      "ancientPotion": true,
-      "itemList": ""
-    }
-  },
-  {
-    "id": "uz7s92kcj",
-    "username": "ebony-knight",
-    "password": "09081508",
-    "config": {
-      "all": false,
-      "recipe": true,
-      "charm": true,
-      "pieceGear": true,
-      "jewel": true,
-      "rune": true,
-      "epicGear": true,
-      "magicScroll": false,
-      "monsterScroll": true,
-      "staminaPotion": true,
-      "ancientPotion": true,
-      "itemList": ""
-    }
-  },
-  {
-    "id": "s5pzjc9gc",
-    "username": "-takkar-",
-    "password": "0908152508",
-    "config": {
-      "all": false,
-      "recipe": true,
-      "charm": true,
-      "pieceGear": false,
-      "jewel": false,
-      "rune": false,
       "epicGear": false,
       "magicScroll": false,
       "monsterScroll": true,
-      "staminaPotion": false,
-      "ancientPotion": false,
-      "itemList": ""
-    }
-  },
-  {
-    "id": "3ldex2g3a",
-    "username": "novice-necro",
-    "password": "09081508",
-    "config": {
-      "all": false,
-      "recipe": true,
-      "charm": true,
-      "pieceGear": true,
-      "jewel": true,
-      "rune": true,
-      "epicGear": true,
-      "magicScroll": false,
-      "monsterScroll": true,
       "staminaPotion": true,
       "ancientPotion": true,
-      "itemList": ""
+      "monsterList": "",
+      "hpThreshold": "0"
     }
   }
 ]

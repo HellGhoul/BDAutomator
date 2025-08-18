@@ -15,7 +15,8 @@
         <attribute name="ancientPotion" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="charm" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="epicGear" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
-        <attribute name="itemList" optional="YES" attributeType="String"/>
+        <attribute name="monsterList" optional="YES" attributeType="String"/>
+        <attribute name="hpThreshold" optional="YES" attributeType="Number"/>
         <attribute name="jewel" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="magicScroll" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="monsterScroll" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>

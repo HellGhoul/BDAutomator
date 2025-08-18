@@ -31,7 +31,7 @@ function renderAccounts() {
     const isUnscrollPaused = unscrollStateValue === 'paused';
     const toggleLabel = isActive ? 'Pause' : (isPaused ? 'Resume' : 'Pause');
     const toggleIcon = isActive ? '⏸️' : (isPaused ? '▶️' : '⏸️');
-    const unscrollToggleLabel = isUnscrollRunning ? 'Pause' : (isUnscrollPaused ? 'Resume' : 'Unscroll');
+    const unscrollToggleLabel = isUnscrollRunning ? 'Pause' : (isUnscrollPaused ? 'Resume' : 'Auto Hunt');
     const unscrollToggleIcon = isUnscrollRunning ? '⏸️' : (isUnscrollPaused ? '▶️' : '📜');
     const div = document.createElement('div');
     div.className = `rpg-border rounded-lg p-4 ${isRunning ? 'bg-green-900/20' : 'bg-rpg-darker'} transition-all duration-300`;
@@ -459,7 +459,8 @@ function getConfigFromForm() {
     monsterScroll: document.getElementById('config-monsterScroll').checked,
     staminaPotion: document.getElementById('config-staminaPotion').checked,
     ancientPotion: document.getElementById('config-ancientPotion').checked,
-    itemList: document.getElementById('config-itemList').value.trim()
+    monsterList: document.getElementById('config-monsterList').value.trim(),
+    hpThreshold: document.getElementById('config-hpThreshold').value
   };
 }
 
@@ -476,7 +477,8 @@ function setConfigToForm(config) {
   document.getElementById('config-monsterScroll').checked = !!config.monsterScroll;
   document.getElementById('config-staminaPotion').checked = !!config.staminaPotion;
   document.getElementById('config-ancientPotion').checked = !!config.ancientPotion;
-  document.getElementById('config-itemList').value = config.itemList || '';
+  document.getElementById('config-monsterList').value = config.monsterList || '';
+  document.getElementById('config-hpThreshold').value = config.hpThreshold || '';
 }
 
 window.editAccount = function(id) {

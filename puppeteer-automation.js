@@ -114,7 +114,7 @@ async function runAutomation({ username, password, config }) {
 
         if (config.all
           || nameFull.toLocaleLowerCase().includes("gold bar")
-          || nameFull.toLocaleLowerCase().includes("revival")
+          || nameFull.toLocaleLowerCase().includes("undead crown")
           || (config.pieceGear && nameFull.toLocaleLowerCase().includes("a piece of"))
           || (config.recipe && nameFull.toLocaleLowerCase().includes("recipe"))
           || (config.charm && nameFull.toLocaleLowerCase().includes("charm"))
@@ -181,32 +181,35 @@ async function runAutomation({ username, password, config }) {
 
   async function choosing() {
     //
-    try{
-      await checkHealRecovery();
-    }
-    catch{}
-    var isTargetmonster = false;
-    if(isTargetmonster){
+    if(config.hpThreshold > 0){
       try{
-        //await navigateTo('https://blackdragon.mobi/maps/view');
-        await clickElement('a img[src*="/ghost_behemoth.jpg"]', { waitForNav: false });
-        await firstAttack();
+        await checkHealRecovery(config.hpThreshold);
       }
-      catch(error){
-        try{
-          //await navigateTo('https://blackdragon.mobi/maps/view');
-          await clickElement('a img[src*="/ancient_behemoth.jpg"]', { waitForNav: false });
+      catch{
+        
+      }
+    }
+    var isTargetmonster = config.monsterList != "";
+    if(isTargetmonster){
+      const monsters = config.monsterList.split(",").map(m => m.trim());
+
+      let success = false;
+    
+      for (const monster of monsters) {
+        try {
+          // try click monster
+          await clickElement(`a img[src*="/${monster}.jpg"]`, { waitForNav: false });
           await firstAttack();
-        }catch(error){
-          try{
-            //await navigateTo('https://blackdragon.mobi/maps/view');
-            await clickElement('a img[src*="/behemoth.jpg"]', { waitForNav: true });
-            await firstAttack();
-          }catch(error){
-            await navigateTo('https://blackdragon.mobi/maps/view');
-            await choosing();
-          }
+          success = true;
+          break; // stop once we succeed
+        } catch (error) {
+          // just continue to next monster
         }
+      }
+    
+      if (!success) {
+        await navigateTo("https://blackdragon.mobi/maps/view");
+        await choosing();
       }
 
     }
@@ -231,7 +234,7 @@ async function runAutomation({ username, password, config }) {
 
 
   }
-  async function checkHealRecovery() {
+  async function checkHealRecovery(threshold) {
     const xpath = '/html/body/div[2]/a/div';
     const [element] = await page.$$('xpath//' + xpath); 
     // Get text content
@@ -242,7 +245,7 @@ async function runAutomation({ username, password, config }) {
       const beforeSlash = str.substring(0, slashIndex); // "1,920,000"
       const num = Number(beforeSlash.replace(/,/g, "")); // 1920000
     
-    if (num > 1500000){
+    if (num > threshold){
       return;
     }
     // Inventory

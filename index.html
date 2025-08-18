@@ -147,9 +147,14 @@
             <label class="flex items-center space-x-2 text-rpg-gold"><input type="checkbox" id="config-ancientPotion"> <span>Ancient Potion</span></label>
           </div>
           <div>
-            <label class="block text-rpg-gold mb-2">📝 Item List (comma or line break separated):</label>
-            <textarea id="config-itemList" rows="2" class="w-full p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded focus:outline-none focus:rpg-glow"></textarea>
+            <label class="block text-rpg-gold mb-2">📝 Monster List (comma or line break separated):</label>
+            <textarea id="config-monsterList" rows="2" class="w-full p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded focus:outline-none focus:rpg-glow"></textarea>
           </div>
+          <div>
+            <label class="block text-rpg-gold mb-2">📝 HP Threshold to auto heal:</label>
+            <input id="config-hpThreshold" type="number" class="w-full p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded focus:outline-none focus:rpg-glow"></input>
+          </div>
+
           <div class="flex space-x-2">
             <button type="submit" id="save-btn" 
                     class="rpg-button px-6 py-2 rounded font-bold">➕ Add Warrior</button>

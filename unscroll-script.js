@@ -148,9 +148,14 @@ async function runUnscroll({ username, password, config }) {
     await clickElement("body > div.main > div.block > form > p > input", { waitForNav: true });
   }
   async function selectBoss(bossName) {
-    try{
-      await checkHealRecovery();
-    }catch{}
+    if(config.hpThreshold > 0){
+      try{
+        await checkHealRecovery();
+      }catch{
+        
+      }
+    }
+
     try{
       //await waitForElement('a img[src*="'+bossName+'"]');
       await clickElement('a img[src*="'+bossName+'"]', { waitForNav: false });
