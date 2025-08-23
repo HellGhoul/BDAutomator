@@ -16,7 +16,8 @@
       "monsterScroll": true,
       "staminaPotion": false,
       "ancientPotion": false,
-      "monsterList": "Ancient Potion"
+      "monsterList": "",
+      "hpThreshold": ""
     }
   },
   {
@@ -35,8 +36,8 @@
       "monsterScroll": true,
       "staminaPotion": false,
       "ancientPotion": true,
-      "monsterList": "hell_hydra,night_dragon,ghost_behemoth",
-      "hpThreshold": "1500000"
+      "monsterList": "",
+      "hpThreshold": ""
     }
   },
   {

@@ -122,7 +122,7 @@ async function runAutomation({ username, password, config }) {
           || (config.rune && (nameFull.toLocaleLowerCase().includes("rune ")))//||nameFull.toLocaleLowerCase().includes("level "))) // ||nameFull.toLocaleLowerCase().includes("level ")
           || (config.epicGear && (nameFull.toLocaleLowerCase().includes("(vi)")||nameFull.toLocaleLowerCase().includes("(v)")||quality.toLocaleLowerCase().includes("epic")||quality.toLocaleLowerCase().includes("mythic")||quality.toLocaleLowerCase().includes("heroic")))
           || (config.magicScroll && nameFull.toLocaleLowerCase().includes("magic scroll"))
-          || (config.monsterScroll && nameFull.toLocaleLowerCase().includes("s magic scroll"))
+          || (config.monsterScroll && nameFull.toLocaleLowerCase().includes("'s "))
           || (config.staminaPotion && nameFull.toLocaleLowerCase().includes("stamina potion"))
           || (config.ancientPotion && nameFull.toLocaleLowerCase().includes("ancient potion"))
         ) {
