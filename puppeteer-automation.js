@@ -146,6 +146,12 @@ async function runAutomation({ username, password, config }) {
           } catch (e) {
             process.send && process.send('Error with XPath! ' + e);
             // Optionally handle the case where the XPath is not found
+
+            await waitForElement('body > div.main > form > input',20);
+            await clickElement('body > div.main > form > input', { waitForNav: true });
+
+
+            await choosing();
           }
         }
       }
