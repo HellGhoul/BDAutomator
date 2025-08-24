@@ -355,14 +355,14 @@ function renderItemsGrid(items) {
         ${items.map(item => `
           <div class="encyclopedia-card p-4 rounded-lg">
             <div class="flex items-center space-x-3 mb-2">
-              <span class="text-2xl">📦</span>
               <h5 class="font-bold text-rpg-gold">${item.name}</h5>
             </div>
+              <div class="items-center">
+              <img src="${item.image_url}"> 
+              </div>
             <div class="text-sm space-y-1">
               <p><span class="text-gray-400">Type:</span> ${item.type}</p>
-              <p><span class="text-gray-400">Rarity:</span> ${item.rarity}</p>
-              <p><span class="text-gray-400">Level:</span> ${item.level}</p>
-              ${item.description ? `<p class="text-gray-300">${item.description}</p>` : ''}
+              ${ item.requirements.Level? `<p><span class="text-gray-400">Level:</span> ${item.requirements.Level}</p>`: ''}
             </div>
           </div>
         `).join('')}

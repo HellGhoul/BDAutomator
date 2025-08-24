@@ -3,7 +3,6 @@ const path = require('path');
 const fs = require('fs');
 const { spawn } = require('child_process');
 const { fork } = require('child_process');
-const EncyclopediaService = require('./encyclopedia-service');
 
 let win;
 let automationProcesses = {}; // { accountId: childProcess }
@@ -12,9 +11,6 @@ let puppeteerProcesses = {};
 let unscrollProcesses = {};
 let encyclopediaProcesses = {}; // { accountId: childProcess }
 const ACCOUNTS_FILE = path.join(__dirname, 'accounts.json');
-
-// Initialize encyclopedia service
-const encyclopediaService = new EncyclopediaService();
 
 function createWindow() {
   win = new BrowserWindow({
@@ -165,32 +161,29 @@ ipcMain.handle('is-unscroll-running', (event, accountId) => {
 });
 
 ipcMain.handle('start-encyclopedia-crawl', async (event, account, crawlOptions) => {
+  console.log('🚀 Starting encyclopedia crawl for account:', JSON.stringify(account, null, 2));
+  console.log('📋 Crawl options:', JSON.stringify(crawlOptions, null, 2));
+  
   if (encyclopediaProcesses[account.id]) return false; // Already running
 
   const child = fork(path.join(__dirname, 'encyclopedia-crawler.js'));
   encyclopediaProcesses[account.id] = child;
 
-  // Start a new crawl session
-  const sessionId = await encyclopediaService.startCrawlSession(account.id);
-
-  // Send credentials, session ID, and crawl options to child
-  child.send({ 
-    type: 'start',
-    account: account, 
-    sessionId: sessionId,
-    crawlOptions: crawlOptions
-  });
+  // Send credentials and crawl options to child
+  const messageData = { 
+    username: account.username, 
+    password: account.password, 
+    config: crawlOptions || {}
+  };
+  console.log('📤 Sending to encyclopedia crawler:', JSON.stringify(messageData, null, 2));
+  child.send(messageData);
 
   // Listen for logs or status from child
   child.on('message', (msg) => {
-    if (msg.type === 'encyclopedia-log') {
-      win.webContents.send('encyclopedia-log', {
-        accountId: account.id,
-        log: msg.message,
-        stats: msg.stats,
-        sessionId: msg.sessionId
-      });
-    }
+    win.webContents.send('encyclopedia-log', {
+      accountId: account.id,
+      log: msg
+    });
   });
 
   child.on('exit', () => {
@@ -229,19 +222,37 @@ ipcMain.on('resume-encyclopedia-crawl', (event, { accountId }) => {
   }
 });
 
-// Encyclopedia data retrieval handlers
+// Encyclopedia data retrieval handlers - now using JSON files
 ipcMain.handle('get-encyclopedia-stats', async () => {
   try {
-    return await encyclopediaService.getCrawlStats();
+    const fs = require('fs');
+    const path = require('path');
+    const dataDir = './encyclopedia-data';
+    const summaryFile = path.join(dataDir, 'summary.json');
+    
+    if (fs.existsSync(summaryFile)) {
+      const summary = JSON.parse(fs.readFileSync(summaryFile, 'utf8'));
+      return summary;
+    }
+    return { total_items: 0, total_monsters: 0, total_skills: 0, total_quests: 0 };
   } catch (error) {
     console.error('Error getting encyclopedia stats:', error);
-    return null;
+    return { total_items: 0, total_monsters: 0, total_skills: 0, total_quests: 0 };
   }
 });
 
 ipcMain.handle('get-encyclopedia-items', async (event, filters) => {
   try {
-    return await encyclopediaService.getItems(filters);
+    const fs = require('fs');
+    const path = require('path');
+    const dataDir = './encyclopedia-data';
+    const itemsFile = path.join(dataDir, 'items.json');
+    
+    if (fs.existsSync(itemsFile)) {
+      const items = JSON.parse(fs.readFileSync(itemsFile, 'utf8'));
+      return items;
+    }
+    return [];
   } catch (error) {
     console.error('Error getting items:', error);
     return [];
@@ -250,7 +261,16 @@ ipcMain.handle('get-encyclopedia-items', async (event, filters) => {
 
 ipcMain.handle('get-encyclopedia-monsters', async (event, filters) => {
   try {
-    return await encyclopediaService.getMonsters(filters);
+    const fs = require('fs');
+    const path = require('path');
+    const dataDir = './encyclopedia-data';
+    const monstersFile = path.join(dataDir, 'monsters.json');
+    
+    if (fs.existsSync(monstersFile)) {
+      const monsters = JSON.parse(fs.readFileSync(monstersFile, 'utf8'));
+      return monsters;
+    }
+    return [];
   } catch (error) {
     console.error('Error getting monsters:', error);
     return [];
@@ -259,7 +279,16 @@ ipcMain.handle('get-encyclopedia-monsters', async (event, filters) => {
 
 ipcMain.handle('get-encyclopedia-skills', async (event, filters) => {
   try {
-    return await encyclopediaService.getSkills(filters);
+    const fs = require('fs');
+    const path = require('path');
+    const dataDir = './encyclopedia-data';
+    const skillsFile = path.join(dataDir, 'skills.json');
+    
+    if (fs.existsSync(skillsFile)) {
+      const skills = JSON.parse(fs.readFileSync(skillsFile, 'utf8'));
+      return skills;
+    }
+    return [];
   } catch (error) {
     console.error('Error getting skills:', error);
     return [];
@@ -268,7 +297,16 @@ ipcMain.handle('get-encyclopedia-skills', async (event, filters) => {
 
 ipcMain.handle('get-encyclopedia-quests', async (event, filters) => {
   try {
-    return await encyclopediaService.getQuests(filters);
+    const fs = require('fs');
+    const path = require('path');
+    const dataDir = './encyclopedia-data';
+    const questsFile = path.join(dataDir, 'quests.json');
+    
+    if (fs.existsSync(questsFile)) {
+      const quests = JSON.parse(fs.readFileSync(questsFile, 'utf8'));
+      return quests;
+    }
+    return [];
   } catch (error) {
     console.error('Error getting quests:', error);
     return [];
@@ -277,7 +315,46 @@ ipcMain.handle('get-encyclopedia-quests', async (event, filters) => {
 
 ipcMain.handle('search-encyclopedia', async (event, query) => {
   try {
-    return await encyclopediaService.searchAll(query);
+    const fs = require('fs');
+    const path = require('path');
+    const dataDir = './encyclopedia-data';
+    
+    const results = { items: [], monsters: [], skills: [], quests: [], total: 0 };
+    
+    // Search in each file
+    const files = ['items.json', 'monsters.json', 'skills.json', 'quests.json'];
+    files.forEach(filename => {
+      const filepath = path.join(dataDir, filename);
+      if (fs.existsSync(filepath)) {
+        try {
+          const data = JSON.parse(fs.readFileSync(filepath, 'utf8'));
+          const filtered = data.filter(item => 
+            item.name && item.name.toLowerCase().includes(query.toLowerCase()) ||
+            (item.description && item.description.toLowerCase().includes(query.toLowerCase()))
+          );
+          
+          switch (filename) {
+            case 'items.json':
+              results.items = filtered;
+              break;
+            case 'monsters.json':
+              results.monsters = filtered;
+              break;
+            case 'skills.json':
+              results.skills = filtered;
+              break;
+            case 'quests.json':
+              results.quests = filtered;
+              break;
+          }
+        } catch (error) {
+          console.error(`Error reading ${filename}:`, error);
+        }
+      }
+    });
+    
+    results.total = results.items.length + results.monsters.length + results.skills.length + results.quests.length;
+    return results;
   } catch (error) {
     console.error('Error searching encyclopedia:', error);
     return { items: [], monsters: [], skills: [], quests: [], total: 0 };
