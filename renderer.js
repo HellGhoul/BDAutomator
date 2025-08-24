@@ -244,8 +244,26 @@ window.searchEncyclopedia = async function() {
   if (!query) return;
 
   try {
-    const results = await ipcRenderer.invoke('search-encyclopedia', query);
-    displayEncyclopediaResults(results, `Search results for: "${query}"`);
+    // Search in the current encyclopedia data
+    if (encyclopediaData && encyclopediaData.items) {
+      const searchResults = encyclopediaData.items.filter(item => {
+        const searchText = query.toLowerCase();
+        return (
+          item.name.toLowerCase().includes(searchText) ||
+          item.type.toLowerCase().includes(searchText) ||
+          (item.requirements.Class && item.requirements.Class.toLowerCase().includes(searchText)) ||
+          (item.description && item.description.toLowerCase().includes(searchText)) ||
+          (item.plainAttributes && item.plainAttributes.some(attr => attr.toLowerCase().includes(searchText))) ||
+          (item.plainReq && item.plainReq.some(req => req.toLowerCase().includes(searchText)))
+        );
+      });
+      
+      displayEncyclopediaResults({ items: searchResults }, `Search results for: "${query}" (${searchResults.length} items)`);
+    } else {
+      // Fallback to server-side search if no local data
+      const results = await ipcRenderer.invoke('search-encyclopedia', query);
+      displayEncyclopediaResults(results, `Search results for: "${query}"`);
+    }
   } catch (error) {
     console.error('Search error:', error);
   }
@@ -288,21 +306,364 @@ window.filterEncyclopedia = async function(type) {
 window.applyAdvancedFilters = async function() {
   try {
     const itemType = document.getElementById('filter-item-type').value;
-    const rarity = document.getElementById('filter-rarity').value;
+    const itemClass = document.getElementById('filter-class').value;
     const levelMin = document.getElementById('filter-level-min').value;
     const levelMax = document.getElementById('filter-level-max').value;
+    const sortBy = document.getElementById('filter-sort-by').value;
     
-    const filters = {};
-    if (itemType) filters.type = itemType;
-    if (rarity) filters.rarity = rarity;
-    if (levelMin) filters.levelMin = parseInt(levelMin);
-    if (levelMax) filters.levelMax = parseInt(levelMax);
+    // Boolean filters
+    const legendaryOnly = document.getElementById('filter-legendary').checked;
+    const dropsOnly = document.getElementById('filter-drops').checked;
+    const craftableOnly = document.getElementById('filter-craftable').checked;
+    const recipesOnly = document.getElementById('filter-recipes').checked;
+    
+    const filters = {
+      type: itemType,
+      class: itemClass,
+      levelMin: levelMin ? parseInt(levelMin) : null,
+      levelMax: levelMax ? parseInt(levelMax) : null,
+      sortBy: sortBy,
+      legendaryOnly: legendaryOnly,
+      dropsOnly: dropsOnly,
+      craftableOnly: craftableOnly,
+      recipesOnly: recipesOnly
+    };
     
     const data = await ipcRenderer.invoke('get-encyclopedia-items', filters);
     displayEncyclopediaResults({ items: data }, `Filtered Items (${data.length})`);
   } catch (error) {
     console.error('Advanced filter error:', error);
   }
+};
+
+window.clearAllFilters = function() {
+  // Reset all filter inputs
+  document.getElementById('filter-item-type').value = '';
+  document.getElementById('filter-class').value = '';
+  document.getElementById('filter-level-min').value = '';
+  document.getElementById('filter-level-max').value = '';
+  document.getElementById('filter-sort-by').value = 'name';
+  
+  // Uncheck all checkboxes
+  document.getElementById('filter-legendary').checked = false;
+  document.getElementById('filter-drops').checked = false;
+  document.getElementById('filter-craftable').checked = false;
+  document.getElementById('filter-recipes').checked = false;
+  
+  // Load all items without filters
+  loadAllEncyclopediaData();
+};
+
+window.quickFilter = function(type) {
+  // Quick filter buttons for common types
+  clearAllFilters();
+  
+  switch(type) {
+    case 'weapons':
+      document.getElementById('filter-item-type').value = 'Weapon';
+      break;
+    case 'armor':
+      document.getElementById('filter-item-type').value = 'armor';
+      break;
+    case 'shields':
+      document.getElementById('filter-item-type').value = 'Shield';
+      break;
+    case 'helmets':
+      document.getElementById('filter-item-type').value = 'Helm';
+      break;
+    case 'bodyarmor':
+      document.getElementById('filter-item-type').value = 'Body Armor';
+      break;
+    case 'boots':
+      document.getElementById('filter-item-type').value = 'Boots';
+      break;
+    case 'accessories':
+      // Filter for all accessory types
+      document.getElementById('filter-item-type').value = 'accessories';
+      break;
+    case 'legendary':
+      document.getElementById('filter-legendary').checked = true;
+      break;
+    case 'recipes':
+      document.getElementById('filter-recipes').checked = true;
+      break;
+  }
+  
+  applyAdvancedFilters();
+};
+
+window.showItemDetails = function(itemId) {
+  // Find the item in the current encyclopedia data
+  const item = encyclopediaData?.items?.find(i => i.id === itemId);
+  if (!item) {
+    console.error('Item not found:', itemId);
+    return;
+  }
+  
+  // Create and show modal
+  const modal = document.createElement('div');
+  modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+  modal.onclick = () => modal.remove();
+  
+  const modalContent = document.createElement('div');
+  modalContent.className = 'bg-rpg-dark border-2 border-rpg-gold rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto';
+  modalContent.onclick = (e) => e.stopPropagation();
+  
+  modalContent.innerHTML = `
+    <div class="flex justify-between items-start mb-4">
+      <h3 class="text-2xl font-bold text-rpg-gold">${item.name}</h3>
+      <button onclick="this.closest('.fixed').remove()" class="text-rpg-gold hover:text-white text-2xl">✕</button>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="text-center">
+        <img src="${item.image_url}" alt="${item.name}" class="mx-auto max-w-32 max-h-32 object-contain mb-4">
+        ${item.isLegendary ? '<div class="text-yellow-400 text-lg font-bold">⭐ Legendary Item</div>' : ''}
+      </div>
+      
+      <div class="space-y-4">
+        <div>
+          <h4 class="text-lg font-bold text-rpg-gold mb-2">Basic Info</h4>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-gray-400">Type:</span>
+              <span class="text-rpg-gold">${item.type}</span>
+            </div>
+            ${item.requirements.Class ? `
+              <div class="flex justify-between">
+                <span class="text-gray-400">Class:</span>
+                <span class="text-rpg-gold">${item.requirements.Class}</span>
+              </div>
+            ` : ''}
+            ${item.requirements.Level ? `
+              <div class="flex justify-between">
+                <span class="text-gray-400">Level:</span>
+                <span class="text-rpg-gold">${item.requirements.Level}</span>
+              </div>
+            ` : ''}
+            ${item.requirements.Dexterity ? `
+              <div class="flex justify-between">
+                <span class="text-gray-400">Dexterity:</span>
+                <span class="text-rpg-gold">${item.requirements.Dexterity}</span>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+        
+        ${Object.keys(item.attributes).length > 0 ? `
+          <div>
+            <h4 class="text-lg font-bold text-rpg-gold mb-2">Attributes</h4>
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              ${Object.entries(item.attributes).map(([key, value]) => `
+                <div class="flex justify-between">
+                  <span class="text-gray-400">${key}:</span>
+                  <span class="text-rpg-gold">${typeof value === 'number' && key !== 'DamageMin' && key !== 'DamageMax' ? '+' : ''}${value}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
+        <hr/>
+        ${Object.keys(item.requirements).length > 0 ? `
+          <div>
+            <h4 class="text-lg font-bold text-rpg-gold mb-2">Requirements</h4>
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              ${Object.entries(item.requirements).map(([key, value]) => `
+                <div class="flex justify-between">
+                  <span class="text-gray-400">${key}:</span>
+                  <span class="text-rpg-gold">${typeof value === 'number' && key !== 'DamageMin' && key !== 'DamageMax' ? '+' : ''}${value}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        <div class="flex flex-wrap gap-2">
+          ${item.isDrop ? '<span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm">Drop Item</span>' : ''}
+          ${item.isCraftable ? '<span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm">Craftable</span>' : ''}
+          ${item.type === 'Recipe' ? '<span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm">Recipe</span>' : ''}
+        </div>
+        
+        ${item.description ? `
+          <div>
+            <h4 class="text-lg font-bold text-rpg-gold mb-2">Description</h4>
+            <p class="text-gray-300 text-sm">${item.description}</p>
+          </div>
+        ` : ''}
+        
+        ${item.ingredients && item.ingredients.length > 0 ? `
+          <div>
+            <h4 class="text-lg font-bold text-rpg-gold mb-2">Ingredients</h4>
+            <div class="text-sm text-gray-300">
+              ${item.ingredients.map(ingredient => `<div>• ${ingredient}</div>`).join('')}
+            </div>
+          </div>
+        ` : ''}
+      </div>
+    </div>
+  `;
+  
+  modal.appendChild(modalContent);
+  document.body.appendChild(modal);
+};
+
+window.exportFilteredResults = function() {
+  // Get current filtered results from the display
+  const contentSection = document.getElementById('encyclopedia-content');
+  if (!contentSection) return;
+  
+  const title = contentSection.querySelector('h3')?.textContent || 'Encyclopedia Data';
+  const items = encyclopediaData?.items || [];
+  
+  // Create CSV content
+  let csv = 'Name,Type,Class,Level,Damage,Armor,Health,Mana,Dexterity,Wisdom,Legendary,Drop,Craftable,Description\n';
+  
+  items.forEach(item => {
+    const row = [
+      `"${item.name}"`,
+      item.type,
+      item.attributes?.DamageMin ? `${item.attributes.DamageMin}-${item.attributes.DamageMax || item.attributes.DamageMin}` : '',
+      item.attributes?.Armor || '',
+      item.attributes?.Health || '',
+      item.attributes?.Mana || '',
+      item.attributes?.Stamina || '',
+      item.attributes?.Strength || '',
+      item.attributes?.Dexterity || '',
+      item.attributes?.Endurance || '',
+      item.attributes?.Wisdom || '',
+      item.requirements?.Class || '',
+      item.requirements?.Level || '',
+      item.requirements?.Strength || '',
+      item.requirements?.Dexterity || '',
+      item.requirements?.Endurance || '',
+      item.requirements?.Wisdom || '',
+      item.isLegendary ? 'Yes' : 'No',
+      item.isDrop ? 'Yes' : 'No',
+      item.isCraftable ? 'Yes' : 'No',
+      `"${item.description || ''}"`
+    ];
+    csv += row.join(',') + '\n';
+  });
+  
+  // Download CSV file
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${title.replace(/[^a-zA-Z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(url);
+};
+
+window.showEncyclopediaStats = function() {
+  if (!encyclopediaData) return;
+  
+  const stats = {
+    total: encyclopediaData.items?.length || 0,
+    byType: {},
+    byClass: {},
+    legendary: 0,
+    drops: 0,
+    craftable: 0,
+    recipes: 0
+  };
+  
+  if (encyclopediaData.items) {
+    encyclopediaData.items.forEach(item => {
+      // Count by type
+      stats.byType[item.type] = (stats.byType[item.type] || 0) + 1;
+      
+      // Count by class
+      if (item.requirements?.Class) {
+        stats.byClass[item.requirements.Class] = (stats.byClass[item.requirements.Class] || 0) + 1;
+      }
+      
+      // Count special properties
+      if (item.isLegendary) stats.legendary++;
+      if (item.isDrop) stats.drops++;
+      if (item.isCraftable) stats.craftable++;
+      if (item.type === 'Recipe') stats.recipes++;
+    });
+  }
+  
+  // Create and show stats modal
+  const modal = document.createElement('div');
+  modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+  modal.onclick = () => modal.remove();
+  
+  const modalContent = document.createElement('div');
+  modalContent.className = 'bg-rpg-dark border-2 border-rpg-gold rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto';
+  modalContent.onclick = (e) => e.stopPropagation();
+  
+  modalContent.innerHTML = `
+    <div class="flex justify-between items-start mb-4">
+      <h3 class="text-2xl font-bold text-rpg-gold">📊 Encyclopedia Statistics</h3>
+      <button onclick="this.closest('.fixed').remove()" class="text-rpg-gold hover:text-white text-2xl">✕</button>
+    </div>
+    
+    <div class="grid grid-cols-2 gap-6">
+      <div>
+        <h4 class="text-lg font-bold text-rpg-gold mb-3">Overview</h4>
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between">
+            <span class="text-gray-400">Total Items:</span>
+            <span class="text-rpg-gold font-bold">${stats.total}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Legendary:</span>
+            <span class="text-yellow-400 font-bold">${stats.legendary}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Drop Items:</span>
+            <span class="text-red-400 font-bold">${stats.drops}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Craftable:</span>
+            <span class="text-blue-400 font-bold">${stats.craftable}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Recipes:</span>
+            <span class="text-green-400 font-bold">${stats.recipes}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div>
+        <h4 class="text-lg font-bold text-rpg-gold mb-3">By Type</h4>
+        <div class="space-y-1 text-sm max-h-40 overflow-y-auto">
+          ${Object.entries(stats.byType)
+            .sort(([,a], [,b]) => b - a) // Sort by count descending
+            .map(([type, count]) => `
+              <div class="flex justify-between">
+                <span class="text-gray-400">${type}:</span>
+                <span class="text-rpg-gold">${count}</span>
+              </div>
+            `).join('')}
+        </div>
+      </div>
+    </div>
+    
+    ${Object.keys(stats.byClass).length > 0 ? `
+      <div class="mt-6">
+        <h4 class="text-lg font-bold text-rpg-gold mb-3">By Class</h4>
+        <div class="grid grid-cols-2 gap-4 text-sm">
+          ${Object.entries(stats.byClass)
+            .sort(([,a], [,b]) => b - a) // Sort by count descending
+            .map(([className, count]) => `
+              <div class="flex justify-between">
+                <span class="text-gray-400">${className}:</span>
+                <span class="text-rpg-gold">${count}</span>
+              </div>
+            `).join('')}
+        </div>
+      </div>
+    ` : ''}
+  `;
+  
+  modal.appendChild(modalContent);
+  document.body.appendChild(modal);
 };
 
 window.loadAllEncyclopediaData = async function() {
@@ -353,16 +714,122 @@ function renderItemsGrid(items) {
       <h4 class="text-xl font-bold mb-3 text-rpg-gold">Items (${items.length})</h4>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         ${items.map(item => `
-          <div class="encyclopedia-card p-4 rounded-lg">
-            <div class="flex items-center space-x-3 mb-2">
-              <h5 class="font-bold text-rpg-gold">${item.name}</h5>
+          <div class="encyclopedia-card p-4 rounded-lg border border-rpg-gold hover:border-rpg-gold/80 transition-all cursor-pointer" onclick="showItemDetails('${item.id}')">
+            <div class="flex items-center justify-between mb-2">
+              <h5 class="font-bold text-rpg-gold text-lg">${item.name}</h5>
+              ${item.isLegendary ? '<span class="text-yellow-400 text-sm">⭐ Legendary</span>' : ''}
             </div>
-              <div class="items-center">
-              <img src="${item.image_url}"> 
+            
+            <div class="flex justify-center mb-3">
+              <img src="${item.image_url}" alt="${item.name}" class="max-w-20 max-h-20 object-contain">
+            </div>
+            
+            <div class="text-sm space-y-2">
+              <div class="flex justify-between">
+                <span class="text-gray-400">Type:</span>
+                <span class="text-rpg-gold">${item.type}</span>
               </div>
-            <div class="text-sm space-y-1">
-              <p><span class="text-gray-400">Type:</span> ${item.type}</p>
-              ${ item.requirements.Level? `<p><span class="text-gray-400">Level:</span> ${item.requirements.Level}</p>`: ''}
+              
+              ${item.requirements.Class ? `
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Class:</span>
+                  <span class="text-rpg-gold">${item.requirements.Class}</span>
+                </div>
+              ` : ''}
+              
+              ${item.requirements.Level ? `
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Level:</span>
+                  <span class="text-rpg-gold">${item.requirements.Level}</span>
+                </div>
+              ` : ''}
+              
+              ${item.attributes.DamageMin ? `
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Damage:</span>
+                  <span class="text-rpg-gold">${item.attributes.DamageMin}-${item.attributes.DamageMax || item.attributes.DamageMin}</span>
+                </div>
+              ` : ''}
+              
+              ${item.attributes.Armor ? `
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Armor:</span>
+                  <span class="text-rpg-gold">+${item.attributes.Armor}</span>
+                </div>
+              ` : ''}
+              
+              ${item.attributes.Health ? `
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Health:</span>
+                  <span class="text-rpg-gold">+${item.attributes.Health}</span>
+                </div>
+              ` : ''}
+              
+              ${item.attributes.Mana ? `
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Mana:</span>
+                  <span class="text-rpg-gold">+${item.attributes.Mana}</span>
+                </div>
+              ` : ''}
+
+
+              
+              ${item.attributes.Stamina ? `
+              <div class="flex justify-between">
+                <span class="text-gray-400">Stamina:</span>
+                <span class="text-rpg-gold">+${item.attributes.Stamina}</span>
+              </div>
+            ` : ''}
+              
+              ${item.attributes.Strength ? `
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Strength:</span>
+                  <span class="text-rpg-gold">+${item.attributes.Strength}</span>
+                </div>
+              ` : ''}
+              
+              ${item.attributes.Dexterity ? `
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Dexterity:</span>
+                  <span class="text-rpg-gold">+${item.attributes.Dexterity}</span>
+                </div>
+              ` : ''}
+              
+              ${item.attributes.Endurance ? `
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Endurance:</span>
+                  <span class="text-rpg-gold">+${item.attributes.Endurance}</span>
+                </div>
+              ` : ''}
+              
+              ${item.attributes.Wisdom ? `
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Wisdom:</span>
+                  <span class="text-rpg-gold">+${item.attributes.Wisdom}</span>
+                </div>
+              ` : ''}
+              
+              ${item.attributes.LifeLeech ? `
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Life Leech:</span>
+                  <span class="text-rpg-gold">${item.attributes.LifeLeech}%</span>
+                </div>
+              ` : ''}
+              
+              ${item.attributes.Block ? `
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Block:</span>
+                  <span class="text-rpg-gold">${item.attributes.Block}%</span>
+                </div>
+              ` : ''}
+            </div>
+            
+            <div class="mt-3 pt-2 border-t border-rpg-gold/30">
+              <div class="flex flex-wrap gap-2 text-xs">
+                ${item.isDrop ? '<span class="bg-red-500 text-white px-2 py-1 rounded">Drop</span>' : ''}
+                ${item.isCraftable ? '<span class="bg-blue-500 text-white px-2 py-1 rounded">Craftable</span>' : ''}
+                ${item.type === 'Recipe' ? '<span class="bg-green-500 text-white px-2 py-1 rounded">Recipe</span>' : ''}
+              </div>
             </div>
           </div>
         `).join('')}

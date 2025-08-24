@@ -60,6 +60,17 @@
       opacity: 0.5;
       cursor: not-allowed;
     }
+    .rpg-button-secondary {
+      background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+      border: 2px solid #666;
+      color: #ccc;
+      transition: all 0.3s ease;
+    }
+    .rpg-button-secondary:hover {
+      background: linear-gradient(145deg, #666, #555);
+      color: #fff;
+      transform: translateY(-2px);
+    }
     .output {
       background: #000;
       color: #00FF00;
@@ -254,11 +265,19 @@
             <!-- Category Filters -->
             <div class="mb-6">
               <div class="flex flex-wrap gap-4">
-                <button onclick="filterEncyclopedia('items')" class="rpg-button px-4 py-2 rounded">📦 Items</button>
+                <button onclick="filterEncyclopedia('items')" class="rpg-button px-4 py-2 rounded">📦 All Items</button>
+                <button onclick="quickFilter('weapons')" class="rpg-button px-4 py-2 rounded">⚔️ Weapons</button>
+                <button onclick="quickFilter('armor')" class="rpg-button px-4 py-2 rounded">🛡️ All Armor</button>
+                <button onclick="quickFilter('shields')" class="rpg-button px-4 py-2 rounded">🛡️ Shields</button>
+                <button onclick="quickFilter('helmets')" class="rpg-button px-4 py-2 rounded">⛑️ Helmets</button>
+                <button onclick="quickFilter('bodyarmor')" class="rpg-button px-4 py-2 rounded">👕 Body Armor</button>
+                <button onclick="quickFilter('boots')" class="rpg-button px-4 py-2 rounded">👢 Boots</button>
+                <button onclick="quickFilter('accessories')" class="rpg-button px-4 py-2 rounded">💍 Accessories</button>
+                <button onclick="quickFilter('legendary')" class="rpg-button px-4 py-2 rounded">⭐ Legendary</button>
+                <button onclick="quickFilter('recipes')" class="rpg-button px-4 py-2 rounded">📖 Recipes</button>
                 <button onclick="filterEncyclopedia('monsters')" class="rpg-button px-4 py-2 rounded">👹 Monsters</button>
                 <button onclick="filterEncyclopedia('skills')" class="rpg-button px-4 py-2 rounded">⚡ Skills</button>
                 <button onclick="filterEncyclopedia('quests')" class="rpg-button px-4 py-2 rounded">📋 Quests</button>
-                <button onclick="filterEncyclopedia('recipes')" class="rpg-button px-4 py-2 rounded">📖 Recipes</button>
                 <button onclick="loadAllEncyclopediaData()" class="rpg-button px-4 py-2 rounded">🔄 Refresh All</button>
               </div>
             </div>
@@ -266,27 +285,37 @@
             <!-- Advanced Filters -->
             <div class="mb-6">
               <h4 class="text-lg font-bold mb-3 text-rpg-gold">Advanced Filters</h4>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
                   <label class="block text-rpg-gold mb-1">Item Type:</label>
                   <select id="filter-item-type" class="w-full p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded">
                     <option value="">All Types</option>
-                    <option value="weapon">Weapon</option>
-                    <option value="armor">Armor</option>
-                    <option value="consumable">Consumable</option>
-                    <option value="material">Material</option>
-                    <option value="recipe">Recipe</option>
+                    <option value="Weapon">⚔️ Weapon</option>
+                    <option value="armor">🛡️ All Armor</option>
+                    <option value="Shield">🛡️ Shield</option>
+                    <option value="Helm">⛑️ Helm</option>
+                    <option value="Body Armor">👕 Body Armor</option>
+                    <option value="Boots">👢 Boots</option>
+                    <option value="Ring">💍 Ring</option>
+                    <option value="Amulet">🔮 Amulet</option>
+                    <option value="Gem">💎 Gem</option>
+                    <option value="Rune">🔯 Rune</option>
+                    <option value="Boost">🚀 Boost</option>
+                    <option value="Recipe">📖 Recipe</option>
+                    <option value="accessories">💍 All Accessories</option>
                   </select>
                 </div>
                 <div>
-                  <label class="block text-rpg-gold mb-1">Rarity:</label>
-                  <select id="filter-rarity" class="w-full p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded">
-                    <option value="">All Rarities</option>
-                    <option value="common">Common</option>
-                    <option value="uncommon">Uncommon</option>
-                    <option value="rare">Rare</option>
-                    <option value="epic">Epic</option>
-                    <option value="legendary">Legendary</option>
+                  <label class="block text-rpg-gold mb-1">Class:</label>
+                  <select id="filter-class" class="w-full p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded">
+                    <option value="">All Classes</option>
+                    <option value="Warrior">Warrior</option>
+                    <option value="Mage">Mage</option>
+                    <option value="Archer">Archer</option>
+                    <option value="Assassin">Assassin</option>
+                    <option value="Necromancer">Necromancer</option>
+                    <option value="Paladin">Paladin</option>
+                    <option value="Druid">Druid</option>
                   </select>
                 </div>
                 <div>
@@ -298,8 +327,48 @@
                            class="flex-1 p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded">
                   </div>
                 </div>
+                <div>
+                  <label class="block text-rpg-gold mb-1">Sort By:</label>
+                  <select id="filter-sort-by" class="w-full p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded">
+                    <option value="name">Name</option>
+                    <option value="level">Level</option>
+                    <option value="damage">Damage</option>
+                    <option value="armor">Armor</option>
+                    <option value="type">Type</option>
+                    <option value="crawled_at">Date Added</option>
+                  </select>
+                </div>
               </div>
-              <button onclick="applyAdvancedFilters()" class="rpg-button px-6 py-2 rounded mt-3">Apply Filters</button>
+              
+              <!-- Boolean Filters -->
+              <div class="mt-4">
+                <h5 class="text-md font-bold mb-2 text-rpg-gold">Special Properties</h5>
+                <div class="flex flex-wrap gap-4">
+                  <label class="flex items-center space-x-2">
+                    <input type="checkbox" id="filter-legendary" class="w-4 h-4 text-rpg-gold bg-rpg-darker border-rpg-gold rounded focus:ring-rpg-gold">
+                    <span class="text-rpg-gold">Legendary Items</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input type="checkbox" id="filter-drops" class="w-4 h-4 text-rpg-gold bg-rpg-darker border-rpg-gold rounded focus:ring-rpg-gold">
+                    <span class="text-rpg-gold">Drop Items</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input type="checkbox" id="filter-craftable" class="w-4 h-4 text-rpg-gold bg-rpg-darker border-rpg-gold rounded focus:ring-rpg-gold">
+                    <span class="text-rpg-gold">Craftable Items</span>
+                  </label>
+                  <label class="flex items-center space-x-2">
+                    <input type="checkbox" id="filter-recipes" class="w-4 h-4 text-rpg-gold bg-rpg-darker border-rpg-gold rounded focus:ring-rpg-gold">
+                    <span class="text-rpg-gold">Recipes Only</span>
+                  </label>
+                </div>
+              </div>
+              
+              <div class="flex flex-wrap gap-3 mt-3">
+                <button onclick="applyAdvancedFilters()" class="rpg-button px-6 py-2 rounded">Apply Filters</button>
+                <button onclick="clearAllFilters()" class="rpg-button-secondary px-6 py-2 rounded">Clear Filters</button>
+                <button onclick="exportFilteredResults()" class="rpg-button px-6 py-2 rounded">📊 Export CSV</button>
+                <button onclick="showEncyclopediaStats()" class="rpg-button px-6 py-2 rounded">📈 Statistics</button>
+              </div>
             </div>
 
             <!-- Content Display -->

@@ -241,18 +241,89 @@ ipcMain.handle('get-encyclopedia-stats', async () => {
   }
 });
 
-ipcMain.handle('get-encyclopedia-items', async (event, filters) => {
+ipcMain.handle('get-encyclopedia-items', async (event, filters = {}) => {
   try {
     const fs = require('fs');
     const path = require('path');
     const dataDir = './encyclopedia-data';
     const itemsFile = path.join(dataDir, 'items.json');
     
-    if (fs.existsSync(itemsFile)) {
-      const items = JSON.parse(fs.readFileSync(itemsFile, 'utf8'));
-      return items;
+    if (!fs.existsSync(itemsFile)) {
+      return [];
     }
-    return [];
+    
+    let items = JSON.parse(fs.readFileSync(itemsFile, 'utf8'));
+    
+    // Apply filters
+    if (filters.type) {
+      if (filters.type === 'accessories') {
+        // Special case for accessories - include rings, amulets, gems, runes
+        items = items.filter(item => ['Ring', 'Amulet', 'Gem', 'Rune'].includes(item.type));
+      } else if (filters.type === 'armor') {
+        // Special case for armor - include helmets, body armor, boots, shields
+        items = items.filter(item => ['Helm', 'Body Armor', 'Boots', 'Shield'].includes(item.type));
+      } else {
+        items = items.filter(item => item.type === filters.type);
+      }
+    }
+    
+    if (filters.class) {
+      items = items.filter(item => item.requirements && item.requirements.Class === filters.class);
+    }
+    
+    if (filters.levelMin !== null && filters.levelMin !== undefined) {
+      items = items.filter(item => item.requirements && item.requirements.Level >= filters.levelMin);
+    }
+    
+    if (filters.levelMax !== null && filters.levelMax !== undefined) {
+      items = items.filter(item => item.requirements && item.requirements.Level <= filters.levelMax);
+    }
+    
+    if (filters.legendaryOnly) {
+      items = items.filter(item => item.isLegendary === true);
+    }
+    
+    if (filters.dropsOnly) {
+      items = items.filter(item => item.isDrop === true);
+    }
+    
+    if (filters.craftableOnly) {
+      items = items.filter(item => item.isCraftable === true);
+    }
+    
+    if (filters.recipesOnly) {
+      items = items.filter(item => item.type === 'Recipe');
+    }
+    
+    // Apply sorting
+    if (filters.sortBy) {
+      items.sort((a, b) => {
+        switch (filters.sortBy) {
+          case 'name':
+            return a.name.localeCompare(b.name);
+          case 'level':
+            const levelA = a.requirements?.Level || 0;
+            const levelB = b.requirements?.Level || 0;
+            return levelA - levelB;
+          case 'damage':
+            const damageA = a.attributes?.DamageMin || 0;
+            const damageB = b.attributes?.DamageMin || 0;
+            return damageB - damageA; // Highest first
+          case 'armor':
+            const armorA = a.attributes?.Armor || 0;
+            const armorB = b.attributes?.Armor || 0;
+            return armorB - armorA; // Highest first
+          case 'type':
+            return a.type.localeCompare(b.type);
+          case 'crawled_at':
+            return new Date(b.crawled_at) - new Date(a.crawled_at); // Newest first
+          default:
+            return 0;
+        }
+      });
+    }
+    
+    return items;
   } catch (error) {
     console.error('Error getting items:', error);
     return [];
