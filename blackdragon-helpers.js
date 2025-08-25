@@ -162,7 +162,7 @@ class BlackDragonHelpers {
         } else {
           try {
             const xpath = '/html/body/div[4]/form[2]/input';
-            await this.page.waitForSelector('xpath//' + xpath, { timeout: 20 });
+            await this.page.waitForSelector('xpath//' + xpath, { timeout: 200 });
             const [element] = await this.page.$$('xpath//' + xpath);
             if (!element) throw new Error('Element not found');
             await Promise.all([
@@ -171,13 +171,24 @@ class BlackDragonHelpers {
             ]);
             return 'continued';
           } catch (e) {
-            // Handle XPath error
-            return 'error';
+            return
           }
         }
       }
     } catch (error) {
-      return 'error';
+      try {
+        const xpath = '/html/body/div[4]/form[2]/input';
+        await this.page.waitForSelector('xpath//' + xpath, { timeout: 200 });
+        const [element] = await this.page.$$('xpath//' + xpath);
+        if (!element) throw new Error('Element not found');
+        await Promise.all([
+          this.page.waitForNavigation({ waitUntil: 'networkidle2' }),
+          element.click()
+        ]);
+        return 'continued';
+      } catch (e) {
+        return
+      }
     }
   }
 

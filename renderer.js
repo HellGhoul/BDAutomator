@@ -729,101 +729,34 @@ function renderItemsGrid(items) {
                 <span class="text-gray-400">Type:</span>
                 <span class="text-rpg-gold">${item.type}</span>
               </div>
-              
-              ${item.requirements.Class ? `
+                      ${Object.keys(item.attributes).length > 0 ? `
+          <div>
+            <h4 class="text-lg font-bold text-rpg-gold mb-2">Attributes</h4>
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              ${Object.entries(item.attributes).map(([key, value]) => `
                 <div class="flex justify-between">
-                  <span class="text-gray-400">Class:</span>
-                  <span class="text-rpg-gold">${item.requirements.Class}</span>
+                  <span class="text-gray-400">${key}:</span>
+                  <span class="text-rpg-gold">${typeof value === 'number' && key !== 'DamageMin' && key !== 'DamageMax' ? '+' : ''}${ key.includes('Prot')  || key.includes('Block')?  value*100+'%': value}</span>
                 </div>
-              ` : ''}
-              
-              ${item.requirements.Level ? `
-                <div class="flex justify-between">
-                  <span class="text-gray-400">Level:</span>
-                  <span class="text-rpg-gold">${item.requirements.Level}</span>
-                </div>
-              ` : ''}
-              
-              ${item.attributes.DamageMin ? `
-                <div class="flex justify-between">
-                  <span class="text-gray-400">Damage:</span>
-                  <span class="text-rpg-gold">${item.attributes.DamageMin}-${item.attributes.DamageMax || item.attributes.DamageMin}</span>
-                </div>
-              ` : ''}
-              
-              ${item.attributes.Armor ? `
-                <div class="flex justify-between">
-                  <span class="text-gray-400">Armor:</span>
-                  <span class="text-rpg-gold">+${item.attributes.Armor}</span>
-                </div>
-              ` : ''}
-              
-              ${item.attributes.Health ? `
-                <div class="flex justify-between">
-                  <span class="text-gray-400">Health:</span>
-                  <span class="text-rpg-gold">+${item.attributes.Health}</span>
-                </div>
-              ` : ''}
-              
-              ${item.attributes.Mana ? `
-                <div class="flex justify-between">
-                  <span class="text-gray-400">Mana:</span>
-                  <span class="text-rpg-gold">+${item.attributes.Mana}</span>
-                </div>
-              ` : ''}
-
-
-              
-              ${item.attributes.Stamina ? `
-              <div class="flex justify-between">
-                <span class="text-gray-400">Stamina:</span>
-                <span class="text-rpg-gold">+${item.attributes.Stamina}</span>
-              </div>
-            ` : ''}
-              
-              ${item.attributes.Strength ? `
-                <div class="flex justify-between">
-                  <span class="text-gray-400">Strength:</span>
-                  <span class="text-rpg-gold">+${item.attributes.Strength}</span>
-                </div>
-              ` : ''}
-              
-              ${item.attributes.Dexterity ? `
-                <div class="flex justify-between">
-                  <span class="text-gray-400">Dexterity:</span>
-                  <span class="text-rpg-gold">+${item.attributes.Dexterity}</span>
-                </div>
-              ` : ''}
-              
-              ${item.attributes.Endurance ? `
-                <div class="flex justify-between">
-                  <span class="text-gray-400">Endurance:</span>
-                  <span class="text-rpg-gold">+${item.attributes.Endurance}</span>
-                </div>
-              ` : ''}
-              
-              ${item.attributes.Wisdom ? `
-                <div class="flex justify-between">
-                  <span class="text-gray-400">Wisdom:</span>
-                  <span class="text-rpg-gold">+${item.attributes.Wisdom}</span>
-                </div>
-              ` : ''}
-              
-              ${item.attributes.LifeLeech ? `
-                <div class="flex justify-between">
-                  <span class="text-gray-400">Life Leech:</span>
-                  <span class="text-rpg-gold">${item.attributes.LifeLeech}%</span>
-                </div>
-              ` : ''}
-              
-              ${item.attributes.Block ? `
-                <div class="flex justify-between">
-                  <span class="text-gray-400">Block:</span>
-                  <span class="text-rpg-gold">${item.attributes.Block}%</span>
-                </div>
-              ` : ''}
+              `).join('')}
             </div>
-            
+          </div>
+        ` : ''}
+        <hr/>
+        ${Object.keys(item.requirements).length > 0 ? `
+          <div>
+            <h4 class="text-lg font-bold text-rpg-gold mb-2">Requirements</h4>
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              ${Object.entries(item.requirements).map(([key, value]) => `
+                <div class="flex justify-between">
+                  <span class="text-gray-400">${key}:</span>
+                  <span class="text-rpg-gold">${value}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
+            </div>
             <div class="mt-3 pt-2 border-t border-rpg-gold/30">
               <div class="flex flex-wrap gap-2 text-xs">
                 ${item.isDrop ? '<span class="bg-red-500 text-white px-2 py-1 rounded">Drop</span>' : ''}
