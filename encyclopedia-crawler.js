@@ -93,11 +93,14 @@ class Item {
       console.log('Successfully logged in to blackdragon.mobi');
 
       // Crawl different sections
-      await this.crawlItems(this.helpers);
+      if(config.items){
+        await this.crawlItems(this.helpers);
+      }
       //await this.crawlMonsters(this.helpers);
       //await this.crawlSkills(this.helpers);
-      //await this.crawlQuests(this.helpers);
-
+      if(config.titles){
+        await this.crawlTitles(this.helpers);
+      }
       // Create summary
       this.createSummary();
 
@@ -424,38 +427,138 @@ class Item {
     }
   }
 
-  async crawlQuests(helpers) {
-    console.log('Starting to crawl quests...');
+  async crawlTitles(helpers) {
+    console.log('Starting to crawl titles...');
     
     try {
-      // Navigate to quests page
-      await helpers.navigateTo('https://blackdragon.mobi/quests/index');
-      
-      const quests = await helpers.page.evaluate(() => {
-        const questElements = Array.from(document.querySelectorAll('.quest, .list'));
-        return questElements.map(el => {
-          const nameEl = el.querySelector('strong, .name');
-          const descEl = el.querySelector('.description, small');
-          
-          return {
-            id: `quest_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-            name: nameEl ? nameEl.textContent.trim() : '',
-            type: 'unknown',
-            description: descEl ? descEl.textContent.trim() : '',
-            source: 'encyclopedia_crawler',
-            crawled_at: new Date().toISOString()
-          };
-        }).filter(quest => quest.name);
-      });
+      // Navigate to titles page
+      await helpers.navigateTo('https://blackdragon.mobi/library/titles');
 
-      // Save all quests to JSON file
-      const questsFile = path.join(this.dataDir, 'quests.json');
-      fs.writeFileSync(questsFile, JSON.stringify(quests, null, 2));
-      console.log(`Total quests found: ${quests.length}`);
-      console.log(`Quests saved to: ${questsFile}`);
+      let titlesFound = 0;
+      const allTitles = [];
+          // Get pages
+          await helpers.waitForElement('body > div.main > div:nth-child(1) > span', 20);
+          const text = await helpers.getTextContent('body > div.main > div:nth-child(1) > span');
+          const slashIndex = text.indexOf('/');
+          
+          if (slashIndex === -1) return;
+          
+          const afterslash = text.substring(slashIndex + 1);
+          const maxPageNum = Number(afterslash.replace(/,/g, ""));
+          for (let libPage = 1; libPage <= maxPageNum; libPage++) {
+
+          await helpers.navigateTo('https://blackdragon.mobi/library/titles/page=' + libPage);
+
+            // Get all title in the current page
+          const titles = await helpers.page.evaluate(() => {
+          const titleLinks = Array.from(document.querySelectorAll('a[href*="https://blackdragon.mobi/library/viewTitle/name="]'));
+              //console.log(titleLinks);
+          return titleLinks.map(link => ({
+
+                url: link.href,
+                name: link.textContent.substring(2).trim()
+              }));
+
+            });
+
+            for (const title of titles) {
+            
+            // Go into each title
+            await helpers.navigateTo(title.url); 
+            // Extract title details from this title page
+          const titleDetails = await helpers.page.evaluate((titleName) => {
+            // Look for the main title container - be more specific to avoid duplicates
+            const titleContainer = document.querySelector('.main');
+            if (!titleContainer) return null;
+            
+            const statsEl = titleContainer.querySelector('.block');
+            const reqsEl = titleContainer.querySelectorAll('.block')[1];
+            const availableEl = titleContainer.querySelector('.list.small');
+            const statsRaw = statsEl ? statsEl.textContent.trim().split('  ') : [];
+            const reqsRaw = reqsEl ? reqsEl.textContent.trim().split('  ') : [];
+            
+
+            function parseKeyValueArray(arr) {
+              const result = {};
+            
+              arr.forEach(line => {
+                if (!line.includes(":")) return;
+            
+                let [key, value] = line.split(":").map(s => s.trim());
+                if (!key || !value) return;
+            
+                // Handle "Class" → keep as string
+                if (key.toLowerCase() === "class") {
+                  result[key] = value;
+                  return;
+                }
+            
+                // Handle "Damage"
+                if (key.toLowerCase() === "damage") {
+                  const [minStr, maxStr] = value.split("-").map(s => s.trim());
+                  const min = parseInt(minStr.replace(/\D/g, ""), 10);
+                  const max = maxStr ? parseInt(maxStr.replace(/\D/g, ""), 10) : min;
+                  result["DamageMin"] = min;
+                  result["DamageMax"] = max;
+                  return;
+                }
+            
+                // Handle numeric with % (convert to fraction)
+                if (value.endsWith("%")) {
+                  const num = parseFloat(value.replace("%", "").trim());
+                  result[key] = num / 100;
+                  return;
+                }
+            
+                // Handle numeric with + or plain number
+                const numeric = parseFloat(value.replace("+", "").trim());
+                if (!isNaN(numeric)) {
+                  result[key] = numeric;
+                  return;
+                }
+            
+                // Default fallback → keep string
+                result[key] = value;
+              });
+            
+              return result;
+            }
+
+            return {
+              id: `title_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+              name: titleName,
+              type: 'Title',
+              plainAttributes: statsRaw,                        // keep raw
+              plainReq: reqsRaw,                  // keep raw
+              available: availableEl? availableEl.textContent:'',                  // keep raw
+              attributes: parseKeyValueArray(statsRaw),   // parsed version
+              requirements: parseKeyValueArray(reqsRaw), // parsed version
+              prefix:titleName.substring(0,titleName.indexOf('...')-1).trim(),
+              suffix: titleName.substring(titleName.indexOf('...')+3).trim(),
+              source: 'encyclopedia_crawler',
+              crawled_at: new Date().toISOString()
+            };
+          }, title.name);
+
+
+          // Add title to collection (only if we found details)
+          if (titleDetails) {
+            allTitles.push(titleDetails);
+            titlesFound += 1;
+            console.log(`Found ${title.name}`);
+          }
+
+            }
+          }
+
+      // Save all titles to JSON file
+      const titlesFile = path.join(this.dataDir, 'titles.json');
+      fs.writeFileSync(titlesFile, JSON.stringify(allTitles, null, 2));
+      console.log(`Total title found: ${titlesFound}`);
+      console.log(`Title saved to: ${titlesFile}`);
 
     } catch (error) {
-      console.error('Error crawling quests:', error);
+      console.error('Error crawling titles:', error);
     }
   }
 

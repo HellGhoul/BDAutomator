@@ -1,0 +1,542 @@
+[
+  {
+    "id": "title_1756142933972_7f2yrpryv",
+    "name": "... of Aqualore's Dynaflex",
+    "type": "Title",
+    "plainAttributes": [
+      "Strength: +2500",
+      "Dexterity: +1500"
+    ],
+    "plainReq": [
+      "Requirements:",
+      "Level: 100"
+    ],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "Strength": 2500,
+      "Dexterity": 1500
+    },
+    "requirements": {
+      "Level": 100
+    },
+    "prefix": "",
+    "suffix": "... of Aqualore's Dynaflex",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:28:53.972Z"
+  },
+  {
+    "id": "title_1756142934779_3rsdv59fj",
+    "name": "... of Aqualore's Flow",
+    "type": "Title",
+    "plainAttributes": [
+      "Wisdom: +2500"
+    ],
+    "plainReq": [
+      "Requirements:",
+      "Level: 100"
+    ],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "Wisdom": 2500
+    },
+    "requirements": {
+      "Level": 100
+    },
+    "prefix": "",
+    "suffix": "... of Aqualore's Flow",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:28:54.779Z"
+  },
+  {
+    "id": "title_1756142935618_rdejf07g4",
+    "name": "... of Aqualore's Ripple",
+    "type": "Title",
+    "plainAttributes": [
+      "Dexterity: +2500"
+    ],
+    "plainReq": [
+      "Requirements:",
+      "Level: 100"
+    ],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "Dexterity": 2500
+    },
+    "requirements": {
+      "Level": 100
+    },
+    "prefix": "",
+    "suffix": "... of Aqualore's Ripple",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:28:55.618Z"
+  },
+  {
+    "id": "title_1756142936461_t8vlgzq92",
+    "name": "... of Aqualore's Surge",
+    "type": "Title",
+    "plainAttributes": [
+      "Strength: +3500"
+    ],
+    "plainReq": [
+      "Requirements:",
+      "Level: 100"
+    ],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "Strength": 3500
+    },
+    "requirements": {
+      "Level": 100
+    },
+    "prefix": "",
+    "suffix": "... of Aqualore's Surge",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:28:56.461Z"
+  },
+  {
+    "id": "title_1756142937286_66pu0wyc5",
+    "name": "... of Damage (I)",
+    "type": "Title",
+    "plainAttributes": [
+      "Damage: +1"
+    ],
+    "plainReq": [],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "DamageMin": 1,
+      "DamageMax": 1
+    },
+    "requirements": {},
+    "prefix": "",
+    "suffix": "... of Damage (I)",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:28:57.286Z"
+  },
+  {
+    "id": "title_1756142938140_a7ej82gbi",
+    "name": "... of Damage (II)",
+    "type": "Title",
+    "plainAttributes": [
+      "Damage: +2"
+    ],
+    "plainReq": [
+      "Requirements:",
+      "Level: 4"
+    ],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "DamageMin": 2,
+      "DamageMax": 2
+    },
+    "requirements": {
+      "Level": 4
+    },
+    "prefix": "",
+    "suffix": "... of Damage (II)",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:28:58.140Z"
+  },
+  {
+    "id": "title_1756142938952_zkyto8yul",
+    "name": "... of Damage (III)",
+    "type": "Title",
+    "plainAttributes": [
+      "Damage: +3"
+    ],
+    "plainReq": [
+      "Requirements:",
+      "Level: 6"
+    ],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "DamageMin": 3,
+      "DamageMax": 3
+    },
+    "requirements": {
+      "Level": 6
+    },
+    "prefix": "",
+    "suffix": "... of Damage (III)",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:28:58.952Z"
+  },
+  {
+    "id": "title_1756142939787_ofedj3zn7",
+    "name": "... of Damage (IV)",
+    "type": "Title",
+    "plainAttributes": [
+      "Damage: +4"
+    ],
+    "plainReq": [
+      "Requirements:",
+      "Level: 8"
+    ],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "DamageMin": 4,
+      "DamageMax": 4
+    },
+    "requirements": {
+      "Level": 8
+    },
+    "prefix": "",
+    "suffix": "... of Damage (IV)",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:28:59.787Z"
+  },
+  {
+    "id": "title_1756142945372_rzvu1rmk9",
+    "name": "... of Damage (V)",
+    "type": "Title",
+    "plainAttributes": [
+      "Damage: +5"
+    ],
+    "plainReq": [
+      "Requirements:",
+      "Level: 10"
+    ],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "DamageMin": 5,
+      "DamageMax": 5
+    },
+    "requirements": {
+      "Level": 10
+    },
+    "prefix": "",
+    "suffix": "... of Damage (V)",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:29:05.372Z"
+  },
+  {
+    "id": "title_1756142946228_hw5ptxb58",
+    "name": "... of Damage (VI)",
+    "type": "Title",
+    "plainAttributes": [
+      "Damage: +10"
+    ],
+    "plainReq": [
+      "Requirements:",
+      "Level: 10"
+    ],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "DamageMin": 10,
+      "DamageMax": 10
+    },
+    "requirements": {
+      "Level": 10
+    },
+    "prefix": "",
+    "suffix": "... of Damage (VI)",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:29:06.229Z"
+  },
+  {
+    "id": "title_1756142947072_osmuk986e",
+    "name": "... of Dexterity (I)",
+    "type": "Title",
+    "plainAttributes": [
+      "Dexterity: +1"
+    ],
+    "plainReq": [],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "Dexterity": 1
+    },
+    "requirements": {},
+    "prefix": "",
+    "suffix": "... of Dexterity (I)",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:29:07.072Z"
+  },
+  {
+    "id": "title_1756142947900_nfirv4qcr",
+    "name": "... of Dexterity (II)",
+    "type": "Title",
+    "plainAttributes": [
+      "Dexterity: +2"
+    ],
+    "plainReq": [
+      "Requirements:",
+      "Level: 4"
+    ],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "Dexterity": 2
+    },
+    "requirements": {
+      "Level": 4
+    },
+    "prefix": "",
+    "suffix": "... of Dexterity (II)",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:29:07.900Z"
+  },
+  {
+    "id": "title_1756142948952_9z2o1qblh",
+    "name": "... of Dexterity (III)",
+    "type": "Title",
+    "plainAttributes": [
+      "Dexterity: +3"
+    ],
+    "plainReq": [
+      "Requirements:",
+      "Level: 6"
+    ],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "Dexterity": 3
+    },
+    "requirements": {
+      "Level": 6
+    },
+    "prefix": "",
+    "suffix": "... of Dexterity (III)",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:29:08.952Z"
+  },
+  {
+    "id": "title_1756142949965_vzrtor466",
+    "name": "... of Dexterity (IV)",
+    "type": "Title",
+    "plainAttributes": [
+      "Dexterity: +4"
+    ],
+    "plainReq": [
+      "Requirements:",
+      "Level: 8"
+    ],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "Dexterity": 4
+    },
+    "requirements": {
+      "Level": 8
+    },
+    "prefix": "",
+    "suffix": "... of Dexterity (IV)",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:29:09.965Z"
+  },
+  {
+    "id": "title_1756142950976_b8xp8wjts",
+    "name": "... of Dexterity (V)",
+    "type": "Title",
+    "plainAttributes": [
+      "Dexterity: +5"
+    ],
+    "plainReq": [
+      "Requirements:",
+      "Level: 10"
+    ],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "Dexterity": 5
+    },
+    "requirements": {
+      "Level": 10
+    },
+    "prefix": "",
+    "suffix": "... of Dexterity (V)",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:29:10.976Z"
+  },
+  {
+    "id": "title_1756142951989_39rg33nxa",
+    "name": "... of Dexterity (VI)",
+    "type": "Title",
+    "plainAttributes": [
+      "Dexterity: +10"
+    ],
+    "plainReq": [
+      "Requirements:",
+      "Level: 10"
+    ],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "Dexterity": 10
+    },
+    "requirements": {
+      "Level": 10
+    },
+    "prefix": "",
+    "suffix": "... of Dexterity (VI)",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:29:11.990Z"
+  },
+  {
+    "id": "title_1756142952984_xxfisjswo",
+    "name": "... of Endurance (I)",
+    "type": "Title",
+    "plainAttributes": [
+      "Endurance: +1"
+    ],
+    "plainReq": [],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "Endurance": 1
+    },
+    "requirements": {},
+    "prefix": "",
+    "suffix": "... of Endurance (I)",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:29:12.984Z"
+  },
+  {
+    "id": "title_1756142953996_6wz8r33iv",
+    "name": "... of Endurance (II)",
+    "type": "Title",
+    "plainAttributes": [
+      "Endurance: +2"
+    ],
+    "plainReq": [
+      "Requirements:",
+      "Level: 4"
+    ],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "Endurance": 2
+    },
+    "requirements": {
+      "Level": 4
+    },
+    "prefix": "",
+    "suffix": "... of Endurance (II)",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:29:13.996Z"
+  },
+  {
+    "id": "title_1756142954822_4qbzglck4",
+    "name": "... of Endurance (III)",
+    "type": "Title",
+    "plainAttributes": [
+      "Endurance: +3"
+    ],
+    "plainReq": [
+      "Requirements:",
+      "Level: 6"
+    ],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "Endurance": 3
+    },
+    "requirements": {
+      "Level": 6
+    },
+    "prefix": "",
+    "suffix": "... of Endurance (III)",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:29:14.822Z"
+  },
+  {
+    "id": "title_1756142955680_5jlfnefy6",
+    "name": "... of Endurance (IV)",
+    "type": "Title",
+    "plainAttributes": [
+      "Endurance: +4"
+    ],
+    "plainReq": [
+      "Requirements:",
+      "Level: 8"
+    ],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "Endurance": 4
+    },
+    "requirements": {
+      "Level": 8
+    },
+    "prefix": "",
+    "suffix": "... of Endurance (IV)",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:29:15.680Z"
+  },
+  {
+    "id": "title_1756142956533_q47k0zswt",
+    "name": "... of Endurance (V)",
+    "type": "Title",
+    "plainAttributes": [
+      "Endurance: +5"
+    ],
+    "plainReq": [
+      "Requirements:",
+      "Level: 10"
+    ],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "Endurance": 5
+    },
+    "requirements": {
+      "Level": 10
+    },
+    "prefix": "",
+    "suffix": "... of Endurance (V)",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:29:16.533Z"
+  },
+  {
+    "id": "title_1756142958039_hidtn6f7o",
+    "name": "... of Endurance (VI)",
+    "type": "Title",
+    "plainAttributes": [
+      "Endurance: +10"
+    ],
+    "plainReq": [
+      "Requirements:",
+      "Level: 10"
+    ],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "Endurance": 10
+    },
+    "requirements": {
+      "Level": 10
+    },
+    "prefix": "",
+    "suffix": "... of Endurance (VI)",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:29:18.039Z"
+  },
+  {
+    "id": "title_1756142959346_j1j7hkbmv",
+    "name": "... of Health (I)",
+    "type": "Title",
+    "plainAttributes": [
+      "Health: +25"
+    ],
+    "plainReq": [],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "Health": 25
+    },
+    "requirements": {},
+    "prefix": "",
+    "suffix": "... of Health (I)",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:29:19.346Z"
+  },
+  {
+    "id": "title_1756142960283_abqat0m69",
+    "name": "... of Health (II)",
+    "type": "Title",
+    "plainAttributes": [
+      "Health: +50"
+    ],
+    "plainReq": [
+      "Requirements:",
+      "Level: 4"
+    ],
+    "available": "Weapon, Shield, Helm, Body Armor, Boots, Amulet, Ring",
+    "attributes": {
+      "Health": 50
+    },
+    "requirements": {
+      "Level": 4
+    },
+    "prefix": "",
+    "suffix": "... of Health (II)",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-25T17:29:20.283Z"
+  }
+]

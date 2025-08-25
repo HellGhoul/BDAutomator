@@ -234,10 +234,10 @@ ipcMain.handle('get-encyclopedia-stats', async () => {
       const summary = JSON.parse(fs.readFileSync(summaryFile, 'utf8'));
       return summary;
     }
-    return { total_items: 0, total_monsters: 0, total_skills: 0, total_quests: 0 };
+    return { total_items: 0, total_monsters: 0, total_skills: 0, total_titles: 0 };
   } catch (error) {
     console.error('Error getting encyclopedia stats:', error);
-    return { total_items: 0, total_monsters: 0, total_skills: 0, total_quests: 0 };
+    return { total_items: 0, total_monsters: 0, total_skills: 0, total_titles: 0 };
   }
 });
 
@@ -366,20 +366,20 @@ ipcMain.handle('get-encyclopedia-skills', async (event, filters) => {
   }
 });
 
-ipcMain.handle('get-encyclopedia-quests', async (event, filters) => {
+ipcMain.handle('get-encyclopedia-titles', async (event, filters) => {
   try {
     const fs = require('fs');
     const path = require('path');
     const dataDir = './encyclopedia-data';
-    const questsFile = path.join(dataDir, 'quests.json');
+    const titlesFile = path.join(dataDir, 'titles.json');
     
-    if (fs.existsSync(questsFile)) {
-      const quests = JSON.parse(fs.readFileSync(questsFile, 'utf8'));
-      return quests;
+    if (fs.existsSync(titlesFile)) {
+      const titles = JSON.parse(fs.readFileSync(titlesFile, 'utf8'));
+      return titles;
     }
     return [];
   } catch (error) {
-    console.error('Error getting quests:', error);
+    console.error('Error getting titles:', error);
     return [];
   }
 });
@@ -390,10 +390,10 @@ ipcMain.handle('search-encyclopedia', async (event, query) => {
     const path = require('path');
     const dataDir = './encyclopedia-data';
     
-    const results = { items: [], monsters: [], skills: [], quests: [], total: 0 };
+    const results = { items: [], monsters: [], skills: [], titles: [], total: 0 };
     
     // Search in each file
-    const files = ['items.json', 'monsters.json', 'skills.json', 'quests.json'];
+    const files = ['items.json', 'monsters.json', 'skills.json', 'titles.json'];
     files.forEach(filename => {
       const filepath = path.join(dataDir, filename);
       if (fs.existsSync(filepath)) {
@@ -414,8 +414,8 @@ ipcMain.handle('search-encyclopedia', async (event, query) => {
             case 'skills.json':
               results.skills = filtered;
               break;
-            case 'quests.json':
-              results.quests = filtered;
+            case 'titles.json':
+              results.titles = filtered;
               break;
           }
         } catch (error) {
@@ -424,10 +424,10 @@ ipcMain.handle('search-encyclopedia', async (event, query) => {
       }
     });
     
-    results.total = results.items.length + results.monsters.length + results.skills.length + results.quests.length;
+    results.total = results.items.length + results.monsters.length + results.skills.length + results.titles.length;
     return results;
   } catch (error) {
     console.error('Error searching encyclopedia:', error);
-    return { items: [], monsters: [], skills: [], quests: [], total: 0 };
+    return { items: [], monsters: [], skills: [], titles: [], total: 0 };
   }
 }); 

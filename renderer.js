@@ -12,7 +12,7 @@ let encyclopediaData = {
   items: [],
   monsters: [],
   skills: [],
-  quests: [],
+  titles: [],
   stats: null
 };
 let isCrawling = false;
@@ -175,7 +175,7 @@ window.startCrawling = async function() {
     items: document.getElementById('crawl-items').checked,
     monsters: document.getElementById('crawl-monsters').checked,
     skills: document.getElementById('crawl-skills').checked,
-    quests: document.getElementById('crawl-quests').checked
+    titles: document.getElementById('crawl-titles').checked
   };
 
   // Check if at least one option is selected
@@ -287,9 +287,9 @@ window.filterEncyclopedia = async function(type) {
         data = await ipcRenderer.invoke('get-encyclopedia-skills');
         title = 'Skills';
         break;
-      case 'quests':
-        data = await ipcRenderer.invoke('get-encyclopedia-quests');
-        title = 'Quests';
+      case 'titles':
+        data = await ipcRenderer.invoke('get-encyclopedia-titles');
+        title = 'Titles';
         break;
       case 'recipes':
         data = await ipcRenderer.invoke('get-encyclopedia-items', { type: 'recipe' });
@@ -668,15 +668,15 @@ window.showEncyclopediaStats = function() {
 
 window.loadAllEncyclopediaData = async function() {
   try {
-    const [items, monsters, skills, quests, stats] = await Promise.all([
+    const [items, monsters, skills, titles, stats] = await Promise.all([
       ipcRenderer.invoke('get-encyclopedia-items'),
       ipcRenderer.invoke('get-encyclopedia-monsters'),
       ipcRenderer.invoke('get-encyclopedia-skills'),
-      ipcRenderer.invoke('get-encyclopedia-quests'),
+      ipcRenderer.invoke('get-encyclopedia-titles'),
       ipcRenderer.invoke('get-encyclopedia-stats')
     ]);
     
-    encyclopediaData = { items, monsters, skills, quests, stats };
+    encyclopediaData = { items, monsters, skills, titles, stats };
   } catch (error) {
     console.error('Error loading encyclopedia data:', error);
   }
@@ -697,11 +697,11 @@ function displayEncyclopediaResults(results, title) {
   if (results.skills && results.skills.length > 0) {
     html += renderSkillsGrid(results.skills);
   }
-  if (results.quests && results.quests.length > 0) {
-    html += renderQuestsGrid(results.quests);
+  if (results.titles && results.titles.length > 0) {
+    html += renderTitlesGrid(results.titles);
   }
   
-  if (results.total === 0 || (!results.items && !results.monsters && !results.skills && !results.quests)) {
+  if (results.total === 0 || (!results.items && !results.monsters && !results.skills && !results.titles)) {
     html = '<div class="text-center text-gray-400 mt-8">No results found</div>';
   }
   
@@ -820,23 +820,23 @@ function renderSkillsGrid(skills) {
   `;
 }
 
-function renderQuestsGrid(quests) {
+function renderTitlesGrid(titles) {
   return `
     <div class="mb-6">
-      <h4 class="text-xl font-bold mb-3 text-rpg-gold">Quests (${quests.length})</h4>
+      <h4 class="text-xl font-bold mb-3 text-rpg-gold">Titles (${titles.length})</h4>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        ${quests.map(quest => `
+        ${titles.map(title => `
           <div class="encyclopedia-card p-4 rounded-lg">
             <div class="flex items-center space-x-3 mb-2">
               <span class="text-2xl">📋</span>
-              <h5 class="font-bold text-rpg-gold">${quest.name}</h5>
+              <h5 class="font-bold text-rpg-gold">${title.name}</h5>
             </div>
             <div class="text-sm space-y-1">
-              <p><span class="text-gray-400">Type:</span> ${quest.type}</p>
-              <p><span class="text-gray-400">Level Req:</span> ${quest.level_requirement}</p>
-              <p><span class="text-gray-400">NPC:</span> ${quest.npc}</p>
-              <p><span class="text-gray-400">Location:</span> ${quest.location}</p>
-              ${quest.description ? `<p class="text-gray-300">${quest.description}</p>` : ''}
+              <p><span class="text-gray-400">Type:</span> ${title.type}</p>
+              <p><span class="text-gray-400">Level Req:</span> ${title.level_requirement}</p>
+              <p><span class="text-gray-400">NPC:</span> ${title.npc}</p>
+              <p><span class="text-gray-400">Location:</span> ${title.location}</p>
+              ${title.description ? `<p class="text-gray-300">${title.description}</p>` : ''}
             </div>
           </div>
         `).join('')}
