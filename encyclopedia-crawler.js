@@ -474,6 +474,7 @@ class Item {
             const statsEl = titleContainer.querySelector('.block');
             const reqsEl = titleContainer.querySelectorAll('.block')[1];
             const availableEl = titleContainer.querySelector('.list.small');
+            const avaialbleText = availableEl? availableEl.textContent:'';
             const statsRaw = statsEl ? statsEl.textContent.trim().split('  ') : [];
             const reqsRaw = reqsEl ? reqsEl.textContent.trim().split('  ') : [];
             
@@ -530,7 +531,16 @@ class Item {
               type: 'Title',
               plainAttributes: statsRaw,                        // keep raw
               plainReq: reqsRaw,                  // keep raw
-              available: availableEl? availableEl.textContent:'',                  // keep raw
+              available: avaialbleText,                  // keep raw
+              slots: {
+                Weapon: avaialbleText.includes('Weapon'),
+                Shield: avaialbleText.includes('Shield'),
+                Helm: avaialbleText.includes('Helm'),
+                BodyArmor: avaialbleText.includes('Body Armor'),
+                Boots: avaialbleText.includes('Boots'),
+                Amulet: avaialbleText.includes('Amulet'),
+                Ring: avaialbleText.includes('Ring'),
+              },
               attributes: parseKeyValueArray(statsRaw),   // parsed version
               requirements: parseKeyValueArray(reqsRaw), // parsed version
               prefix:titleName.substring(0,titleName.indexOf('...')-1).trim(),
@@ -539,7 +549,6 @@ class Item {
               crawled_at: new Date().toISOString()
             };
           }, title.name);
-
 
           // Add title to collection (only if we found details)
           if (titleDetails) {

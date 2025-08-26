@@ -832,11 +832,47 @@ function renderTitlesGrid(titles) {
               <h5 class="font-bold text-rpg-gold">${title.name}</h5>
             </div>
             <div class="text-sm space-y-1">
-              <p><span class="text-gray-400">Type:</span> ${title.type}</p>
-              <p><span class="text-gray-400">Level Req:</span> ${title.level_requirement}</p>
-              <p><span class="text-gray-400">NPC:</span> ${title.npc}</p>
-              <p><span class="text-gray-400">Location:</span> ${title.location}</p>
-              ${title.description ? `<p class="text-gray-300">${title.description}</p>` : ''}
+
+                                  ${Object.keys(title.attributes).length > 0 ? `
+          <div>
+            <h4 class="text-lg font-bold text-rpg-gold mb-2">Attributes</h4>
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              ${Object.entries(title.attributes).map(([key, value]) => `
+                <div class="flex justify-between">
+                  <span class="text-gray-400">${key}:</span>
+                  <span class="text-rpg-gold">${typeof value === 'number' && key !== 'DamageMin' && key !== 'DamageMax' ? '+' : ''}${ key.includes('Prot')  || key.includes('Block')?  value*100+'%': value}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
+        <hr/>
+        ${Object.keys(title.requirements).length > 0 ? `
+          <div>
+            <h4 class="text-lg font-bold text-rpg-gold mb-2">Requirements</h4>
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              ${Object.entries(title.requirements).map(([key, value]) => `
+                <div class="flex justify-between">
+                  <span class="text-gray-400">${key}:</span>
+                  <span class="text-rpg-gold">${value}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+                    <div class="mt-3 pt-2 border-t border-rpg-gold/30">
+              <div class="flex flex-wrap gap-2 text-xs">
+                ${title.slots.Weapon ? '<span class="bg-grey-500 text-white px-2 py-1 rounded">Weapon</span>' : ''}
+                ${title.slots.Shield ? '<span class="bg-grey-500 text-white px-2 py-1 rounded">Shield</span>' : ''}
+                ${title.slots.Helm ? '<span class="bg-grey-500 text-white px-2 py-1 rounded">Helm</span>' : ''}
+                ${title.slots.BodyArmor ? '<span class="bg-grey-500 text-white px-2 py-1 rounded">Body Armor</span>' : ''}
+                ${title.slots.Boots ? '<span class="bg-grey-500 text-white px-2 py-1 rounded">Boots</span>' : ''}
+                ${title.slots.Amulet ? '<span class="bg-grey-500 text-white px-2 py-1 rounded">Amulet</span>' : ''}
+                ${title.slots.Ring ? '<span class="bg-grey-500 text-white px-2 py-1 rounded">Ring</span>' : ''}
+              </div>
+            </div>
+
             </div>
           </div>
         `).join('')}

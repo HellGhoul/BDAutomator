@@ -1,5 +1,5 @@
 {
-  "crawl_date": "2025-08-25T17:29:20.284Z",
+  "crawl_date": "2025-08-26T04:57:09.564Z",
   "total_items": 1380,
   "total_monsters": 1,
   "total_skills": 0,
@@ -8,12 +8,12 @@
     {
       "filename": "items.json",
       "count": 1380,
-      "size_bytes": 1068085
+      "size_bytes": 1026242
     },
     {
       "filename": "monsters.json",
       "count": 1,
-      "size_bytes": 359
+      "size_bytes": 346
     }
   ]
 }
