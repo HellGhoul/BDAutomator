@@ -171,7 +171,9 @@ class BlackDragonHelpers {
             ]);
             return 'continued';
           } catch (e) {
-            return
+            await this.waitForElement('body > div.main > form:nth-child(3) > input', 20);
+            await this.clickElement("body > div.main > form:nth-child(3) > input", { waitForNav: true });
+            return 'looted';
           }
         }
       }
@@ -190,6 +192,14 @@ class BlackDragonHelpers {
         return
       }
     }
+  }
+  async advanceDungeon(){
+    await this.waitForElement('body > div.main > div:nth-child(1) > table > tbody > tr:nth-child(4) > td:nth-child(4) > a > img', 20);
+    await this.clickElement("body > div.main > div:nth-child(1) > table > tbody > tr:nth-child(4) > td:nth-child(4) > a > img", { waitForNav: true });
+
+    
+    await this.waitForElement('body > div.main > div.center > form > input', 20);
+    await this.clickElement("body > div.main > div.center > form > input", { waitForNav: true });
   }
 
   // Check if loot is valuable based on config

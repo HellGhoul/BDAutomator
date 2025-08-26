@@ -75,7 +75,7 @@ async function runAutomation({ username, password, config }) {
         await helpers.checkHealRecovery(config.hpThreshold);
       }
       catch{
-        
+
       }
     }
     
@@ -112,11 +112,18 @@ async function runAutomation({ username, password, config }) {
         ]);
         await firstAttack();
       } catch (error) {
-        process.send && process.send('❌ Error in choosing: ' + error.message);
-        process.send && process.send('🗺️ Navigating to maps page...');
-        await helpers.goToMaps();
-        process.send && process.send('✅ Arrived at maps page, starting target selection...');
-        await choosing();
+        try{
+          await helpers.advanceDungeon();
+          await choosing();
+        }
+        catch{
+
+          process.send && process.send('❌ Error in choosing: ' + error.message);
+          process.send && process.send('🗺️ Navigating to maps page...');
+          await helpers.goToMaps();
+          process.send && process.send('✅ Arrived at maps page, starting target selection...');
+          await choosing();
+        }
       }
     }
   }
