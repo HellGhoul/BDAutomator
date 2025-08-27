@@ -1,14 +1,14 @@
 {
-  "crawl_date": "2025-08-27T13:00:44.208Z",
-  "total_items": 33,
+  "crawl_date": "2025-08-27T17:06:53.845Z",
+  "total_items": 1383,
   "total_monsters": 1,
   "total_skills": 0,
   "total_quests": 0,
   "files": [
     {
       "filename": "items.json",
-      "count": 33,
-      "size_bytes": 28719
+      "count": 1383,
+      "size_bytes": 1028415
     },
     {
       "filename": "monsters.json",
