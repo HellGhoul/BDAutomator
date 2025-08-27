@@ -136,8 +136,37 @@ async function loadAccounts() {
 
 // Encyclopedia Modal Functions
 window.openEncyclopedia = function() {
+  console.log('🔓 Opening encyclopedia modal...');
   document.getElementById('encyclopedia-modal').classList.remove('hidden');
-  loadAllEncyclopediaData();
+  
+  // Show loading state
+  const contentSection = document.getElementById('encyclopedia-content');
+  if (contentSection) {
+    contentSection.innerHTML = `
+      <div class="text-center text-gray-400 mt-8">
+        <div class="text-lg">🔄 Loading encyclopedia data...</div>
+        <div class="text-sm mt-2">Please wait while we fetch the latest data</div>
+      </div>
+    `;
+  }
+  
+  // Load data and show debug info
+  loadAllEncyclopediaData().then(() => {
+    console.log('✅ Encyclopedia data loaded, showing debug info');
+    if (contentSection) {
+      const debugInfo = document.getElementById('debug-info');
+      if (debugInfo) {
+        debugInfo.innerHTML = `
+          <div class="text-xs text-gray-500 mt-2">
+            📊 Data loaded: ${encyclopediaData?.items?.length || 0} items, 
+            ${encyclopediaData?.monsters?.length || 0} monsters, 
+            ${encyclopediaData?.skills?.length || 0} skills, 
+            ${encyclopediaData?.titles?.length || 0} titles
+          </div>
+        `;
+      }
+    }
+  });
 };
 
 window.closeEncyclopedia = function() {
@@ -271,35 +300,51 @@ window.searchEncyclopedia = async function() {
 
 window.filterEncyclopedia = async function(type) {
   try {
+    console.log(`🔍 Filtering encyclopedia for type: ${type}`);
     let data = [];
     let title = '';
     
     switch (type) {
       case 'items':
+        console.log('📦 Fetching all items...');
         data = await ipcRenderer.invoke('get-encyclopedia-items');
         title = 'Items';
         break;
       case 'monsters':
+        console.log('👹 Fetching monsters...');
         data = await ipcRenderer.invoke('get-encyclopedia-monsters');
         title = 'Monsters';
         break;
       case 'skills':
+        console.log('⚡ Fetching skills...');
         data = await ipcRenderer.invoke('get-encyclopedia-skills');
         title = 'Skills';
         break;
       case 'titles':
+        console.log('📋 Fetching titles...');
         data = await ipcRenderer.invoke('get-encyclopedia-titles');
         title = 'Titles';
         break;
       case 'recipes':
+        console.log('📖 Fetching recipes...');
         data = await ipcRenderer.invoke('get-encyclopedia-items', { type: 'recipe' });
         title = 'Recipes';
         break;
     }
     
+    console.log(`✅ Received ${data?.length || 0} ${type}`);
+    if (data && data.length > 0) {
+      console.log('🔍 Sample data:', data.slice(0, 2).map(item => ({
+        name: item.name,
+        type: item.type,
+        isLegendary: item.isLegendary,
+        isCraftable: item.isCraftable
+      })));
+    }
+    
     displayEncyclopediaResults({ [type]: data }, title);
   } catch (error) {
-    console.error('Filter error:', error);
+    console.error('❌ Filter error:', error);
   }
 };
 
@@ -396,6 +441,7 @@ window.showItemDetails = async function(itemId) {
   console.log('🔍 showItemDetails called with itemId:', itemId);
   console.log('📚 encyclopediaData:', encyclopediaData);
   console.log('📦 encyclopediaData.items:', encyclopediaData?.items);
+  console.log('📦 Total items loaded:', encyclopediaData?.items?.length || 0);
   
   // Find the item in the current encyclopedia data
   const item = encyclopediaData?.items?.find(i => i.id === itemId);
@@ -406,36 +452,72 @@ window.showItemDetails = async function(itemId) {
   }
   
   console.log('✅ Item found:', item);
+  console.log('🔍 Item properties:', {
+    name: item.name,
+    id: item.id,
+    isLegendary: item.isLegendary,
+    isCraftable: item.isCraftable,
+    type: item.type
+  });
   
   // Get dependency data if available (for craftable legendary items)
   let dependencyData = null;
+  let flatDependencies = null;
   if (item.isCraftable && item.isLegendary) {
     try {
       console.log('🔍 Fetching dependencies for:', item.name);
-      dependencyData = await ipcRenderer.invoke('get-dependencies', item.name);
-      console.log('✅ Dependency data received:', dependencyData);
+      console.log('🔍 Item properties:', { isCraftable: item.isCraftable, isLegendary: item.isLegendary });
+      const response = await ipcRenderer.invoke('get-dependencies', item.name);
+      console.log('✅ Dependency response received:', response);
       
-      if (dependencyData) {
+      if (response && response.item) {
+        dependencyData = response.item;
+        flatDependencies = response.flatDependencies;
+        
+        // Make flat dependencies available globally for the tree renderer
+        window.flatDependencies = flatDependencies;
+        
         console.log('📊 Dependency structure:', {
           hasChildren: !!dependencyData.children,
           childrenCount: dependencyData.children?.length || 0,
-          hasTotalMaterials: !!dependencyData.totalMaterials,
-          complexity: dependencyData.complexity
+          complexity: dependencyData.complexity,
+          flatDependenciesCount: Object.keys(flatDependencies || {}).length
         });
+        
+        console.log('🔍 Dependency data details:', {
+          item: dependencyData,
+          flatDependencies: flatDependencies
+        });
+      } else {
+        console.log('❌ No dependency data found for:', item.name);
+        console.log('Response was:', response);
       }
     } catch (error) {
       console.error('❌ Error fetching dependencies:', error);
     }
+  } else {
+    console.log('⚠️ Item is not craftable or legendary:', { 
+      name: item.name, 
+      isCraftable: item.isCraftable, 
+      isLegendary: item.isLegendary 
+    });
   }
   
   // Create and show modal
+  console.log('🔨 Creating modal for item:', item.name);
   const modal = document.createElement('div');
   modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-  modal.onclick = () => modal.remove();
+  modal.onclick = () => {
+    console.log('🔄 Modal clicked, removing...');
+    modal.remove();
+  };
   
   const modalContent = document.createElement('div');
   modalContent.className = 'bg-rpg-dark border-2 border-rpg-gold rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto';
-  modalContent.onclick = (e) => e.stopPropagation();
+  modalContent.onclick = (e) => {
+    console.log('🔄 Modal content clicked, stopping propagation');
+    e.stopPropagation();
+  };
   
   // Build dependency tree HTML if available
   let dependencyHtml = '';
@@ -448,32 +530,20 @@ window.showItemDetails = async function(itemId) {
         <div class="bg-rpg-darker p-4 rounded-lg">
           <div class="flex justify-between items-center mb-3">
             <span class="text-sm text-gray-400">Complexity: <span class="text-blue-400 font-bold">${dependencyData.complexity || 'N/A'}</span></span>
-            <span class="text-sm text-gray-400">Recipe: <span class="text-green-400">${dependencyData.children[0]?.name || 'Unknown Recipe'}</span></span>
+            <span class="text-sm text-gray-400">Recipe: <span class="text-green-400">${flatDependencies && dependencyData.children && dependencyData.children[0] ? (flatDependencies[dependencyData.children[0]]?.name || 'Unknown Recipe') : 'Unknown Recipe'}</span></span>
           </div>
           
           <div class="mb-4">
-            <h5 class="text-md font-bold text-rpg-gold mb-2">Total Materials Required (All Levels):</h5>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-60 overflow-y-auto">
-              ${dependencyData.totalMaterials && Object.values(dependencyData.totalMaterials).length > 0 ? 
-                Object.values(dependencyData.totalMaterials).map(material => `
-                  <div class="flex justify-between items-center p-2 bg-rpg-dark rounded border border-rpg-gold/30">
-                    <span class="text-sm text-gray-300">${material.name || 'Unknown Material'}</span>
-                    <div class="flex items-center space-x-2">
-                      <span class="text-xs text-gray-400">x${material.quantity || 0}</span>
-                      ${material.isLegendary ? '<span class="text-yellow-400 text-xs">⭐</span>' : ''}
-                      <span class="text-xs px-2 py-1 rounded ${material.type === 'title' ? 'bg-orange-500' : material.type === 'titled_item' ? 'bg-blue-500' : material.type === 'base_item' ? 'bg-green-500' : material.type === 'craftable_item' ? 'bg-purple-500' : material.type === 'recipe' ? 'bg-red-500' : 'bg-gray-500'} text-white">${(material.type || 'unknown').replace('_', ' ')}</span>
-                    </div>
-                  </div>
-                `).join('') : 
-                '<div class="text-gray-400 text-center py-4">No material data available</div>'
-              }
+            <h5 class="text-md font-bold text-rpg-gold mb-2">Recipe Ingredients:</h5>
+            <div class="text-sm text-gray-400 text-center py-2">
+              Click on recipe ingredients below to see their details
             </div>
           </div>
           
           <div class="mb-4">
             <h5 class="text-md font-bold text-rpg-gold mb-2">Dependency Tree Structure:</h5>
             <div class="bg-rpg-darker p-4 rounded-lg max-h-60 overflow-y-auto">
-              ${dependencyData ? window.renderDependencyTree(dependencyData, 0) : '<div class="text-gray-400 text-center py-4">No dependency tree available</div>'}
+              ${dependencyData ? window.renderDependencyTreeFlat(dependencyData, 0) : '<div class="text-gray-400 text-center py-4">No dependency tree available</div>'}
             </div>
           </div>
           
@@ -482,29 +552,35 @@ window.showItemDetails = async function(itemId) {
           <div>
             <h5 class="text-md font-bold text-rpg-gold mb-2">Direct Recipe Ingredients:</h5>
             <div class="space-y-3">
-              ${dependencyData.children && dependencyData.children[0] && dependencyData.children[0].children && dependencyData.children[0].children.length > 0 ? 
-                dependencyData.children[0].children.map(ingredient => `
-                  <div class="p-3 bg-rpg-dark rounded border border-rpg-gold/20">
-                    <div class="flex justify-between items-start mb-2">
-                      <span class="text-sm font-bold text-gray-300">${ingredient.name || 'Unknown Ingredient'}</span>
-                      <div class="flex items-center space-x-2">
-                        ${ingredient.isLegendary ? '<span class="text-yellow-400 text-xs">⭐ Legendary</span>' : ''}
-                        <span class="text-xs px-2 py-1 rounded ${(ingredient.nodeType || 'unknown') === 'titled_item' ? 'bg-blue-500' : (ingredient.nodeType || 'unknown') === 'base_item' ? 'bg-green-500' : (ingredient.nodeType || 'unknown') === 'craftable_item' ? 'bg-purple-500' : (ingredient.nodeType || 'unknown') === 'title' ? 'bg-orange-500' : 'bg-gray-500'} text-white">${(ingredient.nodeType || 'unknown').replace('_', ' ')}</span>
+              ${flatDependencies && dependencyData.children && dependencyData.children[0] && flatDependencies[dependencyData.children[0]] && flatDependencies[dependencyData.children[0]].children && flatDependencies[dependencyData.children[0]].children.length > 0 ? 
+                dependencyData.children[0].children.map(ingredientId => {
+                  const ingredient = flatDependencies[ingredientId];
+                  if (!ingredient) return '';
+                  
+                  return `
+                    <div class="p-3 bg-rpg-dark rounded border border-rpg-gold/20">
+                      <div class="flex justify-between items-start mb-2">
+                        <span class="text-sm font-bold text-gray-300">${ingredient.name || 'Unknown Ingredient'}</span>
+                        <div class="flex items-center space-x-2">
+                          ${ingredient.isLegendary ? '<span class="text-yellow-400 text-xs">⭐ Legendary</span>' : ''}
+                          <span class="text-xs px-2 py-1 rounded ${(ingredient.nodeType || 'unknown') === 'titled_item' ? 'bg-blue-500' : (ingredient.nodeType || 'unknown') === 'base_item' ? 'bg-green-500' : (ingredient.nodeType || 'unknown') === 'craftable_item' ? 'bg-purple-500' : (ingredient.nodeType || 'unknown') === 'title' ? 'bg-orange-500' : 'bg-gray-500'} text-white">${(ingredient.nodeType || 'unknown').replace('_', ' ')}</span>
+                        </div>
+                      </div>
+                      <div class="text-xs text-gray-400">
+                        <div>Type: ${ingredient.nodeType || 'unknown'}</div>
+                        ${ingredient.children && ingredient.children.length > 0 ? `
+                          <div class="mt-2">
+                            <div class="text-purple-400 font-bold">Sub-components: ${ingredient.children.length}</div>
+                            ${ingredient.children.map(childId => {
+                              const child = flatDependencies[childId];
+                              return `<div class="ml-2">• ${child ? child.name : 'Unknown'} (${child ? child.nodeType : 'unknown'})</div>`;
+                            }).join('')}
+                          </div>
+                        ` : ''}
                       </div>
                     </div>
-                    <div class="text-xs text-gray-400">
-                      <div>Type: ${ingredient.nodeType || 'unknown'}</div>
-                      ${ingredient.children && ingredient.children.length > 0 ? `
-                        <div class="mt-2">
-                          <div class="text-purple-400 font-bold">Sub-components: ${ingredient.children.length}</div>
-                          ${ingredient.children.map(child => `
-                            <div class="ml-2">• ${child.name || 'Unknown'} (${child.nodeType || 'unknown'})</div>
-                          `).join('')}
-                        </div>
-                      ` : ''}
-                    </div>
-                  </div>
-                `).join('') : '<div class="text-gray-400 text-center py-4">No recipe data available</div>'
+                  `;
+                }).join('') : '<div class="text-gray-400 text-center py-4">No recipe data available</div>'
               }
             </div>
           </div>
@@ -627,6 +703,9 @@ window.showItemDetails = async function(itemId) {
     ` : ''}
   `;
   
+  console.log('🔍 Final modal HTML length:', modalContent.innerHTML.length);
+  console.log('🔍 Modal content preview:', modalContent.innerHTML.substring(0, 200) + '...');
+  
   modal.appendChild(modalContent);
   document.body.appendChild(modal);
   
@@ -715,6 +794,51 @@ window.renderDependencyTree = function(node, level = 0) {
   }
   
   return html;
+};
+
+// New function for flat dependency structure
+window.renderDependencyTreeFlat = function(node, level = 0) {
+  if (!node) return '';
+  
+  const nodeTypeColor = {
+    'item': 'text-rpg-gold',
+    'recipe': 'text-red-400',
+    'titled_item': 'text-blue-400',
+    'base_item': 'text-green-400',
+    'craftable_item': 'text-purple-400',
+    'title': 'text-orange-400',
+    'unknown': 'text-gray-400'
+  };
+  
+  let html = `
+    <div class="mb-1" style="margin-left: ${level * 20}px;">
+      <span class="text-xs ${nodeTypeColor[node.nodeType] || 'text-gray-400'}">${node.name}</span>
+      <span class="text-xs text-gray-500">(${node.nodeType})</span>
+      ${node.isLegendary ? '<span class="text-yellow-400 text-xs">⭐</span>' : ''}
+    </div>
+  `;
+  
+  // Recursively render children by following ID references
+  if (node.children && node.children.length > 0) {
+    node.children.forEach(childId => {
+      // Get the child record from the flat dependencies
+      const childRecord = window.getFlatDependencyRecord(childId);
+      if (childRecord) {
+        html += window.renderDependencyTreeFlat(childRecord, level + 1);
+      }
+    });
+  }
+  
+  return html;
+};
+
+// Helper function to get a dependency record by ID
+window.getFlatDependencyRecord = function(recordId) {
+  // This will be populated by the main process when loading dependencies
+  if (window.flatDependencies && window.flatDependencies[recordId]) {
+    return window.flatDependencies[recordId];
+  }
+  return null;
 };
 
 window.showEncyclopediaStats = function() {
@@ -851,84 +975,9 @@ window.analyzeDependencies = async function() {
   }
 };
 
-window.regenerateDependencies = async function() {
-  try {
-    const button = event.target;
-    const originalText = button.textContent;
-    button.disabled = true;
-    button.textContent = '🔄 Regenerating...';
-    
-    // Show confirmation dialog
-    const confirmed = confirm('This will regenerate all dependency data for all craftable legendary items. This may take a few minutes. Continue?');
-    if (!confirmed) {
-      button.disabled = false;
-      button.textContent = originalText;
-      return;
-    }
-    
-    const result = await ipcRenderer.invoke('analyze-dependencies');
-    
-    if (result.success) {
-      alert(`✅ All dependencies regenerated successfully!\n\nFound ${result.total_items} craftable legendary items.\n\nComplexity Statistics:\n• Average: ${result.stats.average_complexity.toFixed(1)}\n• Highest: ${result.stats.highest_complexity}\n• Lowest: ${result.stats.lowest_complexity}\n\nYou can now view detailed dependencies for any craftable legendary item.`);
-    } else {
-      alert(`❌ Regeneration failed: ${result.error}`);
-    }
-  } catch (error) {
-    console.error('Error regenerating dependencies:', error);
-    alert('❌ Failed to regenerate dependencies: ' + error.message);
-  } finally {
-    const button = event.target;
-    button.disabled = false;
-    button.textContent = '🔄 Regenerate All Dependencies';
-  }
-};
 
-window.testModal = function() {
-  console.log('🧪 Testing modal...');
-  console.log('📚 encyclopediaData:', encyclopediaData);
-  console.log('📦 encyclopediaData.items:', encyclopediaData?.items);
-  
-  if (encyclopediaData?.items && encyclopediaData.items.length > 0) {
-    // Try to find a craftable legendary item first
-    const craftableLegendary = encyclopediaData.items.find(item => item.isCraftable && item.isLegendary);
-    if (craftableLegendary) {
-      console.log('🔍 Testing with craftable legendary item:', craftableLegendary);
-      showItemDetails(craftableLegendary.id);
-    } else {
-      const firstItem = encyclopediaData.items[0];
-      console.log('🔍 Testing with first item:', firstItem);
-      showItemDetails(firstItem.id);
-    }
-  } else {
-    console.error('❌ No items available for testing');
-    alert('No items available for testing. Please load encyclopedia data first.');
-  }
-};
 
-window.testDependencyModal = function() {
-  console.log('🔗 Testing dependency modal...');
-  console.log('📚 encyclopediaData:', encyclopediaData);
-  
-  if (encyclopediaData?.items && encyclopediaData.items.length > 0) {
-    // Find a craftable legendary item
-    const craftableLegendary = encyclopediaData.items.find(item => item.isCraftable && item.isLegendary);
-    if (craftableLegendary) {
-      console.log('🔍 Testing dependency modal with:', craftableLegendary.name);
-      console.log('📊 Item properties:', {
-        isCraftable: craftableLegendary.isCraftable,
-        isLegendary: craftableLegendary.isLegendary,
-        type: craftableLegendary.type
-      });
-      showItemDetails(craftableLegendary.id);
-    } else {
-      console.error('❌ No craftable legendary items found');
-      alert('No craftable legendary items found. These are required for dependency testing.');
-    }
-  } else {
-    console.error('❌ No items available for testing');
-    alert('No items available for testing. Please load encyclopedia data first.');
-  }
-};
+
 
 window.showDependencyStats = async function() {
   try {
@@ -1021,6 +1070,7 @@ window.showDependencyStats = async function() {
 
 window.loadAllEncyclopediaData = async function() {
   try {
+    console.log('🔄 Loading encyclopedia data...');
     const [items, monsters, skills, titles, stats] = await Promise.all([
       ipcRenderer.invoke('get-encyclopedia-items'),
       ipcRenderer.invoke('get-encyclopedia-monsters'),
@@ -1029,9 +1079,28 @@ window.loadAllEncyclopediaData = async function() {
       ipcRenderer.invoke('get-encyclopedia-stats')
     ]);
     
+    console.log('📊 Data loaded:', {
+      items: items?.length || 0,
+      monsters: monsters?.length || 0,
+      skills: skills?.length || 0,
+      titles: titles?.length || 0,
+      stats: stats ? 'loaded' : 'not loaded'
+    });
+    
+    // Check sample items for properties
+    if (items && items.length > 0) {
+      console.log('🔍 Sample items properties:', items.slice(0, 3).map(item => ({
+        name: item.name,
+        isLegendary: item.isLegendary,
+        isCraftable: item.isCraftable,
+        type: item.type
+      })));
+    }
+    
     encyclopediaData = { items, monsters, skills, titles, stats };
+    console.log('✅ Encyclopedia data loaded successfully');
   } catch (error) {
-    console.error('Error loading encyclopedia data:', error);
+    console.error('❌ Error loading encyclopedia data:', error);
   }
 };
 

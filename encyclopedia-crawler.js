@@ -105,7 +105,7 @@ class Item {
       this.createSummary();
 
       console.log('Encyclopedia crawling completed successfully');
-
+      
     } catch (error) {
       console.error('Error during crawling:', error);
       throw error;
@@ -234,8 +234,8 @@ class Item {
             
               return result;
             }
-
-            return {
+          
+          return {
               id: `item_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
               name: itemName,
               type: catName,
@@ -277,7 +277,7 @@ class Item {
       fs.writeFileSync(itemsFile, JSON.stringify(allItems, null, 2));
       console.log(`Total items found: ${itemsFound}`);
       console.log(`Items saved to: ${itemsFile}`);
-
+      
     } catch (error) {
       console.error('Error crawling items:', error);
     }
@@ -308,7 +308,7 @@ class Item {
               break;
             }
           }
-
+          
           return {
             name,
             location,
@@ -374,7 +374,7 @@ class Item {
       fs.writeFileSync(monstersFile, JSON.stringify(allMonsters, null, 2));
       console.log(`Total monsters found: ${monstersFound}`);
       console.log(`Monsters saved to: ${monstersFile}`);
-
+      
     } catch (error) {
       console.error('Error crawling monsters:', error);
     }
@@ -421,7 +421,7 @@ class Item {
       fs.writeFileSync(skillsFile, JSON.stringify(skills, null, 2));
       console.log(`Total skills found: ${skills.length}`);
       console.log(`Skills saved to: ${skillsFile}`);
-
+      
     } catch (error) {
       console.error('Error crawling skills:', error);
     }
@@ -524,8 +524,8 @@ class Item {
             
               return result;
             }
-
-            return {
+          
+          return {
               id: `title_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
               name: titleName,
               type: 'Title',
@@ -565,7 +565,7 @@ class Item {
       fs.writeFileSync(titlesFile, JSON.stringify(allTitles, null, 2));
       console.log(`Total title found: ${titlesFound}`);
       console.log(`Title saved to: ${titlesFile}`);
-
+      
     } catch (error) {
       console.error('Error crawling titles:', error);
     }
@@ -682,7 +682,7 @@ process.on('message', async (data) => {
     try {
       crawlerInstance = new EncyclopediaCrawler();
       await crawlerInstance.startCrawling(data);
-      process.exit(0);
+    process.exit(0);
     } catch (error) {
       console.error('❌ Crawling failed:', error);
       process.exit(1);

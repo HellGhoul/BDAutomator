@@ -181,10 +181,10 @@ ipcMain.handle('start-encyclopedia-crawl', async (event, account, crawlOptions) 
 
   // Listen for logs or status from child
   child.on('message', (msg) => {
-    win.webContents.send('encyclopedia-log', {
-      accountId: account.id,
+      win.webContents.send('encyclopedia-log', {
+        accountId: account.id,
       log: msg
-    });
+      });
   });
 
   child.on('exit', () => {
@@ -244,16 +244,19 @@ ipcMain.handle('get-encyclopedia-stats', async () => {
 
 ipcMain.handle('get-encyclopedia-items', async (event, filters = {}) => {
   try {
+    console.log('🔍 get-encyclopedia-items called with filters:', filters);
     const fs = require('fs');
     const path = require('path');
     const dataDir = './encyclopedia-data';
     const itemsFile = path.join(dataDir, 'items.json');
     
     if (!fs.existsSync(itemsFile)) {
+      console.log('❌ Items file not found');
       return [];
     }
     
     let items = JSON.parse(fs.readFileSync(itemsFile, 'utf8'));
+    console.log('📊 Loaded items, total count:', items.length);
     
     // Apply filters
     if (filters.type) {
@@ -295,6 +298,13 @@ ipcMain.handle('get-encyclopedia-items', async (event, filters = {}) => {
     if (filters.recipesOnly) {
       items = items.filter(item => item.type === 'Recipe');
     }
+    
+    console.log('📊 After applying filters, items count:', items.length);
+    console.log('🔍 Sample items:', items.slice(0, 3).map(item => ({ 
+      name: item.name, 
+      isLegendary: item.isLegendary, 
+      isCraftable: item.isCraftable 
+    })));
     
     // Apply sorting
     if (filters.sortBy) {
@@ -464,30 +474,54 @@ ipcMain.handle('analyze-dependencies', async (event) => {
 
 ipcMain.handle('get-dependencies', async (event, itemName) => {
   try {
+    console.log('🔍 get-dependencies called with itemName:', itemName);
+    
     const dependenciesPath = path.join(__dirname, 'encyclopedia-data', 'dependencies.json');
     
     if (!fs.existsSync(dependenciesPath)) {
+      console.log('❌ Dependencies file not found');
       return null;
     }
     
     const data = JSON.parse(fs.readFileSync(dependenciesPath, 'utf8'));
+    console.log('📊 Loaded dependencies data, total records:', Object.keys(data.dependencies).length);
     
     if (itemName) {
-      const itemDependency = data.dependencies[itemName] || null;
+      // Find the item by name by searching through all dependencies
+      let item = null;
+      console.log('🔍 Searching for item by name:', itemName);
       
-      if (itemDependency) {
+      for (const [itemId, itemData] of Object.entries(data.dependencies)) {
+        if (itemData.name === itemName) {
+          item = itemData;
+          console.log('✅ Found item:', itemData.name, 'with ID:', itemId);
+          break;
+        }
+      }
+      
+      if (item) {
+        console.log('🔧 Processing item dependencies for:', item.name);
         // Add recursive materials using the analyzer
         const analyzer = new DependencyAnalyzer();
         analyzer.loadData();
-        itemDependency.recursiveMaterials = analyzer.getAllMaterialsRecursive(itemDependency);
+        analyzer.flatDependencies = data.dependencies; // Load the flat structure
+        item.recursiveMaterials = analyzer.getAllMaterialsRecursive(item);
+        
+        console.log('📊 Item processed successfully, returning data');
+        // Also return the flat dependencies for the renderer to use
+        return {
+          item: item,
+          flatDependencies: data.dependencies
+        };
       }
       
-      return itemDependency;
+      console.log('❌ Item not found in dependencies:', itemName);
+      return null;
     }
     
     return data;
   } catch (error) {
-    console.error('Error getting dependencies:', error);
+    console.error('❌ Error getting dependencies:', error);
     return null;
   }
 });
