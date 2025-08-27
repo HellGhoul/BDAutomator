@@ -132,9 +132,52 @@ class DependencyAnalyzer {
             // Direct ID (base item or title)
             recipeRecord.children.push(ingredientResult);
           } else if (ingredientResult.type === 'titled_ingredient') {
-            // Titled ingredient - add both title and base item IDs
-            recipeRecord.children.push(ingredientResult.titleId);
-            recipeRecord.children.push(ingredientResult.baseItemId);
+            // Titled ingredient - we need to process both title and base item dependencies
+            // to ensure they are created in flatDependencies before adding their IDs
+            console.log(`🔧 Processing titled ingredient: titleId=${ingredientResult.titleId}, baseItemId=${ingredientResult.baseItemId}`);
+            
+            // The parseTitledIngredient function returns IDs, but we need to find the actual objects
+            // We need to search through the maps to find the objects with these IDs
+            let title = null;
+            let baseItem = null;
+            
+            // Find title by ID
+            for (const [name, titleData] of this.titleMap) {
+              if (titleData.id === ingredientResult.titleId) {
+                title = titleData;
+                break;
+              }
+            }
+            
+            // Find base item by ID
+            for (const [name, itemData] of this.itemMap) {
+              if (itemData.id === ingredientResult.baseItemId) {
+                baseItem = itemData;
+                break;
+              }
+            }
+            
+            if (title) {
+              // Process title dependencies to ensure it's created in flatDependencies
+              const processedTitleId = this.processTitleDependencies(title);
+              if (processedTitleId) {
+                recipeRecord.children.push(processedTitleId);
+              }
+            } else {
+              console.log(`⚠️ Title not found in titleMap: ${ingredientResult.titleId}`);
+              recipeRecord.children.push(ingredientResult.titleId);
+            }
+            
+            if (baseItem) {
+              // Process base item dependencies to ensure it's created in flatDependencies
+              const processedBaseItemId = this.processBaseItemDependencies(baseItem);
+              if (processedBaseItemId) {
+                recipeRecord.children.push(processedBaseItemId);
+              }
+            } else {
+              console.log(`⚠️ Base item not found in itemMap: ${ingredientResult.baseItemId}`);
+              recipeRecord.children.push(ingredientResult.baseItemId);
+            }
           }
         }
       });
@@ -234,6 +277,7 @@ class DependencyAnalyzer {
     if (baseItem.isCraftable && baseItem.isLegendary) {
       const recipe = this.findRecipeForItem(baseItem.name);
       if (recipe) {
+        console.log(`🔍 Base item ${baseItem.name} is craftable, processing its recipe: ${recipe.name}`);
         const recipeId = this.processRecipeDependencies(recipe);
         if (recipeId) {
           baseItemRecord.children.push(recipeId);
@@ -347,10 +391,20 @@ class DependencyAnalyzer {
   extractTitleAndBase(titledItemName) {
     console.log(`🔍 Extracting title and base from: "${titledItemName}"`);
     
+    // First, check if the entire string is a base item name
+    if (this.itemMap.has(titledItemName)) {
+      console.log(`✅ Entire string is a base item: "${titledItemName}"`);
+      return {
+        titleName: null,
+        baseItemName: titledItemName
+      };
+    }
+    
     // Handle patterns like "Title's Base Item (III)" or "Title Base Item"
+    // IMPORTANT: More specific patterns must come FIRST to avoid false matches
     const titlePatterns = [
-      /^(.+?)'s (.+?)(?:\s*\([^)]+\))?$/,  // e.g., "Azure dragon's God Forged Boots (III)"
-      /^(.+?) (.+?)(?:\s*\([^)]+\))?$/     // e.g., "Minotaur king Great axe (II)"
+      /^(.+?)'s (.+?)(?:\s*\([^)]+\))?$/,  // e.g., "Azure dragon's God Forged Boots (III)" - CHECK FIRST
+      /^(.+?) (.+?)(?:\s*\([^)]+\))?$/     // e.g., "Minotaur king Great axe (II)" - CHECK SECOND
     ];
     
     for (const pattern of titlePatterns) {
@@ -359,20 +413,22 @@ class DependencyAnalyzer {
         let titleName = match[1].trim();
         let baseItemName = match[2].trim();
         
-        // Clean up common variations
-        if (titleName.endsWith('s') && !titleName.endsWith("'s")) {
-          titleName = titleName.slice(0, -1);
+        // Validate that the extracted base item name is actually a valid item
+        // This prevents incorrect splitting like "Keh's might" being split into "Keh" and "might"
+        if (this.itemMap.has(baseItemName)) {
+          console.log(`✅ Extracted: title="${titleName}", base="${baseItemName}"`);
+          return {
+            titleName: titleName,
+            baseItemName: baseItemName
+          };
+        } else {
+          console.log(`⚠️ Extracted base item "${baseItemName}" is not a valid item, trying next pattern`);
+          continue;
         }
-        
-        console.log(`✅ Extracted: title="${titleName}", base="${baseItemName}"`);
-        return {
-          titleName: titleName,
-          baseItemName: baseItemName
-        };
       }
     }
     
-    console.log(`❌ No pattern matched for: "${titledItemName}"`);
+    console.log(`❌ No valid pattern matched for: "${titledItemName}"`);
     // If no pattern matches, treat the whole name as base item
     return {
       titleName: null,

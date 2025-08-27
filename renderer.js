@@ -553,7 +553,7 @@ window.showItemDetails = async function(itemId) {
               ${(() => {
                 if (!dependencyData || !flatDependencies) return '<div class="text-gray-400 text-center py-4">No summary available</div>';
                 
-                const summary = window.calculateMaterialSummary(dependencyData);
+                const summary = window.calculateQuantitiesFromRecipes(dependencyData);
                 if (!summary || Object.keys(summary).length === 0) {
                   return '<div class="text-gray-400 text-center py-4">No materials to summarize</div>';
                 }
@@ -612,7 +612,7 @@ window.showItemDetails = async function(itemId) {
           </div>
           
           <div>
-            <h5 class="text-md font-bold text-rpg-gold mb-2">Direct Recipe Ingredients:
+            <h5 class="text-md font-bold text-rpg-gold mb-2">Direct Recipe Ingredients:</h5>
             <div class="space-y-3">
               ${flatDependencies && dependencyData.children && dependencyData.children.length > 0 ? 
                 (() => {
@@ -954,7 +954,11 @@ window.renderDependencyTreeFlat = function(node, level = 0, nodeId = null) {
     `;
     
     // For recipes, we need to group children into titled items
+    console.log(`🔍 Recipe ${node.name} has ${node.children.length} children:`, node.children);
+    console.log(`🔍 Children data:`, node.children.map(id => window.flatDependencies[id]).filter(Boolean));
+    
     const titledItems = window.groupRecipeIngredients(node.children);
+    console.log(`🔍 Grouped into ${titledItems.length} titled items:`, titledItems);
     
     titledItems.forEach((titledItem, index) => {
       const titledItemId = `titled_${uniqueId}_${index}`;
@@ -967,14 +971,21 @@ window.renderDependencyTreeFlat = function(node, level = 0, nodeId = null) {
               <span id="icon_${titledItemId}" class="text-sm">▼</span>
             </button>
             
-            <div class="w-[50px] h-[50px] bg-blue-800/30 rounded border border-blue-500/30 flex items-center justify-center">
-              <span class="text-xs text-blue-300">TI</span>
-            </div>
+            ${(() => {
+              // Use base item image for titled items
+              const baseItemData = window.getEncyclopediaItemByName(titledItem.baseItem);
+              return baseItemData && baseItemData.image_url ? 
+                `<img src="${baseItemData.image_url}" alt="${titledItem.name}" class="w-[50px] h-[50px] object-contain rounded border border-blue-500/30">` : 
+                `<div class="w-[50px] h-[50px] bg-blue-800/30 rounded border border-blue-500/30 flex items-center justify-center">
+                  <span class="text-xs text-blue-300">TI</span>
+                </div>`;
+            })()}
             
             <div class="flex-1">
               <div class="flex items-center space-x-2">
                 <span class="text-sm font-bold text-blue-400">${titledItem.name}</span>
                 <span class="text-xs px-2 py-1 rounded bg-blue-600 text-white">Titled Item</span>
+
               </div>
               <div class="text-xs text-blue-300">Recipe Ingredient</div>
             </div>
@@ -996,6 +1007,7 @@ window.renderDependencyTreeFlat = function(node, level = 0, nodeId = null) {
                   <div class="flex-1">
                     <span class="text-sm font-bold text-orange-400">${titledItem.title}</span>
                     <span class="text-xs px-2 py-1 rounded bg-orange-600 text-white">Title</span>
+
                   </div>
                 </div>
               </div>
@@ -1021,6 +1033,7 @@ window.renderDependencyTreeFlat = function(node, level = 0, nodeId = null) {
                       return baseItemData && baseItemData.type ? 
                         `<div class="text-xs text-green-300">Type: ${baseItemData.type}</div>` : '';
                     })()}
+
                   </div>
                 </div>
               </div>
@@ -1088,13 +1101,13 @@ window.groupRecipeIngredients = function(ingredientIds) {
   if (!ingredientIds || !window.flatDependencies) return [];
   
   console.log('🔍 Grouping recipe ingredients:', ingredientIds);
+  console.log('🔍 Available dependencies:', Object.keys(window.flatDependencies));
   
-  const titledItems = [];
-  const processedIds = new Set();
+  // Separate titles and base items
+  const titles = [];
+  const baseItems = [];
   
   ingredientIds.forEach(ingredientId => {
-    if (processedIds.has(ingredientId)) return;
-    
     const ingredient = window.flatDependencies[ingredientId];
     if (!ingredient) {
       console.log(`⚠️ Ingredient not found: ${ingredientId}`);
@@ -1104,73 +1117,81 @@ window.groupRecipeIngredients = function(ingredientIds) {
     console.log(`🔍 Processing ingredient: ${ingredient.name} (${ingredient.nodeType})`);
     
     if (ingredient.nodeType === 'title') {
-      // Find the corresponding base item for this title
-      const baseItemId = ingredientIds.find(id => {
-        const item = window.flatDependencies[id];
-        return item && item.nodeType === 'base_item';
-      });
-      
-      if (baseItemId) {
-        const baseItem = window.flatDependencies[baseItemId];
-        if (baseItem) {
-          // Create titled item: "Title's Base Item"
-          const titledItemName = `${ingredient.name}'s ${baseItem.name}`;
-          console.log(`✅ Created titled item: ${titledItemName}`);
-          titledItems.push({
-            name: titledItemName,
-            title: ingredient.name,
-            baseItem: baseItem.name,
-            titleId: ingredientId,
-            baseItemId: baseItemId
-          });
-          
-          processedIds.add(ingredientId);
-          processedIds.add(baseItemId);
-        }
-      } else {
-        console.log(`⚠️ No base item found for title: ${ingredient.name}`);
-      }
+      titles.push({ id: ingredientId, ...ingredient });
     } else if (ingredient.nodeType === 'base_item') {
-      // Check if this base item has a corresponding title
-      const titleId = ingredientIds.find(id => {
-        const item = window.flatDependencies[id];
-        return item && item.nodeType === 'title';
-      });
-      
-      if (titleId) {
-        const title = window.flatDependencies[titleId];
-        if (title) {
-          // Create titled item: "Title's Base Item"
-          const titledItemName = `${title.name}'s ${ingredient.name}`;
-          console.log(`✅ Created titled item: ${titledItemName}`);
-          titledItems.push({
-            name: titledItemName,
-            title: title.name,
-            baseItem: ingredient.name,
-            titleId: titleId,
-            baseItemId: ingredientId
-          });
-          
-          processedIds.add(ingredientId);
-          processedIds.add(titleId);
-        }
-      } else {
-        // Base item without title
-        console.log(`✅ Base item without title: ${ingredient.name}`);
-        titledItems.push({
-          name: ingredient.name,
-          title: null,
-          baseItem: ingredient.name,
-          titleId: null,
-          baseItemId: ingredientId
-        });
-        
-        processedIds.add(ingredientId);
-      }
+      baseItems.push({ id: ingredientId, ...ingredient });
     } else {
       console.log(`⚠️ Unknown ingredient type: ${ingredient.nodeType} for ${ingredient.name}`);
     }
   });
+  
+  console.log(`🔍 Found ${titles.length} titles:`, titles.map(t => t.name));
+  console.log(`🔍 Found ${baseItems.length} base items:`, baseItems.map(b => b.name));
+  
+      // Pair titles with base items in order
+    const titledItems = [];
+    const maxPairs = Math.min(titles.length, baseItems.length);
+    
+    for (let i = 0; i < maxPairs; i++) {
+      const title = titles[i];
+      const baseItem = baseItems[i];
+      
+      // Create titled item: "prefix + item name + suffix" format
+      let titledItemName = baseItem.name;
+      
+      // Get the actual title data to access prefix and suffix
+      const titleData = window.getEncyclopediaTitleByName(title.name);
+      if (titleData) {
+        if (titleData.prefix && titleData.suffix) {
+          titledItemName = `${titleData.prefix} ${baseItem.name} ${titleData.suffix}`;
+        } else if (titleData.prefix) {
+          titledItemName = `${titleData.prefix} ${baseItem.name}`;
+        } else if (titleData.suffix) {
+          titledItemName = `${baseItem.name} ${titleData.suffix}`;
+        }
+      } else {
+        // Fallback to old format if title data not found
+        titledItemName = `${title.name}'s ${baseItem.name}`;
+      }
+      
+      console.log(`✅ Created titled item ${i + 1}: ${titledItemName}`);
+      
+      titledItems.push({
+        name: titledItemName,
+        title: title.name,
+        baseItem: baseItem.name,
+        titleId: title.id,
+        baseItemId: baseItem.id,
+        index: i
+      });
+    }
+  
+  // Add any remaining unpaired items
+  if (titles.length > baseItems.length) {
+    titles.slice(maxPairs).forEach((title, index) => {
+      console.log(`⚠️ Unpaired title: ${title.name}`);
+      titledItems.push({
+        name: title.name,
+        title: title.name,
+        baseItem: null,
+        titleId: title.id,
+        baseItemId: null,
+        index: maxPairs + index
+      });
+    });
+  } else if (baseItems.length > titles.length) {
+    baseItems.slice(maxPairs).forEach((baseItem, index) => {
+      console.log(`⚠️ Unpaired base item: ${baseItem.name}`);
+      titledItems.push({
+        name: baseItem.name,
+        title: null,
+        baseItem: baseItem.name,
+        titleId: null,
+        baseItemId: baseItem.id,
+        index: maxPairs + index
+      });
+    });
+  }
   
   console.log(`📊 Final titled items:`, titledItems);
   return titledItems;
@@ -1202,7 +1223,7 @@ window.calculateMaterialSummary = function(node, visited = new Set()) {
     quantity: 1
   };
   
-  // Check if item already exists in summary and increment quantity
+  // Check if item already exists in summary and add quantities
   const existingIndex = summary[type].findIndex(item => item.name === node.name);
   if (existingIndex === -1) {
     summary[type].push(summaryItem);
@@ -1224,12 +1245,100 @@ window.calculateMaterialSummary = function(node, visited = new Set()) {
             if (existingIndex === -1) {
               summary[childType].push(childItem);
             } else {
-              summary[childType][existingIndex].quantity += childItem.quantity;
+              summary[type][existingIndex].quantity += (childItem.quantity || 1);
             }
           });
         });
       }
     });
+  }
+  
+  return summary;
+};
+
+// New function to calculate quantities based on recipe ingredient counts
+window.calculateQuantitiesFromRecipes = function(node, visited = new Set(), parentQuantity = 1) {
+  if (!node || visited.has(node.id)) return {};
+  
+  visited.add(node.id);
+  const summary = {};
+  
+  // Add current node to summary with parent quantity
+  const type = node.nodeType || 'unknown';
+  if (!summary[type]) summary[type] = [];
+  
+  // Get encyclopedia item or title for image and details
+  const encyclopediaItem = window.getEncyclopediaItemByName(node.name);
+  const encyclopediaTitle = window.getEncyclopediaTitleByName(node.name);
+  const encyclopediaData = encyclopediaItem || encyclopediaTitle;
+  
+  const summaryItem = {
+    id: node.id,
+    name: node.name,
+    nodeType: node.nodeType,
+    type: encyclopediaData?.type || encyclopediaData?.prefix || 'Unknown',
+    image_url: encyclopediaData?.image_url || null,
+    isLegendary: node.isLegendary || false,
+    quantity: parentQuantity
+  };
+  
+  // Check if item already exists in summary and add quantities
+  const existingIndex = summary[type].findIndex(item => item.name === node.name);
+  if (existingIndex === -1) {
+    summary[type].push(summaryItem);
+  } else {
+    summary[type][existingIndex].quantity += parentQuantity;
+  }
+  
+  // Recursively process children
+  if (node.children && node.children.length > 0) {
+    if (node.nodeType === 'recipe') {
+      // For recipes, calculate ingredient quantities based on how many times they appear
+      const ingredientCounts = {};
+      node.children.forEach(childId => {
+        ingredientCounts[childId] = (ingredientCounts[childId] || 0) + 1;
+      });
+      
+      // Process each child with its count
+      Object.entries(ingredientCounts).forEach(([childId, count]) => {
+        const childRecord = window.getFlatDependencyRecord(childId);
+        if (childRecord) {
+          const childSummary = window.calculateQuantitiesFromRecipes(childRecord, visited, count);
+          // Merge child summary into parent summary
+          Object.entries(childSummary).forEach(([childType, childItems]) => {
+            if (!summary[childType]) summary[childType] = [];
+            childItems.forEach(childItem => {
+              const existingIndex = summary[childType].findIndex(item => item.name === childItem.name);
+              if (existingIndex === -1) {
+                summary[childType].push(childItem);
+              } else {
+                summary[childType][existingIndex].quantity += childItem.quantity;
+              }
+            });
+          });
+        }
+      });
+    } else {
+      // For non-recipe nodes, process children normally
+      node.children.forEach(childId => {
+        const childRecord = window.getFlatDependencyRecord(childId);
+        if (childRecord) {
+          const childSummary = window.calculateQuantitiesFromRecipes(childRecord, visited, parentQuantity);
+          // Merge child summary into parent summary
+          Object.entries(childSummary).forEach(([childType, childItems]) => {
+            if (!summary[childType]) summary[childType] = [];
+            childItems.forEach(childItem => {
+              const existingIndex = summary[childType].findIndex(item => item.name === childItem.name);
+              if (existingIndex === -1) {
+                summary[childType].push(childItem);
+              } else {
+                summary[childType][existingIndex].quantity += childItem.quantity;
+              }
+            });
+          });
+        }
+      });
+    }
   }
   
   return summary;
