@@ -1029,7 +1029,23 @@ window.renderDependencyTreeFlat = function(node, level = 0, nodeId = null) {
             ${titledItem.baseItem ? `
               <div class="mb-2">
                 <div class="flex items-center space-x-2 p-2 bg-green-900/20 rounded border border-green-500/30">
-                  <div class="w-4"></div>
+                  ${(() => {
+                    // Check if this base item has children (like a recipe)
+                    const baseItemRecord = window.flatDependencies[titledItem.baseItemId];
+                    const hasChildren = baseItemRecord && baseItemRecord.children && baseItemRecord.children.length > 0;
+                    const isExpandable = hasChildren && (
+                      baseItemRecord.nodeType === 'recipe' || 
+                      baseItemRecord.nodeType === 'base_item' || 
+                      baseItemRecord.nodeType === 'item'
+                    );
+                    
+                    return isExpandable ? `
+                      <button onclick="toggleNode('${titledItemId}_base')" class="toggle-btn text-green-400 hover:text-green-300">
+                        <span id="icon_${titledItemId}_base" class="text-sm">▶</span>
+                      </button>
+                    ` : '<div class="w-4"></div>';
+                  })()}
+                  
                   ${(() => {
                     const baseItemData = window.getEncyclopediaItemByName(titledItem.baseItem);
                     return baseItemData && baseItemData.image_url ? 
@@ -1038,6 +1054,7 @@ window.renderDependencyTreeFlat = function(node, level = 0, nodeId = null) {
                         <span class="text-xs text-green-300">B</span>
                       </div>`;
                   })()}
+                  
                   <div class="flex-1">
                     <span class="text-sm font-bold text-green-400">${titledItem.baseItem}</span>
                     <span class="text-xs px-2 py-1 rounded bg-green-600 text-white">Base Item</span>
@@ -1046,9 +1063,38 @@ window.renderDependencyTreeFlat = function(node, level = 0, nodeId = null) {
                       return baseItemData && baseItemData.type ? 
                         `<div class="text-xs text-green-300">Type: ${baseItemData.type}</div>` : '';
                     })()}
-
+                    ${(() => {
+                      const baseItemRecord = window.flatDependencies[titledItem.baseItemId];
+                      const hasChildren = baseItemRecord && baseItemRecord.children && baseItemRecord.children.length > 0;
+                      return hasChildren ? `<span class="text-xs px-2 py-1 rounded bg-blue-600 text-white">📁</span>` : '';
+                    })()}
                   </div>
                 </div>
+                
+                ${(() => {
+                  // Add children container for base item if it has children
+                  const baseItemRecord = window.flatDependencies[titledItem.baseItemId];
+                  const hasChildren = baseItemRecord && baseItemRecord.children && baseItemRecord.children.length > 0;
+                  
+                  if (hasChildren) {
+                    return `
+                      <div id="children_${titledItemId}_base" class="hidden" style="margin-left: 20px;">
+                        ${(() => {
+                          // Recursively render the base item's children
+                          let childrenHtml = '';
+                          baseItemRecord.children.forEach(childId => {
+                            const childRecord = window.flatDependencies[childId];
+                            if (childRecord) {
+                              childrenHtml += window.renderDependencyTreeFlat(childRecord, level + 2, `base_${titledItemId}_${childId}`);
+                            }
+                          });
+                          return childrenHtml;
+                        })()}
+                      </div>
+                    `;
+                  }
+                  return '';
+                })()}
               </div>
             ` : ''}
           </div>
