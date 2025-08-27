@@ -1208,85 +1208,121 @@ window.groupRecipeIngredients = function(ingredientIds) {
   
   // Pair titles with base items in order
   const titledItems = [];
-  const maxPairs = Math.min(titles.length, baseItems.length);
   
-  console.log(`🔍 Creating ${maxPairs} titled item pairs...`);
+  console.log(`🔍 Creating titled item pairs...`);
+  console.log(`  Titles: ${titles.length}, Base Items: ${baseItems.length}`);
   
-  for (let i = 0; i < maxPairs; i++) {
-    const title = titles[i];
-    const baseItem = baseItems[i];
-    
-    console.log(`  Pair ${i + 1}: Title "${title.name}" + Base Item "${baseItem.name}"`);
-    
-    // Create titled item: "prefix + item name + suffix" format
-    let titledItemName = baseItem.name;
-    
-    // Get the actual title data to access prefix and suffix
-    const titleData = window.getEncyclopediaTitleByName(title.name);
-    if (titleData) {
-      if (titleData.prefix && titleData.suffix) {
-        titledItemName = `${titleData.prefix} ${baseItem.name} ${titleData.suffix}`;
-      } else if (titleData.prefix) {
-        titledItemName = `${titleData.prefix} ${baseItem.name}`;
-      } else if (titleData.suffix) {
-        titledItemName = `${baseItem.name} ${titleData.suffix}`;
-      }
-    } else {
-      // Fallback to old format if title data not found
-      titledItemName = `${title.name}'s ${baseItem.name}`;
-    }
-    
-    console.log(`✅ Created titled item ${i + 1}: ${titledItemName}`);
-    
-    titledItems.push({
-      name: titledItemName,
-      title: title.name,
-      baseItem: baseItem.name,
-      titleId: title.id,
-      baseItemId: baseItem.id,
-      index: i
-    });
-  }
-  
-  // Add any remaining unpaired items
-  if (titles.length > baseItems.length) {
-    titles.slice(maxPairs).forEach((title, index) => {
-      console.log(`⚠️ Unpaired title: ${title.name}`);
-      titledItems.push({
-        name: title.name,
-        title: title.name,
-        baseItem: null,
-        titleId: title.id,
-        baseItemId: null,
-        index: maxPairs + index
-      });
-    });
-  } else if (baseItems.length > titles.length) {
-    baseItems.slice(maxPairs).forEach((baseItem, index) => {
-      console.log(`⚠️ Unpaired base item: ${baseItem.name}`);
+  // Handle different pairing scenarios
+  if (titles.length === 0 && baseItems.length > 0) {
+    // No titles, just base items
+    baseItems.forEach((baseItem, index) => {
+      console.log(`  Base item ${index + 1}: "${baseItem.name}" (no title)`);
       titledItems.push({
         name: baseItem.name,
         title: null,
         baseItem: baseItem.name,
         titleId: null,
         baseItemId: baseItem.id,
-        index: maxPairs + index
+        index: index
       });
     });
+  } else if (titles.length > 0 && baseItems.length === 0) {
+    // Only titles, no base items
+    titles.forEach((title, index) => {
+      console.log(`  Title ${index + 1}: "${title.name}" (no base item)`);
+      titledItems.push({
+        name: title.name,
+        title: title.name,
+        baseItem: null,
+        titleId: title.id,
+        baseItemId: null,
+        index: index
+      });
+    });
+  } else if (titles.length > 0 && baseItems.length > 0) {
+    // Both titles and base items - pair them
+    const maxPairs = Math.min(titles.length, baseItems.length);
+    
+    for (let i = 0; i < maxPairs; i++) {
+      const title = titles[i];
+      const baseItem = baseItems[i];
+      
+      console.log(`  Pair ${i + 1}: Title "${title.name}" + Base Item "${baseItem.name}"`);
+      
+      // Create titled item: "prefix + item name + suffix" format
+      let titledItemName = baseItem.name;
+      
+      // Get the actual title data to access prefix and suffix
+      const titleData = window.getEncyclopediaTitleByName(title.name);
+      if (titleData) {
+        if (titleData.prefix && titleData.suffix) {
+          titledItemName = `${titleData.prefix} ${baseItem.name} ${titleData.suffix}`;
+        } else if (titleData.prefix) {
+          titledItemName = `${titleData.prefix} ${baseItem.name}`;
+        } else if (titleData.suffix) {
+          titledItemName = `${baseItem.name} ${titleData.suffix}`;
+        }
+      } else {
+        // Fallback to old format if title data not found
+        titledItemName = `${title.name}'s ${baseItem.name}`;
+      }
+      
+      console.log(`✅ Created titled item ${i + 1}: ${titledItemName}`);
+      
+      titledItems.push({
+        name: titledItemName,
+        title: title.name,
+        baseItem: baseItem.name,
+        titleId: title.id,
+        baseItemId: baseItem.id,
+        index: i
+      });
+    }
+    
+    // Handle remaining unpaired items
+    if (titles.length > maxPairs) {
+      titles.slice(maxPairs).forEach((title, index) => {
+        console.log(`⚠️ Unpaired title: ${title.name}`);
+        titledItems.push({
+          name: title.name,
+          title: title.name,
+          baseItem: null,
+          titleId: title.id,
+          baseItemId: null,
+          index: maxPairs + index
+        });
+      });
+    }
+    
+    if (baseItems.length > maxPairs) {
+      baseItems.slice(maxPairs).forEach((baseItem, index) => {
+        console.log(`⚠️ Unpaired base item: ${baseItem.name}`);
+        titledItems.push({
+          name: baseItem.name,
+          title: null,
+          baseItem: baseItem.name,
+          titleId: null,
+          baseItemId: baseItem.id,
+          index: maxPairs + index
+        });
+      });
+    }
   }
+  
+
   
   console.log(`📊 Final titled items:`, titledItems);
   return titledItems;
 };
 
 // Helper function to calculate material summary recursively with quantities
-window.calculateMaterialSummary = function(node, visited = new Set()) {
+window.calculateMaterialSummary = function(node, visited = new Set(), parentQuantity = 1) {
   if (!node || visited.has(node.id)) return {};
   
   visited.add(node.id);
   const summary = {};
   
-  // Add current node to summary
+  // Add current node to summary with proper quantity
   const type = node.nodeType || 'unknown';
   if (!summary[type]) summary[type] = [];
   
@@ -1302,7 +1338,7 @@ window.calculateMaterialSummary = function(node, visited = new Set()) {
     type: encyclopediaData?.type || encyclopediaData?.prefix || 'Unknown',
     image_url: encyclopediaData?.image_url || null,
     isLegendary: node.isLegendary || false,
-    quantity: 1
+    quantity: parentQuantity
   };
   
   // Check if item already exists in summary and add quantities
@@ -1310,29 +1346,59 @@ window.calculateMaterialSummary = function(node, visited = new Set()) {
   if (existingIndex === -1) {
     summary[type].push(summaryItem);
   } else {
-    summary[type][existingIndex].quantity += 1;
+    summary[type][existingIndex].quantity += parentQuantity;
   }
   
-  // Recursively process children
+  // Recursively process children with proper quantity accumulation
   if (node.children && node.children.length > 0) {
-    node.children.forEach(childId => {
-      const childRecord = window.getFlatDependencyRecord(childId);
-      if (childRecord) {
-        const childSummary = window.calculateMaterialSummary(childRecord, visited);
-        // Merge child summary into parent summary
-        Object.entries(childSummary).forEach(([childType, childItems]) => {
-          if (!summary[childType]) summary[childType] = [];
-          childItems.forEach(childItem => {
-            const existingIndex = summary[childType].findIndex(item => item.name === childItem.name);
-            if (existingIndex === -1) {
-              summary[childType].push(childItem);
-            } else {
-              summary[type][existingIndex].quantity += (childItem.quantity || 1);
-            }
+    // For recipes, count how many times each ingredient appears
+    if (node.nodeType === 'recipe') {
+      const ingredientCounts = {};
+      node.children.forEach(childId => {
+        ingredientCounts[childId] = (ingredientCounts[childId] || 0) + 1;
+      });
+      
+      // Process each child with its count
+      Object.entries(ingredientCounts).forEach(([childId, count]) => {
+        const childRecord = window.getFlatDependencyRecord(childId);
+        if (childRecord) {
+          const childQuantity = parentQuantity * count;
+          const childSummary = window.calculateQuantitiesFromRecipes(childRecord, visited, childQuantity);
+          // Merge child summary into parent summary
+          Object.entries(childSummary).forEach(([childType, childItems]) => {
+            if (!summary[childType]) summary[childType] = [];
+            childItems.forEach(childItem => {
+              const existingIndex = summary[childType].findIndex(item => item.name === childItem.name);
+              if (existingIndex === -1) {
+                summary[childType].push(childItem);
+              } else {
+                summary[childType][existingIndex].quantity += (childItem.quantity || 1);
+              }
+            });
           });
-        });
-      }
-    });
+        }
+      });
+    } else {
+      // For non-recipe nodes, process children normally
+      node.children.forEach(childId => {
+        const childRecord = window.getFlatDependencyRecord(childId);
+        if (childRecord) {
+          const childSummary = window.calculateQuantitiesFromRecipes(childRecord, visited, parentQuantity);
+          // Merge child summary into parent summary
+          Object.entries(childSummary).forEach(([childType, childItems]) => {
+            if (!summary[childType]) summary[childType] = [];
+            childItems.forEach(childItem => {
+              const existingIndex = summary[childType].findIndex(item => item.name === childItem.name);
+              if (existingIndex === -1) {
+                summary[childType].push(childItem);
+              } else {
+                summary[childType][existingIndex].quantity += (childItem.quantity || 1);
+              }
+            });
+          });
+        }
+      });
+    }
   }
   
   return summary;
@@ -1340,9 +1406,13 @@ window.calculateMaterialSummary = function(node, visited = new Set()) {
 
 // New function to calculate quantities based on recipe ingredient counts
 window.calculateQuantitiesFromRecipes = function(node, visited = new Set(), parentQuantity = 1) {
-  if (!node || visited.has(node.id)) return {};
+  if (!node) return {};
   
-  visited.add(node.id);
+  // For material summary, we want to count all instances, even if they appear in different branches
+  // So we don't use visited.has(node.id) check for the main logic
+  // const nodeKey = `${node.id}_${parentQuantity}`;
+  // if (visited.has(nodeKey)) return {};
+  // visited.add(nodeKey);
   const summary = {};
   
   // Add current node to summary with parent quantity
@@ -1385,7 +1455,9 @@ window.calculateQuantitiesFromRecipes = function(node, visited = new Set(), pare
       Object.entries(ingredientCounts).forEach(([childId, count]) => {
         const childRecord = window.getFlatDependencyRecord(childId);
         if (childRecord) {
-          const childSummary = window.calculateQuantitiesFromRecipes(childRecord, visited, count);
+          const childQuantity = parentQuantity * count;
+          console.log(`🍳 Processing ${childRecord.name} with quantity ${childQuantity} (parent: ${parentQuantity} × count: ${count})`);
+          const childSummary = window.calculateQuantitiesFromRecipes(childRecord, visited, childQuantity);
           // Merge child summary into parent summary
           Object.entries(childSummary).forEach(([childType, childItems]) => {
             if (!summary[childType]) summary[childType] = [];
