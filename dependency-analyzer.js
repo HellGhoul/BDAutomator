@@ -286,19 +286,55 @@ class DependencyAnalyzer {
       return null;
     }
     
-    // Find the title
-    const title = this.titleMap.get(titleName);
+    // Find the title by prefix (more flexible matching)
+    let title = this.titleMap.get(titleName);
+    if (!title) {
+      // Try to find by prefix that contains the title name
+      for (const [name, titleData] of this.titleMap) {
+        if (titleData.prefix && titleData.prefix.toLowerCase().includes(titleName.toLowerCase())) {
+          title = titleData;
+          console.log(`✅ Found title by prefix: "${titleData.prefix}" for "${titleName}"`);
+          break;
+        }
+      }
+    }
+    
     if (!title) {
       console.log(`❌ Title not found: ${titleName}`);
       return null;
     }
     
-    // Find the base item
-    const baseItem = this.itemMap.get(baseItemName);
+    // Find the base item - try exact match first, then try without suffixes
+    let baseItem = this.itemMap.get(baseItemName);
+    if (!baseItem) {
+      // Try to find by removing common suffixes like (III), (II), etc.
+      const baseItemWithoutSuffix = baseItemName.replace(/\s*\([^)]+\)$/, '');
+      if (baseItemWithoutSuffix !== baseItemName) {
+        baseItem = this.itemMap.get(baseItemWithoutSuffix);
+        if (baseItem) {
+          console.log(`✅ Found base item without suffix: "${baseItemWithoutSuffix}" for "${baseItemName}"`);
+        }
+      }
+      
+      // If still not found, try to find items that contain the base name
+      if (!baseItem) {
+        for (const [name, itemData] of this.itemMap) {
+          if (name.toLowerCase().includes(baseItemName.toLowerCase()) || 
+              baseItemName.toLowerCase().includes(name.toLowerCase())) {
+            baseItem = itemData;
+            console.log(`✅ Found base item by partial match: "${name}" for "${baseItemName}"`);
+            break;
+          }
+        }
+      }
+    }
+    
     if (!baseItem) {
       console.log(`❌ Base item not found: ${baseItemName}`);
       return null;
     }
+    
+    console.log(`✅ Successfully parsed: title="${title.name}", base="${baseItem.name}"`);
     
     // Return both IDs as a special object that the recipe can use
     return {
@@ -309,6 +345,8 @@ class DependencyAnalyzer {
   }
 
   extractTitleAndBase(titledItemName) {
+    console.log(`🔍 Extracting title and base from: "${titledItemName}"`);
+    
     // Handle patterns like "Title's Base Item (III)" or "Title Base Item"
     const titlePatterns = [
       /^(.+?)'s (.+?)(?:\s*\([^)]+\))?$/,  // e.g., "Azure dragon's God Forged Boots (III)"
@@ -321,14 +359,12 @@ class DependencyAnalyzer {
         let titleName = match[1].trim();
         let baseItemName = match[2].trim();
         
-        // Remove any remaining (III) or similar suffixes
-        baseItemName = baseItemName.replace(/\s*\([^)]+\)$/, '');
-        
         // Clean up common variations
         if (titleName.endsWith('s') && !titleName.endsWith("'s")) {
           titleName = titleName.slice(0, -1);
         }
         
+        console.log(`✅ Extracted: title="${titleName}", base="${baseItemName}"`);
         return {
           titleName: titleName,
           baseItemName: baseItemName
@@ -336,6 +372,7 @@ class DependencyAnalyzer {
       }
     }
     
+    console.log(`❌ No pattern matched for: "${titledItemName}"`);
     // If no pattern matches, treat the whole name as base item
     return {
       titleName: null,

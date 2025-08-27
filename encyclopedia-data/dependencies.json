@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-08-27T06:07:44.661Z",
+  "generated_at": "2025-08-27T06:21:42.976Z",
   "total_records": 740,
   "dependencies": {
     "item_1756019706100_3wtt1h07v": {
@@ -8,7 +8,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018693209_prs70xtsq",
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018693209_prs70xtsq"
+      ],
       "complexity": 1
     },
     "item_1756018449655_0l1fyy5or": {
@@ -28,7 +33,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183916565_n56vjd1ua",
+        "item_1756018571265_s4ly2ax2q",
+        "title_1756183472672_efa3h696b",
+        "item_1756018686141_ko0rtgpdd"
+      ],
       "complexity": 1
     },
     "item_1756018450625_by2aj1c8c": {
@@ -48,7 +58,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018455132_ldzlnxubw",
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018455132_ldzlnxubw"
+      ],
       "complexity": 1
     },
     "item_1756018451917_ugyfwf095": {
@@ -68,7 +83,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018622765_yoh1k9e0h",
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018687178_cycv7af8q"
+      ],
       "complexity": 1
     },
     "item_1756018455132_ldzlnxubw": {
@@ -88,7 +108,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183412905_pe2afw962",
+        "item_1756018469341_wzb4hl0n2",
+        "title_1756183553587_ll14l683w",
+        "item_1756018566134_gva0hlrwh"
+      ],
       "complexity": 1
     },
     "item_1756018457167_8y2al6miq": {
@@ -108,7 +133,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183358980_t5t1ghj7b",
+        "item_1756018476437_zq2yhoo28",
+        "title_1756183358980_t5t1ghj7b",
+        "item_1756018526815_5s7bg1z6n"
+      ],
       "complexity": 1
     },
     "item_1756018459228_mh0o56spm": {
@@ -128,8 +158,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183480324_ub6nzbt2m",
+        "item_1756018459228_mh0o56spm",
+        "title_1756183480324_ub6nzbt2m",
+        "item_1756018459228_mh0o56spm"
+      ],
+      "complexity": 3
     },
     "item_1756018463260_l0edz8edf": {
       "id": "item_1756018463260_l0edz8edf",
@@ -140,7 +175,7 @@
       "children": [
         "item_1756019723609_boaq92cdw"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756019725689_c9cffbd65": {
       "id": "item_1756019725689_c9cffbd65",
@@ -148,7 +183,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183395848_2axaojjny",
+        "item_1756019095144_le1274n13"
+      ],
       "complexity": 1
     },
     "item_1756018470392_9v0h5kwch": {
@@ -168,7 +206,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183871099_eje3klb54",
+        "item_1756018706521_qz0n60ew7"
+      ],
       "complexity": 1
     },
     "item_1756018471420_1dmvrvkqt": {
@@ -188,7 +229,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183375838_t5mkwh2cr",
+        "item_1756018571265_s4ly2ax2q",
+        "title_1756183480324_ub6nzbt2m",
+        "item_1756018549081_asoli5va0"
+      ],
       "complexity": 1
     },
     "item_1756018473452_brlvhb8rc": {
@@ -208,7 +254,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183892524_61e5396e6",
+        "item_1756018516888_jgnqmmjgi",
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018746821_qj5xqjs8e"
+      ],
       "complexity": 1
     },
     "item_1756018480532_b6yvzi13f": {
@@ -248,7 +299,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184199902_dwvsxjtci",
+        "item_1756018732576_ua3vj2vii"
+      ],
       "complexity": 1
     },
     "item_1756018485653_sw4iwc91h": {
@@ -268,7 +322,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183480324_ub6nzbt2m",
+        "item_1756018452988_08gy6tgjr",
+        "title_1756183480324_ub6nzbt2m",
+        "item_1756018695256_l514a4h0t"
+      ],
       "complexity": 1
     },
     "item_1756018486681_34gsqfv7y": {
@@ -288,7 +347,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183553587_ll14l683w",
+        "item_1756018623877_ezj3cn8pw",
+        "title_1756183553587_ll14l683w",
+        "item_1756018623877_ezj3cn8pw"
+      ],
       "complexity": 1
     },
     "item_1756018487684_3at4t6yl3": {
@@ -308,7 +372,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018605456_f6pn7z68l",
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018605456_f6pn7z68l"
+      ],
       "complexity": 1
     },
     "item_1756018490774_cmiq9nfax": {
@@ -328,7 +397,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183491396_5yrhq00gp",
+        "item_1756018654592_c06fvsc2l"
+      ],
       "complexity": 1
     },
     "item_1756018493836_0a3mkv53m": {
@@ -348,7 +420,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183453907_kxx8zifw7",
+        "item_1756018823070_k0etj7o6i",
+        "title_1756183472672_efa3h696b",
+        "item_1756018620562_2nd7glkhr"
+      ],
       "complexity": 1
     },
     "item_1756018496806_5wkndavcu": {
@@ -368,7 +445,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183319616_osska08yf",
+        "item_1756018706521_qz0n60ew7",
+        "title_1756183939447_hbzd8fvo7",
+        "item_1756018657980_uo3tx95b1"
+      ],
       "complexity": 1
     },
     "item_1756018500598_jju7stem0": {
@@ -388,8 +470,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183337255_k03lzj0yh",
+        "item_1756018459228_mh0o56spm",
+        "title_1756183480324_ub6nzbt2m",
+        "item_1756018463260_l0edz8edf"
+      ],
+      "complexity": 5
     },
     "item_1756018503642_enfoi7icu": {
       "id": "item_1756018503642_enfoi7icu",
@@ -400,7 +487,7 @@
       "children": [
         "item_1756019765183_uqxmomoja"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756019766183_uw1l8jz94": {
       "id": "item_1756019766183_uw1l8jz94",
@@ -408,7 +495,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183412905_pe2afw962",
+        "item_1756018573258_c5su0qfij",
+        "title_1756183701214_f401egku7",
+        "item_1756018516888_jgnqmmjgi"
+      ],
       "complexity": 1
     },
     "item_1756018505616_v5p6qk1l5": {
@@ -428,7 +520,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018452988_08gy6tgjr",
+        "title_1756183472672_efa3h696b",
+        "item_1756018541960_db248ce4v"
+      ],
       "complexity": 1
     },
     "item_1756018506644_8az422on9": {
@@ -448,7 +545,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183854185_cjjgcp7av",
+        "item_1756018494862_tiww8n5jx",
+        "title_1756183854185_cjjgcp7av",
+        "item_1756018494862_tiww8n5jx"
+      ],
       "complexity": 1
     },
     "item_1756018509713_9qiud5l4t": {
@@ -468,8 +570,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018506644_8az422on9",
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018506644_8az422on9"
+      ],
+      "complexity": 3
     },
     "item_1756018512785_jdovcrom0": {
       "id": "item_1756018512785_jdovcrom0",
@@ -480,7 +587,7 @@
       "children": [
         "item_1756019773541_qr40qnlah"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756019775638_qnwe5ppjq": {
       "id": "item_1756019775638_qnwe5ppjq",
@@ -488,8 +595,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018509713_9qiud5l4t",
+        "title_1756183854185_cjjgcp7av",
+        "item_1756018744847_sq5pm3hw7"
+      ],
+      "complexity": 3
     },
     "item_1756018514838_nbqzkfd7u": {
       "id": "item_1756018514838_nbqzkfd7u",
@@ -500,7 +612,7 @@
       "children": [
         "item_1756019775638_qnwe5ppjq"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756019792630_lgdjr7n6m": {
       "id": "item_1756019792630_lgdjr7n6m",
@@ -508,7 +620,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018535972_lk6pvb3r3",
+        "title_1756183472672_efa3h696b",
+        "item_1756018736842_il3i41rym"
+      ],
       "complexity": 1
     },
     "item_1756018517853_856s3v6zo": {
@@ -528,7 +645,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018478472_tpuskbsca",
+        "title_1756183472672_efa3h696b",
+        "item_1756018663124_o27hjfp1n"
+      ],
       "complexity": 1
     },
     "item_1756018518827_46b9ufzzs": {
@@ -548,7 +670,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018596853_7viydtzxp",
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018605456_f6pn7z68l"
+      ],
       "complexity": 1
     },
     "item_1756018519799_a6ty3rxgs": {
@@ -568,7 +695,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183491396_5yrhq00gp",
+        "item_1756018718431_f9bjv45d6"
+      ],
       "complexity": 1
     },
     "item_1756018522753_icka5kw54": {
@@ -588,8 +718,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018517853_856s3v6zo",
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018535972_lk6pvb3r3"
+      ],
+      "complexity": 3
     },
     "item_1756018523743_j9sgm635c": {
       "id": "item_1756018523743_j9sgm635c",
@@ -600,7 +735,7 @@
       "children": [
         "item_1756019800808_3oqzh3k55"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756019803813_tng9wah93": {
       "id": "item_1756019803813_tng9wah93",
@@ -608,7 +743,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183402308_9y6uny1wv",
+        "item_1756018483593_z5hw7bsuo"
+      ],
       "complexity": 1
     },
     "item_1756018524761_xm679ux8s": {
@@ -628,7 +766,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183882623_7p8oe3nny",
+        "item_1756018634735_9f3ylr62k"
+      ],
       "complexity": 1
     },
     "item_1756018525792_l8e91j9l2": {
@@ -648,8 +789,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183337255_k03lzj0yh",
+        "item_1756018518827_46b9ufzzs",
+        "title_1756183480324_ub6nzbt2m",
+        "item_1756018588671_agyftvxig"
+      ],
+      "complexity": 3
     },
     "item_1756018527823_xt7s4dhui": {
       "id": "item_1756018527823_xt7s4dhui",
@@ -660,7 +806,7 @@
       "children": [
         "item_1756019813995_vsdouj1qs"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756019815256_h4q75p41t": {
       "id": "item_1756019815256_h4q75p41t",
@@ -668,8 +814,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183329192_x66e3sjq1",
+        "item_1756018523743_j9sgm635c",
+        "title_1756183472672_efa3h696b",
+        "item_1756018523743_j9sgm635c"
+      ],
+      "complexity": 5
     },
     "item_1756018528864_5y52fnjlf": {
       "id": "item_1756018528864_5y52fnjlf",
@@ -680,7 +831,7 @@
       "children": [
         "item_1756019815256_h4q75p41t"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756019816292_p69201ubz": {
       "id": "item_1756019816292_p69201ubz",
@@ -688,7 +839,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184199902_dwvsxjtci",
+        "item_1756018623877_ezj3cn8pw",
+        "title_1756184199902_dwvsxjtci",
+        "item_1756018623877_ezj3cn8pw"
+      ],
       "complexity": 1
     },
     "item_1756018529855_p6lwt4p31": {
@@ -708,7 +864,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018513812_4xmyjlybl",
+        "title_1756183472672_efa3h696b",
+        "item_1756018513812_4xmyjlybl"
+      ],
       "complexity": 1
     },
     "item_1756018531928_quqnaly1i": {
@@ -728,7 +889,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018539006_58c7rlhtk",
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018711546_ep63sbrid"
+      ],
       "complexity": 1
     },
     "item_1756018532956_xirk5hj6c": {
@@ -748,7 +914,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018711546_ep63sbrid",
+        "title_1756183854185_cjjgcp7av",
+        "item_1756018711546_ep63sbrid"
+      ],
       "complexity": 1
     },
     "item_1756018535039_6fm2vwply": {
@@ -768,7 +939,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018736842_il3i41rym",
+        "title_1756183337255_k03lzj0yh",
+        "item_1756018736842_il3i41rym"
+      ],
       "complexity": 1
     },
     "item_1756018535972_lk6pvb3r3": {
@@ -788,8 +964,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018490774_cmiq9nfax",
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018682044_eby2ttyue"
+      ],
+      "complexity": 3
     },
     "item_1756018536935_xzvb42q18": {
       "id": "item_1756018536935_xzvb42q18",
@@ -800,7 +981,7 @@
       "children": [
         "item_1756019829864_hyb5yvn4v"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756019831329_egxaw2u60": {
       "id": "item_1756019831329_egxaw2u60",
@@ -808,7 +989,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183406914_d7v74o399",
+        "item_1756018630448_42f8ecfvn"
+      ],
       "complexity": 1
     },
     "item_1756018537982_8hpk4d2x2": {
@@ -828,7 +1012,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018696282_v0hu805zv",
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018711546_ep63sbrid"
+      ],
       "complexity": 1
     },
     "item_1756018539006_58c7rlhtk": {
@@ -868,7 +1057,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018691164_tmhtzjl39",
+        "title_1756183472672_efa3h696b",
+        "item_1756018742791_4yf9rb3sv"
+      ],
       "complexity": 1
     },
     "item_1756018540954_5laox7q6d": {
@@ -888,7 +1082,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183480324_ub6nzbt2m",
+        "item_1756018452988_08gy6tgjr",
+        "title_1756183480324_ub6nzbt2m",
+        "item_1756018452988_08gy6tgjr"
+      ],
       "complexity": 1
     },
     "item_1756018541960_db248ce4v": {
@@ -908,7 +1107,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183402308_9y6uny1wv",
+        "item_1756018616367_5bjvq40lw"
+      ],
       "complexity": 1
     },
     "item_1756018542983_emfe58rl9": {
@@ -928,7 +1130,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183480324_ub6nzbt2m",
+        "item_1756018691164_tmhtzjl39",
+        "title_1756183480324_ub6nzbt2m",
+        "item_1756018742791_4yf9rb3sv"
+      ],
       "complexity": 1
     },
     "item_1756018543918_j1jil2e14": {
@@ -948,7 +1155,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183507974_r5cn9u3r2",
+        "item_1756019095144_le1274n13"
+      ],
       "complexity": 1
     },
     "item_1756018546879_3ujsv2kdn": {
@@ -968,8 +1178,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018541960_db248ce4v",
+        "title_1756183437988_wh7y7w9k1",
+        "item_1756018552010_nccou3td8"
+      ],
+      "complexity": 3
     },
     "item_1756018550041_hg4ksdols": {
       "id": "item_1756018550041_hg4ksdols",
@@ -980,7 +1195,7 @@
       "children": [
         "item_1756019869431_pkwa88us2"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756019876966_t5b4l9ksd": {
       "id": "item_1756019876966_t5b4l9ksd",
@@ -988,7 +1203,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018565161_wzx1kwjs2",
+        "title_1756183472672_efa3h696b",
+        "item_1756018565161_wzx1kwjs2"
+      ],
       "complexity": 1
     },
     "item_1756018552010_nccou3td8": {
@@ -1008,7 +1228,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018677142_26t4tr9ol",
+        "title_1756183531160_pk8k0req6",
+        "item_1756018726599_dbojcomad"
+      ],
       "complexity": 1
     },
     "item_1756018553041_81bb7hyve": {
@@ -1028,7 +1253,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183882623_7p8oe3nny",
+        "item_1756018581485_7xmu603pb",
+        "title_1756183472672_efa3h696b",
+        "item_1756018709604_ab1p16vd0"
+      ],
       "complexity": 1
     },
     "item_1756018554055_qq6kfpqr7": {
@@ -1048,7 +1278,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018635868_zd9g4htgo",
+        "title_1756183480324_ub6nzbt2m",
+        "item_1756018745839_esvk3yc78"
+      ],
       "complexity": 1
     },
     "item_1756018555080_8u07ujtsq": {
@@ -1068,8 +1303,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183437988_wh7y7w9k1",
+        "item_1756018470392_9v0h5kwch",
+        "title_1756183472672_efa3h696b",
+        "item_1756018605456_f6pn7z68l"
+      ],
+      "complexity": 3
     },
     "item_1756018556099_1crkopbqm": {
       "id": "item_1756018556099_1crkopbqm",
@@ -1080,7 +1320,7 @@
       "children": [
         "item_1756019885404_cuv3p5iaq"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756019903202_sxshv9lcq": {
       "id": "item_1756019903202_sxshv9lcq",
@@ -1088,7 +1328,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183375838_t5mkwh2cr",
+        "item_1756018700381_5sr3s0e74",
+        "title_1756183480324_ub6nzbt2m",
+        "item_1756018700381_5sr3s0e74"
+      ],
       "complexity": 1
     },
     "item_1756018567156_l4s9otqrl": {
@@ -1108,7 +1353,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183351139_6kibfjqmp",
+        "item_1756018628300_xis4y31tl",
+        "title_1756183351139_6kibfjqmp",
+        "item_1756018628300_xis4y31tl"
+      ],
       "complexity": 1
     },
     "item_1756018568182_i9f32u5sv": {
@@ -1128,7 +1378,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183916565_n56vjd1ua",
+        "item_1756018695256_l514a4h0t",
+        "title_1756183663676_24m1kh6zj",
+        "item_1756018707543_smt3mccov"
+      ],
       "complexity": 1
     },
     "item_1756018575287_c5v7ekrsk": {
@@ -1148,7 +1403,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183402308_9y6uny1wv",
+        "item_1756018617444_t3c5rxbdt"
+      ],
       "complexity": 1
     },
     "item_1756018577359_5kt2oeq7v": {
@@ -1168,7 +1426,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184076812_wd0lv4m5j",
+        "item_1756018706521_qz0n60ew7",
+        "title_1756183472672_efa3h696b",
+        "item_1756018489743_qem2n6hy8"
+      ],
       "complexity": 1
     },
     "item_1756018578433_gau1izxop": {
@@ -1188,8 +1451,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183437988_wh7y7w9k1",
+        "item_1756018556099_1crkopbqm",
+        "title_1756183437988_wh7y7w9k1",
+        "item_1756018556099_1crkopbqm"
+      ],
+      "complexity": 5
     },
     "item_1756018579441_xl6znmx31": {
       "id": "item_1756018579441_xl6znmx31",
@@ -1200,7 +1468,7 @@
       "children": [
         "item_1756019940501_qv6s3x3pd"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756019946702_g9l9dhy48": {
       "id": "item_1756019946702_g9l9dhy48",
@@ -1208,7 +1476,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018565161_wzx1kwjs2",
+        "title_1756183882623_7p8oe3nny",
+        "item_1756018589698_pnqj2s3dm"
+      ],
       "complexity": 1
     },
     "item_1756018581485_7xmu603pb": {
@@ -1228,7 +1501,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183754685_bdxkftnsm",
+        "item_1756018597890_n58xtbprj"
+      ],
       "complexity": 1
     },
     "item_1756018583545_czthit0eg": {
@@ -1248,8 +1524,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183491396_5yrhq00gp",
+        "item_1756018528864_5y52fnjlf"
+      ],
+      "complexity": 9
     },
     "item_1756018584564_3pcr8ua84": {
       "id": "item_1756018584564_3pcr8ua84",
@@ -1260,7 +1539,7 @@
       "children": [
         "item_1756019949216_kdkvf96p0"
       ],
-      "complexity": 2
+      "complexity": 10
     },
     "item_1756019953213_5lwvb6a3z": {
       "id": "item_1756019953213_5lwvb6a3z",
@@ -1268,7 +1547,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018478472_tpuskbsca",
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018663124_o27hjfp1n"
+      ],
       "complexity": 1
     },
     "item_1756018588671_agyftvxig": {
@@ -1288,8 +1572,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018539006_58c7rlhtk",
+        "title_1756183408124_ldyzzeqll",
+        "item_1756018539006_58c7rlhtk"
+      ],
+      "complexity": 3
     },
     "item_1756018590718_dr3e12a7s": {
       "id": "item_1756018590718_dr3e12a7s",
@@ -1300,7 +1589,7 @@
       "children": [
         "item_1756019961300_twj06dj8d"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756019963955_of5xekwoo": {
       "id": "item_1756019963955_of5xekwoo",
@@ -1308,7 +1597,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183882623_7p8oe3nny",
+        "item_1756018502654_qdgt7b11m",
+        "title_1756183882623_7p8oe3nny",
+        "item_1756018502654_qdgt7b11m"
+      ],
       "complexity": 1
     },
     "item_1756018592811_vwky5lnj5": {
@@ -1328,7 +1622,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183754685_bdxkftnsm",
+        "item_1756018741747_45nzk6zqa"
+      ],
       "complexity": 1
     },
     "item_1756018593783_wpkkdhun2": {
@@ -1348,7 +1645,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183892524_61e5396e6",
+        "item_1756018533983_g22dxiyp3",
+        "title_1756183375838_t5mkwh2cr",
+        "item_1756018491792_zvw6fyvo4"
+      ],
       "complexity": 1
     },
     "item_1756018595830_hvgc7j5vd": {
@@ -1368,7 +1670,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018605456_f6pn7z68l",
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018605456_f6pn7z68l"
+      ],
       "complexity": 1
     },
     "item_1756018596853_7viydtzxp": {
@@ -1388,7 +1695,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183402308_9y6uny1wv",
+        "item_1756018602905_na3f6iqdn"
+      ],
       "complexity": 1
     },
     "item_1756018607712_2jfi3k8al": {
@@ -1408,7 +1718,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183553587_ll14l683w",
+        "item_1756018664165_14h0xa6no",
+        "title_1756183553587_ll14l683w",
+        "item_1756018664165_14h0xa6no"
+      ],
       "complexity": 1
     },
     "item_1756018621634_alyatfve8": {
@@ -1428,8 +1743,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018552010_nccou3td8",
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018596853_7viydtzxp"
+      ],
+      "complexity": 3
     },
     "item_1756018622765_yoh1k9e0h": {
       "id": "item_1756018622765_yoh1k9e0h",
@@ -1440,7 +1760,7 @@
       "children": [
         "item_1756020000613_xi2c65zf4"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020007469_3ehwioz0r": {
       "id": "item_1756020007469_3ehwioz0r",
@@ -1448,8 +1768,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183337255_k03lzj0yh",
+        "item_1756018503642_enfoi7icu",
+        "title_1756183480324_ub6nzbt2m",
+        "item_1756018503642_enfoi7icu"
+      ],
+      "complexity": 7
     },
     "item_1756018625032_w7wx1hqm7": {
       "id": "item_1756018625032_w7wx1hqm7",
@@ -1460,7 +1785,7 @@
       "children": [
         "item_1756020007469_3ehwioz0r"
       ],
-      "complexity": 2
+      "complexity": 8
     },
     "item_1756020012150_0qt4ciyhs": {
       "id": "item_1756020012150_0qt4ciyhs",
@@ -1468,8 +1793,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183491396_5yrhq00gp",
+        "item_1756018590718_dr3e12a7s"
+      ],
+      "complexity": 5
     },
     "item_1756018632590_u1i32s6jk": {
       "id": "item_1756018632590_u1i32s6jk",
@@ -1480,7 +1808,7 @@
       "children": [
         "item_1756020012150_0qt4ciyhs"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756020018433_jhd0ugqps": {
       "id": "item_1756020018433_jhd0ugqps",
@@ -1488,8 +1816,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018486681_34gsqfv7y",
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018541960_db248ce4v"
+      ],
+      "complexity": 3
     },
     "item_1756018633710_mnjrphsln": {
       "id": "item_1756018633710_mnjrphsln",
@@ -1500,7 +1833,7 @@
       "children": [
         "item_1756020018433_jhd0ugqps"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020019460_5dzt7sh7n": {
       "id": "item_1756020019460_5dzt7sh7n",
@@ -1508,8 +1841,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018541960_db248ce4v",
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018552010_nccou3td8"
+      ],
+      "complexity": 3
     },
     "item_1756018635868_zd9g4htgo": {
       "id": "item_1756018635868_zd9g4htgo",
@@ -1520,7 +1858,7 @@
       "children": [
         "item_1756020019460_5dzt7sh7n"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020028866_yqlsiw3jd": {
       "id": "item_1756020028866_yqlsiw3jd",
@@ -1528,7 +1866,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018711546_ep63sbrid",
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018711546_ep63sbrid"
+      ],
       "complexity": 1
     },
     "item_1756018638318_1aonivxvi": {
@@ -1548,7 +1891,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183437988_wh7y7w9k1",
+        "item_1756018712560_p8zma762g"
+      ],
       "complexity": 1
     },
     "item_1756018640666_4swimiye7": {
@@ -1568,7 +1914,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184005959_kp784ujoy",
+        "item_1756018600846_piud82nqu"
+      ],
       "complexity": 1
     },
     "item_1756018641902_n5qfyc2k9": {
@@ -1588,7 +1937,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183491396_5yrhq00gp",
+        "item_1756018656857_5poivdvjo"
+      ],
       "complexity": 1
     },
     "item_1756018644244_ynxa316rz": {
@@ -1608,7 +1960,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183916565_n56vjd1ua",
+        "item_1756018669168_gcg0nzu57",
+        "title_1756183916565_n56vjd1ua",
+        "item_1756018669168_gcg0nzu57"
+      ],
       "complexity": 1
     },
     "item_1756018648870_rm3oxywou": {
@@ -1628,7 +1985,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018573258_c5su0qfij",
+        "title_1756183939447_hbzd8fvo7",
+        "item_1756018468293_7psjf3gf5"
+      ],
       "complexity": 1
     },
     "item_1756018650127_q8k4y6ptp": {
@@ -1648,7 +2010,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183375838_t5mkwh2cr",
+        "item_1756018571265_s4ly2ax2q",
+        "title_1756183375838_t5mkwh2cr",
+        "item_1756018603931_t05gugduu"
+      ],
       "complexity": 1
     },
     "item_1756018651236_gc1aghg3e": {
@@ -1668,7 +2035,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183701214_f401egku7",
+        "item_1756018610941_n6ue59lh2",
+        "title_1756183701214_f401egku7",
+        "item_1756018610941_n6ue59lh2"
+      ],
       "complexity": 1
     },
     "item_1756018652364_neuwfyldd": {
@@ -1688,7 +2060,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183939447_hbzd8fvo7",
+        "item_1756018701370_uhi4cuqwx",
+        "title_1756183472672_efa3h696b",
+        "item_1756018706521_qz0n60ew7"
+      ],
       "complexity": 1
     },
     "item_1756018654592_c06fvsc2l": {
@@ -1708,7 +2085,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183358980_t5t1ghj7b",
+        "item_1756018724557_mdgdbewkz",
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018724557_mdgdbewkz"
+      ],
       "complexity": 1
     },
     "item_1756018656857_5poivdvjo": {
@@ -1728,7 +2110,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183358980_t5t1ghj7b",
+        "item_1756018476437_zq2yhoo28",
+        "title_1756183358980_t5t1ghj7b",
+        "item_1756018694239_ooop6qxb6"
+      ],
       "complexity": 1
     },
     "item_1756018661075_h7awj8464": {
@@ -1748,7 +2135,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183337255_k03lzj0yh",
+        "item_1756018494862_tiww8n5jx",
+        "title_1756183646763_euz86y4ya",
+        "item_1756018626091_soufzz7mr"
+      ],
       "complexity": 1
     },
     "item_1756018676081_rrog4kjlp": {
@@ -1768,7 +2160,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183716191_vudmylq5a",
+        "item_1756018571265_s4ly2ax2q",
+        "title_1756183472672_efa3h696b",
+        "item_1756018731588_d5w8wfep2"
+      ],
       "complexity": 1
     },
     "item_1756018680108_j6babtsc5": {
@@ -1788,7 +2185,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183646763_euz86y4ya",
+        "item_1756018693209_prs70xtsq",
+        "title_1756183337255_k03lzj0yh",
+        "item_1756018693209_prs70xtsq"
+      ],
       "complexity": 1
     },
     "item_1756018681087_cpk60oiri": {
@@ -1808,7 +2210,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183437988_wh7y7w9k1",
+        "item_1756018605456_f6pn7z68l",
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018605456_f6pn7z68l"
+      ],
       "complexity": 1
     },
     "item_1756018682044_eby2ttyue": {
@@ -1828,8 +2235,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183480324_ub6nzbt2m",
+        "item_1756018486681_34gsqfv7y",
+        "title_1756183472672_efa3h696b",
+        "item_1756018575287_c5v7ekrsk"
+      ],
+      "complexity": 3
     },
     "item_1756018683080_tfj12m6s1": {
       "id": "item_1756018683080_tfj12m6s1",
@@ -1840,7 +2252,7 @@
       "children": [
         "item_1756020108319_qb1qz2twm"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020110791_vnstc76pc": {
       "id": "item_1756020110791_vnstc76pc",
@@ -1848,8 +2260,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183772315_95822c0ak",
+        "item_1756018552010_nccou3td8",
+        "title_1756183959569_lop4296xn",
+        "item_1756018552010_nccou3td8"
+      ],
+      "complexity": 3
     },
     "item_1756018687178_cycv7af8q": {
       "id": "item_1756018687178_cycv7af8q",
@@ -1860,7 +2277,7 @@
       "children": [
         "item_1756020110791_vnstc76pc"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020113257_f9zevmpf0": {
       "id": "item_1756020113257_f9zevmpf0",
@@ -1868,8 +2285,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018518827_46b9ufzzs",
+        "title_1756183472672_efa3h696b",
+        "item_1756018588671_agyftvxig"
+      ],
+      "complexity": 3
     },
     "item_1756018688128_hsgpxz9j2": {
       "id": "item_1756018688128_hsgpxz9j2",
@@ -1880,7 +2302,7 @@
       "children": [
         "item_1756020113257_f9zevmpf0"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020119807_a0b64jkpz": {
       "id": "item_1756020119807_a0b64jkpz",
@@ -1888,7 +2310,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183402308_9y6uny1wv",
+        "item_1756018675093_5pub1fzui"
+      ],
       "complexity": 1
     },
     "item_1756018690167_pfkbbiq2h": {
@@ -1908,7 +2333,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183337255_k03lzj0yh",
+        "item_1756018605456_f6pn7z68l",
+        "title_1756183472672_efa3h696b",
+        "item_1756018605456_f6pn7z68l"
+      ],
       "complexity": 1
     },
     "item_1756018691164_tmhtzjl39": {
@@ -1928,8 +2358,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183491396_5yrhq00gp",
+        "item_1756018567156_l4s9otqrl"
+      ],
+      "complexity": 3
     },
     "item_1756018692189_td1byjs8m": {
       "id": "item_1756018692189_td1byjs8m",
@@ -1940,7 +2373,7 @@
       "children": [
         "item_1756020122264_wfcyksto3"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020123284_mol5grp0c": {
       "id": "item_1756020123284_mol5grp0c",
@@ -1948,7 +2381,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183337255_k03lzj0yh",
+        "item_1756018601868_csx96aeix",
+        "title_1756183646763_euz86y4ya",
+        "item_1756018694239_ooop6qxb6"
+      ],
       "complexity": 1
     },
     "item_1756018693209_prs70xtsq": {
@@ -1968,7 +2406,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183337255_k03lzj0yh",
+        "item_1756018574331_ab7jzg0ri",
+        "title_1756183646763_euz86y4ya",
+        "item_1756018746821_qj5xqjs8e"
+      ],
       "complexity": 1
     },
     "item_1756018696282_v0hu805zv": {
@@ -1988,8 +2431,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018449655_0l1fyy5or",
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018698338_2e4ykqo9b"
+      ],
+      "complexity": 5
     },
     "item_1756018697304_c4ana8n51": {
       "id": "item_1756018697304_c4ana8n51",
@@ -2000,7 +2448,7 @@
       "children": [
         "item_1756020133363_m85vteoex"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756020134744_js8mxgqr4": {
       "id": "item_1756020134744_js8mxgqr4",
@@ -2008,8 +2456,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018449655_0l1fyy5or",
+        "title_1756183472672_efa3h696b",
+        "item_1756018449655_0l1fyy5or"
+      ],
+      "complexity": 5
     },
     "item_1756018698338_2e4ykqo9b": {
       "id": "item_1756018698338_2e4ykqo9b",
@@ -2020,7 +2473,7 @@
       "children": [
         "item_1756020134744_js8mxgqr4"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756020138284_x2c0sw41t": {
       "id": "item_1756020138284_x2c0sw41t",
@@ -2028,8 +2481,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183406914_d7v74o399",
+        "item_1756018537982_8hpk4d2x2",
+        "title_1756183406914_d7v74o399",
+        "item_1756018540029_zdhs26t7f"
+      ],
+      "complexity": 3
     },
     "item_1756018700381_5sr3s0e74": {
       "id": "item_1756018700381_5sr3s0e74",
@@ -2040,7 +2498,7 @@
       "children": [
         "item_1756020138284_x2c0sw41t"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020142335_3rgyr8w2g": {
       "id": "item_1756020142335_3rgyr8w2g",
@@ -2048,8 +2506,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018554055_qq6kfpqr7",
+        "title_1756183472672_efa3h696b",
+        "item_1756018708606_ct5v0f3zc"
+      ],
+      "complexity": 5
     },
     "item_1756018701370_uhi4cuqwx": {
       "id": "item_1756018701370_uhi4cuqwx",
@@ -2060,7 +2523,7 @@
       "children": [
         "item_1756020142335_3rgyr8w2g"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756020145384_uk1el4080": {
       "id": "item_1756020145384_uk1el4080",
@@ -2068,8 +2531,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183480324_ub6nzbt2m",
+        "item_1756018449655_0l1fyy5or",
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018449655_0l1fyy5or"
+      ],
+      "complexity": 5
     },
     "item_1756018704480_sjman5sbr": {
       "id": "item_1756018704480_sjman5sbr",
@@ -2080,7 +2548,7 @@
       "children": [
         "item_1756020145384_uk1el4080"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756020148351_ueivcs3nz": {
       "id": "item_1756020148351_ueivcs3nz",
@@ -2088,7 +2556,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183816178_2cu7mxohs",
+        "item_1756018706521_qz0n60ew7",
+        "title_1756183816178_2cu7mxohs",
+        "item_1756019095144_le1274n13"
+      ],
       "complexity": 1
     },
     "item_1756018705544_z6o62oipt": {
@@ -2108,8 +2581,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183882623_7p8oe3nny",
+        "item_1756018554055_qq6kfpqr7",
+        "title_1756183882623_7p8oe3nny",
+        "item_1756018708606_ct5v0f3zc"
+      ],
+      "complexity": 5
     },
     "item_1756018706521_qz0n60ew7": {
       "id": "item_1756018706521_qz0n60ew7",
@@ -2120,7 +2598,7 @@
       "children": [
         "item_1756020152400_2192c4sxl"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756020154835_56t673np9": {
       "id": "item_1756020154835_56t673np9",
@@ -2128,8 +2606,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183882623_7p8oe3nny",
+        "item_1756018554055_qq6kfpqr7",
+        "title_1756183472672_efa3h696b",
+        "item_1756018554055_qq6kfpqr7"
+      ],
+      "complexity": 5
     },
     "item_1756018708606_ct5v0f3zc": {
       "id": "item_1756018708606_ct5v0f3zc",
@@ -2140,7 +2623,7 @@
       "children": [
         "item_1756020154835_56t673np9"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756020162329_2u2hyuazi": {
       "id": "item_1756020162329_2u2hyuazi",
@@ -2148,7 +2631,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183892524_61e5396e6",
+        "item_1756018715022_hbe7n8pdh",
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018715022_hbe7n8pdh"
+      ],
       "complexity": 1
     },
     "item_1756018710572_izuhcd8qk": {
@@ -2168,8 +2656,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018696282_v0hu805zv",
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018696282_v0hu805zv"
+      ],
+      "complexity": 3
     },
     "item_1756018711546_ep63sbrid": {
       "id": "item_1756018711546_ep63sbrid",
@@ -2180,7 +2673,7 @@
       "children": [
         "item_1756020163417_5ak5stsb4"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020166286_e2mqowkvg": {
       "id": "item_1756020166286_e2mqowkvg",
@@ -2188,8 +2681,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018537982_8hpk4d2x2",
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018540029_zdhs26t7f"
+      ],
+      "complexity": 3
     },
     "item_1756018715022_hbe7n8pdh": {
       "id": "item_1756018715022_hbe7n8pdh",
@@ -2200,7 +2698,7 @@
       "children": [
         "item_1756020166286_e2mqowkvg"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020167318_0ruz9o3gz": {
       "id": "item_1756020167318_0ruz9o3gz",
@@ -2208,7 +2706,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183408124_ldyzzeqll",
+        "item_1756018469341_wzb4hl0n2",
+        "title_1756183408124_ldyzzeqll",
+        "item_1756018734755_lw8625tzb"
+      ],
       "complexity": 1
     },
     "item_1756018716247_dsxkwychu": {
@@ -2228,8 +2731,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183491396_5yrhq00gp",
+        "item_1756018710572_izuhcd8qk"
+      ],
+      "complexity": 7
     },
     "item_1756018717380_gomx4oihw": {
       "id": "item_1756018717380_gomx4oihw",
@@ -2240,7 +2746,7 @@
       "children": [
         "item_1756020170433_0crpzlsh9"
       ],
-      "complexity": 2
+      "complexity": 8
     },
     "item_1756020177614_hbnxeq9ig": {
       "id": "item_1756020177614_hbnxeq9ig",
@@ -2248,7 +2754,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183358980_t5t1ghj7b",
+        "item_1756018724557_mdgdbewkz",
+        "title_1756183480324_ub6nzbt2m",
+        "item_1756018724557_mdgdbewkz"
+      ],
       "complexity": 1
     },
     "item_1756018718431_f9bjv45d6": {
@@ -2268,7 +2779,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018634735_9f3ylr62k",
+        "title_1756183659671_dyf35ljkw",
+        "item_1756018686141_ko0rtgpdd"
+      ],
       "complexity": 1
     },
     "item_1756018719427_1jvzvq8q2": {
@@ -2288,7 +2804,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184005959_kp784ujoy",
+        "item_1756018643144_h9j06cu88"
+      ],
       "complexity": 1
     },
     "item_1756018720463_vcg7pw93c": {
@@ -2308,8 +2827,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756018539006_58c7rlhtk",
+        "title_1756183882623_7p8oe3nny",
+        "item_1756018539006_58c7rlhtk"
+      ],
+      "complexity": 7
     },
     "item_1756018722500_jz69a4n5p": {
       "id": "item_1756018722500_jz69a4n5p",
@@ -2320,7 +2844,7 @@
       "children": [
         "item_1756020183459_wp64bpnfq"
       ],
-      "complexity": 2
+      "complexity": 8
     },
     "item_1756020184931_j81ujy12n": {
       "id": "item_1756020184931_j81ujy12n",
@@ -2328,7 +2852,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183480324_ub6nzbt2m",
+        "item_1756018562106_jism2vvce",
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018571265_s4ly2ax2q"
+      ],
       "complexity": 1
     },
     "item_1756018723528_6dy24ehk2": {
@@ -2348,8 +2877,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018697304_c4ana8n51",
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018697304_c4ana8n51"
+      ],
+      "complexity": 9
     },
     "item_1756018724557_mdgdbewkz": {
       "id": "item_1756018724557_mdgdbewkz",
@@ -2360,7 +2894,7 @@
       "children": [
         "item_1756020187470_8mjpwh2bw"
       ],
-      "complexity": 2
+      "complexity": 10
     },
     "item_1756020194452_5d2ebjut4": {
       "id": "item_1756020194452_5d2ebjut4",
@@ -2368,7 +2902,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184005959_kp784ujoy",
+        "item_1756018713885_oa7ct9mf9"
+      ],
       "complexity": 1
     },
     "item_1756018725529_59sfg0o0k": {
@@ -2388,8 +2925,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183337255_k03lzj0yh",
+        "item_1756018676081_rrog4kjlp",
+        "title_1756183472672_efa3h696b",
+        "item_1756018676081_rrog4kjlp"
+      ],
+      "complexity": 3
     },
     "item_1756018736842_il3i41rym": {
       "id": "item_1756018736842_il3i41rym",
@@ -2400,7 +2942,7 @@
       "children": [
         "item_1756020212598_pvpnh9ba2"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020217981_fx6mhb8gu": {
       "id": "item_1756020217981_fx6mhb8gu",
@@ -2408,7 +2950,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018660033_4v6ltwaap",
+        "title_1756183875787_yenu3rzcg",
+        "item_1756018660033_4v6ltwaap"
+      ],
       "complexity": 1
     },
     "item_1756018742791_4yf9rb3sv": {
@@ -2428,7 +2975,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183964260_11i7of9k3",
+        "item_1756018591741_9wh0new42",
+        "title_1756183964260_11i7of9k3",
+        "item_1756018591741_9wh0new42"
+      ],
       "complexity": 1
     },
     "item_1756018743806_6vqr4l3hr": {
@@ -2448,7 +3000,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183659671_dyf35ljkw",
+        "item_1756018609904_e4h4a1ufq",
+        "title_1756183659671_dyf35ljkw",
+        "item_1756018609904_e4h4a1ufq"
+      ],
       "complexity": 1
     },
     "item_1756018744847_sq5pm3hw7": {
@@ -2468,8 +3025,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756184054385_w3wc2yiwp",
+        "item_1756018541960_db248ce4v",
+        "title_1756183716191_vudmylq5a",
+        "item_1756018552010_nccou3td8"
+      ],
+      "complexity": 3
     },
     "item_1756018745839_esvk3yc78": {
       "id": "item_1756018745839_esvk3yc78",
@@ -2480,7 +3042,7 @@
       "children": [
         "item_1756020225999_r670iwb9m"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756019731095_ljjftnruy": {
       "id": "item_1756019731095_ljjftnruy",
@@ -2488,7 +3050,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183916565_n56vjd1ua",
+        "item_1756018758233_x2po0unuv",
+        "title_1756183453907_kxx8zifw7",
+        "item_1756018761314_gyd5jkur1"
+      ],
       "complexity": 1
     },
     "item_1756018753133_3mfxuego6": {
@@ -2508,7 +3075,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183737629_w9ri4qa7d",
+        "item_1756018762336_qg03hn9yg"
+      ],
       "complexity": 1
     },
     "item_1756018755183_6rtgw383t": {
@@ -2528,7 +3098,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183354276_rwom250vi",
+        "item_1756018818188_bzwv67o12",
+        "title_1756183730742_2uqzr2nzr",
+        "item_1756018818188_bzwv67o12"
+      ],
       "complexity": 1
     },
     "item_1756018757208_l3gjamjce": {
@@ -2548,7 +3123,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183354276_rwom250vi",
+        "item_1756018818188_bzwv67o12",
+        "title_1756183737629_w9ri4qa7d",
+        "item_1756018818188_bzwv67o12"
+      ],
       "complexity": 1
     },
     "item_1756018762336_qg03hn9yg": {
@@ -2568,7 +3148,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183510741_3648ogdvs",
+        "item_1756018828281_0i5l945s2",
+        "title_1756183730742_2uqzr2nzr",
+        "item_1756018828281_0i5l945s2"
+      ],
       "complexity": 1
     },
     "item_1756018763308_x1irre8g4": {
@@ -2588,7 +3173,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183395848_2axaojjny",
+        "item_1756018789687_106b1q96r",
+        "title_1756183823169_b83v8r864",
+        "item_1756018789687_106b1q96r"
+      ],
       "complexity": 1
     },
     "item_1756018764378_zurana79m": {
@@ -2608,7 +3198,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183354276_rwom250vi",
+        "item_1756018818188_bzwv67o12",
+        "title_1756183730742_2uqzr2nzr",
+        "item_1756018818188_bzwv67o12"
+      ],
       "complexity": 1
     },
     "item_1756018766438_3a16h951t": {
@@ -2628,7 +3223,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183453907_kxx8zifw7",
+        "item_1756018829525_ittbfq9kw",
+        "title_1756183453907_kxx8zifw7",
+        "item_1756018829525_ittbfq9kw"
+      ],
       "complexity": 1
     },
     "item_1756018767461_8elntdh0z": {
@@ -2648,7 +3248,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183737629_w9ri4qa7d",
+        "item_1756018824427_c5t25dyz4"
+      ],
       "complexity": 1
     },
     "item_1756018768489_o92xnlhxn": {
@@ -2668,7 +3271,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183823169_b83v8r864",
+        "item_1756018815802_npxzuc0rq"
+      ],
       "complexity": 1
     },
     "item_1756018769509_2837pvbfo": {
@@ -2688,8 +3294,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183737629_w9ri4qa7d",
+        "item_1756018763308_x1irre8g4"
+      ],
+      "complexity": 3
     },
     "item_1756018770531_3cnbyilsa": {
       "id": "item_1756018770531_3cnbyilsa",
@@ -2700,7 +3309,7 @@
       "children": [
         "item_1756019902200_zimpao0d9"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756019906704_peahhj00a": {
       "id": "item_1756019906704_peahhj00a",
@@ -2708,7 +3317,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184013970_41dwh5vo1",
+        "item_1756018797014_2el22fm54"
+      ],
       "complexity": 1
     },
     "item_1756018771555_l7f3y1b1v": {
@@ -2728,7 +3340,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183453907_kxx8zifw7",
+        "item_1756018776065_yl4l81mva",
+        "title_1756183453907_kxx8zifw7",
+        "item_1756018819482_p2qxne8js"
+      ],
       "complexity": 1
     },
     "item_1756018774805_zg6d7482a": {
@@ -2748,7 +3365,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183453907_kxx8zifw7",
+        "item_1756018819482_p2qxne8js",
+        "title_1756183453907_kxx8zifw7",
+        "item_1756018819482_p2qxne8js"
+      ],
       "complexity": 1
     },
     "item_1756018776065_yl4l81mva": {
@@ -2768,7 +3390,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184013970_41dwh5vo1",
+        "item_1756018765406_sfsxyzqgu"
+      ],
       "complexity": 1
     },
     "item_1756018777308_mynfp8hzk": {
@@ -2788,8 +3413,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183737629_w9ri4qa7d",
+        "item_1756018766438_3a16h951t"
+      ],
+      "complexity": 3
     },
     "item_1756018786094_fzcsb2d0l": {
       "id": "item_1756018786094_fzcsb2d0l",
@@ -2800,7 +3428,7 @@
       "children": [
         "item_1756019989947_0ek2uqe39"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020011125_z8gxf5lwj": {
       "id": "item_1756020011125_z8gxf5lwj",
@@ -2808,7 +3436,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183510741_3648ogdvs",
+        "item_1756018781113_6xbel3m9k",
+        "title_1756183431479_2silk0czd",
+        "item_1756018823070_k0etj7o6i"
+      ],
       "complexity": 1
     },
     "item_1756018787244_6iqvhk7gf": {
@@ -2828,7 +3461,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183854185_cjjgcp7av",
+        "item_1756018751186_w60zfkp3o",
+        "title_1756183395848_2axaojjny",
+        "item_1756018803494_2alorjytn"
+      ],
       "complexity": 1
     },
     "item_1756018788506_stt9v3w0w": {
@@ -2848,7 +3486,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183816178_2cu7mxohs",
+        "item_1756019095144_le1274n13",
+        "title_1756183823169_b83v8r864",
+        "item_1756018795912_xd121uupq"
+      ],
       "complexity": 1
     },
     "item_1756018789687_106b1q96r": {
@@ -2868,7 +3511,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183395848_2axaojjny",
+        "item_1756018782417_ib3i6igzp",
+        "title_1756183656648_6h47yki9m",
+        "item_1756018809631_at2vo7s7g"
+      ],
       "complexity": 1
     },
     "item_1756018792221_448tlpl4a": {
@@ -2888,8 +3536,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183402308_9y6uny1wv",
+        "item_1756018757208_l3gjamjce"
+      ],
+      "complexity": 3
     },
     "item_1756018793472_zv2d6fred": {
       "id": "item_1756018793472_zv2d6fred",
@@ -2900,7 +3551,7 @@
       "children": [
         "item_1756020046675_vm8qd72oc"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020052838_dxze5tsxb": {
       "id": "item_1756020052838_dxze5tsxb",
@@ -2908,7 +3559,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184013970_41dwh5vo1",
+        "item_1756018814556_jsr4fs1no"
+      ],
       "complexity": 1
     },
     "item_1756018801052_rxp1vhcz2": {
@@ -2928,8 +3582,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183696932_cmnow89o9",
+        "item_1756018789687_106b1q96r",
+        "title_1756183696932_cmnow89o9",
+        "item_1756018789687_106b1q96r"
+      ],
+      "complexity": 3
     },
     "item_1756018802265_72mk30sdw": {
       "id": "item_1756018802265_72mk30sdw",
@@ -2940,7 +3599,7 @@
       "children": [
         "item_1756020064247_pdo8x2la1"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020076697_j3k05yzob": {
       "id": "item_1756020076697_j3k05yzob",
@@ -2948,7 +3607,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183453907_kxx8zifw7",
+        "item_1756018761314_gyd5jkur1",
+        "title_1756183702895_a0dvbjbbj",
+        "item_1756018779818_lp272lgzq"
+      ],
       "complexity": 1
     },
     "item_1756018804727_8voclofbf": {
@@ -2968,8 +3632,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183453907_kxx8zifw7",
+        "item_1756018774805_zg6d7482a",
+        "title_1756183453907_kxx8zifw7",
+        "item_1756018774805_zg6d7482a"
+      ],
+      "complexity": 5
     },
     "item_1756018817038_ux84hp1nx": {
       "id": "item_1756018817038_ux84hp1nx",
@@ -2980,7 +3649,7 @@
       "children": [
         "item_1756020139376_rjbdtvv7y"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756020144340_iylpdr8qg": {
       "id": "item_1756020144340_iylpdr8qg",
@@ -2988,8 +3657,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183510741_3648ogdvs",
+        "item_1756018774805_zg6d7482a",
+        "title_1756183453907_kxx8zifw7",
+        "item_1756018817038_ux84hp1nx"
+      ],
+      "complexity": 7
     },
     "item_1756018818188_bzwv67o12": {
       "id": "item_1756018818188_bzwv67o12",
@@ -3000,7 +3674,7 @@
       "children": [
         "item_1756020144340_iylpdr8qg"
       ],
-      "complexity": 2
+      "complexity": 8
     },
     "item_1756020159920_zl8re8azm": {
       "id": "item_1756020159920_zl8re8azm",
@@ -3008,8 +3682,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183453907_kxx8zifw7",
+        "item_1756018787244_6iqvhk7gf",
+        "title_1756183453907_kxx8zifw7",
+        "item_1756018792221_448tlpl4a"
+      ],
+      "complexity": 3
     },
     "item_1756018819482_p2qxne8js": {
       "id": "item_1756018819482_p2qxne8js",
@@ -3020,7 +3699,7 @@
       "children": [
         "item_1756020159920_zl8re8azm"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020169433_o3chgu391": {
       "id": "item_1756020169433_o3chgu391",
@@ -3028,7 +3707,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183474340_j7xlbxpzf",
+        "item_1756018810873_1bklvinrm"
+      ],
       "complexity": 1
     },
     "item_1756018820611_kaj32vmzo": {
@@ -3048,8 +3730,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183354276_rwom250vi",
+        "item_1756018818188_bzwv67o12",
+        "title_1756183737629_w9ri4qa7d",
+        "item_1756018818188_bzwv67o12"
+      ],
+      "complexity": 13
     },
     "item_1756018824427_c5t25dyz4": {
       "id": "item_1756018824427_c5t25dyz4",
@@ -3060,7 +3747,7 @@
       "children": [
         "item_1756020198142_qrrpvsd0e"
       ],
-      "complexity": 2
+      "complexity": 14
     },
     "item_1756020211509_q03btl0u6": {
       "id": "item_1756020211509_q03btl0u6",
@@ -3068,7 +3755,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183368046_e9or6fk9r",
+        "item_1756018794695_r8roafzcl"
+      ],
       "complexity": 1
     },
     "item_1756018827052_h2h0epg1h": {
@@ -3088,8 +3778,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183395848_2axaojjny",
+        "item_1756018764378_zurana79m",
+        "title_1756183696932_cmnow89o9",
+        "item_1756018764378_zurana79m"
+      ],
+      "complexity": 5
     },
     "item_1756018828281_0i5l945s2": {
       "id": "item_1756018828281_0i5l945s2",
@@ -3100,7 +3795,7 @@
       "children": [
         "item_1756020213600_4rjx0png7"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756019716555_eg3dremi0": {
       "id": "item_1756019716555_eg3dremi0",
@@ -3108,7 +3803,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183583602_mt7w4ade1",
+        "item_1756018912155_t0ipigue3"
+      ],
       "complexity": 1
     },
     "item_1756018835851_y4jh32rhs": {
@@ -3128,7 +3826,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183495691_ng0s0o6zd",
+        "item_1756018875180_rvxmffq30"
+      ],
       "complexity": 1
     },
     "item_1756018839370_6kur0gcpv": {
@@ -3148,8 +3849,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183488924_22ib6l6bx",
+        "item_1756018706521_qz0n60ew7"
+      ],
+      "complexity": 9
     },
     "item_1756018841013_dy5biait2": {
       "id": "item_1756018841013_dy5biait2",
@@ -3160,7 +3864,7 @@
       "children": [
         "item_1756019728692_yjp8v3wpw"
       ],
-      "complexity": 2
+      "complexity": 10
     },
     "item_1756019741538_zkwrvxlv2": {
       "id": "item_1756019741538_zkwrvxlv2",
@@ -3168,7 +3872,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183495691_ng0s0o6zd",
+        "item_1756018869041_cwzx8pghm"
+      ],
       "complexity": 1
     },
     "item_1756018842153_6arpiiaj5": {
@@ -3188,7 +3895,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183495691_ng0s0o6zd",
+        "item_1756018926486_bv789ja3k",
+        "title_1756183577006_c6uzu9mbz",
+        "item_1756018926486_bv789ja3k"
+      ],
       "complexity": 1
     },
     "item_1756018843182_obkc59k0b": {
@@ -3208,7 +3920,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183453907_kxx8zifw7",
+        "item_1756018772576_okw3vp3ml",
+        "title_1756184144528_kpzx9z9m5",
+        "item_1756018866984_3znfqxr29"
+      ],
       "complexity": 1
     },
     "item_1756018846193_t3dul6j60": {
@@ -3228,7 +3945,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183854185_cjjgcp7av",
+        "item_1756018837019_dgnz8mbg5",
+        "title_1756184147408_1kqsqdb12",
+        "item_1756018915230_1hjx9xbop"
+      ],
       "complexity": 1
     },
     "item_1756018847230_0k2v9hpwp": {
@@ -3268,7 +3990,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183882623_7p8oe3nny",
+        "item_1756018877234_740mrg8qd",
+        "title_1756183882623_7p8oe3nny",
+        "item_1756018877234_740mrg8qd"
+      ],
       "complexity": 1
     },
     "item_1756018851108_5d9zk6c7c": {
@@ -3288,7 +4015,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183935733_24ixwyzex",
+        "item_1756018903032_okh3jve2g",
+        "title_1756183766776_m9n698vsf",
+        "item_1756018903032_okh3jve2g"
+      ],
       "complexity": 1
     },
     "item_1756018853052_m7vh7epeh": {
@@ -3308,7 +4040,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183823169_b83v8r864",
+        "item_1756018877234_740mrg8qd",
+        "title_1756183823169_b83v8r864",
+        "item_1756018877234_740mrg8qd"
+      ],
       "complexity": 1
     },
     "item_1756018855029_bl439x0zy": {
@@ -3328,7 +4065,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183553587_ll14l683w",
+        "item_1756018834571_p0nzl46op",
+        "title_1756183766776_m9n698vsf",
+        "item_1756018845186_7iorm11nz"
+      ],
       "complexity": 1
     },
     "item_1756018855985_tgzkei4qg": {
@@ -3348,7 +4090,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183495691_ng0s0o6zd",
+        "item_1756018902012_jn3ssisl7",
+        "title_1756183419495_cfqigczmt",
+        "item_1756018902012_jn3ssisl7"
+      ],
       "complexity": 1
     },
     "item_1756018856959_kc3ouur1n": {
@@ -3368,7 +4115,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183416105_t9mq2hxyp",
+        "item_1756018864048_puf620acz",
+        "title_1756183395848_2axaojjny",
+        "item_1756019095144_le1274n13"
+      ],
       "complexity": 1
     },
     "item_1756018860996_3kuzdnbwu": {
@@ -3388,7 +4140,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183854185_cjjgcp7av",
+        "item_1756018837019_dgnz8mbg5",
+        "title_1756183491396_5yrhq00gp",
+        "item_1756019095144_le1274n13"
+      ],
       "complexity": 1
     },
     "item_1756018866022_ixsynnjzl": {
@@ -3417,8 +4174,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183495691_ng0s0o6zd",
+        "item_1756018855029_bl439x0zy",
+        "title_1756183495691_ng0s0o6zd",
+        "item_1756018855029_bl439x0zy"
+      ],
+      "complexity": 3
     },
     "item_1756018869041_cwzx8pghm": {
       "id": "item_1756018869041_cwzx8pghm",
@@ -3429,7 +4191,7 @@
       "children": [
         "item_1756019914384_uqgamuvpr"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756018870072_utzg8628n": {
       "id": "item_1756018870072_utzg8628n",
@@ -3446,8 +4208,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183871099_eje3klb54",
+        "item_1756018706521_qz0n60ew7",
+        "title_1756183416105_t9mq2hxyp",
+        "item_1756018834571_p0nzl46op"
+      ],
+      "complexity": 9
     },
     "item_1756018873185_6cb13mmwl": {
       "id": "item_1756018873185_6cb13mmwl",
@@ -3458,7 +4225,7 @@
       "children": [
         "item_1756019941794_ytubg7bue"
       ],
-      "complexity": 2
+      "complexity": 10
     },
     "item_1756019950536_bnci8ymfm": {
       "id": "item_1756019950536_bnci8ymfm",
@@ -3466,7 +4233,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183495691_ng0s0o6zd",
+        "item_1756018914200_1xqc8wl6p",
+        "title_1756183463471_69jx2vkqr",
+        "item_1756018914200_1xqc8wl6p"
+      ],
       "complexity": 1
     },
     "item_1756018875180_rvxmffq30": {
@@ -3486,7 +4258,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184084626_uu29zo8zo",
+        "item_1756018834571_p0nzl46op",
+        "title_1756183823169_b83v8r864",
+        "item_1756018882350_ba55n8s65"
+      ],
       "complexity": 1
     },
     "item_1756018878196_lqnccxk5d": {
@@ -3506,7 +4283,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183716191_vudmylq5a",
+        "item_1756018924447_1foowcyaq",
+        "title_1756183766776_m9n698vsf",
+        "item_1756018924447_1foowcyaq"
+      ],
       "complexity": 1
     },
     "item_1756018879330_a74l0lla8": {
@@ -3526,7 +4308,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183548897_r7o7uzulo",
+        "item_1756018861952_ntconyd7q"
+      ],
       "complexity": 1
     },
     "item_1756018881314_b62s4763i": {
@@ -3546,7 +4331,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183583602_mt7w4ade1",
+        "item_1756018896903_unw02x2hr"
+      ],
       "complexity": 1
     },
     "item_1756018884299_34f6rp9xx": {
@@ -3566,8 +4354,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183495691_ng0s0o6zd",
+        "item_1756018856959_kc3ouur1n"
+      ],
+      "complexity": 3
     },
     "item_1756018886292_fc5lmxi1o": {
       "id": "item_1756018886292_fc5lmxi1o",
@@ -3578,7 +4369,7 @@
       "children": [
         "item_1756020003284_e8miwloz3"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020006027_cxmyyuant": {
       "id": "item_1756020006027_cxmyyuant",
@@ -3586,7 +4377,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184147408_1kqsqdb12",
+        "item_1756018837019_dgnz8mbg5",
+        "title_1756184147408_1kqsqdb12",
+        "item_1756018915230_1hjx9xbop"
+      ],
       "complexity": 1
     },
     "item_1756018887233_rs5dgbfyh": {
@@ -3606,7 +4402,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183495691_ng0s0o6zd",
+        "item_1756018906105_db03m6sj2"
+      ],
       "complexity": 1
     },
     "item_1756018888307_gen1qeq89": {
@@ -3626,7 +4425,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183837818_sg1jqd8uy",
+        "item_1756018833403_u8hfuuzs6"
+      ],
       "complexity": 1
     },
     "item_1756018890336_n0x1bpvlw": {
@@ -3646,7 +4448,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183510741_3648ogdvs",
+        "item_1756018877234_740mrg8qd",
+        "title_1756183510741_3648ogdvs",
+        "item_1756018877234_740mrg8qd"
+      ],
       "complexity": 1
     },
     "item_1756018891376_z341r6kbo": {
@@ -3666,7 +4473,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183495691_ng0s0o6zd",
+        "item_1756018913160_cniawlvzv"
+      ],
       "complexity": 1
     },
     "item_1756018892401_2v8wyeyai": {
@@ -3686,7 +4496,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183510741_3648ogdvs",
+        "item_1756018871084_lau23lgjk",
+        "title_1756183553587_ll14l683w",
+        "item_1756018885317_mlq2lvvie"
+      ],
       "complexity": 1
     },
     "item_1756018893346_hntivtr8q": {
@@ -3706,7 +4521,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183510741_3648ogdvs",
+        "item_1756018874211_e3y1sjwys",
+        "title_1756183882623_7p8oe3nny",
+        "item_1756018866984_3znfqxr29"
+      ],
       "complexity": 1
     },
     "item_1756018894342_pw23nn57c": {
@@ -3726,8 +4546,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756184147408_1kqsqdb12",
+        "item_1756018860996_3kuzdnbwu",
+        "title_1756184147408_1kqsqdb12",
+        "item_1756018905147_rawdbkyux"
+      ],
+      "complexity": 3
     },
     "item_1756018895334_bwg5axzu0": {
       "id": "item_1756018895334_bwg5axzu0",
@@ -3738,7 +4563,7 @@
       "children": [
         "item_1756020070256_5f6zhttfj"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020082735_pivblnl9e": {
       "id": "item_1756020082735_pivblnl9e",
@@ -3746,7 +4571,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183351139_6kibfjqmp",
+        "item_1756018866984_3znfqxr29",
+        "title_1756184144528_kpzx9z9m5",
+        "item_1756018871084_lau23lgjk"
+      ],
       "complexity": 1
     },
     "item_1756018897918_11k7k5yvw": {
@@ -3766,7 +4596,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184147408_1kqsqdb12",
+        "item_1756018850133_vexkfmss0",
+        "title_1756184147408_1kqsqdb12",
+        "item_1756018850133_vexkfmss0"
+      ],
       "complexity": 1
     },
     "item_1756018898940_i89x2hfsj": {
@@ -3786,7 +4621,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183416105_t9mq2hxyp",
+        "item_1756018874211_e3y1sjwys",
+        "title_1756183545460_ru2sxp76y",
+        "item_1756018838221_g2jzzvq6h"
+      ],
       "complexity": 1
     },
     "item_1756018899963_xx2u1sbfn": {
@@ -3806,8 +4646,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183766776_m9n698vsf",
+        "item_1756018894342_pw23nn57c",
+        "title_1756183766776_m9n698vsf",
+        "item_1756018894342_pw23nn57c"
+      ],
+      "complexity": 3
     },
     "item_1756018902012_jn3ssisl7": {
       "id": "item_1756018902012_jn3ssisl7",
@@ -3818,7 +4663,7 @@
       "children": [
         "item_1756020096256_4n0fihm99"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020102778_tmm6hhe4p": {
       "id": "item_1756020102778_tmm6hhe4p",
@@ -3826,8 +4671,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183935733_24ixwyzex",
+        "item_1756018852075_2vz2xe7b2",
+        "title_1756183766776_m9n698vsf",
+        "item_1756018868020_y75cpc14t"
+      ],
+      "complexity": 2
     },
     "item_1756018903032_okh3jve2g": {
       "id": "item_1756018903032_okh3jve2g",
@@ -3838,7 +4688,7 @@
       "children": [
         "item_1756020102778_tmm6hhe4p"
       ],
-      "complexity": 2
+      "complexity": 3
     },
     "item_1756020111792_88lqfm5lc": {
       "id": "item_1756020111792_88lqfm5lc",
@@ -3846,7 +4696,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183351139_6kibfjqmp",
+        "item_1756018915230_1hjx9xbop",
+        "title_1756184147408_1kqsqdb12",
+        "item_1756018904056_anx1oetrn"
+      ],
       "complexity": 1
     },
     "item_1756018905147_rawdbkyux": {
@@ -3866,8 +4721,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183495691_ng0s0o6zd",
+        "item_1756018851108_5d9zk6c7c",
+        "title_1756183463471_69jx2vkqr",
+        "item_1756018851108_5d9zk6c7c"
+      ],
+      "complexity": 3
     },
     "item_1756018906105_db03m6sj2": {
       "id": "item_1756018906105_db03m6sj2",
@@ -3878,7 +4738,7 @@
       "children": [
         "item_1756020132277_k85o56q46"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020135782_4hsurfq1j": {
       "id": "item_1756020135782_4hsurfq1j",
@@ -3886,7 +4746,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183935733_24ixwyzex",
+        "item_1756018910091_9ms0ev9fi",
+        "title_1756183935733_24ixwyzex",
+        "item_1756018909122_e3e6ajdlh"
+      ],
       "complexity": 1
     },
     "item_1756018907156_vfbusdp7q": {
@@ -3906,7 +4771,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183394620_yr38fd5ux",
+        "item_1756018866984_3znfqxr29",
+        "title_1756183766776_m9n698vsf",
+        "item_1756018900982_lh3tdhl7w"
+      ],
       "complexity": 1
     },
     "item_1756018908178_2wzrvxhfu": {
@@ -3926,7 +4796,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183882623_7p8oe3nny",
+        "item_1756018910091_9ms0ev9fi",
+        "title_1756184147408_1kqsqdb12",
+        "item_1756018910091_9ms0ev9fi"
+      ],
       "complexity": 1
     },
     "item_1756018909122_e3e6ajdlh": {
@@ -3946,8 +4821,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183882623_7p8oe3nny",
+        "item_1756018852075_2vz2xe7b2",
+        "title_1756184147408_1kqsqdb12",
+        "item_1756018903032_okh3jve2g"
+      ],
+      "complexity": 4
     },
     "item_1756018910091_9ms0ev9fi": {
       "id": "item_1756018910091_9ms0ev9fi",
@@ -3958,7 +4838,7 @@
       "children": [
         "item_1756020155851_yup5k0nsp"
       ],
-      "complexity": 2
+      "complexity": 5
     },
     "item_1756020173440_o954h072l": {
       "id": "item_1756020173440_o954h072l",
@@ -3966,7 +4846,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183766776_m9n698vsf",
+        "item_1756018865057_g57ngmaqa",
+        "title_1756183545460_ru2sxp76y",
+        "item_1756018838221_g2jzzvq6h"
+      ],
       "complexity": 1
     },
     "item_1756018911126_fjjx35jv5": {
@@ -3986,8 +4871,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183545460_ru2sxp76y",
+        "item_1756018891376_z341r6kbo",
+        "title_1756183495691_ng0s0o6zd",
+        "item_1756018891376_z341r6kbo"
+      ],
+      "complexity": 3
     },
     "item_1756018913160_cniawlvzv": {
       "id": "item_1756018913160_cniawlvzv",
@@ -3998,7 +4888,7 @@
       "children": [
         "item_1756020185933_4mt5fl3bn"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020196811_5nczwc0ef": {
       "id": "item_1756020196811_5nczwc0ef",
@@ -4006,7 +4896,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183916565_n56vjd1ua",
+        "item_1756018850133_vexkfmss0",
+        "title_1756183916565_n56vjd1ua",
+        "item_1756018850133_vexkfmss0"
+      ],
       "complexity": 1
     },
     "item_1756018914200_1xqc8wl6p": {
@@ -4026,8 +4921,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183495691_ng0s0o6zd",
+        "item_1756018843182_obkc59k0b"
+      ],
+      "complexity": 3
     },
     "item_1756018917275_8d7ak9bcw": {
       "id": "item_1756018917275_8d7ak9bcw",
@@ -4038,7 +4936,7 @@
       "children": [
         "item_1756020204247_s5xdga27x"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020224999_egf70yewt": {
       "id": "item_1756020224999_egf70yewt",
@@ -4046,7 +4944,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184147408_1kqsqdb12",
+        "item_1756018850133_vexkfmss0",
+        "title_1756184147408_1kqsqdb12",
+        "item_1756018850133_vexkfmss0"
+      ],
       "complexity": 1
     },
     "item_1756018926486_bv789ja3k": {
@@ -4066,7 +4969,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183837818_sg1jqd8uy",
+        "item_1756018960476_be07y8wo6"
+      ],
       "complexity": 1
     },
     "item_1756018929555_s9u0k5rmj": {
@@ -4086,7 +4992,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183308057_2uutl62on",
+        "item_1756018961951_sghjgd4nc",
+        "title_1756183394620_yr38fd5ux",
+        "item_1756018966447_znq2lkhy6"
+      ],
       "complexity": 1
     },
     "item_1756018930582_aj65j6amw": {
@@ -4106,7 +5017,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183394620_yr38fd5ux",
+        "item_1756019012661_wqd6t8em7"
+      ],
       "complexity": 1
     },
     "item_1756018931611_v3uucfxji": {
@@ -4126,7 +5040,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183889838_5tgb3wzti",
+        "item_1756018966447_znq2lkhy6",
+        "title_1756184147408_1kqsqdb12",
+        "item_1756018974319_ah18v4r0d"
+      ],
       "complexity": 1
     },
     "item_1756018933657_aje3fx122": {
@@ -4146,7 +5065,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183766776_m9n698vsf",
+        "item_1756018932625_fbpc1c1s7",
+        "title_1756184147408_1kqsqdb12",
+        "item_1756019024579_579vxe5r4"
+      ],
       "complexity": 1
     },
     "item_1756018934677_e4psnu08x": {
@@ -4166,7 +5090,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183735184_anvp8kpqf",
+        "item_1756018982519_ptpoqoejl",
+        "title_1756184140222_v8vbfok2y",
+        "item_1756018982519_ptpoqoejl"
+      ],
       "complexity": 1
     },
     "item_1756018938486_6ajqkgpm0": {
@@ -4186,7 +5115,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184078029_199dtozko",
+        "item_1756018984522_lg0jec8je"
+      ],
       "complexity": 1
     },
     "item_1756018941440_fyamx3bmi": {
@@ -4206,7 +5138,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183889838_5tgb3wzti",
+        "item_1756018996634_45usmimcx",
+        "title_1756183510741_3648ogdvs",
+        "item_1756019015669_ms5kb0ueu"
+      ],
       "complexity": 1
     },
     "item_1756018943490_lntf6a2cp": {
@@ -4226,7 +5163,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183837818_sg1jqd8uy",
+        "item_1756018946562_b191o07ev"
+      ],
       "complexity": 1
     },
     "item_1756018945537_ip090gvhc": {
@@ -4246,7 +5186,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183553587_ll14l683w",
+        "item_1756018966447_znq2lkhy6",
+        "title_1756183455437_g9e1g1yx2",
+        "item_1756018958057_ix6vzow4u"
+      ],
       "complexity": 1
     },
     "item_1756018947585_znrzrkufs": {
@@ -4266,7 +5211,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183308057_2uutl62on",
+        "item_1756018961951_sghjgd4nc",
+        "title_1756183510741_3648ogdvs",
+        "item_1756019009554_ah01db4ma"
+      ],
       "complexity": 1
     },
     "item_1756018948608_ex6mra1n8": {
@@ -4286,7 +5236,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183696932_cmnow89o9",
+        "item_1756019028693_kwmbghkxu",
+        "title_1756183889838_5tgb3wzti",
+        "item_1756019028693_kwmbghkxu"
+      ],
       "complexity": 1
     },
     "item_1756018949634_141f6ykl2": {
@@ -4306,7 +5261,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183395848_2axaojjny",
+        "item_1756019095144_le1274n13"
+      ],
       "complexity": 1
     },
     "item_1756018950612_xzxsrl0ds": {
@@ -4326,7 +5284,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184140222_v8vbfok2y",
+        "item_1756018967471_wmegwvu9h"
+      ],
       "complexity": 1
     },
     "item_1756018951578_b0pgvv325": {
@@ -4346,7 +5307,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183507974_r5cn9u3r2",
+        "item_1756019095144_le1274n13"
+      ],
       "complexity": 1
     },
     "item_1756018953967_303i94q7k": {
@@ -4366,7 +5330,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183416105_t9mq2hxyp",
+        "item_1756019017134_l7r2e5pne",
+        "title_1756183553587_ll14l683w",
+        "item_1756018959082_popqetdb6"
+      ],
       "complexity": 1
     },
     "item_1756018954984_trok06f31": {
@@ -4386,8 +5355,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756184140222_v8vbfok2y",
+        "item_1756018938486_6ajqkgpm0"
+      ],
+      "complexity": 3
     },
     "item_1756018963954_exorfgyi1": {
       "id": "item_1756018963954_exorfgyi1",
@@ -4398,7 +5370,7 @@
       "children": [
         "item_1756019926469_661y7u126"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756019935042_4anmawxwk": {
       "id": "item_1756019935042_4anmawxwk",
@@ -4406,8 +5378,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183735184_anvp8kpqf",
+        "item_1756018934677_e4psnu08x",
+        "title_1756183735184_anvp8kpqf",
+        "item_1756018934677_e4psnu08x"
+      ],
+      "complexity": 3
     },
     "item_1756018965423_r8zfu1ctd": {
       "id": "item_1756018965423_r8zfu1ctd",
@@ -4418,7 +5395,7 @@
       "children": [
         "item_1756019935042_4anmawxwk"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756019943023_2if1s2dow": {
       "id": "item_1756019943023_2if1s2dow",
@@ -4426,7 +5403,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184140222_v8vbfok2y",
+        "item_1756018986525_6zjky8g13",
+        "title_1756184140222_v8vbfok2y",
+        "item_1756018986525_6zjky8g13"
+      ],
       "complexity": 1
     },
     "item_1756018967471_wmegwvu9h": {
@@ -4446,7 +5428,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183735184_anvp8kpqf",
+        "item_1756019026689_nma6c3nva",
+        "title_1756183735184_anvp8kpqf",
+        "item_1756019026689_nma6c3nva"
+      ],
       "complexity": 1
     },
     "item_1756018969492_zeovx2g5e": {
@@ -4466,7 +5453,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183889838_5tgb3wzti",
+        "item_1756018986525_6zjky8g13",
+        "title_1756183885859_3c1x76mlz",
+        "item_1756018986525_6zjky8g13"
+      ],
       "complexity": 1
     },
     "item_1756018970955_7uomegr8j": {
@@ -4486,7 +5478,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183889838_5tgb3wzti",
+        "item_1756018999616_ut7yisv4h",
+        "title_1756183963260_wcm0m92iy",
+        "item_1756018999616_ut7yisv4h"
+      ],
       "complexity": 1
     },
     "item_1756018976509_dhafu25v2": {
@@ -4506,7 +5503,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183889838_5tgb3wzti",
+        "item_1756019028693_kwmbghkxu",
+        "title_1756183963260_wcm0m92iy",
+        "item_1756019028693_kwmbghkxu"
+      ],
       "complexity": 1
     },
     "item_1756018981516_8wf7zuoef": {
@@ -4526,8 +5528,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183823169_b83v8r864",
+        "item_1756018931611_v3uucfxji",
+        "title_1756183823169_b83v8r864",
+        "item_1756018931611_v3uucfxji"
+      ],
+      "complexity": 3
     },
     "item_1756018982519_ptpoqoejl": {
       "id": "item_1756018982519_ptpoqoejl",
@@ -4538,7 +5545,7 @@
       "children": [
         "item_1756020001954_zwc6y68j5"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020022629_t3liweuxy": {
       "id": "item_1756020022629_t3liweuxy",
@@ -4546,7 +5553,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183308057_2uutl62on",
+        "item_1756018958057_ix6vzow4u",
+        "title_1756183889838_5tgb3wzti",
+        "item_1756019012661_wqd6t8em7"
+      ],
       "complexity": 1
     },
     "item_1756018985524_zcapcxjd1": {
@@ -4566,7 +5578,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183656648_6h47yki9m",
+        "item_1756018935722_bugi5xwqt",
+        "title_1756183656648_6h47yki9m",
+        "item_1756018935722_bugi5xwqt"
+      ],
       "complexity": 1
     },
     "item_1756018986525_6zjky8g13": {
@@ -4586,8 +5603,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756184140222_v8vbfok2y",
+        "item_1756018965423_r8zfu1ctd"
+      ],
+      "complexity": 5
     },
     "item_1756018990615_0ae8dhsky": {
       "id": "item_1756018990615_0ae8dhsky",
@@ -4598,7 +5618,7 @@
       "children": [
         "item_1756020048683_jmqwxu6o4"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756020050688_4nr6dy53l": {
       "id": "item_1756020050688_4nr6dy53l",
@@ -4606,7 +5626,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183882623_7p8oe3nny",
+        "item_1756018959082_popqetdb6",
+        "title_1756183882623_7p8oe3nny",
+        "item_1756018959082_popqetdb6"
+      ],
       "complexity": 1
     },
     "item_1756018991627_hcdmmgxa0": {
@@ -4626,7 +5651,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183962259_h3yeo1hj4",
+        "item_1756018966447_znq2lkhy6",
+        "title_1756183963260_wcm0m92iy",
+        "item_1756018997637_uojtly77p"
+      ],
       "complexity": 1
     },
     "item_1756018993632_056r6m5s0": {
@@ -4646,7 +5676,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183882623_7p8oe3nny",
+        "item_1756018997637_uojtly77p",
+        "title_1756183885859_3c1x76mlz",
+        "item_1756019003017_9tf8matai"
+      ],
       "complexity": 1
     },
     "item_1756018994634_jly5f7ram": {
@@ -4666,8 +5701,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756184140222_v8vbfok2y",
+        "item_1756018991627_hcdmmgxa0",
+        "title_1756184140222_v8vbfok2y",
+        "item_1756018991627_hcdmmgxa0"
+      ],
+      "complexity": 3
     },
     "item_1756018995634_f964h55mw": {
       "id": "item_1756018995634_f964h55mw",
@@ -4678,7 +5718,7 @@
       "children": [
         "item_1756020067260_39pgzr6x6"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020069256_ubby6df9s": {
       "id": "item_1756020069256_ubby6df9s",
@@ -4686,7 +5726,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183962259_h3yeo1hj4",
+        "item_1756019018673_8ozdgkw8j",
+        "title_1756183510741_3648ogdvs",
+        "item_1756019018673_8ozdgkw8j"
+      ],
       "complexity": 1
     },
     "item_1756018996634_45usmimcx": {
@@ -4706,8 +5751,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183963260_wcm0m92iy",
+        "item_1756018944511_rx3kxwe7v",
+        "title_1756183889838_5tgb3wzti",
+        "item_1756018949634_141f6ykl2"
+      ],
+      "complexity": 3
     },
     "item_1756018999616_ut7yisv4h": {
       "id": "item_1756018999616_ut7yisv4h",
@@ -4718,7 +5768,7 @@
       "children": [
         "item_1756020077724_w3lfa7x83"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020079730_t3pmicrjp": {
       "id": "item_1756020079730_t3pmicrjp",
@@ -4726,7 +5776,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183548897_r7o7uzulo",
+        "item_1756018975506_4jotybwk6"
+      ],
       "complexity": 1
     },
     "item_1756019001644_7yd6lw97u": {
@@ -4746,7 +5799,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183455437_g9e1g1yx2",
+        "item_1756018961951_sghjgd4nc",
+        "title_1756183889838_5tgb3wzti",
+        "item_1756018977511_v7s03yh4z"
+      ],
       "complexity": 1
     },
     "item_1756019004017_ktvoooivj": {
@@ -4766,8 +5824,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756184140222_v8vbfok2y",
+        "item_1756018995634_f964h55mw"
+      ],
+      "complexity": 5
     },
     "item_1756019006077_um5xg2q35": {
       "id": "item_1756019006077_um5xg2q35",
@@ -4778,7 +5839,7 @@
       "children": [
         "item_1756020090126_d9apjv3d2"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756020105264_iqnknfq65": {
       "id": "item_1756020105264_iqnknfq65",
@@ -4786,8 +5847,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756184140222_v8vbfok2y",
+        "item_1756018969492_zeovx2g5e"
+      ],
+      "complexity": 3
     },
     "item_1756019007551_j634gp2hf": {
       "id": "item_1756019007551_j634gp2hf",
@@ -4798,7 +5862,7 @@
       "children": [
         "item_1756020105264_iqnknfq65"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020114275_3jt5fo3y3": {
       "id": "item_1756020114275_3jt5fo3y3",
@@ -4806,7 +5870,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184140222_v8vbfok2y",
+        "item_1756019019673_t4qaeao24"
+      ],
       "complexity": 1
     },
     "item_1756019010556_9hfjdewgr": {
@@ -4826,8 +5893,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183766776_m9n698vsf",
+        "item_1756018993632_056r6m5s0",
+        "title_1756183766776_m9n698vsf",
+        "item_1756018993632_056r6m5s0"
+      ],
+      "complexity": 3
     },
     "item_1756019011660_djd7bav3i": {
       "id": "item_1756019011660_djd7bav3i",
@@ -4838,7 +5910,7 @@
       "children": [
         "item_1756020115334_8vwpbiz8l"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020124347_tra1xakrb": {
       "id": "item_1756020124347_tra1xakrb",
@@ -4866,8 +5938,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183889838_5tgb3wzti",
+        "item_1756018976509_dhafu25v2",
+        "title_1756183510741_3648ogdvs",
+        "item_1756018996634_45usmimcx"
+      ],
+      "complexity": 7
     },
     "item_1756019015669_ms5kb0ueu": {
       "id": "item_1756019015669_ms5kb0ueu",
@@ -4878,7 +5955,7 @@
       "children": [
         "item_1756020127356_p6yp9ql5u"
       ],
-      "complexity": 2
+      "complexity": 8
     },
     "item_1756020131266_plpkg752n": {
       "id": "item_1756020131266_plpkg752n",
@@ -4886,8 +5963,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183962259_h3yeo1hj4",
+        "item_1756018944511_rx3kxwe7v",
+        "title_1756183510741_3648ogdvs",
+        "item_1756018981516_8wf7zuoef"
+      ],
+      "complexity": 3
     },
     "item_1756019018673_8ozdgkw8j": {
       "id": "item_1756019018673_8ozdgkw8j",
@@ -4898,7 +5980,7 @@
       "children": [
         "item_1756020131266_plpkg752n"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020140880_q6msj7mtn": {
       "id": "item_1756020140880_q6msj7mtn",
@@ -4906,8 +5988,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183735184_anvp8kpqf",
+        "item_1756019011660_djd7bav3i",
+        "title_1756184140222_v8vbfok2y",
+        "item_1756019011660_djd7bav3i"
+      ],
+      "complexity": 5
     },
     "item_1756019019673_t4qaeao24": {
       "id": "item_1756019019673_t4qaeao24",
@@ -4918,7 +6005,7 @@
       "children": [
         "item_1756020140880_q6msj7mtn"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756020161271_xxs4ae9ga": {
       "id": "item_1756020161271_xxs4ae9ga",
@@ -4926,7 +6013,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183963260_wcm0m92iy",
+        "item_1756018977511_v7s03yh4z",
+        "title_1756183959569_lop4296xn",
+        "item_1756018974319_ah18v4r0d"
+      ],
       "complexity": 1
     },
     "item_1756019021031_5jxxugtpj": {
@@ -4946,7 +6038,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183963260_wcm0m92iy",
+        "item_1756018939491_rq5ibw6m1",
+        "title_1756183510741_3648ogdvs",
+        "item_1756019009554_ah01db4ma"
+      ],
       "complexity": 1
     },
     "item_1756019022125_3fb10xco5": {
@@ -4966,7 +6063,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183882623_7p8oe3nny",
+        "item_1756018966447_znq2lkhy6",
+        "title_1756183885859_3c1x76mlz",
+        "item_1756019012661_wqd6t8em7"
+      ],
       "complexity": 1
     },
     "item_1756019023576_5133qb5pg": {
@@ -4986,7 +6088,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183962259_h3yeo1hj4",
+        "item_1756018932625_fbpc1c1s7",
+        "title_1756183962259_h3yeo1hj4",
+        "item_1756018932625_fbpc1c1s7"
+      ],
       "complexity": 1
     },
     "item_1756019026689_nma6c3nva": {
@@ -5026,8 +6133,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183696932_cmnow89o9",
+        "item_1756018986525_6zjky8g13",
+        "title_1756183889838_5tgb3wzti",
+        "item_1756019026689_nma6c3nva"
+      ],
+      "complexity": 3
     },
     "item_1756019028693_kwmbghkxu": {
       "id": "item_1756019028693_kwmbghkxu",
@@ -5038,7 +6150,7 @@
       "children": [
         "item_1756020222527_6vtbzdte8"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756019718605_n05440hcs": {
       "id": "item_1756019718605_n05440hcs",
@@ -5046,7 +6158,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184205789_nfsq8riyc",
+        "item_1756019053077_2e1gj3kke",
+        "title_1756183696932_cmnow89o9",
+        "item_1756019070090_4x01b96ii"
+      ],
       "complexity": 1
     },
     "item_1756019032591_2yd9vngnk": {
@@ -5066,7 +6183,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183394620_yr38fd5ux",
+        "item_1756019041598_nwyykxdni",
+        "title_1756183696932_cmnow89o9",
+        "item_1756019063122_i2km5tvem"
+      ],
       "complexity": 1
     },
     "item_1756019036047_ywlfn998r": {
@@ -5086,7 +6208,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183411836_i0bs05sgv",
+        "item_1756019086131_q1hg7ivjw",
+        "title_1756184205789_nfsq8riyc",
+        "item_1756019086131_q1hg7ivjw"
+      ],
       "complexity": 1
     },
     "item_1756019037048_04s5jt0eu": {
@@ -5106,7 +6233,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183918245_b2j1oa2kg",
+        "item_1756019045915_qmdmb7k4w"
+      ],
       "complexity": 1
     },
     "item_1756019040597_kxvfpswx4": {
@@ -5126,7 +6256,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183823169_b83v8r864",
+        "item_1756019053077_2e1gj3kke",
+        "title_1756184147408_1kqsqdb12",
+        "item_1756019070090_4x01b96ii"
+      ],
       "complexity": 1
     },
     "item_1756019042600_4tdm9sjwh": {
@@ -5146,7 +6281,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183599725_rji1gzf76",
+        "item_1756019086131_q1hg7ivjw",
+        "title_1756184205789_nfsq8riyc",
+        "item_1756019086131_q1hg7ivjw"
+      ],
       "complexity": 1
     },
     "item_1756019043910_p8syatwtj": {
@@ -5166,7 +6306,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183918245_b2j1oa2kg",
+        "item_1756019048919_yrih2cyyl"
+      ],
       "complexity": 1
     },
     "item_1756019044912_btnaxqonv": {
@@ -5186,7 +6329,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183414889_s1dimluuy",
+        "item_1756019086131_q1hg7ivjw",
+        "title_1756183918245_b2j1oa2kg",
+        "item_1756019086131_q1hg7ivjw"
+      ],
       "complexity": 1
     },
     "item_1756019045915_qmdmb7k4w": {
@@ -5206,8 +6354,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183823169_b83v8r864",
+        "item_1756019042600_4tdm9sjwh",
+        "title_1756183696932_cmnow89o9",
+        "item_1756019070090_4x01b96ii"
+      ],
+      "complexity": 3
     },
     "item_1756019046917_fz8rt3uje": {
       "id": "item_1756019046917_fz8rt3uje",
@@ -5218,7 +6371,7 @@
       "children": [
         "item_1756019794632_pj1s06z0k"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756019801808_vryi1jb1l": {
       "id": "item_1756019801808_vryi1jb1l",
@@ -5226,7 +6379,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183368046_e9or6fk9r",
+        "item_1756019055333_8a6gp1pfz"
+      ],
       "complexity": 1
     },
     "item_1756019047918_mvsopkgss": {
@@ -5246,7 +6402,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183747511_70ca9yqfa",
+        "item_1756019086131_q1hg7ivjw",
+        "title_1756183918245_b2j1oa2kg",
+        "item_1756019086131_q1hg7ivjw"
+      ],
       "complexity": 1
     },
     "item_1756019048919_yrih2cyyl": {
@@ -5266,7 +6427,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183553587_ll14l683w",
+        "item_1756019063122_i2km5tvem"
+      ],
       "complexity": 1
     },
     "item_1756019050923_xa7jw78cw": {
@@ -5286,7 +6450,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183696932_cmnow89o9",
+        "item_1756019088621_s2vngzc5g",
+        "title_1756184205789_nfsq8riyc",
+        "item_1756019059627_i80fwfirp"
+      ],
       "complexity": 1
     },
     "item_1756019053077_2e1gj3kke": {
@@ -5315,7 +6484,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184147408_1kqsqdb12",
+        "item_1756019033592_2ep7zpowz",
+        "title_1756184147408_1kqsqdb12",
+        "item_1756019033592_2ep7zpowz"
+      ],
       "complexity": 1
     },
     "item_1756019056356_85995wkw5": {
@@ -5335,7 +6509,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183696932_cmnow89o9",
+        "item_1756019059627_i80fwfirp",
+        "title_1756183696932_cmnow89o9",
+        "item_1756019083665_ej89mm1ti"
+      ],
       "complexity": 1
     },
     "item_1756019058624_g6m0rqnzr": {
@@ -5355,7 +6534,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183964260_11i7of9k3",
+        "item_1756019051930_3krqqp0qx",
+        "title_1756183964260_11i7of9k3",
+        "item_1756019051930_3krqqp0qx"
+      ],
       "complexity": 1
     },
     "item_1756019059627_i80fwfirp": {
@@ -5375,7 +6559,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183918245_b2j1oa2kg",
+        "item_1756019073571_2529txsp3"
+      ],
       "complexity": 1
     },
     "item_1756019064635_h6yanawwl": {
@@ -5395,7 +6582,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183411836_i0bs05sgv",
+        "item_1756019086131_q1hg7ivjw",
+        "title_1756183452920_y4spgz8cv",
+        "item_1756019086131_q1hg7ivjw"
+      ],
       "complexity": 1
     },
     "item_1756019065781_4irfq277m": {
@@ -5415,7 +6607,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183548897_r7o7uzulo",
+        "item_1756019077117_rr8hz67tm"
+      ],
       "complexity": 1
     },
     "item_1756019066807_myw1dxwd5": {
@@ -5435,8 +6630,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183696932_cmnow89o9",
+        "item_1756019053077_2e1gj3kke",
+        "title_1756184205789_nfsq8riyc",
+        "item_1756019053077_2e1gj3kke"
+      ],
+      "complexity": 5
     },
     "item_1756019070090_4x01b96ii": {
       "id": "item_1756019070090_4x01b96ii",
@@ -5447,7 +6647,7 @@
       "children": [
         "item_1756019988750_u9548gi7l"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756019992537_sk0xydgyz": {
       "id": "item_1756019992537_sk0xydgyz",
@@ -5455,8 +6655,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183918245_b2j1oa2kg",
+        "item_1756019065781_4irfq277m"
+      ],
+      "complexity": 3
     },
     "item_1756019072109_57bpqykxm": {
       "id": "item_1756019072109_57bpqykxm",
@@ -5467,7 +6670,7 @@
       "children": [
         "item_1756019992537_sk0xydgyz"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020020465_11w0kqeb5": {
       "id": "item_1756020020465_11w0kqeb5",
@@ -5475,7 +6678,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183599725_rji1gzf76",
+        "item_1756019086131_q1hg7ivjw",
+        "title_1756183599725_rji1gzf76",
+        "item_1756019086131_q1hg7ivjw"
+      ],
       "complexity": 1
     },
     "item_1756019073571_2529txsp3": {
@@ -5495,7 +6703,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183368046_e9or6fk9r",
+        "item_1756019060628_xn3hdruhs"
+      ],
       "complexity": 1
     },
     "item_1756019074652_gh0jue9by": {
@@ -5515,7 +6726,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183702895_a0dvbjbbj",
+        "item_1756019035044_yqf0fwflt",
+        "title_1756183702895_a0dvbjbbj",
+        "item_1756019035044_yqf0fwflt"
+      ],
       "complexity": 1
     },
     "item_1756019076115_yesqrvy4i": {
@@ -5535,8 +6751,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756184147408_1kqsqdb12",
+        "item_1756019036047_ywlfn998r",
+        "title_1756184147408_1kqsqdb12",
+        "item_1756019036047_ywlfn998r"
+      ],
+      "complexity": 3
     },
     "item_1756019078275_v5ykhdga2": {
       "id": "item_1756019078275_v5ykhdga2",
@@ -5547,7 +6768,7 @@
       "children": [
         "item_1756020088623_kkb0y15vj"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020093760_nywqj7p34": {
       "id": "item_1756020093760_nywqj7p34",
@@ -5555,7 +6776,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183696932_cmnow89o9",
+        "item_1756019088621_s2vngzc5g",
+        "title_1756184205789_nfsq8riyc",
+        "item_1756019083665_ej89mm1ti"
+      ],
       "complexity": 1
     },
     "item_1756019080535_3fr939hud": {
@@ -5575,8 +6801,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183823169_b83v8r864",
+        "item_1756019050923_xa7jw78cw",
+        "title_1756183823169_b83v8r864",
+        "item_1756019050923_xa7jw78cw"
+      ],
+      "complexity": 3
     },
     "item_1756019081550_idnnb1c17": {
       "id": "item_1756019081550_idnnb1c17",
@@ -5587,7 +6818,7 @@
       "children": [
         "item_1756020116335_lew14920x"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020126353_d4ph90zyh": {
       "id": "item_1756020126353_d4ph90zyh",
@@ -5595,8 +6826,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183918245_b2j1oa2kg",
+        "item_1756019043910_p8syatwtj"
+      ],
+      "complexity": 3
     },
     "item_1756019082663_upa07jlpn": {
       "id": "item_1756019082663_upa07jlpn",
@@ -5607,7 +6841,7 @@
       "children": [
         "item_1756020126353_d4ph90zyh"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020176446_37f5jxinz": {
       "id": "item_1756020176446_37f5jxinz",
@@ -5615,7 +6849,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183823169_b83v8r864",
+        "item_1756019063122_i2km5tvem",
+        "title_1756183351139_6kibfjqmp",
+        "item_1756019041598_nwyykxdni"
+      ],
       "complexity": 1
     },
     "item_1756019083665_ej89mm1ti": {
@@ -5635,8 +6874,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183823169_b83v8r864",
+        "item_1756019046917_fz8rt3uje",
+        "title_1756183823169_b83v8r864",
+        "item_1756019070090_4x01b96ii"
+      ],
+      "complexity": 11
     },
     "item_1756019086131_q1hg7ivjw": {
       "id": "item_1756019086131_q1hg7ivjw",
@@ -5647,7 +6891,7 @@
       "children": [
         "item_1756020190478_qdrs9nfxd"
       ],
-      "complexity": 2
+      "complexity": 12
     },
     "item_1756020201831_m1burmspu": {
       "id": "item_1756020201831_m1burmspu",
@@ -5655,8 +6899,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183918245_b2j1oa2kg",
+        "item_1756019037048_04s5jt0eu"
+      ],
+      "complexity": 15
     },
     "item_1756019087600_tqdims6hr": {
       "id": "item_1756019087600_tqdims6hr",
@@ -5667,7 +6914,7 @@
       "children": [
         "item_1756020201831_m1burmspu"
       ],
-      "complexity": 2
+      "complexity": 16
     },
     "item_1756020209504_vr410ata6": {
       "id": "item_1756020209504_vr410ata6",
@@ -5675,7 +6922,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183916565_n56vjd1ua",
+        "item_1756019067831_8vaa5xrs6",
+        "title_1756183916565_n56vjd1ua",
+        "item_1756019067831_8vaa5xrs6"
+      ],
       "complexity": 1
     },
     "item_1756019088621_s2vngzc5g": {
@@ -5695,8 +6947,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756184205789_nfsq8riyc",
+        "item_1756019076115_yesqrvy4i",
+        "title_1756184205789_nfsq8riyc",
+        "item_1756019088621_s2vngzc5g"
+      ],
+      "complexity": 3
     },
     "item_1756019090676_1706hvdwf": {
       "id": "item_1756019090676_1706hvdwf",
@@ -5707,7 +6964,7 @@
       "children": [
         "item_1756020223530_fmluggsw2"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756019711016_b5vnvr4ls": {
       "id": "item_1756019711016_b5vnvr4ls",
@@ -5715,7 +6972,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183754685_bdxkftnsm",
+        "item_1756019122255_y6vq0gldi"
+      ],
       "complexity": 1
     },
     "item_1756019096148_t74lwe1mf": {
@@ -5735,7 +6995,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184005959_kp784ujoy",
+        "item_1756019102222_w1f9vouqf"
+      ],
       "complexity": 1
     },
     "item_1756019097687_hd6l68ca7": {
@@ -5755,7 +7018,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183491396_5yrhq00gp",
+        "item_1756019165279_ykms92rk1",
+        "title_1756183491396_5yrhq00gp",
+        "item_1756019165279_ykms92rk1"
+      ],
       "complexity": 1
     },
     "item_1756019101220_km6ldvijr": {
@@ -5775,7 +7043,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183754685_bdxkftnsm",
+        "item_1756019150261_a6v0oyyt4"
+      ],
       "complexity": 1
     },
     "item_1756019103224_81e4x27v5": {
@@ -5795,7 +7066,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184005959_kp784ujoy",
+        "item_1756019110710_4c8n7ucoc"
+      ],
       "complexity": 1
     },
     "item_1756019104331_ng9oh4qoh": {
@@ -5815,8 +7089,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183589608_gomy5naax",
+        "item_1756018550041_hg4ksdols"
+      ],
+      "complexity": 5
     },
     "item_1756019106702_0v9ubdpm9": {
       "id": "item_1756019106702_0v9ubdpm9",
@@ -5827,7 +7104,7 @@
       "children": [
         "item_1756019768770_evdjh9sn7"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756019802810_5agk2foqy": {
       "id": "item_1756019802810_5agk2foqy",
@@ -5835,7 +7112,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184078029_199dtozko",
+        "item_1756019108707_0ci9jvc8s"
+      ],
       "complexity": 1
     },
     "item_1756019107706_c3f0qdk2p": {
@@ -5855,7 +7135,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183853182_myu15cnia",
+        "item_1756019114713_s0yl6xm7r"
+      ],
       "complexity": 1
     },
     "item_1756019109708_27g8t0w4u": {
@@ -5875,7 +7158,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183916565_n56vjd1ua",
+        "item_1756019164275_1tkpslrvo",
+        "title_1756183484622_uv3t6mn26",
+        "item_1756019164275_1tkpslrvo"
+      ],
       "complexity": 1
     },
     "item_1756019112242_2gddv41n5": {
@@ -5895,8 +7183,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183853182_myu15cnia",
+        "item_1756019109708_27g8t0w4u"
+      ],
+      "complexity": 3
     },
     "item_1756019113711_q74pz27nf": {
       "id": "item_1756019113711_q74pz27nf",
@@ -5907,7 +7198,7 @@
       "children": [
         "item_1756019852054_n43czvy3g"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756019859311_tcjmvw6mr": {
       "id": "item_1756019859311_tcjmvw6mr",
@@ -5915,7 +7206,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183853182_myu15cnia",
+        "item_1756019135214_z4ejnf2q6"
+      ],
       "complexity": 1
     },
     "item_1756019114713_s0yl6xm7r": {
@@ -5935,7 +7229,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183589608_gomy5naax",
+        "item_1756019115714_217uar0rx"
+      ],
       "complexity": 1
     },
     "item_1756019118092_l9vsfww3w": {
@@ -5955,7 +7252,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183589608_gomy5naax",
+        "item_1756019123679_9ir46bcyy"
+      ],
       "complexity": 1
     },
     "item_1756019120165_ut1g2einb": {
@@ -5975,7 +7275,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183507974_r5cn9u3r2",
+        "item_1756019095144_le1274n13",
+        "title_1756183772315_95822c0ak",
+        "item_1756019095144_le1274n13"
+      ],
       "complexity": 1
     },
     "item_1756019121185_qa2lbflc3": {
@@ -5995,7 +7300,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183882623_7p8oe3nny",
+        "item_1756019130601_igmi61s01",
+        "title_1756183882623_7p8oe3nny",
+        "item_1756019130601_igmi61s01"
+      ],
       "complexity": 1
     },
     "item_1756019127532_2ytrakii0": {
@@ -6015,7 +7325,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183643266_138ncgczf",
+        "item_1756019095144_le1274n13",
+        "title_1756183643266_138ncgczf",
+        "item_1756019095144_le1274n13"
+      ],
       "complexity": 1
     },
     "item_1756019128552_xmgjesr4x": {
@@ -6035,7 +7350,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183657667_8p958uobd",
+        "item_1756019095144_le1274n13",
+        "title_1756184175230_jg53cgi2k",
+        "item_1756019095144_le1274n13"
+      ],
       "complexity": 1
     },
     "item_1756019130601_igmi61s01": {
@@ -6055,7 +7375,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183837818_sg1jqd8uy",
+        "item_1756019126261_kp4wecd7u"
+      ],
       "complexity": 1
     },
     "item_1756019132736_3d0d847ua": {
@@ -6075,7 +7398,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183816178_2cu7mxohs",
+        "item_1756019095144_le1274n13",
+        "title_1756183854185_cjjgcp7av",
+        "item_1756019095144_le1274n13"
+      ],
       "complexity": 1
     },
     "item_1756019135214_z4ejnf2q6": {
@@ -6095,7 +7423,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183589608_gomy5naax",
+        "item_1756019094142_24fewak1x"
+      ],
       "complexity": 1
     },
     "item_1756019136199_47f6cji4u": {
@@ -6115,8 +7446,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183484622_uv3t6mn26",
+        "item_1756019114713_s0yl6xm7r",
+        "title_1756183916565_n56vjd1ua",
+        "item_1756019114713_s0yl6xm7r"
+      ],
+      "complexity": 5
     },
     "item_1756019146757_sx0j3od70": {
       "id": "item_1756019146757_sx0j3od70",
@@ -6127,7 +7463,7 @@
       "children": [
         "item_1756020027583_iqr9loyss"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756020041361_zm46lkpkk": {
       "id": "item_1756020041361_zm46lkpkk",
@@ -6135,8 +7471,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183853182_myu15cnia",
+        "item_1756019127532_2ytrakii0",
+        "title_1756183853182_myu15cnia",
+        "item_1756019128552_xmgjesr4x"
+      ],
+      "complexity": 5
     },
     "item_1756019147758_yhwhhu5nd": {
       "id": "item_1756019147758_yhwhhu5nd",
@@ -6147,7 +7488,7 @@
       "children": [
         "item_1756020041361_zm46lkpkk"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756020047679_p8vt3akmo": {
       "id": "item_1756020047679_p8vt3akmo",
@@ -6155,7 +7496,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183837818_sg1jqd8uy",
+        "item_1756019152621_v81dkh0a0"
+      ],
       "complexity": 1
     },
     "item_1756019148761_gq9sziw4v": {
@@ -6175,8 +7519,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183351139_6kibfjqmp",
+        "item_1756019128552_xmgjesr4x",
+        "title_1756183351139_6kibfjqmp",
+        "item_1756019128552_xmgjesr4x"
+      ],
+      "complexity": 3
     },
     "item_1756019151595_5cue2gkv9": {
       "id": "item_1756019151595_5cue2gkv9",
@@ -6187,7 +7536,7 @@
       "children": [
         "item_1756020066255_ta7ep5sbg"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020078727_sutbcv09d": {
       "id": "item_1756020078727_sutbcv09d",
@@ -6195,7 +7544,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183548897_r7o7uzulo",
+        "item_1756019172286_gf0ftfzab"
+      ],
       "complexity": 1
     },
     "item_1756019153681_bh6opt36s": {
@@ -6215,7 +7567,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183589608_gomy5naax",
+        "item_1756019117081_03k1kd9z2"
+      ],
       "complexity": 1
     },
     "item_1756019154771_lji9sz3fu": {
@@ -6235,7 +7590,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183854185_cjjgcp7av",
+        "item_1756019095144_le1274n13",
+        "title_1756183772315_95822c0ak",
+        "item_1756019095144_le1274n13"
+      ],
       "complexity": 1
     },
     "item_1756019157221_s8hn5344r": {
@@ -6255,8 +7615,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183484622_uv3t6mn26",
+        "item_1756019113711_q74pz27nf",
+        "title_1756183916565_n56vjd1ua",
+        "item_1756019164275_1tkpslrvo"
+      ],
+      "complexity": 9
     },
     "item_1756019160102_29iesm4mu": {
       "id": "item_1756019160102_29iesm4mu",
@@ -6267,7 +7632,7 @@
       "children": [
         "item_1756020097295_9xq4jjifw"
       ],
-      "complexity": 2
+      "complexity": 10
     },
     "item_1756020099302_3u9keqyo2": {
       "id": "item_1756020099302_3u9keqyo2",
@@ -6275,7 +7640,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183484622_uv3t6mn26",
+        "item_1756019165279_ykms92rk1",
+        "title_1756183484622_uv3t6mn26",
+        "item_1756019165279_ykms92rk1"
+      ],
       "complexity": 1
     },
     "item_1756019161778_bk0ibft7z": {
@@ -6295,8 +7665,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183491396_5yrhq00gp",
+        "item_1756019121185_qa2lbflc3",
+        "title_1756183491396_5yrhq00gp",
+        "item_1756019121185_qa2lbflc3"
+      ],
+      "complexity": 3
     },
     "item_1756019162882_borxx24lw": {
       "id": "item_1756019162882_borxx24lw",
@@ -6307,7 +7682,7 @@
       "children": [
         "item_1756020100555_hytqtaac9"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020136811_mr1w8q233": {
       "id": "item_1756020136811_mr1w8q233",
@@ -6315,8 +7690,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183484622_uv3t6mn26",
+        "item_1756019184809_65t3e9mdw",
+        "title_1756183916565_n56vjd1ua",
+        "item_1756019146757_sx0j3od70"
+      ],
+      "complexity": 7
     },
     "item_1756019164275_1tkpslrvo": {
       "id": "item_1756019164275_1tkpslrvo",
@@ -6327,7 +7707,7 @@
       "children": [
         "item_1756020136811_mr1w8q233"
       ],
-      "complexity": 2
+      "complexity": 8
     },
     "item_1756020149797_rf3vfpmd4": {
       "id": "item_1756020149797_rf3vfpmd4",
@@ -6335,7 +7715,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183816178_2cu7mxohs",
+        "item_1756019095144_le1274n13",
+        "title_1756183849739_ddkra53qi",
+        "item_1756019095144_le1274n13"
+      ],
       "complexity": 1
     },
     "item_1756019165279_ykms92rk1": {
@@ -6355,8 +7740,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183643266_138ncgczf",
+        "item_1756019112242_2gddv41n5",
+        "title_1756183643266_138ncgczf",
+        "item_1756019164275_1tkpslrvo"
+      ],
+      "complexity": 11
     },
     "item_1756019166279_q6g65pe63": {
       "id": "item_1756019166279_q6g65pe63",
@@ -6367,7 +7757,7 @@
       "children": [
         "item_1756020156872_2ujg252zf"
       ],
-      "complexity": 2
+      "complexity": 12
     },
     "item_1756020172436_h0mmy88x6": {
       "id": "item_1756020172436_h0mmy88x6",
@@ -6375,7 +7765,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183507974_r5cn9u3r2",
+        "item_1756019095144_le1274n13",
+        "title_1756183916565_n56vjd1ua",
+        "item_1756019095144_le1274n13"
+      ],
       "complexity": 1
     },
     "item_1756019167282_vjt6dok3j": {
@@ -6395,7 +7790,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183589608_gomy5naax",
+        "item_1756019131733_9ov5gkf7p"
+      ],
       "complexity": 1
     },
     "item_1756019169790_gnznmkpby": {
@@ -6415,8 +7813,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183823169_b83v8r864",
+        "item_1756019121185_qa2lbflc3",
+        "title_1756183823169_b83v8r864",
+        "item_1756019121185_qa2lbflc3"
+      ],
+      "complexity": 3
     },
     "item_1756019171259_5wy0kq61j": {
       "id": "item_1756019171259_5wy0kq61j",
@@ -6427,7 +7830,7 @@
       "children": [
         "item_1756020215515_0oyomuq9u"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756019708651_y6g69jzui": {
       "id": "item_1756019708651_y6g69jzui",
@@ -6435,7 +7838,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184078029_199dtozko",
+        "item_1756019227449_yj3ovfydg"
+      ],
       "complexity": 1
     },
     "item_1756019175292_sfh0cgwjk": {
@@ -6455,7 +7861,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184049118_cj06u3xik",
+        "item_1756019232903_e9mvsksog",
+        "title_1756184049118_cj06u3xik",
+        "item_1756019236463_4nhz2a8hi"
+      ],
       "complexity": 1
     },
     "item_1756019176701_m1r9osc30": {
@@ -6475,7 +7886,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183474340_j7xlbxpzf",
+        "item_1756019212265_lmgmcir7c"
+      ],
       "complexity": 1
     },
     "item_1756019177799_h8qrpv28f": {
@@ -6495,8 +7909,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756184147408_1kqsqdb12",
+        "item_1756018915230_1hjx9xbop",
+        "title_1756183577006_c6uzu9mbz",
+        "item_1756018706521_qz0n60ew7"
+      ],
+      "complexity": 9
     },
     "item_1756019178802_sopeqxt73": {
       "id": "item_1756019178802_sopeqxt73",
@@ -6507,7 +7926,7 @@
       "children": [
         "item_1756019746728_3oho4f3gp"
       ],
-      "complexity": 2
+      "complexity": 10
     },
     "item_1756019752665_ag1s547bp": {
       "id": "item_1756019752665_ag1s547bp",
@@ -6515,7 +7934,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184078029_199dtozko",
+        "item_1756019199830_acwuzziiz"
+      ],
       "complexity": 1
     },
     "item_1756019180269_b0aufsune": {
@@ -6535,7 +7957,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183871099_eje3klb54",
+        "item_1756019204337_4iw6zbq5x",
+        "title_1756183871099_eje3klb54",
+        "item_1756019232903_e9mvsksog"
+      ],
       "complexity": 1
     },
     "item_1756019181301_ix31rw97z": {
@@ -6555,7 +7982,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183368046_e9or6fk9r",
+        "item_1756019216781_6sy3bw8ik"
+      ],
       "complexity": 1
     },
     "item_1756019182723_73s5dbwwi": {
@@ -6575,7 +8005,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183583602_mt7w4ade1",
+        "item_1756019238884_zs8cy073y"
+      ],
       "complexity": 1
     },
     "item_1756019183756_553h5hh7x": {
@@ -6595,8 +8028,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183319616_osska08yf",
+        "item_1756019176701_m1r9osc30",
+        "title_1756183319616_osska08yf",
+        "item_1756019191820_ln4wv8t4n"
+      ],
+      "complexity": 3
     },
     "item_1756019186311_zobav05qh": {
       "id": "item_1756019186311_zobav05qh",
@@ -6607,7 +8045,7 @@
       "children": [
         "item_1756019835882_b9c9jsd3w"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756019842360_jytmolqpc": {
       "id": "item_1756019842360_jytmolqpc",
@@ -6615,7 +8053,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183553587_ll14l683w",
+        "item_1756018834571_p0nzl46op"
+      ],
       "complexity": 1
     },
     "item_1756019187310_mu59csxy4": {
@@ -6635,7 +8076,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183605070_4vtyjfcqb",
+        "item_1756019221438_dq40mzwh2"
+      ],
       "complexity": 1
     },
     "item_1756019189794_2hqptz61b": {
@@ -6655,7 +8099,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183605070_4vtyjfcqb",
+        "item_1756019203254_4hqihwgxb"
+      ],
       "complexity": 1
     },
     "item_1756019190819_0xirf02o1": {
@@ -6675,7 +8122,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183319616_osska08yf",
+        "item_1756019204337_4iw6zbq5x",
+        "title_1756183319616_osska08yf",
+        "item_1756019232903_e9mvsksog"
+      ],
       "complexity": 1
     },
     "item_1756019191820_ln4wv8t4n": {
@@ -6695,8 +8147,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183507974_r5cn9u3r2",
+        "item_1756018706521_qz0n60ew7",
+        "title_1756183507974_r5cn9u3r2",
+        "item_1756018706521_qz0n60ew7"
+      ],
+      "complexity": 9
     },
     "item_1756019193171_86wmgn16c": {
       "id": "item_1756019193171_86wmgn16c",
@@ -6707,7 +8164,7 @@
       "children": [
         "item_1756019866946_scxiwge56"
       ],
-      "complexity": 2
+      "complexity": 10
     },
     "item_1756019868407_1jsnlicta": {
       "id": "item_1756019868407_1jsnlicta",
@@ -6715,7 +8172,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183474340_j7xlbxpzf",
+        "item_1756019194203_vn4g221dp"
+      ],
       "complexity": 1
     },
     "item_1756019195320_z0td3hu0t": {
@@ -6735,8 +8195,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183823169_b83v8r864",
+        "item_1756019130601_igmi61s01",
+        "title_1756183823169_b83v8r864",
+        "item_1756019130601_igmi61s01"
+      ],
+      "complexity": 3
     },
     "item_1756019196787_81p6lun8w": {
       "id": "item_1756019196787_81p6lun8w",
@@ -6747,7 +8212,7 @@
       "children": [
         "item_1756019873959_zs4t7mfk4"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756019200831_kwow46ezc": {
       "id": "item_1756019200831_kwow46ezc",
@@ -6764,8 +8229,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183707709_gveq6w1t8",
+        "item_1756018706521_qz0n60ew7",
+        "title_1756184003957_gec8y8ota",
+        "item_1756018706521_qz0n60ew7"
+      ],
+      "complexity": 9
     },
     "item_1756019201832_34hk5qkl5": {
       "id": "item_1756019201832_34hk5qkl5",
@@ -6776,7 +8246,7 @@
       "children": [
         "item_1756019905201_rczb01rn8"
       ],
-      "complexity": 2
+      "complexity": 10
     },
     "item_1756019945474_pwkd57158": {
       "id": "item_1756019945474_pwkd57158",
@@ -6784,8 +8254,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183319616_osska08yf",
+        "item_1756019186311_zobav05qh",
+        "title_1756183319616_osska08yf",
+        "item_1756019244995_9hs1po739"
+      ],
+      "complexity": 5
     },
     "item_1756019203254_4hqihwgxb": {
       "id": "item_1756019203254_4hqihwgxb",
@@ -6796,7 +8271,7 @@
       "children": [
         "item_1756019945474_pwkd57158"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756019957198_0ya4qpox3": {
       "id": "item_1756019957198_0ya4qpox3",
@@ -6804,7 +8279,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183871099_eje3klb54",
+        "item_1756019184809_65t3e9mdw",
+        "title_1756183507974_r5cn9u3r2",
+        "item_1756019208836_4mftp1jnj"
+      ],
       "complexity": 1
     },
     "item_1756019204337_4iw6zbq5x": {
@@ -6824,7 +8304,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183589608_gomy5naax",
+        "item_1756019244995_9hs1po739",
+        "title_1756183605070_4vtyjfcqb",
+        "item_1756019244995_9hs1po739"
+      ],
       "complexity": 1
     },
     "item_1756019206341_y19th3vpu": {
@@ -6844,7 +8329,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183484622_uv3t6mn26",
+        "item_1756019249395_b0nqajkcd",
+        "title_1756183484622_uv3t6mn26",
+        "item_1756019249395_b0nqajkcd"
+      ],
       "complexity": 1
     },
     "item_1756019207817_s87reyvt5": {
@@ -6864,7 +8354,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183772315_95822c0ak",
+        "item_1756019246481_wz6e9n5fw",
+        "title_1756183871099_eje3klb54",
+        "item_1756019246481_wz6e9n5fw"
+      ],
       "complexity": 1
     },
     "item_1756019208836_4mftp1jnj": {
@@ -6884,7 +8379,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183605070_4vtyjfcqb",
+        "item_1756019243891_kzm6sto4k"
+      ],
       "complexity": 1
     },
     "item_1756019210843_monyq3me2": {
@@ -6904,8 +8402,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183882623_7p8oe3nny",
+        "item_1756019201832_34hk5qkl5",
+        "title_1756183882623_7p8oe3nny",
+        "item_1756019201832_34hk5qkl5"
+      ],
+      "complexity": 11
     },
     "item_1756019213353_1bfkb8voo": {
       "id": "item_1756019213353_1bfkb8voo",
@@ -6916,7 +8419,7 @@
       "children": [
         "item_1756019995083_4l30eok0e"
       ],
-      "complexity": 2
+      "complexity": 12
     },
     "item_1756020016158_7czih7xrr": {
       "id": "item_1756020016158_7czih7xrr",
@@ -6924,8 +8427,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183605070_4vtyjfcqb",
+        "item_1756019206341_y19th3vpu"
+      ],
+      "complexity": 3
     },
     "item_1756019214355_qtf08jzih": {
       "id": "item_1756019214355_qtf08jzih",
@@ -6936,7 +8442,7 @@
       "children": [
         "item_1756020016158_7czih7xrr"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020033025_3eikdxtt0": {
       "id": "item_1756020033025_3eikdxtt0",
@@ -6944,8 +8450,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183319616_osska08yf",
+        "item_1756019186311_zobav05qh",
+        "title_1756183589608_gomy5naax",
+        "item_1756019186311_zobav05qh"
+      ],
+      "complexity": 9
     },
     "item_1756019221438_dq40mzwh2": {
       "id": "item_1756019221438_dq40mzwh2",
@@ -6956,7 +8467,7 @@
       "children": [
         "item_1756020033025_3eikdxtt0"
       ],
-      "complexity": 2
+      "complexity": 10
     },
     "item_1756020034195_i3yw8bkj5": {
       "id": "item_1756020034195_i3yw8bkj5",
@@ -6964,7 +8475,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184049118_cj06u3xik",
+        "item_1756019259386_xyfx9xsdd",
+        "title_1756183605070_4vtyjfcqb",
+        "item_1756019259386_xyfx9xsdd"
+      ],
       "complexity": 1
     },
     "item_1756019223442_wr0d8cik0": {
@@ -6984,7 +8500,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183351139_6kibfjqmp",
+        "item_1756019246481_wz6e9n5fw",
+        "title_1756183716191_vudmylq5a",
+        "item_1756019246481_wz6e9n5fw"
+      ],
       "complexity": 1
     },
     "item_1756019226448_fmwzb8d42": {
@@ -7004,8 +8525,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756184049118_cj06u3xik",
+        "item_1756019186311_zobav05qh",
+        "title_1756184049118_cj06u3xik",
+        "item_1756019259386_xyfx9xsdd"
+      ],
+      "complexity": 9
     },
     "item_1756019228870_r8oi763x1": {
       "id": "item_1756019228870_r8oi763x1",
@@ -7016,7 +8542,7 @@
       "children": [
         "item_1756020045670_odxkk0s2r"
       ],
-      "complexity": 2
+      "complexity": 10
     },
     "item_1756020051690_dkurbi0m6": {
       "id": "item_1756020051690_dkurbi0m6",
@@ -7024,7 +8550,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183351139_6kibfjqmp",
+        "item_1756019233930_r4uk1gwiu",
+        "title_1756183351139_6kibfjqmp",
+        "item_1756019233930_r4uk1gwiu"
+      ],
       "complexity": 1
     },
     "item_1756019231454_ywrxy5qgg": {
@@ -7044,8 +8575,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183871099_eje3klb54",
+        "item_1756019236463_4nhz2a8hi",
+        "title_1756183871099_eje3klb54",
+        "item_1756019204337_4iw6zbq5x"
+      ],
+      "complexity": 5
     },
     "item_1756019232903_e9mvsksog": {
       "id": "item_1756019232903_e9mvsksog",
@@ -7056,7 +8592,7 @@
       "children": [
         "item_1756020053955_ohtj0oo5q"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756020063175_q26frxz3g": {
       "id": "item_1756020063175_q26frxz3g",
@@ -7064,8 +8600,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756184003957_gec8y8ota",
+        "item_1756018706521_qz0n60ew7",
+        "title_1756184076812_wd0lv4m5j",
+        "item_1756018706521_qz0n60ew7"
+      ],
+      "complexity": 9
     },
     "item_1756019233930_r4uk1gwiu": {
       "id": "item_1756019233930_r4uk1gwiu",
@@ -7076,7 +8617,7 @@
       "children": [
         "item_1756020063175_q26frxz3g"
       ],
-      "complexity": 2
+      "complexity": 10
     },
     "item_1756020071259_xqkes1q9g": {
       "id": "item_1756020071259_xqkes1q9g",
@@ -7084,8 +8625,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756184049118_cj06u3xik",
+        "item_1756019184809_65t3e9mdw",
+        "title_1756183871099_eje3klb54",
+        "item_1756019226448_fmwzb8d42"
+      ],
+      "complexity": 3
     },
     "item_1756019236463_4nhz2a8hi": {
       "id": "item_1756019236463_4nhz2a8hi",
@@ -7096,7 +8642,7 @@
       "children": [
         "item_1756020071259_xqkes1q9g"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020072262_12p5s9xpk": {
       "id": "item_1756020072262_12p5s9xpk",
@@ -7104,7 +8650,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183583602_mt7w4ade1",
+        "item_1756019235357_r32assezi"
+      ],
       "complexity": 1
     },
     "item_1756019237465_l8iosjsyh": {
@@ -7124,7 +8673,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183474340_j7xlbxpzf",
+        "item_1756019188312_m8ttlmje3"
+      ],
       "complexity": 1
     },
     "item_1756019241471_9q6su04xd": {
@@ -7144,7 +8696,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183548897_r7o7uzulo",
+        "item_1756019258408_o8tc1gnc6"
+      ],
       "complexity": 1
     },
     "item_1756019242474_w43p59xhp": {
@@ -7164,7 +8719,12 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183605070_4vtyjfcqb",
+        "item_1756019244995_9hs1po739",
+        "title_1756183605070_4vtyjfcqb",
+        "item_1756019259386_xyfx9xsdd"
+      ],
       "complexity": 1
     },
     "item_1756019243891_kzm6sto4k": {
@@ -7184,8 +8744,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756184049118_cj06u3xik",
+        "item_1756019181301_ix31rw97z",
+        "title_1756184049118_cj06u3xik",
+        "item_1756019176701_m1r9osc30"
+      ],
+      "complexity": 9
     },
     "item_1756019244995_9hs1po739": {
       "id": "item_1756019244995_9hs1po739",
@@ -7196,7 +8761,7 @@
       "children": [
         "item_1756020107315_m44esbmyx"
       ],
-      "complexity": 2
+      "complexity": 10
     },
     "item_1756020109766_dh3o7nmrt": {
       "id": "item_1756020109766_dh3o7nmrt",
@@ -7204,8 +8769,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183772315_95822c0ak",
+        "item_1756019200831_kwow46ezc",
+        "title_1756183871099_eje3klb54",
+        "item_1756019207817_s87reyvt5"
+      ],
+      "complexity": 3
     },
     "item_1756019246481_wz6e9n5fw": {
       "id": "item_1756019246481_wz6e9n5fw",
@@ -7216,7 +8786,7 @@
       "children": [
         "item_1756020109766_dh3o7nmrt"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020117338_vyquz2gyf": {
       "id": "item_1756020117338_vyquz2gyf",
@@ -7224,8 +8794,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183871099_eje3klb54",
+        "item_1756019193171_86wmgn16c",
+        "title_1756183871099_eje3klb54",
+        "item_1756019193171_86wmgn16c"
+      ],
+      "complexity": 11
     },
     "item_1756019247955_lumoqbi04": {
       "id": "item_1756019247955_lumoqbi04",
@@ -7236,7 +8811,7 @@
       "children": [
         "item_1756020117338_vyquz2gyf"
       ],
-      "complexity": 2
+      "complexity": 12
     },
     "item_1756020150809_3i0hfxcxz": {
       "id": "item_1756020150809_3i0hfxcxz",
@@ -7244,8 +8819,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183916565_n56vjd1ua",
+        "item_1756018706521_qz0n60ew7",
+        "title_1756183816178_2cu7mxohs",
+        "item_1756018706521_qz0n60ew7"
+      ],
+      "complexity": 9
     },
     "item_1756019249395_b0nqajkcd": {
       "id": "item_1756019249395_b0nqajkcd",
@@ -7256,7 +8836,7 @@
       "children": [
         "item_1756020150809_3i0hfxcxz"
       ],
-      "complexity": 2
+      "complexity": 10
     },
     "item_1756020153807_1dd4onr3z": {
       "id": "item_1756020153807_1dd4onr3z",
@@ -7264,8 +8844,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183854185_cjjgcp7av",
+        "item_1756019232903_e9mvsksog",
+        "title_1756183854185_cjjgcp7av",
+        "item_1756019236463_4nhz2a8hi"
+      ],
+      "complexity": 21
     },
     "item_1756019250412_za0dp3131": {
       "id": "item_1756019250412_za0dp3131",
@@ -7276,7 +8861,7 @@
       "children": [
         "item_1756020153807_1dd4onr3z"
       ],
-      "complexity": 2
+      "complexity": 22
     },
     "item_1756020164421_3gpel6wvm": {
       "id": "item_1756020164421_3gpel6wvm",
@@ -7284,7 +8869,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756184078029_199dtozko",
+        "item_1756019209842_igzsbtxju"
+      ],
       "complexity": 1
     },
     "item_1756019251490_wioh2hk29": {
@@ -7304,7 +8892,10 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
+      "children": [
+        "title_1756183754685_bdxkftnsm",
+        "item_1756019222440_4669rkw9y"
+      ],
       "complexity": 1
     },
     "item_1756019252872_dp4s2gi26": {
@@ -7324,8 +8915,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183772315_95822c0ak",
+        "item_1756018706521_qz0n60ew7",
+        "title_1756183716191_vudmylq5a",
+        "item_1756018706521_qz0n60ew7"
+      ],
+      "complexity": 9
     },
     "item_1756019253900_z2t0cg862": {
       "id": "item_1756019253900_z2t0cg862",
@@ -7336,7 +8932,7 @@
       "children": [
         "item_1756020174734_qj5bztm7q"
       ],
-      "complexity": 2
+      "complexity": 10
     },
     "item_1756020203069_th1nalnau": {
       "id": "item_1756020203069_th1nalnau",
@@ -7344,8 +8940,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183605070_4vtyjfcqb",
+        "item_1756019223442_wr0d8cik0"
+      ],
+      "complexity": 3
     },
     "item_1756019254902_58n5azbcn": {
       "id": "item_1756019254902_58n5azbcn",
@@ -7356,7 +8955,7 @@
       "children": [
         "item_1756020203069_th1nalnau"
       ],
-      "complexity": 2
+      "complexity": 4
     },
     "item_1756020205592_0tyg9tl45": {
       "id": "item_1756020205592_0tyg9tl45",
@@ -7364,8 +8963,11 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183605070_4vtyjfcqb",
+        "item_1756019228870_r8oi763x1"
+      ],
+      "complexity": 27
     },
     "item_1756019256499_1szfkdqzb": {
       "id": "item_1756019256499_1szfkdqzb",
@@ -7376,7 +8978,7 @@
       "children": [
         "item_1756020205592_0tyg9tl45"
       ],
-      "complexity": 2
+      "complexity": 28
     },
     "item_1756020219444_ul7v849ku": {
       "id": "item_1756020219444_ul7v849ku",
@@ -7384,8 +8986,13 @@
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183319616_osska08yf",
+        "item_1756019191820_ln4wv8t4n",
+        "title_1756183854185_cjjgcp7av",
+        "item_1756019250412_za0dp3131"
+      ],
+      "complexity": 23
     },
     "item_1756019259386_xyfx9xsdd": {
       "id": "item_1756019259386_xyfx9xsdd",
@@ -7396,7 +9003,7 @@
       "children": [
         "item_1756020219444_ul7v849ku"
       ],
-      "complexity": 2
+      "complexity": 24
     }
   }
 }

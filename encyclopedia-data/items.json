@@ -21729,6 +21729,69 @@
     "crawled_at": "2025-08-24T07:06:12.286Z"
   },
   {
+    "id": "item_1756019175266_sfh0cgwjk",
+    "name": "Celestial Stone",
+    "type": "Other",
+    "isLegendary": false,
+    "isDrop": true,
+    "isCraftable": false,
+    "description": "",
+    "plainAttributes": [
+    ],
+    "plainReq": [
+    ],
+    "attributes": {
+    },
+    "requirements": {
+    },
+    "ingredients": [],
+    "image_url": "https://blackdragon.mobi/img/1/items/celestial_stone.gif",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-24T07:06:15.292Z"
+  },
+  {
+    "id": "item_1756019175277_sfh0cgwjk",
+    "name": "Ring",
+    "type": "Ring",
+    "isLegendary": false,
+    "isDrop": true,
+    "isCraftable": false,
+    "description": "",
+    "plainAttributes": [
+    ],
+    "plainReq": [
+    ],
+    "attributes": {
+    },
+    "requirements": {
+    },
+    "ingredients": [],
+    "image_url": "https://blackdragon.mobi/img/1/items/ring_1.gif",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-24T07:06:15.292Z"
+  },
+  {
+    "id": "item_1756019175288_sfh0cgwjk",
+    "name": "Amulet",
+    "type": "Amulet",
+    "isLegendary": false,
+    "isDrop": true,
+    "isCraftable": false,
+    "description": "",
+    "plainAttributes": [
+    ],
+    "plainReq": [
+    ],
+    "attributes": {
+    },
+    "requirements": {
+    },
+    "ingredients": [],
+    "image_url": "https://blackdragon.mobi/img/1/items/amulet_1.gif",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-24T07:06:15.292Z"
+  },
+  {
     "id": "item_1756019175292_sfh0cgwjk",
     "name": "Alluvial Ring",
     "type": "Ring",

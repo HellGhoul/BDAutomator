@@ -534,53 +534,125 @@ window.showItemDetails = async function(itemId) {
           </div>
           
           <div class="mb-4">
-            <h5 class="text-md font-bold text-rpg-gold mb-2">Recipe Ingredients:</h5>
-            <div class="text-sm text-gray-400 text-center py-2">
-              Click on recipe ingredients below to see their details
+            <h5 class="text-md font-bold text-rpg-gold mb-2">Complete Crafting Tree:</h5>
+            <div class="text-sm text-gray-400 text-center py-2 mb-3">
+              This shows all materials needed at every level of crafting
             </div>
           </div>
           
           <div class="mb-4">
             <h5 class="text-md font-bold text-rpg-gold mb-2">Dependency Tree Structure:</h5>
-            <div class="bg-rpg-darker p-4 rounded-lg max-h-60 overflow-y-auto">
+            <div class="bg-rpg-darker p-4 rounded-lg max-h-80 overflow-y-auto">
               ${dependencyData ? window.renderDependencyTreeFlat(dependencyData, 0) : '<div class="text-gray-400 text-center py-4">No dependency tree available</div>'}
             </div>
           </div>
           
-
-          
-          <div>
-            <h5 class="text-md font-bold text-rpg-gold mb-2">Direct Recipe Ingredients:</h5>
-            <div class="space-y-3">
-              ${flatDependencies && dependencyData.children && dependencyData.children[0] && flatDependencies[dependencyData.children[0]] && flatDependencies[dependencyData.children[0]].children && flatDependencies[dependencyData.children[0]].children.length > 0 ? 
-                dependencyData.children[0].children.map(ingredientId => {
-                  const ingredient = flatDependencies[ingredientId];
-                  if (!ingredient) return '';
-                  
-                  return `
-                    <div class="p-3 bg-rpg-dark rounded border border-rpg-gold/20">
-                      <div class="flex justify-between items-start mb-2">
-                        <span class="text-sm font-bold text-gray-300">${ingredient.name || 'Unknown Ingredient'}</span>
-                        <div class="flex items-center space-x-2">
-                          ${ingredient.isLegendary ? '<span class="text-yellow-400 text-xs">⭐ Legendary</span>' : ''}
-                          <span class="text-xs px-2 py-1 rounded ${(ingredient.nodeType || 'unknown') === 'titled_item' ? 'bg-blue-500' : (ingredient.nodeType || 'unknown') === 'base_item' ? 'bg-green-500' : (ingredient.nodeType || 'unknown') === 'craftable_item' ? 'bg-purple-500' : (ingredient.nodeType || 'unknown') === 'title' ? 'bg-orange-500' : 'bg-gray-500'} text-white">${(ingredient.nodeType || 'unknown').replace('_', ' ')}</span>
-                        </div>
+          <div class="mb-4">
+            <h5 class="text-md font-bold text-rpg-gold mb-2">Material Summary:</h5>
+            <div class="bg-rpg-darker p-4 rounded-lg">
+              ${(() => {
+                if (!dependencyData || !flatDependencies) return '<div class="text-gray-400 text-center py-4">No summary available</div>';
+                
+                const summary = window.calculateMaterialSummary(dependencyData);
+                if (!summary || Object.keys(summary).length === 0) {
+                  return '<div class="text-gray-400 text-center py-4">No materials to summarize</div>';
+                }
+                
+                // Calculate total counts
+                const totalCounts = {};
+                Object.entries(summary).forEach(([type, items]) => {
+                  totalCounts[type] = items.reduce((sum, item) => sum + item.quantity, 0);
+                });
+                
+                const totalUnique = Object.values(summary).reduce((sum, items) => sum + items.length, 0);
+                const totalMaterials = Object.values(totalCounts).reduce((sum, count) => sum + count, 0);
+                
+                return `
+                  <div class="mb-4 p-3 bg-rpg-dark rounded border border-rpg-gold/30">
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                      <div>
+                        <div class="text-lg font-bold text-rpg-gold">${totalUnique}</div>
+                        <div class="text-xs text-gray-400">Unique Items</div>
                       </div>
-                      <div class="text-xs text-gray-400">
-                        <div>Type: ${ingredient.nodeType || 'unknown'}</div>
-                        ${ingredient.children && ingredient.children.length > 0 ? `
-                          <div class="mt-2">
-                            <div class="text-purple-400 font-bold">Sub-components: ${ingredient.children.length}</div>
-                            ${ingredient.children.map(childId => {
-                              const child = flatDependencies[childId];
-                              return `<div class="ml-2">• ${child ? child.name : 'Unknown'} (${child ? child.nodeType : 'unknown'})</div>`;
-                            }).join('')}
-                          </div>
-                        ` : ''}
+                      <div>
+                        <div class="text-lg font-bold text-rpg-gold">${totalMaterials}</div>
+                        <div class="text-xs text-gray-400">Total Materials</div>
                       </div>
                     </div>
-                  `;
-                }).join('') : '<div class="text-gray-400 text-center py-4">No recipe data available</div>'
+                  </div>
+                  
+                  ${Object.entries(summary).map(([type, items]) => `
+                    <div class="mb-3">
+                      <h6 class="text-sm font-bold text-rpg-gold mb-2">${type} (${items.length} unique, ${totalCounts[type]} total)</h6>
+                      <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        ${items.map(item => `
+                          <div class="flex items-center space-x-2 p-2 bg-rpg-dark rounded border border-rpg-gold/20">
+                            ${item.image_url ? 
+                              `<img src="${item.image_url}" alt="${item.name}" class="w-8 h-8 object-contain rounded">` : 
+                              `<div class="w-8 h-8 bg-gray-700 rounded flex items-center justify-center">
+                                <span class="text-xs text-gray-400">${item.type?.charAt(0)?.toUpperCase() || '?'}</span>
+                              </div>`
+                            }
+                            <div class="flex-1">
+                              <span class="text-sm text-gray-300">${item.name}</span>
+                              <span class="text-xs text-gray-400 block">(${item.nodeType})</span>
+                              ${item.type && item.type !== 'Unknown' ? 
+                                `<span class="text-xs text-gray-500 block">${item.type}</span>` : ''
+                              }
+                            </div>
+                            <span class="text-sm font-bold text-rpg-gold bg-rpg-dark px-2 py-1 rounded border border-rpg-gold/30">×${item.quantity}</span>
+                          </div>
+                        `).join('')}
+                      </div>
+                    </div>
+                  `).join('')}
+                `;
+              })()}
+            </div>
+          </div>
+          
+          <div>
+            <h5 class="text-md font-bold text-rpg-gold mb-2">Direct Recipe Ingredients:
+            <div class="space-y-3">
+              ${flatDependencies && dependencyData.children && dependencyData.children.length > 0 ? 
+                (() => {
+                  // Get the first child (recipe ID)
+                  const recipeId = dependencyData.children[0];
+                  const recipe = flatDependencies[recipeId];
+                  
+                  if (recipe && recipe.children && recipe.children.length > 0) {
+                    return recipe.children.map(ingredientId => {
+                      const ingredient = flatDependencies[ingredientId];
+                      if (!ingredient) return '';
+                      
+                      return `
+                        <div class="p-3 bg-rpg-dark rounded border border-rpg-gold/20">
+                          <div class="flex justify-between items-start mb-2">
+                            <span class="text-sm font-bold text-gray-300">${ingredient.name || 'Unknown Ingredient'}</span>
+                            <div class="flex items-center space-x-2">
+                              ${ingredient.isLegendary ? '<span class="text-yellow-400 text-xs">⭐ Legendary</span>' : ''}
+                              <span class="text-xs px-2 py-1 rounded ${(ingredient.nodeType || 'unknown') === 'title' ? 'bg-orange-500' : (ingredient.nodeType || 'unknown') === 'base_item' ? 'bg-green-500' : 'bg-gray-500'} text-white">${(ingredient.nodeType || 'unknown').replace('_', ' ')}</span>
+                            </div>
+                          </div>
+                          <div class="text-xs text-gray-400">
+                            <div>Type: ${ingredient.nodeType || 'unknown'}</div>
+                            ${ingredient.children && ingredient.children.length > 0 ? `
+                              <div class="mt-2">
+                                <div class="text-purple-400 font-bold">Sub-components: ${ingredient.children.length}</div>
+                                ${ingredient.children.map(childId => {
+                                  const child = flatDependencies[childId];
+                                  return `<div class="ml-2">• ${child ? child.name : 'Unknown'} (${child ? child.nodeType : 'unknown'})</div>`;
+                                }).join('')}
+                              </div>
+                            ` : ''}
+                          </div>
+                        </div>
+                      `;
+                    }).join('');
+                  } else {
+                    return '<div class="text-gray-400 text-center py-4">No recipe ingredients found</div>';
+                  }
+                })() : '<div class="text-gray-400 text-center py-4">No recipe data available</div>'
               }
             </div>
           </div>
@@ -706,6 +778,13 @@ window.showItemDetails = async function(itemId) {
   console.log('🔍 Final modal HTML length:', modalContent.innerHTML.length);
   console.log('🔍 Modal content preview:', modalContent.innerHTML.substring(0, 200) + '...');
   
+  // Check if modal content is valid
+  if (!modalContent.innerHTML || modalContent.innerHTML.length < 100) {
+    console.error('❌ Modal content is too short or empty!');
+    console.error('Modal HTML:', modalContent.innerHTML);
+    return;
+  }
+  
   modal.appendChild(modalContent);
   document.body.appendChild(modal);
   
@@ -713,6 +792,17 @@ window.showItemDetails = async function(itemId) {
   console.log('🔍 Modal element:', modal);
   console.log('🔍 Modal content:', modalContent);
   console.log('🔍 Modal HTML length:', modalContent.innerHTML.length);
+  
+  // Verify modal is visible
+  setTimeout(() => {
+    const modalElement = document.querySelector('.fixed');
+    if (modalElement) {
+      console.log('✅ Modal found in DOM:', modalElement);
+      console.log('🔍 Modal styles:', window.getComputedStyle(modalElement));
+    } else {
+      console.error('❌ Modal not found in DOM after creation!');
+    }
+  }, 100);
 };
 
 window.exportFilteredResults = function() {
@@ -796,8 +886,8 @@ window.renderDependencyTree = function(node, level = 0) {
   return html;
 };
 
-// New function for flat dependency structure
-window.renderDependencyTreeFlat = function(node, level = 0) {
+// New function for flat dependency structure - recursively shows all nested children with collapsible sections
+window.renderDependencyTreeFlat = function(node, level = 0, nodeId = null) {
   if (!node) return '';
   
   const nodeTypeColor = {
@@ -810,23 +900,159 @@ window.renderDependencyTreeFlat = function(node, level = 0) {
     'unknown': 'text-gray-400'
   };
   
+  // Get the actual encyclopedia item or title data for images and details
+  const encyclopediaItem = window.getEncyclopediaItemByName(node.name);
+  const encyclopediaTitle = window.getEncyclopediaTitleByName(node.name);
+  const encyclopediaData = encyclopediaItem || encyclopediaTitle;
+  
+  // Generate unique ID for this node
+  const uniqueId = nodeId || `node_${level}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  
+  // Check if this node has children
+  const hasChildren = node.children && node.children.length > 0;
+  
   let html = `
-    <div class="mb-1" style="margin-left: ${level * 20}px;">
-      <span class="text-xs ${nodeTypeColor[node.nodeType] || 'text-gray-400'}">${node.name}</span>
-      <span class="text-xs text-gray-500">(${node.nodeType})</span>
-      ${node.isLegendary ? '<span class="text-yellow-400 text-xs">⭐</span>' : ''}
+    <div class="mb-2" style="margin-left: ${level * 20}px;">
+      <div class="flex items-center space-x-2 p-2 bg-rpg-darker rounded border border-rpg-gold/20">
+        ${hasChildren ? `
+          <button onclick="toggleNode('${uniqueId}')" class="toggle-btn text-rpg-gold hover:text-rpg-gold/80">
+            <span id="icon_${uniqueId}" class="text-sm">▶</span>
+          </button>
+        ` : '<div class="w-4"></div>'}
+        
+        ${encyclopediaData && encyclopediaData.image_url ? 
+          `<img src="${encyclopediaData.image_url}" alt="${node.name}" class="w-[50px] h-[50px] object-contain rounded border border-rpg-gold/30">` : 
+          `<div class="w-[50px] h-[50px] bg-gray-700 rounded border border-rpg-gold/30 flex items-center justify-center">
+            <span class="text-xs text-gray-400">${node.nodeType?.charAt(0)?.toUpperCase() || '?'}</span>
+          </div>`
+        }
+        
+        <div class="flex-1">
+          <div class="flex items-center space-x-2">
+            <span class="text-sm font-bold ${nodeTypeColor[node.nodeType] || 'text-gray-400'}">${node.name}</span>
+            <span class="text-xs px-2 py-1 rounded bg-gray-600 text-white">${(node.nodeType || 'unknown').replace('_', ' ')}</span>
+            ${node.isLegendary ? '<span class="text-yellow-400 text-xs">⭐</span>' : ''}
+          </div>
+          ${encyclopediaData && encyclopediaData.type ? 
+            `<div class="text-xs text-gray-400">Type: ${encyclopediaData.type}</div>` : 
+            encyclopediaData && encyclopediaData.prefix ? 
+            `<div class="text-xs text-gray-400">Title: ${encyclopediaData.prefix}</div>` : ''
+          }
+        </div>
+      </div>
     </div>
   `;
   
-  // Recursively render children by following ID references
-  if (node.children && node.children.length > 0) {
+  // Special handling for recipes to show titled items
+  if (node.nodeType === 'recipe' && hasChildren) {
+    // First level (recipe ingredients) should be visible by default
+    const containerClass = '';
+    const iconText = '▼';
+    
+    html += `
+      <div id="children_${uniqueId}" class="${containerClass}" style="margin-left: ${(level + 1) * 20}px;">
+    `;
+    
+    // For recipes, we need to group children into titled items
+    const titledItems = window.groupRecipeIngredients(node.children);
+    
+    titledItems.forEach((titledItem, index) => {
+      const titledItemId = `titled_${uniqueId}_${index}`;
+      
+      // Create titled item node
+      html += `
+        <div class="mb-2">
+          <div class="flex items-center space-x-2 p-2 bg-blue-900/20 rounded border border-blue-500/30">
+            <button onclick="toggleNode('${titledItemId}')" class="toggle-btn text-blue-400 hover:text-blue-300">
+              <span id="icon_${titledItemId}" class="text-sm">▼</span>
+            </button>
+            
+            <div class="w-[50px] h-[50px] bg-blue-800/30 rounded border border-blue-500/30 flex items-center justify-center">
+              <span class="text-xs text-blue-300">TI</span>
+            </div>
+            
+            <div class="flex-1">
+              <div class="flex items-center space-x-2">
+                <span class="text-sm font-bold text-blue-400">${titledItem.name}</span>
+                <span class="text-xs px-2 py-1 rounded bg-blue-600 text-white">Titled Item</span>
+              </div>
+              <div class="text-xs text-blue-300">Recipe Ingredient</div>
+            </div>
+          </div>
+          
+          <div id="children_${titledItemId}" class="" style="margin-left: 20px;">
+            ${titledItem.title ? `
+              <div class="mb-2">
+                <div class="flex items-center space-x-2 p-2 bg-orange-900/20 rounded border border-orange-500/30">
+                  <div class="w-4"></div>
+                  ${(() => {
+                    const titleData = window.getEncyclopediaTitleByName(titledItem.title);
+                    return titleData && titleData.image_url ? 
+                      `<img src="${titleData.image_url}" alt="${titledItem.title}" class="w-[50px] h-[50px] object-contain rounded border border-orange-500/30">` : 
+                      `<div class="w-[50px] h-[50px] bg-orange-800/30 rounded border border-orange-500/30 flex items-center justify-center">
+                        <span class="text-xs text-orange-300">T</span>
+                      </div>`;
+                  })()}
+                  <div class="flex-1">
+                    <span class="text-sm font-bold text-orange-400">${titledItem.title}</span>
+                    <span class="text-xs px-2 py-1 rounded bg-orange-600 text-white">Title</span>
+                  </div>
+                </div>
+              </div>
+            ` : ''}
+            
+            ${titledItem.baseItem ? `
+              <div class="mb-2">
+                <div class="flex items-center space-x-2 p-2 bg-green-900/20 rounded border border-green-500/30">
+                  <div class="w-4"></div>
+                  ${(() => {
+                    const baseItemData = window.getEncyclopediaItemByName(titledItem.baseItem);
+                    return baseItemData && baseItemData.image_url ? 
+                      `<img src="${baseItemData.image_url}" alt="${titledItem.baseItem}" class="w-[50px] h-[50px] object-contain rounded border border-green-500/30">` : 
+                      `<div class="w-[50px] h-[50px] bg-green-800/30 rounded border border-green-500/30 flex items-center justify-center">
+                        <span class="text-xs text-green-300">B</span>
+                      </div>`;
+                  })()}
+                  <div class="flex-1">
+                    <span class="text-sm font-bold text-green-400">${titledItem.baseItem}</span>
+                    <span class="text-xs px-2 py-1 rounded bg-green-600 text-white">Base Item</span>
+                    ${(() => {
+                      const baseItemData = window.getEncyclopediaItemByName(titledItem.baseItem);
+                      return baseItemData && baseItemData.type ? 
+                        `<div class="text-xs text-green-300">Type: ${baseItemData.type}</div>` : '';
+                    })()}
+                  </div>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    });
+    
+    html += `</div>`;
+    
+    // Update the icon to show correct state
+    html = html.replace(`id="icon_${uniqueId}" class="text-sm">▶`, `id="icon_${uniqueId}" class="text-sm">${iconText}`);
+    
+  } else if (hasChildren) {
+    // Regular children handling for non-recipe nodes
+    const containerClass = 'hidden';
+    const iconText = '▶';
+    
+    html += `
+      <div id="children_${uniqueId}" class="${containerClass}" style="margin-left: ${(level + 1) * 20}px;">
+    `;
+    
+    // Recursively render children by following ID references
     node.children.forEach(childId => {
-      // Get the child record from the flat dependencies
       const childRecord = window.getFlatDependencyRecord(childId);
       if (childRecord) {
-        html += window.renderDependencyTreeFlat(childRecord, level + 1);
+        html += window.renderDependencyTreeFlat(childRecord, level + 1, `child_${uniqueId}_${childId}`);
       }
     });
+    
+    html += `</div>`;
   }
   
   return html;
@@ -839,6 +1065,190 @@ window.getFlatDependencyRecord = function(recordId) {
     return window.flatDependencies[recordId];
   }
   return null;
+};
+
+// Helper function to get encyclopedia item by name (for images and details)
+window.getEncyclopediaItemByName = function(itemName) {
+  if (encyclopediaData && encyclopediaData.items) {
+    return encyclopediaData.items.find(item => item.name === itemName);
+  }
+  return null;
+};
+
+// Helper function to get encyclopedia title by name (for titles)
+window.getEncyclopediaTitleByName = function(titleName) {
+  if (encyclopediaData && encyclopediaData.titles) {
+    return encyclopediaData.titles.find(title => title.name === titleName);
+  }
+  return null;
+};
+
+// Helper function to group recipe ingredients into titled items
+window.groupRecipeIngredients = function(ingredientIds) {
+  if (!ingredientIds || !window.flatDependencies) return [];
+  
+  console.log('🔍 Grouping recipe ingredients:', ingredientIds);
+  
+  const titledItems = [];
+  const processedIds = new Set();
+  
+  ingredientIds.forEach(ingredientId => {
+    if (processedIds.has(ingredientId)) return;
+    
+    const ingredient = window.flatDependencies[ingredientId];
+    if (!ingredient) {
+      console.log(`⚠️ Ingredient not found: ${ingredientId}`);
+      return;
+    }
+    
+    console.log(`🔍 Processing ingredient: ${ingredient.name} (${ingredient.nodeType})`);
+    
+    if (ingredient.nodeType === 'title') {
+      // Find the corresponding base item for this title
+      const baseItemId = ingredientIds.find(id => {
+        const item = window.flatDependencies[id];
+        return item && item.nodeType === 'base_item';
+      });
+      
+      if (baseItemId) {
+        const baseItem = window.flatDependencies[baseItemId];
+        if (baseItem) {
+          // Create titled item: "Title's Base Item"
+          const titledItemName = `${ingredient.name}'s ${baseItem.name}`;
+          console.log(`✅ Created titled item: ${titledItemName}`);
+          titledItems.push({
+            name: titledItemName,
+            title: ingredient.name,
+            baseItem: baseItem.name,
+            titleId: ingredientId,
+            baseItemId: baseItemId
+          });
+          
+          processedIds.add(ingredientId);
+          processedIds.add(baseItemId);
+        }
+      } else {
+        console.log(`⚠️ No base item found for title: ${ingredient.name}`);
+      }
+    } else if (ingredient.nodeType === 'base_item') {
+      // Check if this base item has a corresponding title
+      const titleId = ingredientIds.find(id => {
+        const item = window.flatDependencies[id];
+        return item && item.nodeType === 'title';
+      });
+      
+      if (titleId) {
+        const title = window.flatDependencies[titleId];
+        if (title) {
+          // Create titled item: "Title's Base Item"
+          const titledItemName = `${title.name}'s ${ingredient.name}`;
+          console.log(`✅ Created titled item: ${titledItemName}`);
+          titledItems.push({
+            name: titledItemName,
+            title: title.name,
+            baseItem: ingredient.name,
+            titleId: titleId,
+            baseItemId: ingredientId
+          });
+          
+          processedIds.add(ingredientId);
+          processedIds.add(titleId);
+        }
+      } else {
+        // Base item without title
+        console.log(`✅ Base item without title: ${ingredient.name}`);
+        titledItems.push({
+          name: ingredient.name,
+          title: null,
+          baseItem: ingredient.name,
+          titleId: null,
+          baseItemId: ingredientId
+        });
+        
+        processedIds.add(ingredientId);
+      }
+    } else {
+      console.log(`⚠️ Unknown ingredient type: ${ingredient.nodeType} for ${ingredient.name}`);
+    }
+  });
+  
+  console.log(`📊 Final titled items:`, titledItems);
+  return titledItems;
+};
+
+// Helper function to calculate material summary recursively with quantities
+window.calculateMaterialSummary = function(node, visited = new Set()) {
+  if (!node || visited.has(node.id)) return {};
+  
+  visited.add(node.id);
+  const summary = {};
+  
+  // Add current node to summary
+  const type = node.nodeType || 'unknown';
+  if (!summary[type]) summary[type] = [];
+  
+  // Get encyclopedia item or title for image and details
+  const encyclopediaItem = window.getEncyclopediaItemByName(node.name);
+  const encyclopediaTitle = window.getEncyclopediaTitleByName(node.name);
+  const encyclopediaData = encyclopediaItem || encyclopediaTitle;
+  
+  const summaryItem = {
+    id: node.id,
+    name: node.name,
+    nodeType: node.nodeType,
+    type: encyclopediaData?.type || encyclopediaData?.prefix || 'Unknown',
+    image_url: encyclopediaData?.image_url || null,
+    isLegendary: node.isLegendary || false,
+    quantity: 1
+  };
+  
+  // Check if item already exists in summary and increment quantity
+  const existingIndex = summary[type].findIndex(item => item.name === node.name);
+  if (existingIndex === -1) {
+    summary[type].push(summaryItem);
+  } else {
+    summary[type][existingIndex].quantity += 1;
+  }
+  
+  // Recursively process children
+  if (node.children && node.children.length > 0) {
+    node.children.forEach(childId => {
+      const childRecord = window.getFlatDependencyRecord(childId);
+      if (childRecord) {
+        const childSummary = window.calculateMaterialSummary(childRecord, visited);
+        // Merge child summary into parent summary
+        Object.entries(childSummary).forEach(([childType, childItems]) => {
+          if (!summary[childType]) summary[childType] = [];
+          childItems.forEach(childItem => {
+            const existingIndex = summary[childType].findIndex(item => item.name === childItem.name);
+            if (existingIndex === -1) {
+              summary[childType].push(childItem);
+            } else {
+              summary[childType][existingIndex].quantity += childItem.quantity;
+            }
+          });
+        });
+      }
+    });
+  }
+  
+  return summary;
+};
+
+// Function to toggle node expansion/collapse
+window.toggleNode = function(nodeId) {
+  const childrenContainer = document.getElementById(`children_${nodeId}`);
+  const icon = document.getElementById(`icon_${nodeId}`);
+  
+  if (childrenContainer && icon) {
+    if (childrenContainer.classList.contains('hidden')) {
+      childrenContainer.classList.remove('hidden');
+      icon.textContent = '▼';
+    } else {
+      childrenContainer.classList.add('hidden');
+      icon.textContent = '▶';
+    }
+  }
 };
 
 window.showEncyclopediaStats = function() {
@@ -1164,8 +1574,9 @@ function renderItemsGrid(items) {
             </div>
           </div>
         ` : ''}
-        <hr/>
         ${Object.keys(item.requirements).length > 0 ? `
+
+        <hr/>
           <div>
             <h4 class="text-lg font-bold text-rpg-gold mb-2">Requirements</h4>
             <div class="grid grid-cols-2 gap-2 text-sm">
