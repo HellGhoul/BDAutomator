@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const { spawn } = require('child_process');
 const { fork } = require('child_process');
+const DependencyAnalyzer = require('./dependency-analyzer');
 
 let win;
 let automationProcesses = {}; // { accountId: childProcess }
@@ -429,5 +430,103 @@ ipcMain.handle('search-encyclopedia', async (event, query) => {
   } catch (error) {
     console.error('Error searching encyclopedia:', error);
     return { items: [], monsters: [], skills: [], titles: [], total: 0 };
+  }
+});
+
+// Dependency Analysis Handlers
+ipcMain.handle('analyze-dependencies', async (event) => {
+  try {
+    console.log('Starting hierarchical dependency analysis...');
+    const analyzer = new DependencyAnalyzer();
+    
+    if (!analyzer.loadData()) {
+      throw new Error('Failed to load encyclopedia data');
+    }
+    
+    const dependencies = analyzer.analyzeDependencies();
+    const stats = analyzer.getDependencyStats();
+    
+    console.log(`Hierarchical dependency analysis completed. Found ${stats.total_craftable_items} craftable items.`);
+    
+    return {
+      success: true,
+      stats: stats,
+      total_items: stats.total_craftable_items
+    };
+  } catch (error) {
+    console.error('Error analyzing dependencies:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+});
+
+ipcMain.handle('get-dependencies', async (event, itemName) => {
+  try {
+    const dependenciesPath = path.join(__dirname, 'encyclopedia-data', 'dependencies.json');
+    
+    if (!fs.existsSync(dependenciesPath)) {
+      return null;
+    }
+    
+    const data = JSON.parse(fs.readFileSync(dependenciesPath, 'utf8'));
+    
+    if (itemName) {
+      const itemDependency = data.dependencies[itemName] || null;
+      
+      if (itemDependency) {
+        // Add recursive materials using the analyzer
+        const analyzer = new DependencyAnalyzer();
+        analyzer.loadData();
+        itemDependency.recursiveMaterials = analyzer.getAllMaterialsRecursive(itemDependency);
+      }
+      
+      return itemDependency;
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('Error getting dependencies:', error);
+    return null;
+  }
+});
+
+ipcMain.handle('get-dependency-stats', async (event) => {
+  try {
+    const dependenciesPath = path.join(__dirname, 'encyclopedia-data', 'dependencies.json');
+    
+    if (!fs.existsSync(dependenciesPath)) {
+      return null;
+    }
+    
+    const data = JSON.parse(fs.readFileSync(dependenciesPath, 'utf8'));
+    const analyzer = new DependencyAnalyzer();
+    analyzer.loadData();
+    
+    return analyzer.getDependencyStats();
+  } catch (error) {
+    console.error('Error getting dependency stats:', error);
+    return null;
+  }
+});
+
+ipcMain.handle('search-dependencies', async (event, query) => {
+  try {
+    const dependenciesPath = path.join(__dirname, 'encyclopedia-data', 'dependencies.json');
+    
+    if (!fs.existsSync(dependenciesPath)) {
+      return [];
+    }
+    
+    const data = JSON.parse(fs.readFileSync(dependenciesPath, 'utf8'));
+    const analyzer = new DependencyAnalyzer();
+    analyzer.loadData();
+    analyzer.dependencies = data.dependencies;
+    
+    return analyzer.searchDependencies(query);
+  } catch (error) {
+    console.error('Error searching dependencies:', error);
+    return [];
   }
 }); 

@@ -392,12 +392,40 @@ window.quickFilter = function(type) {
   applyAdvancedFilters();
 };
 
-window.showItemDetails = function(itemId) {
+window.showItemDetails = async function(itemId) {
+  console.log('🔍 showItemDetails called with itemId:', itemId);
+  console.log('📚 encyclopediaData:', encyclopediaData);
+  console.log('📦 encyclopediaData.items:', encyclopediaData?.items);
+  
   // Find the item in the current encyclopedia data
   const item = encyclopediaData?.items?.find(i => i.id === itemId);
   if (!item) {
-    console.error('Item not found:', itemId);
+    console.error('❌ Item not found:', itemId);
+    console.error('Available items:', encyclopediaData?.items?.map(i => ({ id: i.id, name: i.name })));
     return;
+  }
+  
+  console.log('✅ Item found:', item);
+  
+  // Get dependency data if available (for craftable legendary items)
+  let dependencyData = null;
+  if (item.isCraftable && item.isLegendary) {
+    try {
+      console.log('🔍 Fetching dependencies for:', item.name);
+      dependencyData = await ipcRenderer.invoke('get-dependencies', item.name);
+      console.log('✅ Dependency data received:', dependencyData);
+      
+      if (dependencyData) {
+        console.log('📊 Dependency structure:', {
+          hasChildren: !!dependencyData.children,
+          childrenCount: dependencyData.children?.length || 0,
+          hasTotalMaterials: !!dependencyData.totalMaterials,
+          complexity: dependencyData.complexity
+        });
+      }
+    } catch (error) {
+      console.error('❌ Error fetching dependencies:', error);
+    }
   }
   
   // Create and show modal
@@ -406,8 +434,84 @@ window.showItemDetails = function(itemId) {
   modal.onclick = () => modal.remove();
   
   const modalContent = document.createElement('div');
-  modalContent.className = 'bg-rpg-dark border-2 border-rpg-gold rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto';
+  modalContent.className = 'bg-rpg-dark border-2 border-rpg-gold rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto';
   modalContent.onclick = (e) => e.stopPropagation();
+  
+  // Build dependency tree HTML if available
+  let dependencyHtml = '';
+  if (dependencyData && dependencyData.children && dependencyData.children.length > 0) {
+    console.log('🔨 Building dependency HTML for:', item.name);
+    
+    dependencyHtml = `
+      <div class="mt-6 border-t border-rpg-gold/30 pt-4">
+        <h4 class="text-lg font-bold text-rpg-gold mb-3">🔗 Crafting Dependencies</h4>
+        <div class="bg-rpg-darker p-4 rounded-lg">
+          <div class="flex justify-between items-center mb-3">
+            <span class="text-sm text-gray-400">Complexity: <span class="text-blue-400 font-bold">${dependencyData.complexity || 'N/A'}</span></span>
+            <span class="text-sm text-gray-400">Recipe: <span class="text-green-400">${dependencyData.children[0]?.name || 'Unknown Recipe'}</span></span>
+          </div>
+          
+          <div class="mb-4">
+            <h5 class="text-md font-bold text-rpg-gold mb-2">Total Materials Required (All Levels):</h5>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-60 overflow-y-auto">
+              ${dependencyData.totalMaterials && Object.values(dependencyData.totalMaterials).length > 0 ? 
+                Object.values(dependencyData.totalMaterials).map(material => `
+                  <div class="flex justify-between items-center p-2 bg-rpg-dark rounded border border-rpg-gold/30">
+                    <span class="text-sm text-gray-300">${material.name || 'Unknown Material'}</span>
+                    <div class="flex items-center space-x-2">
+                      <span class="text-xs text-gray-400">x${material.quantity || 0}</span>
+                      ${material.isLegendary ? '<span class="text-yellow-400 text-xs">⭐</span>' : ''}
+                      <span class="text-xs px-2 py-1 rounded ${material.type === 'title' ? 'bg-orange-500' : material.type === 'titled_item' ? 'bg-blue-500' : material.type === 'base_item' ? 'bg-green-500' : material.type === 'craftable_item' ? 'bg-purple-500' : material.type === 'recipe' ? 'bg-red-500' : 'bg-gray-500'} text-white">${(material.type || 'unknown').replace('_', ' ')}</span>
+                    </div>
+                  </div>
+                `).join('') : 
+                '<div class="text-gray-400 text-center py-4">No material data available</div>'
+              }
+            </div>
+          </div>
+          
+          <div class="mb-4">
+            <h5 class="text-md font-bold text-rpg-gold mb-2">Dependency Tree Structure:</h5>
+            <div class="bg-rpg-darker p-4 rounded-lg max-h-60 overflow-y-auto">
+              ${dependencyData ? window.renderDependencyTree(dependencyData, 0) : '<div class="text-gray-400 text-center py-4">No dependency tree available</div>'}
+            </div>
+          </div>
+          
+
+          
+          <div>
+            <h5 class="text-md font-bold text-rpg-gold mb-2">Direct Recipe Ingredients:</h5>
+            <div class="space-y-3">
+              ${dependencyData.children && dependencyData.children[0] && dependencyData.children[0].children && dependencyData.children[0].children.length > 0 ? 
+                dependencyData.children[0].children.map(ingredient => `
+                  <div class="p-3 bg-rpg-dark rounded border border-rpg-gold/20">
+                    <div class="flex justify-between items-start mb-2">
+                      <span class="text-sm font-bold text-gray-300">${ingredient.name || 'Unknown Ingredient'}</span>
+                      <div class="flex items-center space-x-2">
+                        ${ingredient.isLegendary ? '<span class="text-yellow-400 text-xs">⭐ Legendary</span>' : ''}
+                        <span class="text-xs px-2 py-1 rounded ${(ingredient.nodeType || 'unknown') === 'titled_item' ? 'bg-blue-500' : (ingredient.nodeType || 'unknown') === 'base_item' ? 'bg-green-500' : (ingredient.nodeType || 'unknown') === 'craftable_item' ? 'bg-purple-500' : (ingredient.nodeType || 'unknown') === 'title' ? 'bg-orange-500' : 'bg-gray-500'} text-white">${(ingredient.nodeType || 'unknown').replace('_', ' ')}</span>
+                      </div>
+                    </div>
+                    <div class="text-xs text-gray-400">
+                      <div>Type: ${ingredient.nodeType || 'unknown'}</div>
+                      ${ingredient.children && ingredient.children.length > 0 ? `
+                        <div class="mt-2">
+                          <div class="text-purple-400 font-bold">Sub-components: ${ingredient.children.length}</div>
+                          ${ingredient.children.map(child => `
+                            <div class="ml-2">• ${child.name || 'Unknown'} (${child.nodeType || 'unknown'})</div>
+                          `).join('')}
+                        </div>
+                      ` : ''}
+                    </div>
+                  </div>
+                `).join('') : '<div class="text-gray-400 text-center py-4">No recipe data available</div>'
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
   
   modalContent.innerHTML = `
     <div class="flex justify-between items-start mb-4">
@@ -481,7 +585,7 @@ window.showItemDetails = function(itemId) {
         <div class="flex flex-wrap gap-2">
           ${item.isDrop ? '<span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm">Drop Item</span>' : ''}
           ${item.isCraftable ? '<span class="bg-blue-500 text-white px-3 py-1 rounded-full text-sm">Craftable</span>' : ''}
-          ${item.type === 'Recipe' ? '<span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm">Recipe</span>' : ''}
+          ${item.type === 'Recipe' ? '<span class="text-green-500 text-white px-3 py-1 rounded-full text-sm">Recipe</span>' : ''}
         </div>
         
         ${item.description ? `
@@ -501,10 +605,35 @@ window.showItemDetails = function(itemId) {
         ` : ''}
       </div>
     </div>
+    
+    ${dependencyHtml}
+    
+    ${!dependencyData && item.isCraftable && item.isLegendary ? `
+      <div class="mt-6 border-t border-rpg-gold/30 pt-4">
+        <div class="text-center text-gray-400">
+          <p>🔗 Dependency analysis not available for this item.</p>
+          <p class="text-sm">Run "Analyze Dependencies" to generate crafting trees.</p>
+        </div>
+      </div>
+    ` : ''}
+    
+    ${dependencyData && (!dependencyData.children || dependencyData.children.length === 0) ? `
+      <div class="mt-6 border-t border-rpg-gold/30 pt-4">
+        <div class="text-center text-gray-400">
+          <p>🔗 Dependency data incomplete for this item.</p>
+          <p class="text-sm">Try regenerating dependencies or check the data structure.</p>
+        </div>
+      </div>
+    ` : ''}
   `;
   
   modal.appendChild(modalContent);
   document.body.appendChild(modal);
+  
+  console.log('✅ Modal created and added to DOM');
+  console.log('🔍 Modal element:', modal);
+  console.log('🔍 Modal content:', modalContent);
+  console.log('🔍 Modal HTML length:', modalContent.innerHTML.length);
 };
 
 window.exportFilteredResults = function() {
@@ -555,6 +684,37 @@ window.exportFilteredResults = function() {
   a.click();
   document.body.removeChild(a);
   window.URL.revokeObjectURL(url);
+};
+
+window.renderDependencyTree = function(node, level = 0) {
+  if (!node) return '';
+  
+  const nodeTypeColor = {
+    'item': 'text-rpg-gold',
+    'recipe': 'text-red-400',
+    'titled_item': 'text-blue-400',
+    'base_item': 'text-green-400',
+    'craftable_item': 'text-purple-400',
+    'title': 'text-orange-400',
+    'unknown': 'text-gray-400'
+  };
+  
+  let html = `
+    <div class="mb-1" style="margin-left: ${level * 20}px;">
+      <span class="text-xs ${nodeTypeColor[node.nodeType] || 'text-gray-400'}">${node.name}</span>
+      <span class="text-xs text-gray-500">(${node.nodeType})</span>
+      ${node.isLegendary ? '<span class="text-yellow-400 text-xs">⭐</span>' : ''}
+    </div>
+  `;
+  
+  // Recursively render children
+  if (node.children && node.children.length > 0) {
+    node.children.forEach(child => {
+      html += window.renderDependencyTree(child, level + 1);
+    });
+  }
+  
+  return html;
 };
 
 window.showEncyclopediaStats = function() {
@@ -664,6 +824,199 @@ window.showEncyclopediaStats = function() {
   
   modal.appendChild(modalContent);
   document.body.appendChild(modal);
+};
+
+// Dependency Analysis Functions
+window.analyzeDependencies = async function() {
+  try {
+    const button = event.target;
+    const originalText = button.textContent;
+    button.disabled = true;
+    button.textContent = '🔗 Analyzing...';
+    
+    const result = await ipcRenderer.invoke('analyze-dependencies');
+    
+    if (result.success) {
+      alert(`✅ Dependency analysis completed!\n\nFound ${result.total_items} craftable items with dependencies.\n\nDependencies saved to encyclopedia-data/dependencies.json`);
+    } else {
+      alert(`❌ Analysis failed: ${result.error}`);
+    }
+  } catch (error) {
+    console.error('Error analyzing dependencies:', error);
+    alert('❌ Error analyzing dependencies: ' + error.message);
+  } finally {
+    const button = event.target;
+    button.disabled = false;
+    button.textContent = '🔗 Analyze Dependencies';
+  }
+};
+
+window.regenerateDependencies = async function() {
+  try {
+    const button = event.target;
+    const originalText = button.textContent;
+    button.disabled = true;
+    button.textContent = '🔄 Regenerating...';
+    
+    // Show confirmation dialog
+    const confirmed = confirm('This will regenerate all dependency data for all craftable legendary items. This may take a few minutes. Continue?');
+    if (!confirmed) {
+      button.disabled = false;
+      button.textContent = originalText;
+      return;
+    }
+    
+    const result = await ipcRenderer.invoke('analyze-dependencies');
+    
+    if (result.success) {
+      alert(`✅ All dependencies regenerated successfully!\n\nFound ${result.total_items} craftable legendary items.\n\nComplexity Statistics:\n• Average: ${result.stats.average_complexity.toFixed(1)}\n• Highest: ${result.stats.highest_complexity}\n• Lowest: ${result.stats.lowest_complexity}\n\nYou can now view detailed dependencies for any craftable legendary item.`);
+    } else {
+      alert(`❌ Regeneration failed: ${result.error}`);
+    }
+  } catch (error) {
+    console.error('Error regenerating dependencies:', error);
+    alert('❌ Failed to regenerate dependencies: ' + error.message);
+  } finally {
+    const button = event.target;
+    button.disabled = false;
+    button.textContent = '🔄 Regenerate All Dependencies';
+  }
+};
+
+window.testModal = function() {
+  console.log('🧪 Testing modal...');
+  console.log('📚 encyclopediaData:', encyclopediaData);
+  console.log('📦 encyclopediaData.items:', encyclopediaData?.items);
+  
+  if (encyclopediaData?.items && encyclopediaData.items.length > 0) {
+    // Try to find a craftable legendary item first
+    const craftableLegendary = encyclopediaData.items.find(item => item.isCraftable && item.isLegendary);
+    if (craftableLegendary) {
+      console.log('🔍 Testing with craftable legendary item:', craftableLegendary);
+      showItemDetails(craftableLegendary.id);
+    } else {
+      const firstItem = encyclopediaData.items[0];
+      console.log('🔍 Testing with first item:', firstItem);
+      showItemDetails(firstItem.id);
+    }
+  } else {
+    console.error('❌ No items available for testing');
+    alert('No items available for testing. Please load encyclopedia data first.');
+  }
+};
+
+window.testDependencyModal = function() {
+  console.log('🔗 Testing dependency modal...');
+  console.log('📚 encyclopediaData:', encyclopediaData);
+  
+  if (encyclopediaData?.items && encyclopediaData.items.length > 0) {
+    // Find a craftable legendary item
+    const craftableLegendary = encyclopediaData.items.find(item => item.isCraftable && item.isLegendary);
+    if (craftableLegendary) {
+      console.log('🔍 Testing dependency modal with:', craftableLegendary.name);
+      console.log('📊 Item properties:', {
+        isCraftable: craftableLegendary.isCraftable,
+        isLegendary: craftableLegendary.isLegendary,
+        type: craftableLegendary.type
+      });
+      showItemDetails(craftableLegendary.id);
+    } else {
+      console.error('❌ No craftable legendary items found');
+      alert('No craftable legendary items found. These are required for dependency testing.');
+    }
+  } else {
+    console.error('❌ No items available for testing');
+    alert('No items available for testing. Please load encyclopedia data first.');
+  }
+};
+
+window.showDependencyStats = async function() {
+  try {
+    const stats = await ipcRenderer.invoke('get-dependency-stats');
+    
+    if (!stats) {
+      alert('No dependency data found. Please run dependency analysis first.');
+      return;
+    }
+    
+    // Create and show dependency stats modal
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+    modal.onclick = () => modal.remove();
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'bg-rpg-dark border-2 border-rpg-gold rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto';
+    modalContent.onclick = (e) => e.stopPropagation();
+    
+    modalContent.innerHTML = `
+      <div class="flex justify-between items-start mb-4">
+        <h3 class="text-2xl font-bold text-rpg-gold">🔗 Dependency Analysis Statistics</h3>
+        <button onclick="this.closest('.fixed').remove()" class="text-rpg-gold hover:text-white text-2xl">✕</button>
+      </div>
+      
+      <div class="grid grid-cols-2 gap-6">
+        <div>
+          <h4 class="text-lg font-bold text-rpg-gold mb-3">Overview</h4>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-gray-400">Total Craftable Items:</span>
+              <span class="text-rpg-gold font-bold">${stats.total_craftable_items}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-400">Average Complexity:</span>
+              <span class="text-blue-400 font-bold">${stats.average_complexity.toFixed(2)}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="text-lg font-bold text-rpg-gold mb-3">By Complexity</h4>
+          <div class="space-y-1 text-sm max-h-40 overflow-y-auto">
+            ${Object.entries(stats.by_complexity)
+              .sort(([a], [b]) => parseInt(a) - parseInt(b))
+              .map(([complexity, count]) => `
+                <div class="flex justify-between">
+                  <span class="text-gray-400">Complexity ${complexity}:</span>
+                  <span class="text-rpg-gold">${count} items</span>
+                </div>
+              `).join('')}
+          </div>
+        </div>
+      </div>
+      
+      <div class="mt-6">
+        <h4 class="text-lg font-bold text-rpg-gold mb-3">By Item Type</h4>
+        <div class="grid grid-cols-3 gap-4 text-sm">
+          ${Object.entries(stats.by_type)
+            .sort(([,a], [,b]) => b - a)
+            .map(([type, count]) => `
+              <div class="flex justify-between">
+                <span class="text-gray-400">${type}:</span>
+                <span class="text-rpg-gold">${count}</span>
+              </div>
+            `).join('')}
+        </div>
+      </div>
+      
+      <div class="mt-6">
+        <h4 class="text-lg font-bold text-rpg-gold mb-3">Most Complex Items</h4>
+        <div class="space-y-2 text-sm">
+          ${stats.most_complex_items.map(item => `
+            <div class="flex justify-between p-2 bg-rpg-darker rounded">
+              <span class="text-gray-400">${item.name}</span>
+              <span class="text-red-400 font-bold">Complexity: ${item.complexity}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+    
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+  } catch (error) {
+    console.error('Error showing dependency stats:', error);
+    alert('Error loading dependency statistics: ' + error.message);
+  }
 };
 
 window.loadAllEncyclopediaData = async function() {

@@ -9,9 +9,12 @@
       theme: {
         extend: {
           colors: {
-            'rpg-gold': '#FFD700',
-            'rpg-dark': '#1a1a1a',
-            'rpg-darker': '#0a0a0a'
+            'smoke-accent': '#4A5568',
+            'smoke-dark': '#1A202C',
+            'smoke-darker': '#0F1419',
+            'smoke-black': '#000000',
+            'smoke-gray': '#2D3748',
+            'smoke-light': '#718096'
           }
         }
       }
@@ -19,80 +22,271 @@
   </script>
   <style>
     body { 
-      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-      font-family: 'Courier New', monospace;
+      background: linear-gradient(135deg, #000000 0%, #0F1419 25%, #1A202C 50%, #0F1419 75%, #000000 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #E2E8F0;
     }
+    
+    /* Smoke effect overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    
     .rpg-border {
-      border: 2px solid #FFD700;
-      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+      border: 1px solid #4A5568;
+      box-shadow: 
+        0 0 20px rgba(74, 85, 104, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      background: linear-gradient(145deg, #1A202C, #0F1419);
     }
+    
     .rpg-glow {
-      box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+      box-shadow: 
+        0 0 30px rgba(74, 85, 104, 0.5),
+        0 0 60px rgba(74, 85, 104, 0.2);
     }
+    
     .tab {
-      background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
-      border: 1px solid #FFD700;
-      color: #FFD700;
+      background: linear-gradient(145deg, #2D3748, #1A202C);
+      border: 1px solid #4A5568;
+      color: #E2E8F0;
       transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
+    
+    .tab::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s;
+    }
+    
+    .tab:hover::before {
+      left: 100%;
+    }
+    
     .tab:hover {
-      background: linear-gradient(145deg, #FFD700, #B8860B);
-      color: #000;
+      background: linear-gradient(145deg, #4A5568, #2D3748);
+      color: #FFFFFF;
       transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
+    
     .tab.active {
-      background: linear-gradient(145deg, #FFD700, #B8860B);
-      color: #000;
+      background: linear-gradient(145deg, #4A5568, #2D3748);
+      color: #FFFFFF;
       font-weight: bold;
+      box-shadow: 
+        0 0 20px rgba(74, 85, 104, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
+    
     .rpg-button {
-      background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
-      border: 2px solid #FFD700;
-      color: #FFD700;
+      background: linear-gradient(145deg, #2D3748, #1A202C);
+      border: 1px solid #4A5568;
+      color: #E2E8F0;
       transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
+    
+    .rpg-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s;
+    }
+    
+    .rpg-button:hover::before {
+      left: 100%;
+    }
+    
     .rpg-button:hover {
-      background: linear-gradient(145deg, #FFD700, #B8860B);
-      color: #000;
+      background: linear-gradient(145deg, #4A5568, #2D3748);
+      color: #FFFFFF;
       transform: translateY(-2px);
+      box-shadow: 
+        0 5px 15px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(74, 85, 104, 0.3);
     }
+    
     .rpg-button:disabled {
-      opacity: 0.5;
+      opacity: 0.4;
       cursor: not-allowed;
+      transform: none;
     }
+    
     .rpg-button-secondary {
-      background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-      border: 2px solid #666;
-      color: #ccc;
+      background: linear-gradient(145deg, #1A202C, #0F1419);
+      border: 1px solid #718096;
+      color: #A0AEC0;
       transition: all 0.3s ease;
     }
+    
     .rpg-button-secondary:hover {
-      background: linear-gradient(145deg, #666, #555);
-      color: #fff;
+      background: linear-gradient(145deg, #718096, #4A5568);
+      color: #FFFFFF;
       transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     }
+    
     .output {
-      background: #000;
-      color: #00FF00;
+      background: #000000;
+      color: #48BB78;
       font-family: 'Courier New', monospace;
-      border: 1px solid #FFD700;
+      border: 1px solid #4A5568;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
     }
+    
     .webview-container {
-      border: 2px solid #FFD700;
+      border: 1px solid #4A5568;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     }
+    
     .encyclopedia-card {
-      background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
-      border: 1px solid #FFD700;
+      background: linear-gradient(145deg, #2D3748, #1A202C);
+      border: 1px solid #4A5568;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .encyclopedia-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.02) 50%, transparent 70%);
+      transform: translateX(-100%);
+      transition: transform 0.6s;
+    }
+    
+    .encyclopedia-card:hover::before {
+      transform: translateX(100%);
+    }
+    
+    .encyclopedia-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 
+        0 10px 25px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(74, 85, 104, 0.2);
+      border-color: #718096;
+    }
+    
+    .encyclopedia-header {
+      background: linear-gradient(145deg, #1A202C, #0F1419);
+      border: 1px solid #4A5568;
+      box-shadow: 
+        0 0 30px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    
+    /* Input styling */
+    input, select, textarea {
+      background: linear-gradient(145deg, #1A202C, #0F1419) !important;
+      border: 1px solid #4A5568 !important;
+      color: #E2E8F0 !important;
       transition: all 0.3s ease;
     }
-    .encyclopedia-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+    
+    input:focus, select:focus, textarea:focus {
+      outline: none !important;
+      border-color: #718096 !important;
+      box-shadow: 
+        0 0 20px rgba(74, 85, 104, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
-    .encyclopedia-header {
-      background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
-      border: 2px solid #FFD700;
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    
+    /* Checkbox styling */
+    input[type="checkbox"] {
+      accent-color: #4A5568;
+      background: #1A202C !important;
+      border: 1px solid #4A5568 !important;
+    }
+    
+    /* Modal styling */
+    .fixed {
+      backdrop-filter: blur(10px);
+      background: rgba(0, 0, 0, 0.8) !important;
+    }
+    
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #1A202C;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #4A5568;
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #718096;
+    }
+    
+    /* Text colors */
+    .text-rpg-gold {
+      color: #E2E8F0 !important;
+    }
+    
+    .text-gray-400 {
+      color: #A0AEC0 !important;
+    }
+    
+    .text-green-400 {
+      color: #48BB78 !important;
+    }
+    
+    .text-yellow-400 {
+      color: #ECC94B !important;
+    }
+    
+    .text-blue-400 {
+      color: #4299E1 !important;
+    }
+    
+    .text-red-400 {
+      color: #F56565 !important;
+    }
+    
+    /* Background colors */
+    .bg-rpg-dark {
+      background: linear-gradient(145deg, #2D3748, #1A202C) !important;
+    }
+    
+    .bg-rpg-darker {
+      background: linear-gradient(145deg, #1A202C, #0F1419) !important;
+    }
+    
+    /* Progress bar */
+    .bg-rpg-gold {
+      background: linear-gradient(90deg, #4A5568, #718096) !important;
     }
   </style>
 </head>
@@ -368,6 +562,11 @@
                 <button onclick="clearAllFilters()" class="rpg-button-secondary px-6 py-2 rounded">Clear Filters</button>
                 <button onclick="exportFilteredResults()" class="rpg-button px-6 py-2 rounded">📊 Export CSV</button>
                 <button onclick="showEncyclopediaStats()" class="rpg-button px-6 py-2 rounded">📈 Statistics</button>
+                        <button onclick="analyzeDependencies()" class="rpg-button px-6 py-2 rounded">🔗 Analyze Dependencies</button>
+        <button onclick="regenerateDependencies()" class="rpg-button px-6 py-2 rounded">🔄 Regenerate All Dependencies</button>
+        <button onclick="showDependencyStats()" class="rpg-button px-6 py-2 rounded">📊 Dependency Stats</button>
+        <button onclick="testModal()" class="rpg-button px-6 py-2 rounded">🧪 Test Modal</button>
+        <button onclick="testDependencyModal()" class="rpg-button px-6 py-2 rounded">🔗 Test Dependency Modal</button>
               </div>
             </div>
 
