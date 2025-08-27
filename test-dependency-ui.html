@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dependency UI Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #333;
+            border-radius: 5px;
+        }
+        
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .test-button:hover {
+            background: #0056b3;
+        }
+        
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 3px;
+        }
+        
+        .success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .error {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .warning {
+            background: #ffc107;
+            color: black;
+        }
+        
+        .info {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .dependency-tree {
+            margin: 20px 0;
+            padding: 15px;
+            background: #444;
+            border-radius: 5px;
+        }
+        
+        .tree-node {
+            margin: 10px 0;
+            padding: 10px;
+            background: #555;
+            border-radius: 3px;
+            border-left: 3px solid #007bff;
+        }
+        
+        .tree-node.expandable {
+            border-left-color: #28a745;
+        }
+        
+        .tree-node.recipe {
+            border-left-color: #ffc107;
+        }
+        
+        .tree-node.base-item {
+            border-left-color: #17a2b8;
+        }
+        
+        .toggle-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        
+        .toggle-btn:hover {
+            background: #0056b3;
+        }
+        
+        .children-container {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .children-container.hidden {
+            display: none;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .icon {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        .node-type {
+            background: #666;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .legendary {
+            color: #ffd700;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Dependency UI Test</h1>
+        <p>This page tests the dependency tree functionality in isolation.</p>
+        
+        <div class="test-section">
+            <h3>🔧 Function Tests</h3>
+            <button class="test-button" onclick="testFunctions()">Test Functions</button>
+            <button class="test-button" onclick="testDependencyData()">Test Dependency Data</button>
+            <button class="test-button" onclick="testTreeRendering()">Test Tree Rendering</button>
+            <button class="test-button" onclick="testToggleFunctionality()">Test Toggle</button>
+            <div id="function-results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>📊 Mock Dependency Data</h3>
+            <p>This simulates the data structure from your app:</p>
+            <pre id="mock-data" style="background: #444; padding: 10px; border-radius: 3px; overflow-x: auto;"></pre>
+        </div>
+        
+        <div class="test-section">
+            <h3>🌳 Dependency Tree</h3>
+            <p>This shows how the tree should render:</p>
+            <div id="dependency-tree" class="dependency-tree"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🔍 Debug Information</h3>
+            <div id="debug-info"></div>
+        </div>
+    </div>
+
+    <script>
+        // Mock dependency data (simulating your app's data)
+        const mockFlatDependencies = {
+            "item_1756018757208_l3gjamjce": {
+                "id": "item_1756018757208_l3gjamjce",
+                "name": "Blind Vision",
+                "type": "Shield",
+                "isLegendary": true,
+                "nodeType": "base_item",
+                "children": ["item_1756019737709_ldenxe1hg"],
+                "complexity": 15
+            },
+            "item_1756019737709_ldenxe1hg": {
+                "id": "item_1756019737709_ldenxe1hg",
+                "name": "Recipe of Blind Vision",
+                "type": "Recipe",
+                "isLegendary": false,
+                "nodeType": "recipe",
+                "children": [
+                    "title_1756183354276_rwom250vi",
+                    "item_1756018818188_bzwv67o12",
+                    "title_1756183730742_2uqzr2nzr",
+                    "item_1756018818188_bzwv67o12"
+                ],
+                "complexity": 14
+            },
+            "item_1756018818188_bzwv67o12": {
+                "id": "item_1756018818188_bzwv67o12",
+                "name": "The Iron Maiden",
+                "type": "Shield",
+                "isLegendary": true,
+                "nodeType": "base_item",
+                "children": ["item_1756020144340_iylpdr8qg"],
+                "complexity": 13
+            },
+            "title_1756183354276_rwom250vi": {
+                "id": "title_1756183354276_rwom250vi",
+                "name": "Archdevil's ...",
+                "type": "Title",
+                "nodeType": "title",
+                "children": [],
+                "complexity": 1
+            },
+            "title_1756183730742_2uqzr2nzr": {
+                "id": "title_1756183730742_2uqzr8qg",
+                "name": "Hell Baron's ...",
+                "type": "Title",
+                "nodeType": "title",
+                "children": [],
+                "complexity": 1
+            }
+        };
+
+        // Display mock data
+        document.getElementById('mock-data').textContent = JSON.stringify(mockFlatDependencies, null, 2);
+
+        // Test functions
+        function testFunctions() {
+            const results = document.getElementById('function-results');
+            let html = '';
+            
+            // Test 1: Check if functions exist
+            if (typeof renderDependencyTreeFlat === 'function') {
+                html += '<div class="test-result success">✅ renderDependencyTreeFlat function exists</div>';
+            } else {
+                html += '<div class="test-result error">❌ renderDependencyTreeFlat function NOT found</div>';
+            }
+            
+            if (typeof toggleNode === 'function') {
+                html += '<div class="test-result success">✅ toggleNode function exists</div>';
+            } else {
+                html += '<div class="test-result error">❌ toggleNode function NOT found</div>';
+            }
+            
+            if (typeof getFlatDependencyRecord === 'function') {
+                html += '<div class="test-result success">✅ getFlatDependencyRecord function exists</div>';
+            } else {
+                html += '<div class="test-result error">❌ getFlatDependencyRecord function NOT found</div>';
+            }
+            
+            results.innerHTML = html;
+        }
+
+        // Test dependency data
+        function testDependencyData() {
+            const results = document.getElementById('function-results');
+            let html = '';
+            
+            if (mockFlatDependencies) {
+                html += '<div class="test-result success">✅ Mock dependencies loaded</div>';
+                html += `<div class="test-result info">📊 Total records: ${Object.keys(mockFlatDependencies).length}</div>`;
+                
+                const blindVision = mockFlatDependencies["item_1756018757208_l3gjamjce"];
+                if (blindVision) {
+                    html += '<div class="test-result success">✅ Blind Vision found</div>';
+                    html += `<div class="test-result info">📦 Children: ${blindVision.children?.length || 0}</div>`;
+                }
+            } else {
+                html += '<div class="test-result error">❌ Mock dependencies not loaded</div>';
+            }
+            
+            results.innerHTML = html;
+        }
+
+        // Test tree rendering
+        function testTreeRendering() {
+            const results = document.getElementById('function-results');
+            let html = '';
+            
+            try {
+                // Try to render the tree
+                const treeHtml = renderDependencyTreeFlat(mockFlatDependencies["item_1756018757208_l3gjamjce"], 0);
+                if (treeHtml) {
+                    html += '<div class="test-result success">✅ Tree rendering successful</div>';
+                    document.getElementById('dependency-tree').innerHTML = treeHtml;
+                } else {
+                    html += '<div class="test-result error">❌ Tree rendering failed - no output</div>';
+                }
+            } catch (error) {
+                html += `<div class="test-result error">❌ Tree rendering failed with error: ${error.message}</div>`;
+            }
+            
+            results.innerHTML = html;
+        }
+
+        // Test toggle functionality
+        function testToggleFunctionality() {
+            const results = document.getElementById('function-results');
+            let html = '';
+            
+            try {
+                // Find a children container to test with
+                const testContainer = document.querySelector('[id^="children_"]');
+                if (testContainer) {
+                    const containerId = testContainer.id.replace('children_', '');
+                    html += `<div class="test-result info">🔍 Testing toggle with ID: ${containerId}</div>`;
+                    
+                    // Test the toggle
+                    toggleNode(containerId);
+                    html += '<div class="test-result success">✅ toggleNode executed successfully</div>';
+                    
+                    // Check if it worked
+                    const isHidden = testContainer.classList.contains('hidden');
+                    html += `<div class="test-result info">📊 Container hidden: ${isHidden}</div>`;
+                } else {
+                    html += '<div class="test-result warning">⚠️ No children containers found to test with</div>';
+                }
+            } catch (error) {
+                html += `<div class="test-result error">❌ Toggle test failed: ${error.message}</div>`;
+            }
+            
+            results.innerHTML = html;
+        }
+
+        // Mock the functions that should exist in your app
+        function renderDependencyTreeFlat(node, level = 0, nodeId = null) {
+            if (!node) return '';
+            
+            const hasChildren = node.children && node.children.length > 0;
+            const isExpandable = hasChildren && (
+                node.nodeType === 'recipe' || 
+                node.nodeType === 'base_item' || 
+                node.nodeType === 'item'
+            );
+            
+            const uniqueId = nodeId || `node_${level}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            
+            let html = `
+                <div class="tree-node ${node.nodeType} ${isExpandable ? 'expandable' : ''}">
+                    ${isExpandable ? `
+                        <button onclick="toggleNode('${uniqueId}')" class="toggle-btn">
+                            <span id="icon_${uniqueId}" class="icon">▶</span>
+                        </button>
+                    ` : '<span class="icon">•</span>'}
+                    
+                    <span class="${node.isLegendary ? 'legendary' : ''}">${node.name}</span>
+                    <span class="node-type">${node.nodeType}</span>
+                    ${node.isLegendary ? '<span class="legendary">⭐</span>' : ''}
+                </div>
+            `;
+            
+            if (node.nodeType === 'recipe' && hasChildren) {
+                // Recipe handling
+                html += `<div id="children_${uniqueId}" class="children-container">`;
+                node.children.forEach(childId => {
+                    const childRecord = mockFlatDependencies[childId];
+                    if (childRecord) {
+                        html += renderDependencyTreeFlat(childRecord, level + 1, `child_${uniqueId}_${childId}`);
+                    }
+                });
+                html += '</div>';
+            } else if (hasChildren) {
+                // Generic handling for base items and other nodes
+                html += `<div id="children_${uniqueId}" class="children-container hidden">`;
+                node.children.forEach(childId => {
+                    const childRecord = mockFlatDependencies[childId];
+                    if (childRecord) {
+                        html += renderDependencyTreeFlat(childRecord, level + 1, `child_${uniqueId}_${childId}`);
+                    }
+                });
+                html += '</div>';
+            }
+            
+            return html;
+        }
+
+        function toggleNode(nodeId) {
+            const childrenContainer = document.getElementById(`children_${nodeId}`);
+            const icon = document.getElementById(`icon_${nodeId}`);
+            
+            if (childrenContainer && icon) {
+                const isHidden = childrenContainer.classList.contains('hidden');
+                
+                if (isHidden) {
+                    childrenContainer.classList.remove('hidden');
+                    icon.textContent = '▼';
+                } else {
+                    childrenContainer.classList.add('hidden');
+                    icon.textContent = '▶';
+                }
+            }
+        }
+
+        function getFlatDependencyRecord(recordId) {
+            return mockFlatDependencies[recordId] || null;
+        }
+
+        // Initialize the page
+        window.onload = function() {
+            // Auto-run the first test
+            testFunctions();
+            
+            // Display debug info
+            document.getElementById('debug-info').innerHTML = `
+                <div class="test-result info">
+                    <strong>Debug Info:</strong><br>
+                    • This page simulates your app's dependency functionality<br>
+                    • All functions are mocked to match your app's behavior<br>
+                    • Use this to test the UI logic in isolation<br>
+                    • Compare results with your actual app
+                </div>
+            `;
+        };
+    </script>
+</body>
+</html>

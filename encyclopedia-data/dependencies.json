@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-08-27T10:38:56.343Z",
+  "generated_at": "2025-08-27T12:31:16.912Z",
   "total_records": 984,
   "dependencies": {
     "title_1756183472672_efa3h696b": {
@@ -63,7 +63,7 @@
       "name": "Suwayyah",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020123284_mol5grp0c"
       ],
@@ -96,7 +96,7 @@
       "name": "Abyssal avatar",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019706100_3wtt1h07v"
       ],
@@ -223,7 +223,7 @@
       "name": "Isterus wisdom",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756019973031_ahfosubc2"
       ],
@@ -248,7 +248,7 @@
       "name": "Manastorm spire",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020000613_xi2c65zf4"
       ],
@@ -289,7 +289,7 @@
       "name": "Spirit of Bolivar",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020110791_vnstc76pc"
       ],
@@ -314,7 +314,7 @@
       "name": "Apocalypse",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756019715115_29zjpv6pm"
       ],
@@ -449,7 +449,7 @@
       "name": "Assassin's kiss",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019722681_ijxdsa3y8"
       ],
@@ -482,7 +482,7 @@
       "name": "Balance",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019723609_boaq92cdw"
       ],
@@ -522,7 +522,7 @@
       "name": "Bear claws",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019725689_c9cffbd65"
       ],
@@ -758,7 +758,7 @@
       "name": "Bloodreaper",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019744726_ugqgk3tvb"
       ],
@@ -817,7 +817,7 @@
       "name": "Boneshredder",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019750623_mls4vo0y7"
       ],
@@ -974,7 +974,7 @@
       "name": "Circle of death",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019765183_uqxmomoja"
       ],
@@ -1066,7 +1066,7 @@
       "name": "Claw of fury",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019767644_z0yjnktvn"
       ],
@@ -1108,7 +1108,7 @@
       "name": "Cliffkiller",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019771154_d43mpqomu"
       ],
@@ -1175,7 +1175,7 @@
       "name": "Wizendraw",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020221527_2s5t5dsos"
       ],
@@ -1234,7 +1234,7 @@
       "name": "Soldier's justice",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020098299_oyj77fhnm"
       ],
@@ -1259,7 +1259,7 @@
       "name": "Warmaker",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020212598_pvpnh9ba2"
       ],
@@ -1284,7 +1284,7 @@
       "name": "Dragonbones",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756019828865_ssilkinfm"
       ],
@@ -1309,7 +1309,7 @@
       "name": "Dawn Hunter",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019792630_lgdjr7n6m"
       ],
@@ -1352,7 +1352,7 @@
       "name": "Daywalker",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019795634_e6thpauv4"
       ],
@@ -1424,7 +1424,7 @@
       "name": "Death's Whisper",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019800808_3oqzh3k55"
       ],
@@ -1681,7 +1681,7 @@
       "name": "The curving stream",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020129826_fos9lwbxh"
       ],
@@ -1706,7 +1706,7 @@
       "name": "The resurrector",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020163417_5ak5stsb4"
       ],
@@ -1814,7 +1814,7 @@
       "name": "Soulpiercer",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020106315_p6tfx0h4g"
       ],
@@ -1879,7 +1879,7 @@
       "name": "Dragonheart",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019831329_egxaw2u60"
       ],
@@ -1899,7 +1899,7 @@
       "name": "Earth crafter",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019834809_crovwbi0a"
       ],
@@ -1924,7 +1924,7 @@
       "name": "Sunstrike",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020120810_7xgk95huh"
       ],
@@ -1958,7 +1958,7 @@
       "name": "Windsong",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020217981_fx6mhb8gu"
       ],
@@ -2182,7 +2182,7 @@
       "name": "Heirloom sword",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756019946702_g9l9dhy48"
       ],
@@ -2216,7 +2216,7 @@
       "name": "Frostheim",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019882317_8d96dp5i3"
       ],
@@ -2241,7 +2241,7 @@
       "name": "Mourneblade",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020019460_5dzt7sh7n"
       ],
@@ -2274,7 +2274,7 @@
       "name": "Xeria's fury",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020225999_r670iwb9m"
       ],
@@ -2324,7 +2324,7 @@
       "name": "Genesis",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019885404_cuv3p5iaq"
       ],
@@ -2349,7 +2349,7 @@
       "name": "The Immortal",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020138284_x2c0sw41t"
       ],
@@ -2458,7 +2458,7 @@
       "name": "Grimsteel reaver",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019927471_4s3vaznn7"
       ],
@@ -3184,7 +3184,7 @@
       "name": "The Onslaught Flame",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020154835_56t673np9"
       ],
@@ -3209,7 +3209,7 @@
       "name": "The Inferno",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020142335_3rgyr8w2g"
       ],
@@ -3234,7 +3234,7 @@
       "name": "The Light Bringer",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020152400_2192c4sxl"
       ],
@@ -3284,7 +3284,7 @@
       "name": "The Fourth Wind",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020134744_js8mxgqr4"
       ],
@@ -3309,7 +3309,7 @@
       "name": "The Fourth Soul",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020133363_m85vteoex"
       ],
@@ -3334,7 +3334,7 @@
       "name": "Touch of the Sun",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020187470_8mjpwh2bw"
       ],
@@ -3631,7 +3631,7 @@
       "name": "The Skullcrusher",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020166286_e2mqowkvg"
       ],
@@ -4052,7 +4052,7 @@
       "name": "Meteoric shield",
       "type": "Shield",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020011125_z8gxf5lwj"
       ],
@@ -4103,7 +4103,7 @@
       "name": "Platinum shield",
       "type": "Shield",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020043521_yjq6x0g3e"
       ],
@@ -4128,7 +4128,7 @@
       "name": "The protecter",
       "type": "Shield",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020159920_zl8re8azm"
       ],
@@ -4153,7 +4153,7 @@
       "name": "Guardian shield",
       "type": "Shield",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756019933839_g2dyhnqm1"
       ],
@@ -4178,7 +4178,7 @@
       "name": "Guardian of Naraca",
       "type": "Shield",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756019931479_m5w80nhdc"
       ],
@@ -4203,7 +4203,7 @@
       "name": "The Impaler",
       "type": "Shield",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020139376_rjbdtvv7y"
       ],
@@ -4261,7 +4261,7 @@
       "name": "Blind Vision",
       "type": "Shield",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019737709_ldenxe1hg"
       ],
@@ -4361,7 +4361,7 @@
       "name": "Dragonscale Quiver",
       "type": "Shield",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756019833337_q49c81ukd"
       ],
@@ -4394,7 +4394,7 @@
       "name": "Warsong Quiver",
       "type": "Shield",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020213600_4rjx0png7"
       ],
@@ -5090,7 +5090,7 @@
       "name": "Wyrmskin cowl",
       "type": "Helm",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020224999_egf70yewt"
       ],
@@ -5271,7 +5271,7 @@
       "name": "Diamond mask",
       "type": "Helm",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019811995_kbxbpu8cq"
       ],
@@ -5307,7 +5307,7 @@
       "name": "Glacial crown",
       "type": "Helm",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [],
       "complexity": 1
     },
@@ -5380,7 +5380,7 @@
       "name": "Elfhame",
       "type": "Helm",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019836885_cmfna3pnq"
       ],
@@ -5485,7 +5485,7 @@
       "name": "Eternal beauty",
       "type": "Helm",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019855905_bxhfsdr8w"
       ],
@@ -5610,7 +5610,7 @@
       "name": "Tyrant's horns",
       "type": "Helm",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020196811_5nczwc0ef"
       ],
@@ -5918,7 +5918,7 @@
       "name": "Nightwolf crest",
       "type": "Helm",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756020029904_w3y1z7l9v"
       ],
@@ -6017,7 +6017,7 @@
       "name": "Ravager helm",
       "type": "Helm",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756020059702_9vbssn1ps"
       ],
@@ -6051,7 +6051,7 @@
       "name": "Spite",
       "type": "Helm",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020111792_88lqfm5lc"
       ],
@@ -6243,7 +6243,7 @@
       "name": "The oracle",
       "type": "Helm",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020155851_yup5k0nsp"
       ],
@@ -6268,7 +6268,7 @@
       "name": "The Lich's Eye",
       "type": "Helm",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020146388_2q7xc8mm7"
       ],
@@ -6530,7 +6530,7 @@
       "name": "Beastmaster garb",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019727689_11oyh29tv"
       ],
@@ -6615,7 +6615,7 @@
       "name": "Bloodspeaker robe",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019748185_e44pcly3o"
       ],
@@ -6648,7 +6648,7 @@
       "name": "Mantle of the north",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020001954_zwc6y68j5"
       ],
@@ -6763,7 +6763,7 @@
       "name": "Oakcase",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020030930_kctlvbv2l"
       ],
@@ -6788,7 +6788,7 @@
       "name": "Vigilant hauberk",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020208177_09n597qk1"
       ],
@@ -6813,7 +6813,7 @@
       "name": "Woodland finery",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020222527_6vtbzdte8"
       ],
@@ -6846,7 +6846,7 @@
       "name": "Lightning shroud",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756019993752_wwfd7gekx"
       ],
@@ -6871,7 +6871,7 @@
       "name": "The encrusted masterpiece",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020131266_plpkg752n"
       ],
@@ -6896,7 +6896,7 @@
       "name": "Resplendent Mail",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020069256_ubby6df9s"
       ],
@@ -6921,7 +6921,7 @@
       "name": "Etched spirit",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756019853356_ld8vagrd2"
       ],
@@ -6946,7 +6946,7 @@
       "name": "Runemaster's chain",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020077724_w3lfa7x83"
       ],
@@ -6971,7 +6971,7 @@
       "name": "Lescanza Skin",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756019986260_kh2va0n91"
       ],
@@ -6996,7 +6996,7 @@
       "name": "The Ageless Hunter",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020127356_p6yp9ql5u"
       ],
@@ -7198,7 +7198,7 @@
       "name": "Fire king's trappings",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019865915_1dvkdcn90"
       ],
@@ -7438,7 +7438,7 @@
       "name": "Purifier vestments",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756020050688_4nr6dy53l"
       ],
@@ -7472,7 +7472,7 @@
       "name": "Ravager armor",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756020056112_qdd2kmq3m"
       ],
@@ -7697,7 +7697,7 @@
       "name": "Stonecase",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756020115334_8vwpbiz8l"
       ],
@@ -7931,7 +7931,7 @@
       "name": "Growth of ages",
       "type": "Boots",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756019930476_zte6qxbes"
       ],
@@ -7956,7 +7956,7 @@
       "name": "Forest dancers",
       "type": "Boots",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756019872860_8fgbv7dpd"
       ],
@@ -7981,7 +7981,7 @@
       "name": "Lifewalk",
       "type": "Boots",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756019988750_u9548gi7l"
       ],
@@ -8049,7 +8049,7 @@
       "name": "Beastmaster boots",
       "type": "Boots",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019726689_tebavaa0c"
       ],
@@ -8082,7 +8082,7 @@
       "name": "Companion's wisdom",
       "type": "Boots",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756019772104_og3eifuvx"
       ],
@@ -8107,7 +8107,7 @@
       "name": "Dawntread",
       "type": "Boots",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756019794632_pj1s06z0k"
       ],
@@ -8132,7 +8132,7 @@
       "name": "Treads of Justice",
       "type": "Boots",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020190478_qdrs9nfxd"
       ],
@@ -8352,7 +8352,7 @@
       "name": "Elven battlemage boots",
       "type": "Boots",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019837888_drxsfkfd8"
       ],
@@ -8420,7 +8420,7 @@
       "name": "The warlord's tread",
       "type": "Boots",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020176446_37f5jxinz"
       ],
@@ -8647,7 +8647,7 @@
       "name": "Panther's paw",
       "type": "Boots",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756020037653_hdbs3js0q"
       ],
@@ -8890,7 +8890,7 @@
       "name": "The lich's heart",
       "type": "Amulet",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020149797_rf3vfpmd4"
       ],
@@ -9069,7 +9069,7 @@
       "name": "Mysterious token",
       "type": "Amulet",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020021466_55m3dq0zg"
       ],
@@ -9092,7 +9092,7 @@
       "name": "Eye of the Tempest",
       "type": "Amulet",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756019859311_tcjmvw6mr"
       ],
@@ -9115,7 +9115,7 @@
       "name": "Diamond amulet",
       "type": "Amulet",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019810828_vhons20sk"
       ],
@@ -9157,7 +9157,7 @@
       "name": "Nexus prism",
       "type": "Amulet",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020027583_iqr9loyss"
       ],
@@ -9207,7 +9207,7 @@
       "name": "Dragon Amulet",
       "type": "Amulet",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019824325_gkqrz7npi"
       ],
@@ -9230,7 +9230,7 @@
       "name": "Erc amulet",
       "type": "Amulet",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019852054_n43czvy3g"
       ],
@@ -9299,7 +9299,7 @@
       "name": "Hunter's mark",
       "type": "Amulet",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019962621_p3qxtpsu0"
       ],
@@ -9365,7 +9365,7 @@
       "name": "Kreya's pendant",
       "type": "Amulet",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019979619_rwcibf7j2"
       ],
@@ -9398,7 +9398,7 @@
       "name": "Magic amulet",
       "type": "Amulet",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019996276_kar2h000o"
       ],
@@ -9840,7 +9840,7 @@
       "name": "Gleamstone",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [],
       "complexity": 1
     },
@@ -9863,7 +9863,7 @@
       "name": "The lich's tooth",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020150809_3i0hfxcxz"
       ],
@@ -9888,7 +9888,7 @@
       "name": "Keh's might",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756019976951_qc4mhjp9u"
       ],
@@ -9913,7 +9913,7 @@
       "name": "Spellbinder",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020109766_dh3o7nmrt"
       ],
@@ -9938,7 +9938,7 @@
       "name": "Plainswalker's relic",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020042380_un2yq47ch"
       ],
@@ -9963,7 +9963,7 @@
       "name": "Ring of Chaac",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020071259_xqkes1q9g"
       ],
@@ -9988,7 +9988,7 @@
       "name": "Keh's rulership",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756019978290_nkkd8w7be"
       ],
@@ -10013,7 +10013,7 @@
       "name": "Hero's ring",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756019957198_0ya4qpox3"
       ],
@@ -10038,7 +10038,7 @@
       "name": "Rahvan's Fist",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020053955_ohtj0oo5q"
       ],
@@ -10063,7 +10063,7 @@
       "name": "Arcstone",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019719604_mmjiv4wcz"
       ],
@@ -10179,7 +10179,7 @@
       "name": "Broken Promise",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019753740_x7ncucul8"
       ],
@@ -10295,7 +10295,7 @@
       "name": "Earthshadow",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019835882_b9c9jsd3w"
       ],
@@ -10387,7 +10387,7 @@
       "name": "Fire king's will",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019866946_scxiwge56"
       ],
@@ -10486,7 +10486,7 @@
       "name": "Gold ring",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756019905201_rczb01rn8"
       ],
@@ -10511,7 +10511,7 @@
       "name": "Soulshadow",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020107315_m44esbmyx"
       ],
@@ -10673,7 +10673,7 @@
       "name": "The Oculus",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020153807_1dd4onr3z"
       ],
@@ -10698,7 +10698,7 @@
       "name": "Windweaver",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020219444_ul7v849ku"
       ],
@@ -10771,7 +10771,7 @@
       "name": "Recovery ring",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756020063175_q26frxz3g"
       ],

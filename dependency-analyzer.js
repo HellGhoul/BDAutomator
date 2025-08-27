@@ -257,11 +257,9 @@ class DependencyAnalyzer {
   }
 
   processBaseItemDependencies(baseItem) {
-    if (this.processedItems.has(baseItem.id)) {
-      return baseItem.id;
-    }
-    
-    this.processedItems.add(baseItem.id);
+    // For base items, we want to allow unlimited recursion to show all layers
+    // So we don't check if it's already processed
+    console.log(`🔍 Processing base item: ${baseItem.name} (craftable: ${baseItem.isCraftable})`);
     
     const baseItemRecord = {
       id: baseItem.id,
@@ -274,7 +272,7 @@ class DependencyAnalyzer {
     };
     
     // If the base item is craftable, process its dependencies
-    if (baseItem.isCraftable && baseItem.isLegendary) {
+    if (baseItem.isCraftable) {
       const recipe = this.findRecipeForItem(baseItem.name);
       if (recipe) {
         console.log(`🔍 Base item ${baseItem.name} is craftable, processing its recipe: ${recipe.name}`);

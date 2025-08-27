@@ -911,10 +911,22 @@ window.renderDependencyTreeFlat = function(node, level = 0, nodeId = null) {
   // Check if this node has children
   const hasChildren = node.children && node.children.length > 0;
   
+  // Determine if this node should be expandable
+  const isExpandable = hasChildren && (
+    node.nodeType === 'recipe' || 
+    node.nodeType === 'base_item' || 
+    node.nodeType === 'item'
+  );
+  
+  // Debug logging for expandable nodes
+  if (isExpandable) {
+    console.log(`🔍 Node "${node.name}" (${node.nodeType}) is expandable with ${node.children.length} children`);
+  }
+  
   let html = `
     <div class="mb-2" style="margin-left: ${level * 20}px;">
       <div class="flex items-center space-x-2 p-2 bg-rpg-darker rounded border border-rpg-gold/20">
-        ${hasChildren ? `
+        ${isExpandable ? `
           <button onclick="toggleNode('${uniqueId}')" class="toggle-btn text-rpg-gold hover:text-rpg-gold/80">
             <span id="icon_${uniqueId}" class="text-sm">▶</span>
           </button>
@@ -932,6 +944,7 @@ window.renderDependencyTreeFlat = function(node, level = 0, nodeId = null) {
             <span class="text-sm font-bold ${nodeTypeColor[node.nodeType] || 'text-gray-400'}">${node.name}</span>
             <span class="text-xs px-2 py-1 rounded bg-gray-600 text-white">${(node.nodeType || 'unknown').replace('_', ' ')}</span>
             ${node.isLegendary ? '<span class="text-yellow-400 text-xs">⭐</span>' : ''}
+            ${isExpandable ? '<span class="text-xs px-2 py-1 rounded bg-blue-600 text-white">📁</span>' : ''}
           </div>
           ${encyclopediaData && encyclopediaData.type ? 
             `<div class="text-xs text-gray-400">Type: ${encyclopediaData.type}</div>` : 
@@ -1049,9 +1062,13 @@ window.renderDependencyTreeFlat = function(node, level = 0, nodeId = null) {
     html = html.replace(`id="icon_${uniqueId}" class="text-sm">▶`, `id="icon_${uniqueId}" class="text-sm">${iconText}`);
     
   } else if (hasChildren) {
-    // Regular children handling for non-recipe nodes
+    // Handle all expandable nodes (recipes, base items, items)
     const containerClass = 'hidden';
     const iconText = '▶';
+    
+    console.log(`🔍 Generic handler for ${node.nodeType} "${node.name}" with ${node.children.length} children`);
+    console.log(`  Creating children container: children_${uniqueId}`);
+    console.log(`  Container class: ${containerClass}`);
     
     html += `
       <div id="children_${uniqueId}" class="${containerClass}" style="margin-left: ${(level + 1) * 20}px;">
@@ -1059,13 +1076,22 @@ window.renderDependencyTreeFlat = function(node, level = 0, nodeId = null) {
     
     // Recursively render children by following ID references
     node.children.forEach(childId => {
+      console.log(`  🔍 Processing child ID: ${childId}`);
       const childRecord = window.getFlatDependencyRecord(childId);
       if (childRecord) {
+        console.log(`  ✅ Found child record: ${childRecord.name} (${childRecord.nodeType})`);
         html += window.renderDependencyTreeFlat(childRecord, level + 1, `child_${uniqueId}_${childId}`);
+      } else {
+        console.log(`  ❌ Child record not found for ID: ${childId}`);
       }
     });
     
     html += `</div>`;
+    
+    // Update the icon to show correct state
+    html = html.replace(`id="icon_${uniqueId}" class="text-sm">▶`, `id="icon_${uniqueId}" class="text-sm">${iconText}`);
+    
+    console.log(`  ✅ Created children container for ${node.name}`);
   }
   
   return html;
@@ -1074,9 +1100,15 @@ window.renderDependencyTreeFlat = function(node, level = 0, nodeId = null) {
 // Helper function to get a dependency record by ID
 window.getFlatDependencyRecord = function(recordId) {
   // This will be populated by the main process when loading dependencies
+  console.log(`🔍 Looking up dependency record: ${recordId}`);
+  console.log(`  Available keys:`, window.flatDependencies ? Object.keys(window.flatDependencies).slice(0, 10) : 'undefined');
+  
   if (window.flatDependencies && window.flatDependencies[recordId]) {
+    console.log(`  ✅ Found record: ${window.flatDependencies[recordId].name}`);
     return window.flatDependencies[recordId];
   }
+  
+  console.log(`  ❌ Record not found: ${recordId}`);
   return null;
 };
 
@@ -1118,7 +1150,7 @@ window.groupRecipeIngredients = function(ingredientIds) {
     
     if (ingredient.nodeType === 'title') {
       titles.push({ id: ingredientId, ...ingredient });
-    } else if (ingredient.nodeType === 'base_item') {
+    } else if (ingredient.nodeType === 'base_item' || ingredient.nodeType === 'item') {
       baseItems.push({ id: ingredientId, ...ingredient });
     } else {
       console.log(`⚠️ Unknown ingredient type: ${ingredient.nodeType} for ${ingredient.name}`);
@@ -1128,43 +1160,47 @@ window.groupRecipeIngredients = function(ingredientIds) {
   console.log(`🔍 Found ${titles.length} titles:`, titles.map(t => t.name));
   console.log(`🔍 Found ${baseItems.length} base items:`, baseItems.map(b => b.name));
   
-      // Pair titles with base items in order
-    const titledItems = [];
-    const maxPairs = Math.min(titles.length, baseItems.length);
+  // Pair titles with base items in order
+  const titledItems = [];
+  const maxPairs = Math.min(titles.length, baseItems.length);
+  
+  console.log(`🔍 Creating ${maxPairs} titled item pairs...`);
+  
+  for (let i = 0; i < maxPairs; i++) {
+    const title = titles[i];
+    const baseItem = baseItems[i];
     
-    for (let i = 0; i < maxPairs; i++) {
-      const title = titles[i];
-      const baseItem = baseItems[i];
-      
-      // Create titled item: "prefix + item name + suffix" format
-      let titledItemName = baseItem.name;
-      
-      // Get the actual title data to access prefix and suffix
-      const titleData = window.getEncyclopediaTitleByName(title.name);
-      if (titleData) {
-        if (titleData.prefix && titleData.suffix) {
-          titledItemName = `${titleData.prefix} ${baseItem.name} ${titleData.suffix}`;
-        } else if (titleData.prefix) {
-          titledItemName = `${titleData.prefix} ${baseItem.name}`;
-        } else if (titleData.suffix) {
-          titledItemName = `${baseItem.name} ${titleData.suffix}`;
-        }
-      } else {
-        // Fallback to old format if title data not found
-        titledItemName = `${title.name}'s ${baseItem.name}`;
+    console.log(`  Pair ${i + 1}: Title "${title.name}" + Base Item "${baseItem.name}"`);
+    
+    // Create titled item: "prefix + item name + suffix" format
+    let titledItemName = baseItem.name;
+    
+    // Get the actual title data to access prefix and suffix
+    const titleData = window.getEncyclopediaTitleByName(title.name);
+    if (titleData) {
+      if (titleData.prefix && titleData.suffix) {
+        titledItemName = `${titleData.prefix} ${baseItem.name} ${titleData.suffix}`;
+      } else if (titleData.prefix) {
+        titledItemName = `${titleData.prefix} ${baseItem.name}`;
+      } else if (titleData.suffix) {
+        titledItemName = `${baseItem.name} ${titleData.suffix}`;
       }
-      
-      console.log(`✅ Created titled item ${i + 1}: ${titledItemName}`);
-      
-      titledItems.push({
-        name: titledItemName,
-        title: title.name,
-        baseItem: baseItem.name,
-        titleId: title.id,
-        baseItemId: baseItem.id,
-        index: i
-      });
+    } else {
+      // Fallback to old format if title data not found
+      titledItemName = `${title.name}'s ${baseItem.name}`;
     }
+    
+    console.log(`✅ Created titled item ${i + 1}: ${titledItemName}`);
+    
+    titledItems.push({
+      name: titledItemName,
+      title: title.name,
+      baseItem: baseItem.name,
+      titleId: title.id,
+      baseItemId: baseItem.id,
+      index: i
+    });
+  }
   
   // Add any remaining unpaired items
   if (titles.length > baseItems.length) {
@@ -1346,17 +1382,53 @@ window.calculateQuantitiesFromRecipes = function(node, visited = new Set(), pare
 
 // Function to toggle node expansion/collapse
 window.toggleNode = function(nodeId) {
+  console.log(`🔍 toggleNode called with ID: ${nodeId}`);
+  
   const childrenContainer = document.getElementById(`children_${nodeId}`);
   const icon = document.getElementById(`icon_${nodeId}`);
   
+  console.log(`  Children container:`, childrenContainer);
+  console.log(`  Icon:`, icon);
+  console.log(`  Container ID: children_${nodeId}`);
+  console.log(`  Icon ID: icon_${nodeId}`);
+  
   if (childrenContainer && icon) {
-    if (childrenContainer.classList.contains('hidden')) {
+    const isHidden = childrenContainer.classList.contains('hidden');
+    console.log(`  Currently hidden: ${isHidden}`);
+    console.log(`  Container classes:`, childrenContainer.className);
+    
+    if (isHidden) {
+      // Remove hidden class and force visibility with !important
       childrenContainer.classList.remove('hidden');
+      childrenContainer.style.setProperty('display', 'block', 'important');
+      childrenContainer.style.setProperty('visibility', 'visible', 'important');
+      childrenContainer.style.setProperty('opacity', '1', 'important');
+      childrenContainer.style.setProperty('height', 'auto', 'important');
+      childrenContainer.style.setProperty('overflow', 'visible', 'important');
+      
       icon.textContent = '▼';
+      console.log(`  ✅ Expanded node: ${nodeId}`);
+      console.log(`  Container classes after expand:`, childrenContainer.className);
+      console.log(`  Forced visibility styles applied`);
     } else {
+      // Add hidden class and force hiding with !important
       childrenContainer.classList.add('hidden');
+      childrenContainer.style.setProperty('display', 'none', 'important');
+      childrenContainer.style.setProperty('visibility', 'hidden', 'important');
+      childrenContainer.style.setProperty('opacity', '0', 'important');
+      childrenContainer.style.setProperty('height', '0', 'important');
+      childrenContainer.style.setProperty('overflow', 'hidden', 'important');
+      
       icon.textContent = '▶';
+      console.log(`  ✅ Collapsed node: ${nodeId}`);
+      console.log(`  Container classes after collapse:`, childrenContainer.className);
+      console.log(`  Forced hiding styles applied`);
     }
+  } else {
+    console.log(`  ❌ Could not find elements for node: ${nodeId}`);
+    console.log(`  Available elements with similar IDs:`);
+    const allElements = document.querySelectorAll('[id*="' + nodeId + '"]');
+    allElements.forEach(el => console.log(`    - ${el.id}: ${el.tagName}`));
   }
 };
 
