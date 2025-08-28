@@ -1,0 +1,62 @@
+{
+  "timestamp": "2025-08-28T15:50:31.178Z",
+  "targetItems": [
+    "Hell ghoul's (III) Celestial Stone",
+    "Steel Dragon's Platinum Ring (III)",
+    "Azure dragon's Nefârtatul's Ring (III)"
+  ],
+  "materialRequirements": {},
+  "farmingRecommendations": [],
+  "inventoryOptimization": [
+    {
+      "action": "consider_selling",
+      "item": "Celestial Stone",
+      "quantity": 3,
+      "reason": "Not needed for current crafting goals",
+      "estimatedValue": 150000,
+      "priority": "low"
+    },
+    {
+      "action": "consider_selling",
+      "item": "Ring",
+      "quantity": 15,
+      "reason": "Not needed for current crafting goals",
+      "estimatedValue": 15000,
+      "priority": "low"
+    },
+    {
+      "action": "consider_selling",
+      "item": "Shield",
+      "quantity": 8,
+      "reason": "Not needed for current crafting goals",
+      "estimatedValue": 12000,
+      "priority": "low"
+    },
+    {
+      "action": "consider_selling",
+      "item": "Ancient Potion",
+      "quantity": 25,
+      "reason": "Not needed for current crafting goals",
+      "estimatedValue": 12500,
+      "priority": "low"
+    },
+    {
+      "action": "consider_selling",
+      "item": "Stamina Potion",
+      "quantity": 30,
+      "reason": "Not needed for current crafting goals",
+      "estimatedValue": 9000,
+      "priority": "low"
+    },
+    {
+      "action": "consider_selling",
+      "item": "Gold",
+      "quantity": 150000,
+      "reason": "Not needed for current crafting goals",
+      "estimatedValue": 150000,
+      "priority": "low"
+    }
+  ],
+  "estimatedTime": 0,
+  "riskAssessment": "low"
+}

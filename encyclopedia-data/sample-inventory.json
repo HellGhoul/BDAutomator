@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Celestial Stone",
+    "quantity": 3,
+    "rarity": "legendary",
+    "type": "Other",
+    "value": 50000,
+    "lastUpdated": "2025-01-26T23:30:00.000Z"
+  },
+  {
+    "name": "Damned Fortune",
+    "quantity": 1,
+    "rarity": "epic",
+    "type": "Shield",
+    "value": 25000,
+    "lastUpdated": "2025-01-26T22:15:00.000Z"
+  },
+  {
+    "name": "Ring",
+    "quantity": 15,
+    "rarity": "common",
+    "type": "Ring",
+    "value": 1000,
+    "lastUpdated": "2025-01-26T21:00:00.000Z"
+  },
+  {
+    "name": "Shield",
+    "quantity": 8,
+    "rarity": "common",
+    "type": "Shield",
+    "value": 1500,
+    "lastUpdated": "2025-01-26T20:45:00.000Z"
+  },
+  {
+    "name": "Ancient Potion",
+    "quantity": 25,
+    "rarity": "common",
+    "type": "Consumable",
+    "value": 500,
+    "lastUpdated": "2025-01-26T19:30:00.000Z"
+  },
+  {
+    "name": "Stamina Potion",
+    "quantity": 30,
+    "rarity": "common",
+    "type": "Consumable",
+    "value": 300,
+    "lastUpdated": "2025-01-26T18:15:00.000Z"
+  },
+  {
+    "name": "Gold",
+    "quantity": 150000,
+    "rarity": "common",
+    "type": "Currency",
+    "value": 1,
+    "lastUpdated": "2025-01-26T17:00:00.000Z"
+  },
+  {
+    "name": "Hell ghoul's (III) Celestial Stone",
+    "quantity": 0,
+    "rarity": "legendary",
+    "type": "Shield",
+    "value": 100000,
+    "lastUpdated": "2025-01-26T16:45:00.000Z"
+  },
+  {
+    "name": "Steel Dragon's Platinum Ring (III)",
+    "quantity": 0,
+    "rarity": "legendary",
+    "type": "Ring",
+    "value": 75000,
+    "lastUpdated": "2025-01-26T16:30:00.000Z"
+  },
+  {
+    "name": "Azure dragon's Nefârtatul's Ring (III)",
+    "quantity": 0,
+    "rarity": "legendary",
+    "type": "Ring",
+    "value": 80000,
+    "lastUpdated": "2025-01-26T16:15:00.000Z"
+  }
+] 

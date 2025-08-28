@@ -197,10 +197,37 @@
     
     .encyclopedia-header {
       background: linear-gradient(145deg, #1A202C, #0F1419);
+      border-bottom: 1px solid #4A5568;
+      padding: 1rem;
+      border-radius: 0.5rem 0.5rem 0 0;
+    }
+    
+    .rpg-input {
+      background: linear-gradient(145deg, #1A202C, #0F1419);
       border: 1px solid #4A5568;
-      box-shadow: 
-        0 0 30px rgba(0, 0, 0, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      color: #E2E8F0;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.375rem;
+      transition: all 0.3s ease;
+      font-size: 0.875rem;
+    }
+    
+    .rpg-input:focus {
+      outline: none;
+      border-color: #718096;
+      box-shadow: 0 0 0 3px rgba(113, 128, 150, 0.1);
+    }
+    
+    .rpg-input::placeholder {
+      color: #718096;
+    }
+    
+    .rpg-darker {
+      background: #0F1419;
+    }
+    
+    .rpg-gold {
+      color: #F59E0B;
     }
     
     /* Input styling */

@@ -18,6 +18,15 @@ let encyclopediaData = {
 let isCrawling = false;
 let crawlProgress = 0;
 
+// AI Resource Manager variables
+let aiTargetItems = [];
+let aiAnalysisResults = null;
+let aiUserPreferences = {
+  riskTolerance: 'medium',
+  timePreference: 'efficient',
+  resourcePriority: 'materials'
+};
+
 function renderAccounts() {
   const list = document.getElementById('account-list');
   list.innerHTML = '';
@@ -79,8 +88,28 @@ function renderTabs() {
   outputTab.onclick = () => switchTab('output');
   tabBar.appendChild(outputTab);
 
-  // Render tab content
-  renderOutputTab();
+  // AI Resource Manager tab
+  const aiTab = document.createElement('div');
+  aiTab.className = `tab px-4 py-2 rounded-t-lg ${activeTab === 'ai' ? 'active' : ''}`;
+  aiTab.innerHTML = '🧠 AI Resource Manager';
+  aiTab.onclick = () => switchTab('ai');
+  tabBar.appendChild(aiTab);
+
+  // Encyclopedia tab
+  const encyclopediaTab = document.createElement('div');
+  encyclopediaTab.className = `tab px-4 py-2 rounded-t-lg ${activeTab === 'encyclopedia' ? 'active' : ''}`;
+  encyclopediaTab.innerHTML = '📚 Encyclopedia';
+  encyclopediaTab.onclick = () => switchTab('encyclopedia');
+  tabBar.appendChild(encyclopediaTab);
+
+  // Render tab content based on active tab
+  if (activeTab === 'output' || !activeTab) {
+    renderOutputTab();
+  } else if (activeTab === 'ai') {
+    renderAITab();
+  } else if (activeTab === 'encyclopedia') {
+    renderEncyclopediaTab();
+  }
 }
 
 function renderOutputTab() {
@@ -98,6 +127,170 @@ function renderOutputTab() {
   });
   outDiv.innerHTML = outputEntries.reverse().join('');
   tabContent.appendChild(outDiv);
+}
+
+function renderAITab() {
+  const tabContent = document.getElementById('tab-content');
+  
+  // AI Resource Manager tab content
+  const aiDiv = document.createElement('div');
+  aiDiv.className = 'p-4 h-[600px] overflow-y-auto';
+  aiDiv.innerHTML = `
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-rpg-gold mb-4">🧠 AI Resource Manager</h2>
+      <p class="text-gray-300 mb-4">AI-powered resource prediction, farming route optimization, and inventory management</p>
+    </div>
+    
+    <!-- Target Items Section -->
+    <div class="rpg-border rounded-lg p-4 mb-6">
+      <h3 class="text-xl font-bold text-rpg-gold mb-3">🎯 Target Items</h3>
+      <div class="flex flex-wrap gap-2 mb-3">
+        <input type="text" id="target-item-input" placeholder="Enter item name..." 
+               class="rpg-input flex-1 min-w-[200px]" />
+        <button onclick="addTargetItem()" class="rpg-button px-4 py-2">Add Target</button>
+      </div>
+      <div id="target-items-list" class="space-y-2">
+        <!-- Target items will be displayed here -->
+      </div>
+    </div>
+    
+    <!-- AI Analysis Section -->
+    <div class="rpg-border rounded-lg p-4 mb-6">
+      <h3 class="text-xl font-bold text-rpg-gold mb-3">🔍 AI Analysis</h3>
+      <div class="flex gap-4 mb-4">
+        <button onclick="runAIAnalysis()" class="rpg-button px-6 py-2 bg-green-900/50 border-green-500 text-green-300">
+          🚀 Run AI Analysis
+        </button>
+        <button onclick="loadSampleData()" class="rpg-button px-4 py-2 bg-blue-900/50 border-blue-500 text-blue-300">
+          📊 Load Sample Data
+        </button>
+        <button onclick="clearAIAnalysis()" class="rpg-button px-4 py-2 bg-red-900/50 border-red-500 text-red-300">
+          🗑️ Clear Analysis
+        </button>
+      </div>
+      <div id="ai-analysis-results" class="hidden">
+        <!-- AI analysis results will be displayed here -->
+      </div>
+    </div>
+    
+    <!-- User Preferences Section -->
+    <div class="rpg-border rounded-lg p-4 mb-6">
+      <h3 class="text-xl font-bold text-rpg-gold mb-3">⚙️ AI Preferences</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Risk Tolerance</label>
+          <select id="risk-tolerance" class="rpg-input w-full">
+            <option value="low">Low Risk</option>
+            <option value="medium" selected>Medium Risk</option>
+            <option value="high">High Risk</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Time Preference</label>
+          <select id="time-preference" class="rpg-input w-full">
+            <option value="efficient" selected>Efficient</option>
+            <option value="safe">Safe</option>
+            <option value="aggressive">Aggressive</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Resource Priority</label>
+          <select id="resource-priority" class="rpg-input w-full">
+            <option value="materials" selected>Materials</option>
+            <option value="experience">Experience</option>
+            <option value="gold">Gold</option>
+          </select>
+        </div>
+      </div>
+      <button onclick="updateAIPreferences()" class="rpg-button px-4 py-2 mt-3">
+        🔄 Update Preferences
+      </button>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="rpg-border rounded-lg p-4">
+      <h3 class="text-xl font-bold text-rpg-gold mb-3">⚡ Quick Actions</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <button onclick="optimizeInventory()" class="rpg-button p-4 text-center">
+          <div class="text-2xl mb-2">🔄</div>
+          <div class="font-bold">Inventory Optimization</div>
+          <div class="text-sm text-gray-400">Get AI suggestions for inventory management</div>
+        </button>
+        <button onclick="generateFarmingRoute()" class="rpg-button p-4 text-center">
+          <div class="text-2xl mb-2">🗺️</div>
+          <div class="font-bold">Farming Routes</div>
+          <div class="text-sm text-gray-400">Get optimal farming sequences</div>
+        </button>
+      </div>
+    </div>
+  `;
+  tabContent.appendChild(aiDiv);
+  
+  // Initialize target items display
+  updateTargetItemsDisplay();
+}
+
+function renderEncyclopediaTab() {
+  const tabContent = document.getElementById('tab-content');
+  
+  // Encyclopedia tab content
+  const encyclopediaDiv = document.createElement('div');
+  encyclopediaDiv.className = 'p-4 h-[600px] overflow-y-auto';
+  encyclopediaDiv.innerHTML = `
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-rpg-gold mb-4">📚 Encyclopedia Data</h2>
+      <p class="text-gray-300 mb-4">Browse collected game data and information</p>
+    </div>
+    
+    <!-- Statistics Dashboard -->
+    <div class="rpg-border rounded-lg p-4 mb-6">
+      <h3 class="text-xl font-bold text-rpg-gold mb-3">📊 Data Statistics</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="text-center p-3 bg-rpg-darker/50 rounded">
+          <div class="text-2xl font-bold text-blue-400">${encyclopediaData?.items?.length || 0}</div>
+          <div class="text-sm text-gray-400">Items</div>
+        </div>
+        <div class="text-center p-3 bg-rpg-darker/50 rounded">
+          <div class="text-2xl font-bold text-green-400">${encyclopediaData?.monsters?.length || 0}</div>
+          <div class="text-sm text-gray-400">Monsters</div>
+        </div>
+        <div class="text-center p-3 bg-rpg-darker/50 rounded">
+          <div class="text-2xl font-bold text-purple-400">${encyclopediaData?.skills?.length || 0}</div>
+          <div class="text-sm text-gray-400">Skills</div>
+        </div>
+        <div class="text-center p-3 bg-rpg-darker/50 rounded">
+          <div class="text-2xl font-bold text-yellow-400">${encyclopediaData?.titles?.length || 0}</div>
+          <div class="text-sm text-gray-400">Titles</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Search and Filter -->
+    <div class="rpg-border rounded-lg p-4 mb-6">
+      <h3 class="text-xl font-bold text-rpg-gold mb-3">🔍 Search & Filter</h3>
+      <div class="flex gap-4 mb-4">
+        <input type="text" id="encyclopedia-search" placeholder="Search items, monsters, skills..." 
+               class="rpg-input flex-1" />
+        <select id="encyclopedia-filter" class="rpg-input">
+          <option value="all">All Types</option>
+          <option value="items">Items</option>
+          <option value="monsters">Monsters</option>
+          <option value="skills">Skills</option>
+          <option value="titles">Titles</option>
+        </select>
+        <button onclick="searchEncyclopedia()" class="rpg-button px-4 py-2">🔍 Search</button>
+      </div>
+    </div>
+    
+    <!-- Data Display -->
+    <div id="encyclopedia-data-display" class="rpg-border rounded-lg p-4">
+      <div class="text-center text-gray-400 mt-8">
+        <div class="text-lg">🔍 Use the search above to find specific data</div>
+        <div class="text-sm mt-2">Or browse by category using the filter</div>
+      </div>
+    </div>
+  `;
+  tabContent.appendChild(encyclopediaDiv);
 }
 
 function switchTab(tabId) {
@@ -2240,4 +2433,406 @@ ipcRenderer.on('execute-in-webview', (event, { accountId, script, requestId }) =
   }
 });
 
-loadAccounts(); 
+loadAccounts();
+
+// AI Resource Manager Functions
+window.addTargetItem = function() {
+  const input = document.getElementById('target-item-input');
+  const itemName = input.value.trim();
+  
+  if (itemName && !aiTargetItems.includes(itemName)) {
+    aiTargetItems.push(itemName);
+    input.value = '';
+    updateTargetItemsDisplay();
+    console.log(`🎯 Added target item: ${itemName}`);
+  }
+};
+
+window.removeTargetItem = function(itemName) {
+  const index = aiTargetItems.indexOf(itemName);
+  if (index > -1) {
+    aiTargetItems.splice(index, 1);
+    updateTargetItemsDisplay();
+    console.log(`🗑️ Removed target item: ${itemName}`);
+  }
+};
+
+window.updateTargetItemsDisplay = function() {
+  const list = document.getElementById('target-items-list');
+  if (!list) return;
+  
+  if (aiTargetItems.length === 0) {
+    list.innerHTML = '<p class="text-gray-400 text-sm">No target items set. Add items above to get AI recommendations.</p>';
+    return;
+  }
+  
+  list.innerHTML = aiTargetItems.map(item => `
+    <div class="flex items-center justify-between p-2 bg-rpg-darker/50 rounded">
+      <span class="text-gray-200">${item}</span>
+      <button onclick="removeTargetItem('${item}')" class="text-red-400 hover:text-red-300 text-sm">
+        🗑️ Remove
+      </button>
+    </div>
+  `).join('');
+};
+
+window.runAIAnalysis = async function() {
+  if (aiTargetItems.length === 0) {
+    alert('Please add target items first!');
+    return;
+  }
+  
+  console.log('🧠 Running AI analysis...');
+  
+  // Show loading state
+  const resultsDiv = document.getElementById('ai-analysis-results');
+  resultsDiv.classList.remove('hidden');
+  resultsDiv.innerHTML = `
+    <div class="text-center text-gray-400 py-8">
+      <div class="text-lg">🧠 AI is analyzing your resources...</div>
+      <div class="text-sm mt-2">This may take a few moments</div>
+    </div>
+  `;
+  
+  try {
+    // In a real implementation, this would call the AI Resource Manager
+    // For now, we'll simulate the analysis
+    await simulateAIAnalysis();
+    
+    // Display results
+    displayAIAnalysisResults();
+    
+  } catch (error) {
+    console.error('AI analysis failed:', error);
+    resultsDiv.innerHTML = `
+      <div class="text-center text-red-400 py-8">
+        <div class="text-lg">❌ AI analysis failed</div>
+        <div class="text-sm mt-2">${error.message}</div>
+      </div>
+    `;
+  }
+};
+
+window.simulateAIAnalysis = async function() {
+  // Simulate AI processing time
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  
+  // Generate mock analysis results
+  aiAnalysisResults = {
+    timestamp: new Date(),
+    targetItems: aiTargetItems,
+    materialRequirements: new Map([
+      ['Celestial Stone', {
+        name: 'Celestial Stone',
+        required: 5,
+        current: 3,
+        needed: 2,
+        priority: 9,
+        rarity: 'legendary',
+        source: { monster: 'Ancient Behemoth', location: 'Behemoth areas' },
+        estimatedFarmingTime: 45
+      }],
+      ['Damned Fortune', {
+        name: 'Damned Fortune',
+        required: 3,
+        current: 1,
+        needed: 2,
+        priority: 7,
+        rarity: 'epic',
+        source: { monster: 'Hell ghoul', location: 'Hell areas' },
+        estimatedFarmingTime: 30
+      }]
+    ]),
+    farmingRecommendations: [
+      {
+        location: 'Behemoth areas',
+        materials: ['Celestial Stone'],
+        totalTime: 45,
+        priority: 9,
+        efficiency: 0.2,
+        route: [
+          {
+            step: 1,
+            material: 'Celestial Stone',
+            monster: 'Ancient Behemoth',
+            estimatedTime: 45,
+            priority: 9,
+            notes: ['High priority - legendary material']
+          }
+        ]
+      },
+      {
+        location: 'Hell areas',
+        materials: ['Damned Fortune'],
+        totalTime: 30,
+        priority: 7,
+        efficiency: 0.23,
+        route: [
+          {
+            step: 1,
+            material: 'Damned Fortune',
+            monster: 'Hell ghoul',
+            estimatedTime: 30,
+            priority: 7,
+            notes: ['Epic material needed']
+          }
+        ]
+      }
+    ],
+    inventoryOptimization: [
+      {
+        action: 'prioritize_farming',
+        item: 'Celestial Stone',
+        needed: 2,
+        priority: 9,
+        reason: 'High priority material for crafting',
+        estimatedTime: 45,
+        priority: 'high'
+      }
+    ],
+    estimatedTime: 75,
+    riskAssessment: 'medium'
+  };
+};
+
+window.displayAIAnalysisResults = function() {
+  if (!aiAnalysisResults) return;
+  
+  const resultsDiv = document.getElementById('ai-analysis-results');
+  
+  resultsDiv.innerHTML = `
+    <div class="space-y-6">
+      <!-- Summary -->
+      <div class="rpg-border rounded-lg p-4">
+        <h4 class="text-lg font-bold text-rpg-gold mb-3">📊 Analysis Summary</h4>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="text-center">
+            <div class="text-2xl font-bold text-blue-400">${aiAnalysisResults.materialRequirements.size}</div>
+            <div class="text-sm text-gray-400">Materials Needed</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-green-400">${aiAnalysisResults.estimatedTime}</div>
+            <div class="text-sm text-gray-400">Minutes</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-yellow-400">${aiAnalysisResults.riskAssessment.toUpperCase()}</div>
+            <div class="text-sm text-gray-400">Risk Level</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-purple-400">${aiAnalysisResults.farmingRecommendations.length}</div>
+            <div class="text-sm text-gray-400">Locations</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Material Requirements -->
+      <div class="rpg-border rounded-lg p-4">
+        <h4 class="text-lg font-bold text-rpg-gold mb-3">📋 Material Requirements</h4>
+        <div class="space-y-3">
+          ${Array.from(aiAnalysisResults.materialRequirements.values())
+            .sort((a, b) => b.priority - a.priority)
+            .map(material => `
+              <div class="flex items-center justify-between p-3 bg-rpg-darker/30 rounded">
+                <div>
+                  <div class="font-medium text-gray-200">${material.name}</div>
+                  <div class="text-sm text-gray-400">
+                    Priority: ${material.priority} | Rarity: ${material.rarity} | 
+                    Needed: ${material.needed} | Current: ${material.current}
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="text-sm text-gray-400">${material.source.monster}</div>
+                  <div class="text-xs text-gray-500">${material.source.location}</div>
+                </div>
+              </div>
+            `).join('')}
+        </div>
+      </div>
+      
+      <!-- Farming Recommendations -->
+      <div class="rpg-border rounded-lg p-4">
+        <h4 class="text-lg font-bold text-rpg-gold mb-3">🗺️ Optimal Farming Routes</h4>
+        <div class="space-y-4">
+          ${aiAnalysisResults.farmingRecommendations.map((rec, index) => `
+            <div class="p-3 bg-rpg-darker/30 rounded">
+              <div class="flex items-center justify-between mb-2">
+                <h5 class="font-medium text-gray-200">${index + 1}. ${rec.location}</h5>
+                <div class="text-sm text-gray-400">
+                  ${rec.materials.length} materials | ${rec.totalTime} min | 
+                  Efficiency: ${rec.efficiency.toFixed(2)}
+                </div>
+              </div>
+              <div class="space-y-2">
+                ${rec.route.map(step => `
+                  <div class="ml-4 text-sm">
+                    <span class="text-gray-300">${step.step}. ${step.material}</span>
+                    <span class="text-gray-500 ml-2">(${step.monster} - ${step.estimatedTime} min)</span>
+                    ${step.notes.length > 0 ? `<div class="text-xs text-gray-500 ml-4">${step.notes.join(', ')}</div>` : ''}
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      
+      <!-- Inventory Optimization -->
+      <div class="rpg-border rounded-lg p-4">
+        <h4 class="text-lg font-bold text-rpg-gold mb-3">🔄 Inventory Optimization</h4>
+        <div class="space-y-3">
+          ${aiAnalysisResults.inventoryOptimization.map((suggestion, index) => `
+            <div class="flex items-center justify-between p-3 bg-rpg-darker/30 rounded">
+              <div>
+                <div class="font-medium text-gray-200">${suggestion.action.replace('_', ' ').toUpperCase()}: ${suggestion.item}</div>
+                <div class="text-sm text-gray-400">${suggestion.reason}</div>
+              </div>
+              <div class="text-right">
+                <div class="text-sm text-gray-400">Priority: ${suggestion.priority}</div>
+                ${suggestion.estimatedTime ? `<div class="text-xs text-gray-500">${suggestion.estimatedTime} min</div>` : ''}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+};
+
+window.loadSampleData = function() {
+  // Load sample target items
+  aiTargetItems = [
+    "Hell ghoul's (III) Celestial Stone",
+    "Steel Dragon's Platinum Ring (III)",
+    "Azure dragon's Nefârtatul's Ring (III)"
+  ];
+  
+  updateTargetItemsDisplay();
+  console.log('📊 Loaded sample target items');
+};
+
+window.clearAIAnalysis = function() {
+  aiTargetItems = [];
+  aiAnalysisResults = null;
+  updateTargetItemsDisplay();
+  
+  const resultsDiv = document.getElementById('ai-analysis-results');
+  if (resultsDiv) {
+    resultsDiv.classList.add('hidden');
+  }
+  
+  console.log('🗑️ Cleared AI analysis data');
+};
+
+window.updateAIPreferences = function() {
+  aiUserPreferences.riskTolerance = document.getElementById('risk-tolerance').value;
+  aiUserPreferences.timePreference = document.getElementById('time-preference').value;
+  aiUserPreferences.resourcePriority = document.getElementById('resource-priority').value;
+  
+  console.log('⚙️ Updated AI preferences:', aiUserPreferences);
+  alert('AI preferences updated!');
+};
+
+window.optimizeInventory = function() {
+  if (!aiAnalysisResults) {
+    alert('Please run AI analysis first!');
+    return;
+  }
+  
+  // Show inventory optimization results
+  const resultsDiv = document.getElementById('ai-analysis-results');
+  resultsDiv.scrollIntoView({ behavior: 'smooth' });
+  
+  // Highlight inventory section
+  const inventorySection = resultsDiv.querySelector('.rpg-border:last-child');
+  if (inventorySection) {
+    inventorySection.style.borderColor = '#F59E0B';
+    setTimeout(() => {
+      inventorySection.style.borderColor = '#4A5568';
+    }, 3000);
+  }
+};
+
+window.generateFarmingRoute = function() {
+  if (!aiAnalysisResults) {
+    alert('Please run AI analysis first!');
+    return;
+  }
+  
+  // Show farming recommendations
+  const resultsDiv = document.getElementById('ai-analysis-results');
+  resultsDiv.scrollIntoView({ behavior: 'smooth' });
+  
+  // Highlight farming section
+  const farmingSection = resultsDiv.querySelector('.rpg-border:nth-child(3)');
+  if (farmingSection) {
+    farmingSection.style.borderColor = '#10B981';
+    setTimeout(() => {
+      farmingSection.style.borderColor = '#4A5568';
+    }, 3000);
+  }
+};
+
+window.searchEncyclopedia = function() {
+  const searchTerm = document.getElementById('encyclopedia-search').value.toLowerCase();
+  const filterType = document.getElementById('encyclopedia-filter').value;
+  
+  if (!searchTerm) {
+    document.getElementById('encyclopedia-data-display').innerHTML = `
+      <div class="text-center text-gray-400 mt-8">
+        <div class="text-lg">🔍 Use the search above to find specific data</div>
+        <div class="text-sm mt-2">Or browse by category using the filter</div>
+      </div>
+    `;
+    return;
+  }
+  
+  // Simple search implementation
+  let results = [];
+  
+  if (filterType === 'all' || filterType === 'items') {
+    results.push(...encyclopediaData.items.filter(item => 
+      item.name.toLowerCase().includes(searchTerm)
+    ).slice(0, 10));
+  }
+  
+  if (filterType === 'all' || filterType === 'monsters') {
+    results.push(...encyclopediaData.monsters.filter(monster => 
+      monster.name.toLowerCase().includes(searchTerm)
+    ).slice(0, 10));
+  }
+  
+  if (filterType === 'all' || filterType === 'titles') {
+    results.push(...encyclopediaData.titles.filter(title => 
+      title.name.toLowerCase().includes(searchTerm)
+    ).slice(0, 10));
+  }
+  
+  if (results.length === 0) {
+    document.getElementById('encyclopedia-data-display').innerHTML = `
+      <div class="text-center text-gray-400 mt-8">
+        <div class="text-lg">🔍 No results found</div>
+        <div class="text-sm mt-2">Try a different search term or filter</div>
+      </div>
+    `;
+    return;
+  }
+  
+  // Display results
+  const resultsHtml = results.map(item => `
+    <div class="p-3 bg-rpg-darker/30 rounded mb-2">
+      <div class="font-medium text-gray-200">${item.name}</div>
+      <div class="text-sm text-gray-400">Type: ${item.type || 'Unknown'}</div>
+      ${item.rarity ? `<div class="text-xs text-gray-500">Rarity: ${item.rarity}</div>` : ''}
+    </div>
+  `).join('');
+  
+  document.getElementById('encyclopedia-data-display').innerHTML = `
+    <div class="mb-4">
+      <h4 class="text-lg font-bold text-rpg-gold">Search Results (${results.length})</h4>
+      <p class="text-sm text-gray-400">Found ${results.length} results for "${searchTerm}"</p>
+    </div>
+    <div class="space-y-2">
+      ${resultsHtml}
+    </div>
+  `;
+}; 

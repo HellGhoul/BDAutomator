@@ -1,0 +1,171 @@
+{
+  "generated_at": "2025-01-27T00:00:00.000Z",
+  "dropRates": {
+    "Celestial Stone": {
+      "monsters": [
+        {
+          "name": "Ancient Behemoth",
+          "dropRate": 0.15,
+          "location": "Behemoth areas",
+          "difficulty": "hard",
+          "health": 2000000,
+          "level": 95
+        },
+        {
+          "name": "Ghost Behemoth",
+          "dropRate": 0.12,
+          "location": "Behemoth areas",
+          "difficulty": "hard",
+          "health": 1800000,
+          "level": 90
+        },
+        {
+          "name": "Hell ghoul",
+          "dropRate": 0.08,
+          "location": "Hell areas",
+          "difficulty": "medium",
+          "health": 1200000,
+          "level": 85
+        }
+      ]
+    },
+    "Damned Fortune": {
+      "monsters": [
+        {
+          "name": "Hell ghoul",
+          "dropRate": 0.10,
+          "location": "Hell areas",
+          "difficulty": "medium",
+          "health": 1200000,
+          "level": 85
+        },
+        {
+          "name": "Demon Lord",
+          "dropRate": 0.18,
+          "location": "Demon areas",
+          "difficulty": "hard",
+          "health": 2500000,
+          "level": 100
+        }
+      ]
+    },
+    "Ring": {
+      "monsters": [
+        {
+          "name": "Ring Guardian",
+          "dropRate": 0.25,
+          "location": "Ring areas",
+          "difficulty": "easy",
+          "health": 800000,
+          "level": 75
+        },
+        {
+          "name": "Jewel Master",
+          "dropRate": 0.20,
+          "location": "Jewel areas",
+          "difficulty": "medium",
+          "health": 1500000,
+          "level": 80
+        }
+      ]
+    },
+    "Shield": {
+      "monsters": [
+        {
+          "name": "Shield Bearer",
+          "dropRate": 0.22,
+          "location": "Shield areas",
+          "difficulty": "medium",
+          "health": 1400000,
+          "level": 82
+        },
+        {
+          "name": "Defender",
+          "dropRate": 0.18,
+          "location": "Defense areas",
+          "difficulty": "medium",
+          "health": 1600000,
+          "level": 85
+        }
+      ]
+    },
+    "Hell ghoul's (III) Celestial Stone": {
+      "monsters": [
+        {
+          "name": "Hell ghoul (III)",
+          "dropRate": 0.05,
+          "location": "Hell areas",
+          "difficulty": "hard",
+          "health": 2000000,
+          "level": 95
+        }
+      ]
+    }
+  },
+  "monsterDifficulty": {
+    "easy": {
+      "healthRange": [500000, 1000000],
+      "levelRange": [60, 80],
+      "risk": "low",
+      "recommendedHealth": 800000
+    },
+    "medium": {
+      "healthRange": [1000000, 2000000],
+      "levelRange": [80, 95],
+      "risk": "medium",
+      "recommendedHealth": 1500000
+    },
+    "hard": {
+      "healthRange": [2000000, 5000000],
+      "levelRange": [95, 120],
+      "risk": "high",
+      "recommendedHealth": 3000000
+    }
+  },
+  "farmingHistory": [
+    {
+      "timestamp": "2025-01-26T23:00:00.000Z",
+      "monster": "Ancient Behemoth",
+      "location": "Behemoth areas",
+      "duration": 45,
+      "drops": ["Celestial Stone"],
+      "success": true,
+      "healthLost": 200000
+    },
+    {
+      "timestamp": "2025-01-26T22:00:00.000Z",
+      "monster": "Hell ghoul",
+      "location": "Hell areas",
+      "duration": 30,
+      "drops": ["Damned Fortune"],
+      "success": true,
+      "healthLost": 150000
+    }
+  ],
+  "locationEfficiency": {
+    "Behemoth areas": {
+      "averageTime": 40,
+      "successRate": 0.85,
+      "riskLevel": "medium",
+      "recommendedLevel": 90
+    },
+    "Hell areas": {
+      "averageTime": 25,
+      "successRate": 0.90,
+      "riskLevel": "low",
+      "recommendedLevel": 85
+    },
+    "Ring areas": {
+      "averageTime": 20,
+      "successRate": 0.95,
+      "riskLevel": "low",
+      "recommendedLevel": 75
+    },
+    "Shield areas": {
+      "averageTime": 30,
+      "successRate": 0.88,
+      "riskLevel": "low",
+      "recommendedLevel": 80
+    }
+  }
+} 
