@@ -1,6 +1,6 @@
 {
-  "generated_at": "2025-08-27T17:14:59.653Z",
-  "total_records": 988,
+  "generated_at": "2025-08-27T17:21:16.153Z",
+  "total_records": 1024,
   "dependencies": {
     "title_1756183472672_efa3h696b": {
       "id": "title_1756183472672_efa3h696b",
@@ -102,9 +102,9 @@
       ],
       "complexity": 5
     },
-    "title_1756183916565_n56vjd1ua": {
-      "id": "title_1756183916565_n56vjd1ua",
-      "name": "Ogre Mage's ...",
+    "title_1756183933724_c69vum6y9": {
+      "id": "title_1756183933724_c69vum6y9",
+      "name": "Ogre's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -135,7 +135,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183916565_n56vjd1ua",
+        "title_1756183933724_c69vum6y9",
         "item_1756312822031_lnw38rq3h",
         "title_1756183472672_efa3h696b",
         "item_1756312934673_eo9qy4ef1"
@@ -187,9 +187,9 @@
       ],
       "complexity": 3
     },
-    "title_1756184054385_w3wc2yiwp": {
-      "id": "title_1756184054385_w3wc2yiwp",
-      "name": "Skeleton King's ...",
+    "title_1756184057794_4o5rquzup": {
+      "id": "title_1756184057794_4o5rquzup",
+      "name": "Skeleton's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -211,9 +211,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756184054385_w3wc2yiwp",
+        "title_1756184057794_4o5rquzup",
         "item_1756312857546_h10hjw4wk",
-        "title_1756184054385_w3wc2yiwp",
+        "title_1756184057794_4o5rquzup",
         "item_1756312857546_h10hjw4wk"
       ],
       "complexity": 2
@@ -254,9 +254,9 @@
       ],
       "complexity": 5
     },
-    "title_1756183772315_95822c0ak": {
-      "id": "title_1756183772315_95822c0ak",
-      "name": "Infernal Troglodyte's ...",
+    "title_1756184135758_39gditmfi": {
+      "id": "title_1756184135758_39gditmfi",
+      "name": "Troglodyte's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -277,7 +277,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183772315_95822c0ak",
+        "title_1756184135758_39gditmfi",
         "item_1756312805258_fscx1exed",
         "title_1756183959569_lop4296xn",
         "item_1756312805258_fscx1exed"
@@ -329,7 +329,7 @@
       "children": [
         "title_1756183875787_yenu3rzcg",
         "item_1756312709177_34sx80k1y",
-        "title_1756184054385_w3wc2yiwp",
+        "title_1756184057794_4o5rquzup",
         "item_1756312709177_34sx80k1y"
       ],
       "complexity": 8
@@ -345,9 +345,9 @@
       ],
       "complexity": 9
     },
-    "title_1756183412905_pe2afw962": {
-      "id": "title_1756183412905_pe2afw962",
-      "name": "Blood Minotaur's ...",
+    "title_1756183877434_cu7sap6sn": {
+      "id": "title_1756183877434_cu7sap6sn",
+      "name": "Minotaur's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -386,7 +386,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183412905_pe2afw962",
+        "title_1756183877434_cu7sap6sn",
         "item_1756312723206_6r6lhzn58",
         "title_1756183553587_ll14l683w",
         "item_1756312816488_yh3slsqpz"
@@ -404,9 +404,9 @@
       ],
       "complexity": 3
     },
-    "title_1756183358980_t5t1ghj7b": {
-      "id": "title_1756183358980_t5t1ghj7b",
-      "name": "Assassin's ... (I)",
+    "title_1756183363376_unhzdr27p": {
+      "id": "title_1756183363376_unhzdr27p",
+      "name": "Assassin's ... (V)",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -437,9 +437,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183358980_t5t1ghj7b",
+        "title_1756183363376_unhzdr27p",
         "item_1756312730266_8jpqn6rhj",
-        "title_1756183358980_t5t1ghj7b",
+        "title_1756183363376_unhzdr27p",
         "item_1756312778097_ofc7bcd6c"
       ],
       "complexity": 2
@@ -488,9 +488,9 @@
       ],
       "complexity": 5
     },
-    "title_1756183395848_2axaojjny": {
-      "id": "title_1756183395848_2axaojjny",
-      "name": "Battle Dwarf's ...",
+    "title_1756183544229_f81n4th92": {
+      "id": "title_1756183544229_f81n4th92",
+      "name": "Dwarf's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -512,7 +512,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183395848_2axaojjny",
+        "title_1756183544229_f81n4th92",
         "item_1756019175288_sfh0cgwjk"
       ],
       "complexity": 2
@@ -528,9 +528,9 @@
       ],
       "complexity": 3
     },
-    "title_1756183871099_eje3klb54": {
-      "id": "title_1756183871099_eje3klb54",
-      "name": "Mighty Gorgons king's ...",
+    "title_1756183872782_gk2lo56s5": {
+      "id": "title_1756183872782_gk2lo56s5",
+      "name": "Mighty gorgon's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -552,7 +552,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183871099_eje3klb54",
+        "title_1756183872782_gk2lo56s5",
         "item_1756019175277_sfh0cgwjk"
       ],
       "complexity": 2
@@ -568,9 +568,9 @@
       ],
       "complexity": 3
     },
-    "title_1756183375838_t5mkwh2cr": {
-      "id": "title_1756183375838_t5mkwh2cr",
-      "name": "Barbarian Santa's ...",
+    "title_1756183391244_zuoa4u5wd": {
+      "id": "title_1756183391244_zuoa4u5wd",
+      "name": "Barbarian's ... (V)",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -592,7 +592,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183375838_t5mkwh2cr",
+        "title_1756183391244_zuoa4u5wd",
         "item_1756312822031_lnw38rq3h",
         "title_1756183480324_ub6nzbt2m",
         "item_1756312800465_i5xhqpi6l"
@@ -610,9 +610,9 @@
       ],
       "complexity": 3
     },
-    "title_1756183892524_61e5396e6": {
-      "id": "title_1756183892524_61e5396e6",
-      "name": "Necromancer's ... (I)",
+    "title_1756183899514_66cinf2en": {
+      "id": "title_1756183899514_66cinf2en",
+      "name": "Necromancer's ... (V)",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -643,7 +643,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183892524_61e5396e6",
+        "title_1756183899514_66cinf2en",
         "item_1756312768007_nowqum75v",
         "title_1756183875787_yenu3rzcg",
         "item_1756312995228_jwdypohbv"
@@ -832,6 +832,198 @@
       "children": [],
       "complexity": 1
     },
+    "title_1756183492624_rlqj41j3y": {
+      "id": "title_1756183492624_rlqj41j3y",
+      "name": "Demon king's (III) ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "title_1756183948375_l6nyxo3wq": {
+      "id": "title_1756183948375_l6nyxo3wq",
+      "name": "Paladin's ... (VII)",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "title_1756183882623_7p8oe3nny": {
+      "id": "title_1756183882623_7p8oe3nny",
+      "name": "Monk's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756312841436_9cc7xl0bs": {
+      "id": "item_1756312841436_9cc7xl0bs",
+      "name": "Holy sword",
+      "type": "Weapon",
+      "isLegendary": false,
+      "nodeType": "base_item",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756314156894_ye4vkjwlf": {
+      "id": "item_1756314156894_ye4vkjwlf",
+      "name": "Recipe of Heirloom sword",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756312815486_fr2vd78a2",
+        "title_1756183882623_7p8oe3nny",
+        "item_1756312841436_9cc7xl0bs"
+      ],
+      "complexity": 2
+    },
+    "item_1756312833046_k7dwvk2h1": {
+      "id": "item_1756312833046_k7dwvk2h1",
+      "name": "Heirloom sword",
+      "type": "Weapon",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314156894_ye4vkjwlf"
+      ],
+      "complexity": 3
+    },
+    "item_1756312959718_vrsk0ftig": {
+      "id": "item_1756312959718_vrsk0ftig",
+      "name": "The patriarch",
+      "type": "Weapon",
+      "isLegendary": false,
+      "nodeType": "base_item",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756314120246_0mrioawhp": {
+      "id": "item_1756314120246_0mrioawhp",
+      "name": "Recipe of Frostheim",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183882623_7p8oe3nny",
+        "item_1756312833046_k7dwvk2h1",
+        "title_1756183472672_efa3h696b",
+        "item_1756312959718_vrsk0ftig"
+      ],
+      "complexity": 4
+    },
+    "item_1756312807309_mbebcdqlg": {
+      "id": "item_1756312807309_mbebcdqlg",
+      "name": "Frostheim",
+      "type": "Weapon",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314120246_0mrioawhp"
+      ],
+      "complexity": 5
+    },
+    "item_1756314350413_d4s3kj3wg": {
+      "id": "item_1756314350413_d4s3kj3wg",
+      "name": "Recipe of The Onslaught Flame",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183882623_7p8oe3nny",
+        "item_1756312807309_mbebcdqlg",
+        "title_1756183472672_efa3h696b",
+        "item_1756312807309_mbebcdqlg"
+      ],
+      "complexity": 6
+    },
+    "item_1756312958716_7hy1xkdrb": {
+      "id": "item_1756312958716_7hy1xkdrb",
+      "name": "The Onslaught Flame",
+      "type": "Weapon",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314350413_d4s3kj3wg"
+      ],
+      "complexity": 7
+    },
+    "item_1756314339246_sr87c8lv4": {
+      "id": "item_1756314339246_sr87c8lv4",
+      "name": "Recipe of The Inferno",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183472672_efa3h696b",
+        "item_1756312807309_mbebcdqlg",
+        "title_1756183472672_efa3h696b",
+        "item_1756312958716_7hy1xkdrb"
+      ],
+      "complexity": 8
+    },
+    "item_1756312950967_d4zcsg0sj": {
+      "id": "item_1756312950967_d4zcsg0sj",
+      "name": "The Inferno",
+      "type": "Weapon",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314339246_sr87c8lv4"
+      ],
+      "complexity": 9
+    },
+    "item_1756314348406_zeittb17j": {
+      "id": "item_1756314348406_zeittb17j",
+      "name": "Recipe of The Light Bringer",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183882623_7p8oe3nny",
+        "item_1756312807309_mbebcdqlg",
+        "title_1756183882623_7p8oe3nny",
+        "item_1756312958716_7hy1xkdrb"
+      ],
+      "complexity": 8
+    },
+    "item_1756312956712_dutpw34w4": {
+      "id": "item_1756312956712_dutpw34w4",
+      "name": "The Light Bringer",
+      "type": "Weapon",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314348406_zeittb17j"
+      ],
+      "complexity": 9
+    },
+    "item_1756314274125_ot83hajjx": {
+      "id": "item_1756314274125_ot83hajjx",
+      "name": "Recipe of Ritual Sculptor",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183948375_l6nyxo3wq",
+        "item_1756312950967_d4zcsg0sj",
+        "title_1756183472672_efa3h696b",
+        "item_1756312956712_dutpw34w4"
+      ],
+      "complexity": 10
+    },
+    "item_1756312903622_pzgehwfnl": {
+      "id": "item_1756312903622_pzgehwfnl",
+      "name": "Ritual Sculptor",
+      "type": "Weapon",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314274125_ot83hajjx"
+      ],
+      "complexity": 11
+    },
     "item_1756314012821_i0x22v53r": {
       "id": "item_1756314012821_i0x22v53r",
       "name": "Recipe of Ceremonial Blade",
@@ -839,9 +1031,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183492624_rlqj41j3y",
+        "item_1756312903622_pzgehwfnl"
       ],
-      "complexity": 2
+      "complexity": 12
     },
     "item_1756312747685_loh0ea88c": {
       "id": "item_1756312747685_loh0ea88c",
@@ -852,7 +1046,7 @@
       "children": [
         "item_1756314012821_i0x22v53r"
       ],
-      "complexity": 3
+      "complexity": 13
     },
     "title_1756183453907_kxx8zifw7": {
       "id": "title_1756183453907_kxx8zifw7",
@@ -905,17 +1099,17 @@
       ],
       "complexity": 3
     },
-    "title_1756183319616_osska08yf": {
-      "id": "title_1756183319616_osska08yf",
-      "name": "Almighty Archangel's ...",
+    "title_1756183353302_ylxv5ugwb": {
+      "id": "title_1756183353302_ylxv5ugwb",
+      "name": "Archangel's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
       "complexity": 1
     },
-    "title_1756183939447_hbzd8fvo7": {
-      "id": "title_1756183939447_hbzd8fvo7",
-      "name": "Paladin's ... (I)",
+    "title_1756183944911_3kmoobq1p": {
+      "id": "title_1756183944911_3kmoobq1p",
+      "name": "Paladin's ... (V)",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -937,9 +1131,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183319616_osska08yf",
+        "title_1756183353302_ylxv5ugwb",
         "item_1756019175277_sfh0cgwjk",
-        "title_1756183939447_hbzd8fvo7",
+        "title_1756183944911_3kmoobq1p",
         "item_1756312906627_p3cbvdt1u"
       ],
       "complexity": 2
@@ -1004,7 +1198,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183412905_pe2afw962",
+        "title_1756183877434_cu7sap6sn",
         "item_1756312824472_ia0qks4q9",
         "title_1756183701214_f401egku7",
         "item_1756312768007_nowqum75v"
@@ -1022,6 +1216,14 @@
       ],
       "complexity": 3
     },
+    "title_1756183481539_cr6ry1m2r": {
+      "id": "title_1756183481539_cr6ry1m2r",
+      "name": "Cyclop's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
     "item_1756314090217_frdl0og01": {
       "id": "item_1756314090217_frdl0og01",
       "name": "Recipe of Endkindled cleaver",
@@ -1029,9 +1231,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183480324_ub6nzbt2m",
+        "title_1756183481539_cr6ry1m2r",
         "item_1756312707235_gm3iun36b",
-        "title_1756183480324_ub6nzbt2m",
+        "title_1756183481539_cr6ry1m2r",
         "item_1756312707235_gm3iun36b"
       ],
       "complexity": 2
@@ -1054,7 +1256,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756184054385_w3wc2yiwp",
+        "title_1756184057794_4o5rquzup",
         "item_1756312707235_gm3iun36b",
         "title_1756183472672_efa3h696b",
         "item_1756312792730_vjq08fgnl"
@@ -1072,9 +1274,9 @@
       ],
       "complexity": 5
     },
-    "title_1756183854185_cjjgcp7av": {
-      "id": "title_1756183854185_cjjgcp7av",
-      "name": "Medusa emperor's ...",
+    "title_1756183857727_w529uncnx": {
+      "id": "title_1756183857727_w529uncnx",
+      "name": "Medusa's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -1096,9 +1298,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183854185_cjjgcp7av",
+        "title_1756183857727_w529uncnx",
         "item_1756312748705_a3gs9pb5r",
-        "title_1756183854185_cjjgcp7av",
+        "title_1756183857727_w529uncnx",
         "item_1756312748705_a3gs9pb5r"
       ],
       "complexity": 2
@@ -1139,9 +1341,9 @@
       ],
       "complexity": 7
     },
-    "title_1756183659671_dyf35ljkw": {
-      "id": "title_1756183659671_dyf35ljkw",
-      "name": "Gnoll King's ...",
+    "title_1756183662199_12n4al42a": {
+      "id": "title_1756183662199_12n4al42a",
+      "name": "Gnoll's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -1163,9 +1365,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183659671_dyf35ljkw",
+        "title_1756183662199_12n4al42a",
         "item_1756312864247_621qd5422",
-        "title_1756183659671_dyf35ljkw",
+        "title_1756183662199_12n4al42a",
         "item_1756312864247_621qd5422"
       ],
       "complexity": 2
@@ -1190,7 +1392,7 @@
       "children": [
         "title_1756183472672_efa3h696b",
         "item_1756312760889_3g31omvi0",
-        "title_1756183854185_cjjgcp7av",
+        "title_1756183857727_w529uncnx",
         "item_1756312993168_4p4jsioln"
       ],
       "complexity": 4
@@ -1367,7 +1569,7 @@
       "children": [
         "title_1756183472672_efa3h696b",
         "item_1756312848531_y3k3ve0n4",
-        "title_1756184054385_w3wc2yiwp",
+        "title_1756184057794_4o5rquzup",
         "item_1756312857546_h10hjw4wk"
       ],
       "complexity": 4
@@ -1383,6 +1585,114 @@
       ],
       "complexity": 5
     },
+    "title_1756183365738_oe0uix16n": {
+      "id": "title_1756183365738_oe0uix16n",
+      "name": "Assassin's ... (VII)",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756314332381_nnsw1yf4f": {
+      "id": "item_1756314332381_nnsw1yf4f",
+      "name": "Recipe of The Fourth Wind",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183875787_yenu3rzcg",
+        "item_1756312704107_0ygj3rq5g",
+        "title_1756183472672_efa3h696b",
+        "item_1756312704107_0ygj3rq5g"
+      ],
+      "complexity": 6
+    },
+    "item_1756312947694_ryfdfxzcj": {
+      "id": "item_1756312947694_ryfdfxzcj",
+      "name": "The Fourth Wind",
+      "type": "Weapon",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314332381_nnsw1yf4f"
+      ],
+      "complexity": 7
+    },
+    "item_1756314331247_yh9lpz0z1": {
+      "id": "item_1756314331247_yh9lpz0z1",
+      "name": "Recipe of The Fourth Soul",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183875787_yenu3rzcg",
+        "item_1756312704107_0ygj3rq5g",
+        "title_1756183875787_yenu3rzcg",
+        "item_1756312947694_ryfdfxzcj"
+      ],
+      "complexity": 8
+    },
+    "item_1756312946376_mjs52aarw": {
+      "id": "item_1756312946376_mjs52aarw",
+      "name": "The Fourth Soul",
+      "type": "Weapon",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314331247_yh9lpz0z1"
+      ],
+      "complexity": 9
+    },
+    "item_1756314383719_ykxifb7dd": {
+      "id": "item_1756314383719_ykxifb7dd",
+      "name": "Recipe of Touch of the Sun",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756184057794_4o5rquzup",
+        "item_1756312946376_mjs52aarw",
+        "title_1756183875787_yenu3rzcg",
+        "item_1756312946376_mjs52aarw"
+      ],
+      "complexity": 10
+    },
+    "item_1756312974121_masz3lrkn": {
+      "id": "item_1756312974121_masz3lrkn",
+      "name": "Touch of the Sun",
+      "type": "Weapon",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314383719_ykxifb7dd"
+      ],
+      "complexity": 11
+    },
+    "item_1756314376316_fkhjza9h8": {
+      "id": "item_1756314376316_fkhjza9h8",
+      "name": "Recipe of Thirsty Etcher",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183365738_oe0uix16n",
+        "item_1756312974121_masz3lrkn",
+        "title_1756183480324_ub6nzbt2m",
+        "item_1756312974121_masz3lrkn"
+      ],
+      "complexity": 12
+    },
+    "item_1756312967736_rozcmxegx": {
+      "id": "item_1756312967736_rozcmxegx",
+      "name": "Thirsty Etcher",
+      "type": "Weapon",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314376316_fkhjza9h8"
+      ],
+      "complexity": 13
+    },
     "item_1756314040675_10mt4y3qy": {
       "id": "item_1756314040675_10mt4y3qy",
       "name": "Recipe of Death Stinger",
@@ -1390,9 +1700,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183492624_rlqj41j3y",
+        "item_1756312967736_rozcmxegx"
       ],
-      "complexity": 2
+      "complexity": 14
     },
     "item_1756312774103_fkz6u51cz": {
       "id": "item_1756312774103_fkz6u51cz",
@@ -1403,7 +1715,7 @@
       "children": [
         "item_1756314040675_10mt4y3qy"
       ],
-      "complexity": 3
+      "complexity": 15
     },
     "item_1756314041951_2m3w1wd4j": {
       "id": "item_1756314041951_2m3w1wd4j",
@@ -1414,7 +1726,7 @@
       "children": [
         "title_1756183875787_yenu3rzcg",
         "item_1756312768997_ry64ma0pc",
-        "title_1756184054385_w3wc2yiwp",
+        "title_1756184057794_4o5rquzup",
         "item_1756312787112_791xz3sig"
       ],
       "complexity": 10
@@ -1430,9 +1742,9 @@
       ],
       "complexity": 11
     },
-    "title_1756183402308_9y6uny1wv": {
-      "id": "title_1756183402308_9y6uny1wv",
-      "name": "Black dragon's ...",
+    "title_1756183405688_yf9mgncxx": {
+      "id": "title_1756183405688_yf9mgncxx",
+      "name": "Black dragon's ... (III)",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -1455,7 +1767,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183402308_9y6uny1wv",
+        "title_1756183405688_yf9mgncxx",
         "item_1756312737036_s7gha4jn1"
       ],
       "complexity": 2
@@ -1470,14 +1782,6 @@
         "item_1756314045289_5b1zp3g4d"
       ],
       "complexity": 3
-    },
-    "title_1756183882623_7p8oe3nny": {
-      "id": "title_1756183882623_7p8oe3nny",
-      "name": "Monk's ...",
-      "type": "Title",
-      "nodeType": "title",
-      "children": [],
-      "complexity": 1
     },
     "item_1756312885591_zfph34mto": {
       "id": "item_1756312885591_zfph34mto",
@@ -1561,9 +1865,9 @@
       ],
       "complexity": 5
     },
-    "title_1756183329192_x66e3sjq1": {
-      "id": "title_1756183329192_x66e3sjq1",
-      "name": "Amazon's ... (I)",
+    "title_1756183336251_i7upj42z5": {
+      "id": "title_1756183336251_i7upj42z5",
+      "name": "Amazon's ... (VII)",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -1576,7 +1880,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183329192_x66e3sjq1",
+        "title_1756183336251_i7upj42z5",
         "item_1756312775126_joi1h68aq",
         "title_1756183472672_efa3h696b",
         "item_1756312775126_joi1h68aq"
@@ -1588,7 +1892,7 @@
       "name": "Doomfletch",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756314056701_ygp3dr22q"
       ],
@@ -1696,7 +2000,7 @@
       "children": [
         "title_1756183472672_efa3h696b",
         "item_1756312945165_n3uvmkdnd",
-        "title_1756184054385_w3wc2yiwp",
+        "title_1756184057794_4o5rquzup",
         "item_1756312945165_n3uvmkdnd"
       ],
       "complexity": 4
@@ -1719,9 +2023,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756184054385_w3wc2yiwp",
+        "title_1756184057794_4o5rquzup",
         "item_1756312945165_n3uvmkdnd",
-        "title_1756184054385_w3wc2yiwp",
+        "title_1756184057794_4o5rquzup",
         "item_1756312961723_8s4vu3uub"
       ],
       "complexity": 6
@@ -1769,9 +2073,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756184054385_w3wc2yiwp",
+        "title_1756184057794_4o5rquzup",
         "item_1756312961723_8s4vu3uub",
-        "title_1756183854185_cjjgcp7av",
+        "title_1756183857727_w529uncnx",
         "item_1756312961723_8s4vu3uub"
       ],
       "complexity": 6
@@ -1804,7 +2108,7 @@
       "children": [
         "title_1756183437988_wh7y7w9k1",
         "item_1756312857546_h10hjw4wk",
-        "title_1756184054385_w3wc2yiwp",
+        "title_1756184057794_4o5rquzup",
         "item_1756312857546_h10hjw4wk"
       ],
       "complexity": 2
@@ -1827,9 +2131,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756184054385_w3wc2yiwp",
+        "title_1756184057794_4o5rquzup",
         "item_1756312744815_wfglivk2v",
-        "title_1756184054385_w3wc2yiwp",
+        "title_1756184057794_4o5rquzup",
         "item_1756312930668_3fow4jz95"
       ],
       "complexity": 4
@@ -1946,7 +2250,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756184054385_w3wc2yiwp",
+        "title_1756184057794_4o5rquzup",
         "item_1756312908629_iqcb1osoi",
         "title_1756183875787_yenu3rzcg",
         "item_1756312908629_iqcb1osoi"
@@ -2006,7 +2310,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183402308_9y6uny1wv",
+        "title_1756183405688_yf9mgncxx",
         "item_1756312870258_s7j5uh74d"
       ],
       "complexity": 2
@@ -2136,7 +2440,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756184054385_w3wc2yiwp",
+        "title_1756184057794_4o5rquzup",
         "item_1756312927661_4x4vr7e4u",
         "title_1756183531160_pk8k0req6",
         "item_1756312976135_3l176qprs"
@@ -2153,74 +2457,6 @@
         "item_1756314119217_qz70j8wqa"
       ],
       "complexity": 3
-    },
-    "item_1756312841436_9cc7xl0bs": {
-      "id": "item_1756312841436_9cc7xl0bs",
-      "name": "Holy sword",
-      "type": "Weapon",
-      "isLegendary": false,
-      "nodeType": "base_item",
-      "children": [],
-      "complexity": 1
-    },
-    "item_1756314156894_ye4vkjwlf": {
-      "id": "item_1756314156894_ye4vkjwlf",
-      "name": "Recipe of Heirloom sword",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183472672_efa3h696b",
-        "item_1756312815486_fr2vd78a2",
-        "title_1756183882623_7p8oe3nny",
-        "item_1756312841436_9cc7xl0bs"
-      ],
-      "complexity": 2
-    },
-    "item_1756312833046_k7dwvk2h1": {
-      "id": "item_1756312833046_k7dwvk2h1",
-      "name": "Heirloom sword",
-      "type": "Weapon",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314156894_ye4vkjwlf"
-      ],
-      "complexity": 3
-    },
-    "item_1756312959718_vrsk0ftig": {
-      "id": "item_1756312959718_vrsk0ftig",
-      "name": "The patriarch",
-      "type": "Weapon",
-      "isLegendary": false,
-      "nodeType": "base_item",
-      "children": [],
-      "complexity": 1
-    },
-    "item_1756314120246_0mrioawhp": {
-      "id": "item_1756314120246_0mrioawhp",
-      "name": "Recipe of Frostheim",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183882623_7p8oe3nny",
-        "item_1756312833046_k7dwvk2h1",
-        "title_1756183472672_efa3h696b",
-        "item_1756312959718_vrsk0ftig"
-      ],
-      "complexity": 4
-    },
-    "item_1756312807309_mbebcdqlg": {
-      "id": "item_1756312807309_mbebcdqlg",
-      "name": "Frostheim",
-      "type": "Weapon",
-      "isLegendary": true,
-      "nodeType": "base_item",
-      "children": [
-        "item_1756314120246_0mrioawhp"
-      ],
-      "complexity": 5
     },
     "item_1756314217413_x38jp3w2r": {
       "id": "item_1756314217413_x38jp3w2r",
@@ -2247,9 +2483,9 @@
       ],
       "complexity": 5
     },
-    "title_1756183716191_vudmylq5a": {
-      "id": "title_1756183716191_vudmylq5a",
-      "name": "Harpy Hag's ...",
+    "title_1756183717727_0l7qyslf4": {
+      "id": "title_1756183717727_0l7qyslf4",
+      "name": "Harpy's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -2262,9 +2498,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756184054385_w3wc2yiwp",
+        "title_1756184057794_4o5rquzup",
         "item_1756312792730_vjq08fgnl",
-        "title_1756183716191_vudmylq5a",
+        "title_1756183717727_0l7qyslf4",
         "item_1756312805258_fscx1exed"
       ],
       "complexity": 4
@@ -2330,6 +2566,14 @@
       ],
       "complexity": 5
     },
+    "title_1756183393549_uclbuctao": {
+      "id": "title_1756183393549_uclbuctao",
+      "name": "Barbarian's ... (VII)",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
     "item_1756314336025_p4pex75bn": {
       "id": "item_1756314336025_p4pex75bn",
       "name": "Recipe of The Immortal",
@@ -2362,7 +2606,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183375838_t5mkwh2cr",
+        "title_1756183393549_uclbuctao",
         "item_1756312949965_jzird2xwl",
         "title_1756183480324_ub6nzbt2m",
         "item_1756312949965_jzird2xwl"
@@ -2374,15 +2618,15 @@
       "name": "Godslayer",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756314129927_y1cwcpu8i"
       ],
       "complexity": 7
     },
-    "title_1756183351139_6kibfjqmp": {
-      "id": "title_1756183351139_6kibfjqmp",
-      "name": "Arch Magis leader's ...",
+    "title_1756183832789_dptav6552": {
+      "id": "title_1756183832789_dptav6552",
+      "name": "Magi's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -2404,9 +2648,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183351139_6kibfjqmp",
+        "title_1756183832789_dptav6552",
         "item_1756312879579_kxezzx9yz",
-        "title_1756183351139_6kibfjqmp",
+        "title_1756183832789_dptav6552",
         "item_1756312879579_kxezzx9yz"
       ],
       "complexity": 2
@@ -2446,7 +2690,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183916565_n56vjd1ua",
+        "title_1756183933724_c69vum6y9",
         "item_1756312944117_lp3a450x6",
         "title_1756183663676_24m1kh6zj",
         "item_1756312957713_2bble0r54"
@@ -2481,7 +2725,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183402308_9y6uny1wv",
+        "title_1756183405688_yf9mgncxx",
         "item_1756312871261_u5lu7fck6"
       ],
       "complexity": 2
@@ -2539,6 +2783,14 @@
       ],
       "complexity": 3
     },
+    "title_1756183439153_c9uc87asc": {
+      "id": "title_1756183439153_c9uc87asc",
+      "name": "Centaur's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
     "item_1756314150359_zrr6c1dg9": {
       "id": "item_1756314150359_zrr6c1dg9",
       "name": "Recipe of Hands of the North",
@@ -2548,7 +2800,7 @@
       "children": [
         "title_1756183437988_wh7y7w9k1",
         "item_1756312809803_bgmra90zn",
-        "title_1756183437988_wh7y7w9k1",
+        "title_1756183439153_c9uc87asc",
         "item_1756312809803_bgmra90zn"
       ],
       "complexity": 6
@@ -2564,9 +2816,9 @@
       ],
       "complexity": 7
     },
-    "title_1756183754685_bdxkftnsm": {
-      "id": "title_1756183754685_bdxkftnsm",
-      "name": "Horror Dragon's ...",
+    "title_1756183757194_vwc09u3fj": {
+      "id": "title_1756183757194_vwc09u3fj",
+      "name": "Horror Dragon's ... (III)",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -2589,7 +2841,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183754685_bdxkftnsm",
+        "title_1756183757194_vwc09u3fj",
         "item_1756312849905_zf57333bl"
       ],
       "complexity": 2
@@ -2612,9 +2864,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183492624_rlqj41j3y",
+        "item_1756312780048_5bv07vr5r"
       ],
-      "complexity": 2
+      "complexity": 14
     },
     "item_1756312836053_01diz8fl6": {
       "id": "item_1756312836053_01diz8fl6",
@@ -2625,11 +2879,11 @@
       "children": [
         "item_1756314159303_f9cjd58ew"
       ],
-      "complexity": 3
+      "complexity": 15
     },
-    "title_1756183408124_ldyzzeqll": {
-      "id": "title_1756183408124_ldyzzeqll",
-      "name": "Blight Druid's ...",
+    "title_1756183542190_hz2ifei4x": {
+      "id": "title_1756183542190_hz2ifei4x",
+      "name": "Druid's ... (VII)",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -2644,7 +2898,7 @@
       "children": [
         "title_1756183472672_efa3h696b",
         "item_1756312789882_aydkcv1ap",
-        "title_1756183408124_ldyzzeqll",
+        "title_1756183542190_hz2ifei4x",
         "item_1756312789882_aydkcv1ap"
       ],
       "complexity": 8
@@ -2654,7 +2908,7 @@
       "name": "Hopeshredder",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756314169366_vk847yd7n"
       ],
@@ -2711,7 +2965,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183754685_bdxkftnsm",
+        "title_1756183757194_vwc09u3fj",
         "item_1756312989771_a1rahwr6x"
       ],
       "complexity": 2
@@ -2752,9 +3006,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183892524_61e5396e6",
+        "title_1756183899514_66cinf2en",
         "item_1756312785073_64o4y7v3n",
-        "title_1756183375838_t5mkwh2cr",
+        "title_1756183391244_zuoa4u5wd",
         "item_1756312745760_9gmtg1t63"
       ],
       "complexity": 2
@@ -2787,7 +3041,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183402308_9y6uny1wv",
+        "title_1756183405688_yf9mgncxx",
         "item_1756312855544_n8qgbh228"
       ],
       "complexity": 2
@@ -2869,9 +3123,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183492624_rlqj41j3y",
+        "item_1756312842439_9o5q7hw3f"
       ],
-      "complexity": 2
+      "complexity": 10
     },
     "item_1756312883587_8hxfplkne": {
       "id": "item_1756312883587_8hxfplkne",
@@ -2882,7 +3138,7 @@
       "children": [
         "item_1756314210397_qr5dzspw2"
       ],
-      "complexity": 3
+      "complexity": 11
     },
     "item_1756314216023_pxeg6j3dg": {
       "id": "item_1756314216023_pxeg6j3dg",
@@ -2966,9 +3222,9 @@
       ],
       "complexity": 3
     },
-    "title_1756184005959_kp784ujoy": {
-      "id": "title_1756184005959_kp784ujoy",
-      "name": "Royal Dragon's ...",
+    "title_1756184009567_z221i6mvv": {
+      "id": "title_1756184009567_z221i6mvv",
+      "name": "Royal Dragon's ... (III)",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -2991,7 +3247,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756184005959_kp784ujoy",
+        "title_1756184009567_z221i6mvv",
         "item_1756312853539_148tvetsd"
       ],
       "complexity": 2
@@ -3007,6 +3263,31 @@
       ],
       "complexity": 3
     },
+    "item_1756314280136_aqvvmyh27": {
+      "id": "item_1756314280136_aqvvmyh27",
+      "name": "Recipe of Savagery",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183365738_oe0uix16n",
+        "item_1756312974121_masz3lrkn",
+        "title_1756183875787_yenu3rzcg",
+        "item_1756312974121_masz3lrkn"
+      ],
+      "complexity": 12
+    },
+    "item_1756312905624_l1s9f2dk6": {
+      "id": "item_1756312905624_l1s9f2dk6",
+      "name": "Savagery",
+      "type": "Weapon",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314280136_aqvvmyh27"
+      ],
+      "complexity": 13
+    },
     "item_1756314238067_mv1g5nmp3": {
       "id": "item_1756314238067_mv1g5nmp3",
       "name": "Recipe of Phantasma Soul",
@@ -3014,9 +3295,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183492624_rlqj41j3y",
+        "item_1756312905624_l1s9f2dk6"
       ],
-      "complexity": 2
+      "complexity": 14
     },
     "item_1756312894606_ww5xx4053": {
       "id": "item_1756312894606_ww5xx4053",
@@ -3027,7 +3310,7 @@
       "children": [
         "item_1756314238067_mv1g5nmp3"
       ],
-      "complexity": 3
+      "complexity": 15
     },
     "item_1756312918327_z29v3ltlg": {
       "id": "item_1756312918327_z29v3ltlg",
@@ -3045,9 +3328,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183916565_n56vjd1ua",
+        "title_1756183933724_c69vum6y9",
         "item_1756312918327_z29v3ltlg",
-        "title_1756183916565_n56vjd1ua",
+        "title_1756183933724_c69vum6y9",
         "item_1756312918327_z29v3ltlg"
       ],
       "complexity": 2
@@ -3081,7 +3364,7 @@
       "children": [
         "title_1756183875787_yenu3rzcg",
         "item_1756312824472_ia0qks4q9",
-        "title_1756183939447_hbzd8fvo7",
+        "title_1756183944911_3kmoobq1p",
         "item_1756312722182_pu0y3dv28"
       ],
       "complexity": 2
@@ -3113,9 +3396,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183375838_t5mkwh2cr",
+        "title_1756183391244_zuoa4u5wd",
         "item_1756312822031_lnw38rq3h",
-        "title_1756183375838_t5mkwh2cr",
+        "title_1756183391244_zuoa4u5wd",
         "item_1756312856544_8ru6jo7cu"
       ],
       "complexity": 2
@@ -3165,206 +3448,6 @@
       ],
       "complexity": 3
     },
-    "item_1756314350413_d4s3kj3wg": {
-      "id": "item_1756314350413_d4s3kj3wg",
-      "name": "Recipe of The Onslaught Flame",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183882623_7p8oe3nny",
-        "item_1756312807309_mbebcdqlg",
-        "title_1756183472672_efa3h696b",
-        "item_1756312807309_mbebcdqlg"
-      ],
-      "complexity": 6
-    },
-    "item_1756312958716_7hy1xkdrb": {
-      "id": "item_1756312958716_7hy1xkdrb",
-      "name": "The Onslaught Flame",
-      "type": "Weapon",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314350413_d4s3kj3wg"
-      ],
-      "complexity": 7
-    },
-    "item_1756314339246_sr87c8lv4": {
-      "id": "item_1756314339246_sr87c8lv4",
-      "name": "Recipe of The Inferno",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183472672_efa3h696b",
-        "item_1756312807309_mbebcdqlg",
-        "title_1756183472672_efa3h696b",
-        "item_1756312958716_7hy1xkdrb"
-      ],
-      "complexity": 8
-    },
-    "item_1756312950967_d4zcsg0sj": {
-      "id": "item_1756312950967_d4zcsg0sj",
-      "name": "The Inferno",
-      "type": "Weapon",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314339246_sr87c8lv4"
-      ],
-      "complexity": 9
-    },
-    "item_1756314348406_zeittb17j": {
-      "id": "item_1756314348406_zeittb17j",
-      "name": "Recipe of The Light Bringer",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183882623_7p8oe3nny",
-        "item_1756312807309_mbebcdqlg",
-        "title_1756183882623_7p8oe3nny",
-        "item_1756312958716_7hy1xkdrb"
-      ],
-      "complexity": 8
-    },
-    "item_1756312956712_dutpw34w4": {
-      "id": "item_1756312956712_dutpw34w4",
-      "name": "The Light Bringer",
-      "type": "Weapon",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314348406_zeittb17j"
-      ],
-      "complexity": 9
-    },
-    "item_1756314274125_ot83hajjx": {
-      "id": "item_1756314274125_ot83hajjx",
-      "name": "Recipe of Ritual Sculptor",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183939447_hbzd8fvo7",
-        "item_1756312950967_d4zcsg0sj",
-        "title_1756183472672_efa3h696b",
-        "item_1756312956712_dutpw34w4"
-      ],
-      "complexity": 10
-    },
-    "item_1756312903622_pzgehwfnl": {
-      "id": "item_1756312903622_pzgehwfnl",
-      "name": "Ritual Sculptor",
-      "type": "Weapon",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314274125_ot83hajjx"
-      ],
-      "complexity": 11
-    },
-    "item_1756314332381_nnsw1yf4f": {
-      "id": "item_1756314332381_nnsw1yf4f",
-      "name": "Recipe of The Fourth Wind",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183875787_yenu3rzcg",
-        "item_1756312704107_0ygj3rq5g",
-        "title_1756183472672_efa3h696b",
-        "item_1756312704107_0ygj3rq5g"
-      ],
-      "complexity": 6
-    },
-    "item_1756312947694_ryfdfxzcj": {
-      "id": "item_1756312947694_ryfdfxzcj",
-      "name": "The Fourth Wind",
-      "type": "Weapon",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314332381_nnsw1yf4f"
-      ],
-      "complexity": 7
-    },
-    "item_1756314331247_yh9lpz0z1": {
-      "id": "item_1756314331247_yh9lpz0z1",
-      "name": "Recipe of The Fourth Soul",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183875787_yenu3rzcg",
-        "item_1756312704107_0ygj3rq5g",
-        "title_1756183875787_yenu3rzcg",
-        "item_1756312947694_ryfdfxzcj"
-      ],
-      "complexity": 8
-    },
-    "item_1756312946376_mjs52aarw": {
-      "id": "item_1756312946376_mjs52aarw",
-      "name": "The Fourth Soul",
-      "type": "Weapon",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314331247_yh9lpz0z1"
-      ],
-      "complexity": 9
-    },
-    "item_1756314383719_ykxifb7dd": {
-      "id": "item_1756314383719_ykxifb7dd",
-      "name": "Recipe of Touch of the Sun",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756184054385_w3wc2yiwp",
-        "item_1756312946376_mjs52aarw",
-        "title_1756183875787_yenu3rzcg",
-        "item_1756312946376_mjs52aarw"
-      ],
-      "complexity": 10
-    },
-    "item_1756312974121_masz3lrkn": {
-      "id": "item_1756312974121_masz3lrkn",
-      "name": "Touch of the Sun",
-      "type": "Weapon",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314383719_ykxifb7dd"
-      ],
-      "complexity": 11
-    },
-    "item_1756314280136_aqvvmyh27": {
-      "id": "item_1756314280136_aqvvmyh27",
-      "name": "Recipe of Savagery",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183358980_t5t1ghj7b",
-        "item_1756312974121_masz3lrkn",
-        "title_1756183875787_yenu3rzcg",
-        "item_1756312974121_masz3lrkn"
-      ],
-      "complexity": 12
-    },
-    "item_1756312905624_l1s9f2dk6": {
-      "id": "item_1756312905624_l1s9f2dk6",
-      "name": "Savagery",
-      "type": "Weapon",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314280136_aqvvmyh27"
-      ],
-      "complexity": 13
-    },
     "item_1756314284893_m8qc1gu91": {
       "id": "item_1756314284893_m8qc1gu91",
       "name": "Recipe of Shadow assassin blade",
@@ -3372,9 +3455,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183358980_t5t1ghj7b",
+        "title_1756183363376_unhzdr27p",
         "item_1756312730266_8jpqn6rhj",
-        "title_1756183358980_t5t1ghj7b",
+        "title_1756183363376_unhzdr27p",
         "item_1756312943094_c7p1betb7"
       ],
       "complexity": 2
@@ -3406,7 +3489,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183716191_vudmylq5a",
+        "title_1756183717727_0l7qyslf4",
         "item_1756312822031_lnw38rq3h",
         "title_1756183472672_efa3h696b",
         "item_1756312982759_6rsbp3hvq"
@@ -3516,7 +3599,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183402308_9y6uny1wv",
+        "title_1756183405688_yf9mgncxx",
         "item_1756312925656_ywooq2ecs"
       ],
       "complexity": 2
@@ -3539,9 +3622,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183492624_rlqj41j3y",
+        "item_1756312817489_pvme6poni"
       ],
-      "complexity": 2
+      "complexity": 8
     },
     "item_1756312941137_f3t71xiwa": {
       "id": "item_1756312941137_f3t71xiwa",
@@ -3552,7 +3637,7 @@
       "children": [
         "item_1756314321155_xq3lxnod7"
       ],
-      "complexity": 3
+      "complexity": 9
     },
     "item_1756314342747_v7i2qxpxa": {
       "id": "item_1756314342747_v7i2qxpxa",
@@ -3563,7 +3648,7 @@
       "children": [
         "title_1756183480324_ub6nzbt2m",
         "item_1756312704107_0ygj3rq5g",
-        "title_1756184054385_w3wc2yiwp",
+        "title_1756184057794_4o5rquzup",
         "item_1756312704107_0ygj3rq5g"
       ],
       "complexity": 6
@@ -3612,6 +3697,14 @@
       ],
       "complexity": 3
     },
+    "title_1756183901877_pin7hsdvv": {
+      "id": "title_1756183901877_pin7hsdvv",
+      "name": "Necromancer's ... (VII)",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
     "item_1756314363739_x3n7vpixz": {
       "id": "item_1756314363739_x3n7vpixz",
       "name": "Recipe of The Skullcrusher",
@@ -3619,9 +3712,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756184054385_w3wc2yiwp",
+        "title_1756184057794_4o5rquzup",
         "item_1756312788950_5hkcvttar",
-        "title_1756184054385_w3wc2yiwp",
+        "title_1756184057794_4o5rquzup",
         "item_1756312790840_zkvo7saeh"
       ],
       "complexity": 4
@@ -3644,9 +3737,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183892524_61e5396e6",
+        "title_1756183901877_pin7hsdvv",
         "item_1756312964730_cf776lygp",
-        "title_1756184054385_w3wc2yiwp",
+        "title_1756184057794_4o5rquzup",
         "item_1756312964730_cf776lygp"
       ],
       "complexity": 6
@@ -3656,11 +3749,19 @@
       "name": "The Remorse",
       "type": "Weapon",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756314357820_ta4xr7xcx"
       ],
       "complexity": 7
+    },
+    "title_1756183538105_hhkvo9a9n": {
+      "id": "title_1756183538105_hhkvo9a9n",
+      "name": "Druid's ... (V)",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
     },
     "item_1756312985840_ifbbgw7cm": {
       "id": "item_1756312985840_ifbbgw7cm",
@@ -3678,9 +3779,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183408124_ldyzzeqll",
+        "title_1756183538105_hhkvo9a9n",
         "item_1756312723206_6r6lhzn58",
-        "title_1756183408124_ldyzzeqll",
+        "title_1756183538105_hhkvo9a9n",
         "item_1756312985840_ifbbgw7cm"
       ],
       "complexity": 2
@@ -3703,9 +3804,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183492624_rlqj41j3y",
+        "item_1756312960720_q51rfen1f"
       ],
-      "complexity": 2
+      "complexity": 8
     },
     "item_1756312966734_suvm109s3": {
       "id": "item_1756312966734_suvm109s3",
@@ -3716,32 +3819,7 @@
       "children": [
         "item_1756314369748_2g1xwc56o"
       ],
-      "complexity": 3
-    },
-    "item_1756314376316_fkhjza9h8": {
-      "id": "item_1756314376316_fkhjza9h8",
-      "name": "Recipe of Thirsty Etcher",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183358980_t5t1ghj7b",
-        "item_1756312974121_masz3lrkn",
-        "title_1756183480324_ub6nzbt2m",
-        "item_1756312974121_masz3lrkn"
-      ],
-      "complexity": 12
-    },
-    "item_1756312967736_rozcmxegx": {
-      "id": "item_1756312967736_rozcmxegx",
-      "name": "Thirsty Etcher",
-      "type": "Weapon",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314376316_fkhjza9h8"
-      ],
-      "complexity": 13
+      "complexity": 9
     },
     "item_1756314377766_cub5tvdia": {
       "id": "item_1756314377766_cub5tvdia",
@@ -3752,7 +3830,7 @@
       "children": [
         "title_1756183472672_efa3h696b",
         "item_1756312885591_zfph34mto",
-        "title_1756183659671_dyf35ljkw",
+        "title_1756183662199_12n4al42a",
         "item_1756312934673_eo9qy4ef1"
       ],
       "complexity": 2
@@ -3785,7 +3863,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756184005959_kp784ujoy",
+        "title_1756184009567_z221i6mvv",
         "item_1756312893293_jnxvagus7"
       ],
       "complexity": 2
@@ -3877,7 +3955,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756184005959_kp784ujoy",
+        "title_1756184009567_z221i6mvv",
         "item_1756312963728_8zjf6ezhz"
       ],
       "complexity": 2
@@ -3960,7 +4038,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183916565_n56vjd1ua",
+        "title_1756183933724_c69vum6y9",
         "item_1756313006797_nyw48e02d",
         "title_1756183453907_kxx8zifw7",
         "item_1756313010193_zo8fs287x"
@@ -3978,31 +4056,17 @@
       ],
       "complexity": 3
     },
-    "item_1756313989560_abd5qxe02": {
-      "id": "item_1756313989560_abd5qxe02",
-      "name": "Recipe of Blade Ironbark",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "item_1756019175266_sfh0cgwjk"
-      ],
-      "complexity": 2
+    "title_1756183738741_1mznzcwv6": {
+      "id": "title_1756183738741_1mznzcwv6",
+      "name": "Hell ghoul's (III) ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
     },
-    "item_1756313003620_iiuvsgs4l": {
-      "id": "item_1756313003620_iiuvsgs4l",
-      "name": "Blade Ironbark",
-      "type": "Shield",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756313989560_abd5qxe02"
-      ],
-      "complexity": 3
-    },
-    "title_1756183354276_rwom250vi": {
-      "id": "title_1756183354276_rwom250vi",
-      "name": "Archdevil's ...",
+    "title_1756183515357_dno6mqp3o": {
+      "id": "title_1756183515357_dno6mqp3o",
+      "name": "Devil's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -4067,9 +4131,9 @@
       "children": [],
       "complexity": 1
     },
-    "title_1756183656648_6h47yki9m": {
-      "id": "title_1756183656648_6h47yki9m",
-      "name": "Gingerbread Golem's ...",
+    "title_1756183677559_i1gnalx13": {
+      "id": "title_1756183677559_i1gnalx13",
+      "name": "Golem's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -4091,9 +4155,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183395848_2axaojjny",
+        "title_1756183544229_f81n4th92",
         "item_1756313029834_ia1muwmql",
-        "title_1756183656648_6h47yki9m",
+        "title_1756183677559_i1gnalx13",
         "item_1756313052547_ysqopwv2i"
       ],
       "complexity": 2
@@ -4228,11 +4292,68 @@
       "name": "The Iron Maiden",
       "type": "Shield",
       "isLegendary": true,
-      "nodeType": "base_item",
+      "nodeType": "item",
       "children": [
         "item_1756314341396_iyfojtlba"
       ],
       "complexity": 13
+    },
+    "title_1756183740685_mpk8r4y99": {
+      "id": "title_1756183740685_mpk8r4y99",
+      "name": "Hell ghoul's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756314032586_yvqatynsd": {
+      "id": "item_1756314032586_yvqatynsd",
+      "name": "Recipe of Damned Fortune",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183515357_dno6mqp3o",
+        "item_1756313059922_kv2yyz604",
+        "title_1756183740685_mpk8r4y99",
+        "item_1756313059922_kv2yyz604"
+      ],
+      "complexity": 14
+    },
+    "item_1756313011194_nm89avujp": {
+      "id": "item_1756313011194_nm89avujp",
+      "name": "Damned Fortune",
+      "type": "Shield",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314032586_yvqatynsd"
+      ],
+      "complexity": 15
+    },
+    "item_1756313989560_abd5qxe02": {
+      "id": "item_1756313989560_abd5qxe02",
+      "name": "Recipe of Blade Ironbark",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183738741_1mznzcwv6",
+        "item_1756313011194_nm89avujp"
+      ],
+      "complexity": 16
+    },
+    "item_1756313003620_iiuvsgs4l": {
+      "id": "item_1756313003620_iiuvsgs4l",
+      "name": "Blade Ironbark",
+      "type": "Shield",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756313989560_abd5qxe02"
+      ],
+      "complexity": 17
     },
     "title_1756183730742_2uqzr2nzr": {
       "id": "title_1756183730742_2uqzr2nzr",
@@ -4249,7 +4370,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183354276_rwom250vi",
+        "title_1756183515357_dno6mqp3o",
         "item_1756313059922_kv2yyz604",
         "title_1756183730742_2uqzr2nzr",
         "item_1756313059922_kv2yyz604"
@@ -4267,42 +4388,9 @@
       ],
       "complexity": 15
     },
-    "title_1756183737629_w9ri4qa7d": {
-      "id": "title_1756183737629_w9ri4qa7d",
-      "name": "Hell ghoul's (II) ...",
-      "type": "Title",
-      "nodeType": "title",
-      "children": [],
-      "complexity": 1
-    },
-    "item_1756314032586_yvqatynsd": {
-      "id": "item_1756314032586_yvqatynsd",
-      "name": "Recipe of Damned Fortune",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183354276_rwom250vi",
-        "item_1756313059922_kv2yyz604",
-        "title_1756183737629_w9ri4qa7d",
-        "item_1756313059922_kv2yyz604"
-      ],
-      "complexity": 14
-    },
-    "item_1756313011194_nm89avujp": {
-      "id": "item_1756313011194_nm89avujp",
-      "name": "Damned Fortune",
-      "type": "Shield",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314032586_yvqatynsd"
-      ],
-      "complexity": 15
-    },
-    "title_1756183823169_b83v8r864": {
-      "id": "title_1756183823169_b83v8r864",
-      "name": "Lizard Warrior's ...",
+    "title_1756183824859_1tt3ng52b": {
+      "id": "title_1756183824859_1tt3ng52b",
+      "name": "Lizard's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -4326,7 +4414,7 @@
       "children": [
         "title_1756183816178_2cu7mxohs",
         "item_1756019175288_sfh0cgwjk",
-        "title_1756183823169_b83v8r864",
+        "title_1756183824859_1tt3ng52b",
         "item_1756313043253_2xe8gcqc9"
       ],
       "complexity": 2
@@ -4349,9 +4437,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183395848_2axaojjny",
+        "title_1756183544229_f81n4th92",
         "item_1756313035845_vjpdwbwcy",
-        "title_1756183823169_b83v8r864",
+        "title_1756183824859_1tt3ng52b",
         "item_1756313035845_vjpdwbwcy"
       ],
       "complexity": 4
@@ -4382,7 +4470,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183395848_2axaojjny",
+        "title_1756183544229_f81n4th92",
         "item_1756313013198_khsu5dhdc",
         "title_1756183696932_cmnow89o9",
         "item_1756313013198_khsu5dhdc"
@@ -4419,11 +4507,19 @@
       "name": "Destiny's Song",
       "type": "Shield",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756314049688_qkdusutw6"
       ],
       "complexity": 9
+    },
+    "title_1756183354276_rwom250vi": {
+      "id": "title_1756183354276_rwom250vi",
+      "name": "Archdevil's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
     },
     "item_1756314087209_cwaiki8an": {
       "id": "item_1756314087209_cwaiki8an",
@@ -4444,7 +4540,7 @@
       "name": "Endless Sorrow",
       "type": "Shield",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756314087209_cwaiki8an"
       ],
@@ -4484,6 +4580,31 @@
       ],
       "complexity": 3
     },
+    "item_1756314391649_nkyrrb215": {
+      "id": "item_1756314391649_nkyrrb215",
+      "name": "Recipe of Unholy Memories",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183354276_rwom250vi",
+        "item_1756313059922_kv2yyz604",
+        "title_1756183740685_mpk8r4y99",
+        "item_1756313059922_kv2yyz604"
+      ],
+      "complexity": 14
+    },
+    "item_1756313065158_9kxjo2llg": {
+      "id": "item_1756313065158_9kxjo2llg",
+      "name": "Unholy Memories",
+      "type": "Shield",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314391649_nkyrrb215"
+      ],
+      "complexity": 15
+    },
     "item_1756314115812_mg32ka8tt": {
       "id": "item_1756314115812_mg32ka8tt",
       "name": "Recipe of Forest Vanguard",
@@ -4491,9 +4612,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183738741_1mznzcwv6",
+        "item_1756313065158_9kxjo2llg"
       ],
-      "complexity": 2
+      "complexity": 16
     },
     "item_1756313018206_ryx5hjcqf": {
       "id": "item_1756313018206_ryx5hjcqf",
@@ -4504,7 +4627,7 @@
       "children": [
         "item_1756314115812_mg32ka8tt"
       ],
-      "complexity": 3
+      "complexity": 17
     },
     "item_1756313057757_wqfqzihdz": {
       "id": "item_1756313057757_wqfqzihdz",
@@ -4522,7 +4645,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183823169_b83v8r864",
+        "title_1756183824859_1tt3ng52b",
         "item_1756313057757_wqfqzihdz"
       ],
       "complexity": 2
@@ -4545,9 +4668,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183738741_1mznzcwv6",
+        "item_1756313012196_uxacdixa4"
       ],
-      "complexity": 2
+      "complexity": 10
     },
     "item_1756313020209_yotomo4c1": {
       "id": "item_1756313020209_yotomo4c1",
@@ -4558,11 +4683,11 @@
       "children": [
         "item_1756314128924_mynmnkkev"
       ],
-      "complexity": 3
+      "complexity": 11
     },
-    "title_1756184013970_41dwh5vo1": {
-      "id": "title_1756184013970_41dwh5vo1",
-      "name": "Rust dragon's ...",
+    "title_1756184017975_s34yz7wbd": {
+      "id": "title_1756184017975_s34yz7wbd",
+      "name": "Rust dragon's ... (III)",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -4585,7 +4710,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756184013970_41dwh5vo1",
+        "title_1756184017975_s34yz7wbd",
         "item_1756313044277_xinc5laok"
       ],
       "complexity": 2
@@ -4618,7 +4743,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756184013970_41dwh5vo1",
+        "title_1756184017975_s34yz7wbd",
         "item_1756313014670_evtfu2nww"
       ],
       "complexity": 2
@@ -4641,9 +4766,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183738741_1mznzcwv6",
+        "item_1756313015812_4h5ge2nhl"
       ],
-      "complexity": 2
+      "complexity": 16
     },
     "item_1756313032838_ewle2xsa7": {
       "id": "item_1756313032838_ewle2xsa7",
@@ -4654,7 +4781,7 @@
       "children": [
         "item_1756314192353_u74wrmaxf"
       ],
-      "complexity": 3
+      "complexity": 17
     },
     "item_1756312999176_ityt0mpvy": {
       "id": "item_1756312999176_ityt0mpvy",
@@ -4681,9 +4808,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183854185_cjjgcp7av",
+        "title_1756183857727_w529uncnx",
         "item_1756312999176_ityt0mpvy",
-        "title_1756183395848_2axaojjny",
+        "title_1756183544229_f81n4th92",
         "item_1756313047362_5mfsebrcd"
       ],
       "complexity": 2
@@ -4707,7 +4834,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183402308_9y6uny1wv",
+        "title_1756183405688_yf9mgncxx",
         "item_1756313005796_dpz939jwe"
       ],
       "complexity": 16
@@ -4740,7 +4867,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756184013970_41dwh5vo1",
+        "title_1756184017975_s34yz7wbd",
         "item_1756313056763_1kf3fwv3k"
       ],
       "complexity": 2
@@ -4823,9 +4950,9 @@
       ],
       "complexity": 3
     },
-    "title_1756183474340_j7xlbxpzf": {
-      "id": "title_1756183474340_j7xlbxpzf",
-      "name": "Crystal dragon's ...",
+    "title_1756183476640_z2cri4kzt": {
+      "id": "title_1756183476640_z2cri4kzt",
+      "name": "Crystal dragon's ... (III)",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -4848,7 +4975,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183474340_j7xlbxpzf",
+        "title_1756183476640_z2cri4kzt",
         "item_1756313053551_qykan3gj3"
       ],
       "complexity": 2
@@ -4864,34 +4991,9 @@
       ],
       "complexity": 3
     },
-    "item_1756314391649_nkyrrb215": {
-      "id": "item_1756314391649_nkyrrb215",
-      "name": "Recipe of Unholy Memories",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183354276_rwom250vi",
-        "item_1756313059922_kv2yyz604",
-        "title_1756183737629_w9ri4qa7d",
-        "item_1756313059922_kv2yyz604"
-      ],
-      "complexity": 14
-    },
-    "item_1756313065158_9kxjo2llg": {
-      "id": "item_1756313065158_9kxjo2llg",
-      "name": "Unholy Memories",
-      "type": "Shield",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314391649_nkyrrb215"
-      ],
-      "complexity": 15
-    },
-    "title_1756183368046_e9or6fk9r": {
-      "id": "title_1756183368046_e9or6fk9r",
-      "name": "Azure dragon's ...",
+    "title_1756183370361_lkycmxfqx": {
+      "id": "title_1756183370361_lkycmxfqx",
+      "name": "Azure dragon's ... (III)",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -4914,7 +5016,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183368046_e9or6fk9r",
+        "title_1756183370361_lkycmxfqx",
         "item_1756313042229_thdw5xg7y"
       ],
       "complexity": 2
@@ -4930,9 +5032,9 @@
       ],
       "complexity": 3
     },
-    "title_1756183583602_mt7w4ade1": {
-      "id": "title_1756183583602_mt7w4ade1",
-      "name": "Faerie dragon's ...",
+    "title_1756183587685_xdhtskpy4": {
+      "id": "title_1756183587685_xdhtskpy4",
+      "name": "Faerie dragon's ... (III)",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -4955,7 +5057,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183583602_mt7w4ade1",
+        "title_1756183587685_xdhtskpy4",
         "item_1756313155030_5z2hrtc2z"
       ],
       "complexity": 2
@@ -4971,6 +5073,89 @@
       ],
       "complexity": 3
     },
+    "title_1756183496673_w2x81v423": {
+      "id": "title_1756183496673_w2x81v423",
+      "name": "Demon lord's (III) ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "title_1756183495691_ng0s0o6zd": {
+      "id": "title_1756183495691_ng0s0o6zd",
+      "name": "Demon lord's (II) ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756313088921_huj1osuis": {
+      "id": "item_1756313088921_huj1osuis",
+      "name": "Demon head",
+      "type": "Helm",
+      "isLegendary": false,
+      "nodeType": "base_item",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756314390595_60y9avalj": {
+      "id": "item_1756314390595_60y9avalj",
+      "name": "Recipe of Tyrant's horns",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183933724_c69vum6y9",
+        "item_1756313088921_huj1osuis",
+        "title_1756183933724_c69vum6y9",
+        "item_1756313088921_huj1osuis"
+      ],
+      "complexity": 2
+    },
+    "item_1756313157442_b9umi5ofs": {
+      "id": "item_1756313157442_b9umi5ofs",
+      "name": "Tyrant's horns",
+      "type": "Helm",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314390595_60y9avalj"
+      ],
+      "complexity": 3
+    },
+    "title_1756184121114_nqxsel1y8": {
+      "id": "title_1756184121114_nqxsel1y8",
+      "name": "Titan's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756314160837_3fgnf1mqb": {
+      "id": "item_1756314160837_3fgnf1mqb",
+      "name": "Recipe of Hellish Justice",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183495691_ng0s0o6zd",
+        "item_1756313157442_b9umi5ofs",
+        "title_1756184121114_nqxsel1y8",
+        "item_1756313157442_b9umi5ofs"
+      ],
+      "complexity": 4
+    },
+    "item_1756313113964_5lfh7tnn8": {
+      "id": "item_1756313113964_5lfh7tnn8",
+      "name": "Hellish Justice",
+      "type": "Helm",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314160837_3fgnf1mqb"
+      ],
+      "complexity": 5
+    },
     "item_1756313977961_jj8skyku9": {
       "id": "item_1756313977961_jj8skyku9",
       "name": "Recipe of Barbaric Tusks",
@@ -4978,9 +5163,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183496673_w2x81v423",
+        "item_1756313113964_5lfh7tnn8"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756313078907_sgri36x58": {
       "id": "item_1756313078907_sgri36x58",
@@ -4991,11 +5178,11 @@
       "children": [
         "item_1756313977961_jj8skyku9"
       ],
-      "complexity": 3
+      "complexity": 7
     },
-    "title_1756183488924_22ib6l6bx": {
-      "id": "title_1756183488924_22ib6l6bx",
-      "name": "Demogorgon's ...",
+    "title_1756183679004_k6ni2q73y": {
+      "id": "title_1756183679004_k6ni2q73y",
+      "name": "Gorgon's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -5008,7 +5195,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183488924_22ib6l6bx",
+        "title_1756183679004_k6ni2q73y",
         "item_1756019175277_sfh0cgwjk"
       ],
       "complexity": 2
@@ -5024,6 +5211,73 @@
       ],
       "complexity": 3
     },
+    "title_1756183497840_zr44nxbw4": {
+      "id": "title_1756183497840_zr44nxbw4",
+      "name": "Demon lord's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756313116587_pkh90pav6": {
+      "id": "item_1756313116587_pkh90pav6",
+      "name": "Helm of glory",
+      "type": "Helm",
+      "isLegendary": false,
+      "nodeType": "base_item",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756314078977_apxx9xgr5": {
+      "id": "item_1756314078977_apxx9xgr5",
+      "name": "Recipe of Elfhame",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183824859_1tt3ng52b",
+        "item_1756313116587_pkh90pav6",
+        "title_1756183824859_1tt3ng52b",
+        "item_1756313116587_pkh90pav6"
+      ],
+      "complexity": 2
+    },
+    "item_1756313094344_919kxpwik": {
+      "id": "item_1756313094344_919kxpwik",
+      "name": "Elfhame",
+      "type": "Helm",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314078977_apxx9xgr5"
+      ],
+      "complexity": 3
+    },
+    "item_1756314132933_r50pst169": {
+      "id": "item_1756314132933_r50pst169",
+      "name": "Recipe of Golden Visage",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183497840_zr44nxbw4",
+        "item_1756313094344_919kxpwik",
+        "title_1756183497840_zr44nxbw4",
+        "item_1756313094344_919kxpwik"
+      ],
+      "complexity": 4
+    },
+    "item_1756313107575_171ahzxmv": {
+      "id": "item_1756313107575_171ahzxmv",
+      "name": "Golden Visage",
+      "type": "Helm",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314132933_r50pst169"
+      ],
+      "complexity": 5
+    },
     "item_1756313996579_bg6p2clph": {
       "id": "item_1756313996579_bg6p2clph",
       "name": "Recipe of Blood Plague",
@@ -5031,9 +5285,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183496673_w2x81v423",
+        "item_1756313107575_171ahzxmv"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756313080909_ft7lb97j0": {
       "id": "item_1756313080909_ft7lb97j0",
@@ -5044,30 +5300,13 @@
       "children": [
         "item_1756313996579_bg6p2clph"
       ],
-      "complexity": 3
+      "complexity": 7
     },
-    "title_1756183495691_ng0s0o6zd": {
-      "id": "title_1756183495691_ng0s0o6zd",
-      "name": "Demon lord's (II) ...",
+    "title_1756184149777_aik1v95nn": {
+      "id": "title_1756184149777_aik1v95nn",
+      "name": "Vampire's ...",
       "type": "Title",
       "nodeType": "title",
-      "children": [],
-      "complexity": 1
-    },
-    "title_1756184147408_1kqsqdb12": {
-      "id": "title_1756184147408_1kqsqdb12",
-      "name": "Vampire lord's ...",
-      "type": "Title",
-      "nodeType": "title",
-      "children": [],
-      "complexity": 1
-    },
-    "item_1756313088921_huj1osuis": {
-      "id": "item_1756313088921_huj1osuis",
-      "name": "Demon head",
-      "type": "Helm",
-      "isLegendary": false,
-      "nodeType": "base_item",
       "children": [],
       "complexity": 1
     },
@@ -5078,9 +5317,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756184147408_1kqsqdb12",
+        "title_1756184149777_aik1v95nn",
         "item_1756313088921_huj1osuis",
-        "title_1756184147408_1kqsqdb12",
+        "title_1756184149777_aik1v95nn",
         "item_1756313088921_huj1osuis"
       ],
       "complexity": 2
@@ -5096,9 +5335,9 @@
       ],
       "complexity": 3
     },
-    "title_1756183577006_c6uzu9mbz": {
-      "id": "title_1756183577006_c6uzu9mbz",
-      "name": "Evil Zombie's ...",
+    "title_1756184225033_k622d6ept": {
+      "id": "title_1756184225033_k622d6ept",
+      "name": "Zombie's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -5111,9 +5350,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183495691_ng0s0o6zd",
+        "title_1756183497840_zr44nxbw4",
         "item_1756313167870_rkn925rhi",
-        "title_1756183577006_c6uzu9mbz",
+        "title_1756184225033_k622d6ept",
         "item_1756313167870_rkn925rhi"
       ],
       "complexity": 4
@@ -5123,7 +5362,7 @@
       "name": "Breaking Storm",
       "type": "Helm",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756314007600_26dfhlo2a"
       ],
@@ -5189,6 +5428,14 @@
       "children": [],
       "complexity": 1
     },
+    "title_1756184147408_1kqsqdb12": {
+      "id": "title_1756184147408_1kqsqdb12",
+      "name": "Vampire lord's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
     "item_1756313158442_o2za3xxst": {
       "id": "item_1756313158442_o2za3xxst",
       "name": "Undead crown",
@@ -5205,7 +5452,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183854185_cjjgcp7av",
+        "title_1756183857727_w529uncnx",
         "item_1756313076589_fhoswqtre",
         "title_1756184147408_1kqsqdb12",
         "item_1756313158442_o2za3xxst"
@@ -5242,15 +5489,6 @@
         "item_1756314037891_h9zk8tvf6"
       ],
       "complexity": 2
-    },
-    "item_1756313116587_pkh90pav6": {
-      "id": "item_1756313116587_pkh90pav6",
-      "name": "Helm of glory",
-      "type": "Helm",
-      "isLegendary": false,
-      "nodeType": "base_item",
-      "children": [],
-      "complexity": 1
     },
     "item_1756314053135_sngzcashp": {
       "id": "item_1756314053135_sngzcashp",
@@ -5324,31 +5562,6 @@
       "nodeType": "base_item",
       "children": [
         "item_1756314227885_z6sivyor8"
-      ],
-      "complexity": 3
-    },
-    "item_1756314390595_60y9avalj": {
-      "id": "item_1756314390595_60y9avalj",
-      "name": "Recipe of Tyrant's horns",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183916565_n56vjd1ua",
-        "item_1756313088921_huj1osuis",
-        "title_1756183916565_n56vjd1ua",
-        "item_1756313088921_huj1osuis"
-      ],
-      "complexity": 2
-    },
-    "item_1756313157442_b9umi5ofs": {
-      "id": "item_1756313157442_b9umi5ofs",
-      "name": "Tyrant's horns",
-      "type": "Helm",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314390595_60y9avalj"
       ],
       "complexity": 3
     },
@@ -5427,31 +5640,6 @@
       ],
       "complexity": 9
     },
-    "item_1756314078977_apxx9xgr5": {
-      "id": "item_1756314078977_apxx9xgr5",
-      "name": "Recipe of Elfhame",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183823169_b83v8r864",
-        "item_1756313116587_pkh90pav6",
-        "title_1756183823169_b83v8r864",
-        "item_1756313116587_pkh90pav6"
-      ],
-      "complexity": 2
-    },
-    "item_1756313094344_919kxpwik": {
-      "id": "item_1756313094344_919kxpwik",
-      "name": "Elfhame",
-      "type": "Helm",
-      "isLegendary": true,
-      "nodeType": "base_item",
-      "children": [
-        "item_1756314078977_apxx9xgr5"
-      ],
-      "complexity": 3
-    },
     "item_1756313074378_iulnt5m05": {
       "id": "item_1756313074378_iulnt5m05",
       "name": "Antlers",
@@ -5495,25 +5683,97 @@
       ],
       "complexity": 3
     },
+    "item_1756313112962_arnjbpfvu": {
+      "id": "item_1756313112962_arnjbpfvu",
+      "name": "Hawk helm",
+      "type": "Helm",
+      "isLegendary": false,
+      "nodeType": "base_item",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756314258488_9m8dsx4hd": {
+      "id": "item_1756314258488_9m8dsx4hd",
+      "name": "Recipe of Ravager helm",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183510741_3648ogdvs",
+        "item_1756313112962_arnjbpfvu",
+        "title_1756183882623_7p8oe3nny",
+        "item_1756313105570_unug129fe"
+      ],
+      "complexity": 2
+    },
+    "item_1756313135999_e0m278le7": {
+      "id": "item_1756313135999_e0m278le7",
+      "name": "Ravager helm",
+      "type": "Helm",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314258488_9m8dsx4hd"
+      ],
+      "complexity": 3
+    },
+    "item_1756314294601_j5mmpusuw": {
+      "id": "item_1756314294601_j5mmpusuw",
+      "name": "Recipe of Smoke's cowl",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183766776_m9n698vsf",
+        "item_1756313135999_e0m278le7",
+        "title_1756183766776_m9n698vsf",
+        "item_1756313135999_e0m278le7"
+      ],
+      "complexity": 4
+    },
+    "item_1756313143772_gxyjkp4g2": {
+      "id": "item_1756313143772_gxyjkp4g2",
+      "name": "Smoke's cowl",
+      "type": "Helm",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314294601_j5mmpusuw"
+      ],
+      "complexity": 5
+    },
+    "title_1756183830784_026w02860": {
+      "id": "title_1756183830784_026w02860",
+      "name": "Lord's of Thunder ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
     "item_1756314088213_30ml7iogq": {
       "id": "item_1756314088213_30ml7iogq",
       "name": "Recipe of Endless Voices",
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183495691_ng0s0o6zd",
+        "item_1756313143772_gxyjkp4g2",
+        "title_1756183830784_026w02860",
+        "item_1756313143772_gxyjkp4g2"
+      ],
+      "complexity": 6
     },
     "item_1756313096386_bniftm83p": {
       "id": "item_1756313096386_bniftm83p",
       "name": "Endless Voices",
       "type": "Helm",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756314088213_30ml7iogq"
       ],
-      "complexity": 2
+      "complexity": 7
     },
     "title_1756183416105_t9mq2hxyp": {
       "id": "title_1756183416105_t9mq2hxyp",
@@ -5541,7 +5801,7 @@
       "children": [
         "title_1756183416105_t9mq2hxyp",
         "item_1756313100942_gpsa3rtgm",
-        "title_1756183395848_2axaojjny",
+        "title_1756183544229_f81n4th92",
         "item_1756019175288_sfh0cgwjk"
       ],
       "complexity": 2
@@ -5557,9 +5817,9 @@
       ],
       "complexity": 3
     },
-    "title_1756183491396_5yrhq00gp": {
-      "id": "title_1756183491396_5yrhq00gp",
-      "name": "Demon king's (II) ...",
+    "title_1756183499071_ecybm2b86": {
+      "id": "title_1756183499071_ecybm2b86",
+      "name": "Demon's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -5572,9 +5832,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183854185_cjjgcp7av",
+        "title_1756183857727_w529uncnx",
         "item_1756313076589_fhoswqtre",
-        "title_1756183491396_5yrhq00gp",
+        "title_1756183499071_ecybm2b86",
         "item_1756019175288_sfh0cgwjk"
       ],
       "complexity": 2
@@ -5589,31 +5849,6 @@
         "item_1756314105590_fcebdihh9"
       ],
       "complexity": 3
-    },
-    "item_1756314132933_r50pst169": {
-      "id": "item_1756314132933_r50pst169",
-      "name": "Recipe of Golden Visage",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183495691_ng0s0o6zd",
-        "item_1756313094344_919kxpwik",
-        "title_1756183495691_ng0s0o6zd",
-        "item_1756313094344_919kxpwik"
-      ],
-      "complexity": 4
-    },
-    "item_1756313107575_171ahzxmv": {
-      "id": "item_1756313107575_171ahzxmv",
-      "name": "Golden Visage",
-      "type": "Helm",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314132933_r50pst169"
-      ],
-      "complexity": 5
     },
     "item_1756313108577_3hmpcjmaf": {
       "id": "item_1756313108577_3hmpcjmaf",
@@ -5631,7 +5866,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183871099_eje3klb54",
+        "title_1756183872782_gk2lo56s5",
         "item_1756019175277_sfh0cgwjk",
         "title_1756183416105_t9mq2hxyp",
         "item_1756313074378_iulnt5m05"
@@ -5648,37 +5883,6 @@
         "item_1756314151889_4wxjheoki"
       ],
       "complexity": 3
-    },
-    "title_1756183463471_69jx2vkqr": {
-      "id": "title_1756183463471_69jx2vkqr",
-      "name": "Colossal Titan's ...",
-      "type": "Title",
-      "nodeType": "title",
-      "children": [],
-      "complexity": 1
-    },
-    "item_1756314160837_3fgnf1mqb": {
-      "id": "item_1756314160837_3fgnf1mqb",
-      "name": "Recipe of Hellish Justice",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183463471_69jx2vkqr",
-        "item_1756313157442_b9umi5ofs"
-      ],
-      "complexity": 4
-    },
-    "item_1756313113964_5lfh7tnn8": {
-      "id": "item_1756313113964_5lfh7tnn8",
-      "name": "Hellish Justice",
-      "type": "Helm",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314160837_3fgnf1mqb"
-      ],
-      "complexity": 5
     },
     "title_1756184084626_uu29zo8zo": {
       "id": "title_1756184084626_uu29zo8zo",
@@ -5706,7 +5910,7 @@
       "children": [
         "title_1756184084626_uu29zo8zo",
         "item_1756313074378_iulnt5m05",
-        "title_1756183823169_b83v8r864",
+        "title_1756183824859_1tt3ng52b",
         "item_1756313122508_uqfnmxmrw"
       ],
       "complexity": 2
@@ -5738,7 +5942,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183716191_vudmylq5a",
+        "title_1756183717727_0l7qyslf4",
         "item_1756313165373_0qsy4kicd",
         "title_1756183766776_m9n698vsf",
         "item_1756313165373_0qsy4kicd"
@@ -5756,9 +5960,9 @@
       ],
       "complexity": 3
     },
-    "title_1756183548897_r7o7uzulo": {
-      "id": "title_1756183548897_r7o7uzulo",
-      "name": "Electricity Dragon's ...",
+    "title_1756183552151_9d8xedg29": {
+      "id": "title_1756183552151_9d8xedg29",
+      "name": "Electricity Dragon's ... (III)",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -5781,7 +5985,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183548897_r7o7uzulo",
+        "title_1756183552151_9d8xedg29",
         "item_1756313098618_lp893eash"
       ],
       "complexity": 2
@@ -5814,7 +6018,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183583602_mt7w4ade1",
+        "title_1756183587685_xdhtskpy4",
         "item_1756313137939_8dx9bl055"
       ],
       "complexity": 2
@@ -5837,9 +6041,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183496673_w2x81v423",
+        "item_1756313096386_bniftm83p"
       ],
-      "complexity": 2
+      "complexity": 8
     },
     "item_1756313126984_4b4zpaouq": {
       "id": "item_1756313126984_4b4zpaouq",
@@ -5850,7 +6056,7 @@
       "children": [
         "item_1756314202373_oa9zdsp6v"
       ],
-      "complexity": 3
+      "complexity": 9
     },
     "item_1756314204897_jyg0dc678": {
       "id": "item_1756314204897_jyg0dc678",
@@ -5861,7 +6067,7 @@
       "children": [
         "title_1756184147408_1kqsqdb12",
         "item_1756313076589_fhoswqtre",
-        "title_1756184147408_1kqsqdb12",
+        "title_1756184149777_aik1v95nn",
         "item_1756313158442_o2za3xxst"
       ],
       "complexity": 2
@@ -5877,6 +6083,31 @@
       ],
       "complexity": 3
     },
+    "item_1756314330245_ivt31gf0l": {
+      "id": "item_1756314330245_ivt31gf0l",
+      "name": "Recipe of The Falling Sky",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183497840_zr44nxbw4",
+        "item_1756313089924_rtgln2yag",
+        "title_1756184121114_nqxsel1y8",
+        "item_1756313089924_rtgln2yag"
+      ],
+      "complexity": 4
+    },
+    "item_1756313148427_gl55wngv4": {
+      "id": "item_1756313148427_gl55wngv4",
+      "name": "The Falling Sky",
+      "type": "Helm",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314330245_ivt31gf0l"
+      ],
+      "complexity": 5
+    },
     "item_1756314208008_2qsqracyv": {
       "id": "item_1756314208008_2qsqracyv",
       "name": "Recipe of Maximum Glare",
@@ -5884,9 +6115,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183496673_w2x81v423",
+        "item_1756313148427_gl55wngv4"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756313129061_e90wlowuo": {
       "id": "item_1756313129061_e90wlowuo",
@@ -5897,11 +6130,11 @@
       "children": [
         "item_1756314208008_2qsqracyv"
       ],
-      "complexity": 3
+      "complexity": 7
     },
-    "title_1756183837818_sg1jqd8uy": {
-      "id": "title_1756183837818_sg1jqd8uy",
-      "name": "Magma Dragon's ...",
+    "title_1756183840823_6ms29qp7j": {
+      "id": "title_1756183840823_6ms29qp7j",
+      "name": "Magma Dragon's ... (III)",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -5924,7 +6157,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183837818_sg1jqd8uy",
+        "title_1756183840823_6ms29qp7j",
         "item_1756313072900_p82uc9ygl"
       ],
       "complexity": 2
@@ -5940,6 +6173,39 @@
       ],
       "complexity": 3
     },
+    "title_1756183545460_ru2sxp76y": {
+      "id": "title_1756183545460_ru2sxp76y",
+      "name": "Efreet sultan's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756314382333_3r1mng5xh": {
+      "id": "item_1756314382333_3r1mng5xh",
+      "name": "Recipe of Timeless Powers",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183545460_ru2sxp76y",
+        "item_1756313132931_844bywwc4",
+        "title_1756183495691_ng0s0o6zd",
+        "item_1756313132931_844bywwc4"
+      ],
+      "complexity": 4
+    },
+    "item_1756313156438_qg9w9yw2k": {
+      "id": "item_1756313156438_qg9w9yw2k",
+      "name": "Timeless Powers",
+      "type": "Helm",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314382333_3r1mng5xh"
+      ],
+      "complexity": 5
+    },
     "item_1756314236445_03ute4voi": {
       "id": "item_1756314236445_03ute4voi",
       "name": "Recipe of Perpetual Mask",
@@ -5947,9 +6213,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183496673_w2x81v423",
+        "item_1756313156438_qg9w9yw2k"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756313133934_yhbt8gpj6": {
       "id": "item_1756313133934_yhbt8gpj6",
@@ -5960,7 +6228,7 @@
       "children": [
         "item_1756314236445_03ute4voi"
       ],
-      "complexity": 3
+      "complexity": 7
     },
     "item_1756313109579_8vnp2997x": {
       "id": "item_1756313109579_8vnp2997x",
@@ -6005,40 +6273,6 @@
       ],
       "complexity": 3
     },
-    "item_1756313112962_arnjbpfvu": {
-      "id": "item_1756313112962_arnjbpfvu",
-      "name": "Hawk helm",
-      "type": "Helm",
-      "isLegendary": false,
-      "nodeType": "base_item",
-      "children": [],
-      "complexity": 1
-    },
-    "item_1756314258488_9m8dsx4hd": {
-      "id": "item_1756314258488_9m8dsx4hd",
-      "name": "Recipe of Ravager helm",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183510741_3648ogdvs",
-        "item_1756313112962_arnjbpfvu",
-        "title_1756183882623_7p8oe3nny",
-        "item_1756313105570_unug129fe"
-      ],
-      "complexity": 2
-    },
-    "item_1756313135999_e0m278le7": {
-      "id": "item_1756313135999_e0m278le7",
-      "name": "Ravager helm",
-      "type": "Helm",
-      "isLegendary": true,
-      "nodeType": "base_item",
-      "children": [
-        "item_1756314258488_9m8dsx4hd"
-      ],
-      "complexity": 3
-    },
     "item_1756313146247_j599ybndy": {
       "id": "item_1756313146247_j599ybndy",
       "name": "Spirit mask",
@@ -6055,7 +6289,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183351139_6kibfjqmp",
+        "title_1756183832789_dptav6552",
         "item_1756313158442_o2za3xxst",
         "title_1756184147408_1kqsqdb12",
         "item_1756313146247_j599ybndy"
@@ -6105,7 +6339,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183351139_6kibfjqmp",
+        "title_1756183832789_dptav6552",
         "item_1756313105570_unug129fe",
         "title_1756184144528_kpzx9z9m5",
         "item_1756313109579_8vnp2997x"
@@ -6130,9 +6364,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756184147408_1kqsqdb12",
+        "title_1756184149777_aik1v95nn",
         "item_1756313088921_huj1osuis",
-        "title_1756184147408_1kqsqdb12",
+        "title_1756184149777_aik1v95nn",
         "item_1756313088921_huj1osuis"
       ],
       "complexity": 2
@@ -6148,9 +6382,9 @@
       ],
       "complexity": 3
     },
-    "title_1756183545460_ru2sxp76y": {
-      "id": "title_1756183545460_ru2sxp76y",
-      "name": "Efreet sultan's ...",
+    "title_1756183547608_3loz2lhxv": {
+      "id": "title_1756183547608_3loz2lhxv",
+      "name": "Efreet's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -6174,7 +6408,7 @@
       "children": [
         "title_1756183416105_t9mq2hxyp",
         "item_1756313112962_arnjbpfvu",
-        "title_1756183545460_ru2sxp76y",
+        "title_1756183547608_3loz2lhxv",
         "item_1756313077860_p4r7cudbx"
       ],
       "complexity": 2
@@ -6190,56 +6424,6 @@
       ],
       "complexity": 3
     },
-    "item_1756314294601_j5mmpusuw": {
-      "id": "item_1756314294601_j5mmpusuw",
-      "name": "Recipe of Smoke's cowl",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183766776_m9n698vsf",
-        "item_1756313135999_e0m278le7",
-        "title_1756183766776_m9n698vsf",
-        "item_1756313135999_e0m278le7"
-      ],
-      "complexity": 4
-    },
-    "item_1756313143772_gxyjkp4g2": {
-      "id": "item_1756313143772_gxyjkp4g2",
-      "name": "Smoke's cowl",
-      "type": "Helm",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314294601_j5mmpusuw"
-      ],
-      "complexity": 5
-    },
-    "item_1756314330245_ivt31gf0l": {
-      "id": "item_1756314330245_ivt31gf0l",
-      "name": "Recipe of The Falling Sky",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183495691_ng0s0o6zd",
-        "item_1756313089924_rtgln2yag",
-        "title_1756183463471_69jx2vkqr",
-        "item_1756313089924_rtgln2yag"
-      ],
-      "complexity": 4
-    },
-    "item_1756313148427_gl55wngv4": {
-      "id": "item_1756313148427_gl55wngv4",
-      "name": "The Falling Sky",
-      "type": "Helm",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314330245_ivt31gf0l"
-      ],
-      "complexity": 5
-    },
     "item_1756314351412_fdi88x646": {
       "id": "item_1756314351412_fdi88x646",
       "name": "Recipe of The oracle",
@@ -6249,7 +6433,7 @@
       "children": [
         "title_1756183882623_7p8oe3nny",
         "item_1756313090927_tanzkhh6z",
-        "title_1756184147408_1kqsqdb12",
+        "title_1756184149777_aik1v95nn",
         "item_1756313145243_p0ca42oae"
       ],
       "complexity": 8
@@ -6274,7 +6458,7 @@
       "children": [
         "title_1756183882623_7p8oe3nny",
         "item_1756313153026_at1s2mg7h",
-        "title_1756184147408_1kqsqdb12",
+        "title_1756184149777_aik1v95nn",
         "item_1756313153026_at1s2mg7h"
       ],
       "complexity": 10
@@ -6375,7 +6559,7 @@
       "children": [
         "title_1756183766776_m9n698vsf",
         "item_1756313103568_3qs5obejl",
-        "title_1756183545460_ru2sxp76y",
+        "title_1756183547608_3loz2lhxv",
         "item_1756313077860_p4r7cudbx"
       ],
       "complexity": 2
@@ -6391,29 +6575,6 @@
       ],
       "complexity": 3
     },
-    "item_1756314382333_3r1mng5xh": {
-      "id": "item_1756314382333_3r1mng5xh",
-      "name": "Recipe of Timeless Powers",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183545460_ru2sxp76y",
-        "item_1756313132931_844bywwc4"
-      ],
-      "complexity": 4
-    },
-    "item_1756313156438_qg9w9yw2k": {
-      "id": "item_1756313156438_qg9w9yw2k",
-      "name": "Timeless Powers",
-      "type": "Helm",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314382333_3r1mng5xh"
-      ],
-      "complexity": 5
-    },
     "item_1756314395354_ucc4w2boc": {
       "id": "item_1756314395354_ucc4w2boc",
       "name": "Recipe of Venomancer's Mask",
@@ -6421,9 +6582,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183496673_w2x81v423",
+        "item_1756313081913_ny2neumee"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756313160448_wdq1tarrq": {
       "id": "item_1756313160448_wdq1tarrq",
@@ -6434,7 +6597,7 @@
       "children": [
         "item_1756314395354_ucc4w2boc"
       ],
-      "complexity": 3
+      "complexity": 7
     },
     "item_1756313203854_vnobif5nl": {
       "id": "item_1756313203854_vnobif5nl",
@@ -6453,7 +6616,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183837818_sg1jqd8uy",
+        "title_1756183840823_6ms29qp7j",
         "item_1756313203854_vnobif5nl"
       ],
       "complexity": 2
@@ -6469,9 +6632,9 @@
       ],
       "complexity": 3
     },
-    "title_1756183308057_2uutl62on": {
-      "id": "title_1756183308057_2uutl62on",
-      "name": "Abyssal Hydra's ...",
+    "title_1756183758198_rrvbe0xz8": {
+      "id": "title_1756183758198_rrvbe0xz8",
+      "name": "Hydra's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -6502,7 +6665,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183308057_2uutl62on",
+        "title_1756183758198_rrvbe0xz8",
         "item_1756313205050_jrczdmmjr",
         "title_1756183394620_yr38fd5ux",
         "item_1756313209963_bn50ikpvt"
@@ -6652,9 +6815,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183823169_b83v8r864",
+        "title_1756183824859_1tt3ng52b",
         "item_1756313173238_mv8gojb4x",
-        "title_1756183823169_b83v8r864",
+        "title_1756183824859_1tt3ng52b",
         "item_1756313173238_mv8gojb4x"
       ],
       "complexity": 4
@@ -6670,6 +6833,14 @@
       ],
       "complexity": 5
     },
+    "title_1756184140222_v8vbfok2y": {
+      "id": "title_1756184140222_v8vbfok2y",
+      "name": "Undead hydra's (II) ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
     "item_1756314010608_vlrvd2n9n": {
       "id": "item_1756314010608_vlrvd2n9n",
       "name": "Recipe of Burning Glory",
@@ -6678,6 +6849,8 @@
       "nodeType": "recipe",
       "children": [
         "title_1756183735184_anvp8kpqf",
+        "item_1756313224606_clhk65onx",
+        "title_1756184140222_v8vbfok2y",
         "item_1756313224606_clhk65onx"
       ],
       "complexity": 6
@@ -6687,15 +6860,15 @@
       "name": "Burning Glory",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756314010608_vlrvd2n9n"
       ],
       "complexity": 7
     },
-    "title_1756184078029_199dtozko": {
-      "id": "title_1756184078029_199dtozko",
-      "name": "Steel Dragon's ...",
+    "title_1756184081068_qqc39w0lh": {
+      "id": "title_1756184081068_qqc39w0lh",
+      "name": "Steel Dragon's ... (III)",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -6718,7 +6891,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756184078029_199dtozko",
+        "title_1756184081068_qqc39w0lh",
         "item_1756313226871_1kq73c5su"
       ],
       "complexity": 2
@@ -6767,9 +6940,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183656648_6h47yki9m",
+        "title_1756183677559_i1gnalx13",
         "item_1756313178066_aj2r4smpq",
-        "title_1756183656648_6h47yki9m",
+        "title_1756183677559_i1gnalx13",
         "item_1756313178066_aj2r4smpq"
       ],
       "complexity": 2
@@ -7060,7 +7233,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183837818_sg1jqd8uy",
+        "title_1756183840823_6ms29qp7j",
         "item_1756313189080_evqa6b0gw"
       ],
       "complexity": 2
@@ -7134,7 +7307,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183308057_2uutl62on",
+        "title_1756183758198_rrvbe0xz8",
         "item_1756313205050_jrczdmmjr",
         "title_1756183510741_3648ogdvs",
         "item_1756313252355_blvo2osb6"
@@ -7159,7 +7332,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183395848_2axaojjny",
+        "title_1756183544229_f81n4th92",
         "item_1756019175288_sfh0cgwjk"
       ],
       "complexity": 2
@@ -7175,6 +7348,39 @@
       ],
       "complexity": 3
     },
+    "title_1756184141224_p3d6ls0t5": {
+      "id": "title_1756184141224_p3d6ls0t5",
+      "name": "Undead hydra's (III) ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756314152969_x4mjd763z": {
+      "id": "item_1756314152969_x4mjd763z",
+      "name": "Recipe of Haunted Might",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756184140222_v8vbfok2y",
+        "item_1756313228875_qqjlrm141",
+        "title_1756184140222_v8vbfok2y",
+        "item_1756313228875_qqjlrm141"
+      ],
+      "complexity": 4
+    },
+    "item_1756313210939_76pnob9d8": {
+      "id": "item_1756313210939_76pnob9d8",
+      "name": "Haunted Might",
+      "type": "Body Armor",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314152969_x4mjd763z"
+      ],
+      "complexity": 5
+    },
     "item_1756314103165_ezmfdo8jq": {
       "id": "item_1756314103165_ezmfdo8jq",
       "name": "Recipe of Fallen King",
@@ -7182,9 +7388,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756184141224_p3d6ls0t5",
+        "item_1756313210939_76pnob9d8"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756313195093_t3zflcnvw": {
       "id": "item_1756313195093_t3zflcnvw",
@@ -7195,7 +7403,7 @@
       "children": [
         "item_1756314103165_ezmfdo8jq"
       ],
-      "complexity": 3
+      "complexity": 7
     },
     "item_1756314107792_9y5xay0hb": {
       "id": "item_1756314107792_9y5xay0hb",
@@ -7270,9 +7478,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756184141224_p3d6ls0t5",
+        "item_1756313180395_cy6g85ux8"
       ],
-      "complexity": 2
+      "complexity": 8
     },
     "item_1756313207491_o9r8cpv7f": {
       "id": "item_1756313207491_o9r8cpv7f",
@@ -7283,7 +7493,7 @@
       "children": [
         "item_1756314138858_d6pqtda6n"
       ],
-      "complexity": 3
+      "complexity": 9
     },
     "item_1756314146876_rm9770u9i": {
       "id": "item_1756314146876_rm9770u9i",
@@ -7304,31 +7514,11 @@
       "name": "Hallowed Hope",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756314146876_rm9770u9i"
       ],
       "complexity": 5
-    },
-    "item_1756314152969_x4mjd763z": {
-      "id": "item_1756314152969_x4mjd763z",
-      "name": "Recipe of Haunted Might",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
-    },
-    "item_1756313210939_76pnob9d8": {
-      "id": "item_1756313210939_76pnob9d8",
-      "name": "Haunted Might",
-      "type": "Body Armor",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314152969_x4mjd763z"
-      ],
-      "complexity": 2
     },
     "item_1756314175941_mlvvt5y7w": {
       "id": "item_1756314175941_mlvvt5y7w",
@@ -7349,15 +7539,15 @@
       "name": "Infernal Trials",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756314175941_mlvvt5y7w"
       ],
       "complexity": 5
     },
-    "title_1756183885859_3c1x76mlz": {
-      "id": "title_1756183885859_3c1x76mlz",
-      "name": "Naga Dragon's ...",
+    "title_1756183891297_55q1m4lug": {
+      "id": "title_1756183891297_55q1m4lug",
+      "name": "Naga's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -7372,7 +7562,7 @@
       "children": [
         "title_1756183889838_5tgb3wzti",
         "item_1756313228875_qqjlrm141",
-        "title_1756183885859_3c1x76mlz",
+        "title_1756183891297_55q1m4lug",
         "item_1756313228875_qqjlrm141"
       ],
       "complexity": 4
@@ -7395,7 +7585,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183308057_2uutl62on",
+        "title_1756183758198_rrvbe0xz8",
         "item_1756313201555_d1mnxqbot",
         "title_1756183889838_5tgb3wzti",
         "item_1756313255915_t6dmm7xn6"
@@ -7420,9 +7610,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756184141224_p3d6ls0t5",
+        "item_1756313208565_jj1vov1t0"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756313233158_zcb0zt039": {
       "id": "item_1756313233158_zcb0zt039",
@@ -7433,7 +7625,7 @@
       "children": [
         "item_1756314248081_1tuw4yzsf"
       ],
-      "complexity": 3
+      "complexity": 7
     },
     "item_1756314250088_gzev0rm36": {
       "id": "item_1756314250088_gzev0rm36",
@@ -7512,7 +7704,7 @@
       "children": [
         "title_1756183882623_7p8oe3nny",
         "item_1756313240890_gx3ccm322",
-        "title_1756183885859_3c1x76mlz",
+        "title_1756183891297_55q1m4lug",
         "item_1756313246181_k11gilv9k"
       ],
       "complexity": 2
@@ -7528,9 +7720,9 @@
       ],
       "complexity": 3
     },
-    "title_1756184140222_v8vbfok2y": {
-      "id": "title_1756184140222_v8vbfok2y",
-      "name": "Undead hydra's (II) ...",
+    "title_1756184143097_m6ou8a13l": {
+      "id": "title_1756184143097_m6ou8a13l",
+      "name": "Undead hydra's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -7543,9 +7735,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756184140222_v8vbfok2y",
+        "title_1756184143097_m6ou8a13l",
         "item_1756313234643_hdp90ufse",
-        "title_1756184140222_v8vbfok2y",
+        "title_1756184143097_m6ou8a13l",
         "item_1756313234643_hdp90ufse"
       ],
       "complexity": 4
@@ -7555,7 +7747,7 @@
       "name": "Relentless Might",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756314266474_5tle1ff04"
       ],
@@ -7578,7 +7770,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183548897_r7o7uzulo",
+        "title_1756183552151_9d8xedg29",
         "item_1756313218579_0c4coubuv"
       ],
       "complexity": 2
@@ -7635,9 +7827,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756184141224_p3d6ls0t5",
+        "item_1756313238885_a4iiyj018"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756313249282_6iobkjv96": {
       "id": "item_1756313249282_6iobkjv96",
@@ -7648,7 +7842,7 @@
       "children": [
         "item_1756314289157_v21togrkz"
       ],
-      "complexity": 3
+      "complexity": 7
     },
     "item_1756314305082_in1t7493t": {
       "id": "item_1756314305082_in1t7493t",
@@ -7657,9 +7851,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756184141224_p3d6ls0t5",
+        "item_1756313213042_6em6q6eaq"
       ],
-      "complexity": 2
+      "complexity": 6
     },
     "item_1756313250306_s52qe2nmv": {
       "id": "item_1756313250306_s52qe2nmv",
@@ -7670,29 +7866,7 @@
       "children": [
         "item_1756314305082_in1t7493t"
       ],
-      "complexity": 3
-    },
-    "item_1756314314207_llst1sgoq": {
-      "id": "item_1756314314207_llst1sgoq",
-      "name": "Recipe of Stealth Wrap",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "item_1756019175266_sfh0cgwjk"
-      ],
-      "complexity": 2
-    },
-    "item_1756313253379_5amm2r90h": {
-      "id": "item_1756313253379_5amm2r90h",
-      "name": "Stealth Wrap",
-      "type": "Body Armor",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314314207_llst1sgoq"
-      ],
-      "complexity": 3
+      "complexity": 7
     },
     "item_1756314315206_r91bdavqj": {
       "id": "item_1756314315206_r91bdavqj",
@@ -7713,40 +7887,9 @@
       "name": "Stonecase",
       "type": "Body Armor",
       "isLegendary": true,
-      "nodeType": "base_item",
-      "children": [
-        "item_1756314315206_r91bdavqj"
-      ],
-      "complexity": 5
-    },
-    "title_1756183728091_s3mek8sdb": {
-      "id": "title_1756183728091_s3mek8sdb",
-      "name": "Headless Pegasus's ...",
-      "type": "Title",
-      "nodeType": "title",
-      "children": [],
-      "complexity": 1
-    },
-    "item_1756314323222_w85885b56": {
-      "id": "item_1756314323222_w85885b56",
-      "name": "Recipe of Sylvan garb",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183728091_s3mek8sdb",
-        "item_1756313197465_mvn918208"
-      ],
-      "complexity": 4
-    },
-    "item_1756313256916_byj4ejj2w": {
-      "id": "item_1756313256916_byj4ejj2w",
-      "name": "Sylvan garb",
-      "type": "Body Armor",
-      "isLegendary": true,
       "nodeType": "item",
       "children": [
-        "item_1756314323222_w85885b56"
+        "item_1756314315206_r91bdavqj"
       ],
       "complexity": 5
     },
@@ -7758,6 +7901,8 @@
       "nodeType": "recipe",
       "children": [
         "title_1756183735184_anvp8kpqf",
+        "item_1756313254602_1j5sk2nvg",
+        "title_1756184140222_v8vbfok2y",
         "item_1756313254602_1j5sk2nvg"
       ],
       "complexity": 6
@@ -7772,6 +7917,61 @@
         "item_1756314338235_zpgqhzjm6"
       ],
       "complexity": 7
+    },
+    "item_1756314314207_llst1sgoq": {
+      "id": "item_1756314314207_llst1sgoq",
+      "name": "Recipe of Stealth Wrap",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756184141224_p3d6ls0t5",
+        "item_1756313262204_18szr72tp"
+      ],
+      "complexity": 8
+    },
+    "item_1756313253379_5amm2r90h": {
+      "id": "item_1756313253379_5amm2r90h",
+      "name": "Stealth Wrap",
+      "type": "Body Armor",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314314207_llst1sgoq"
+      ],
+      "complexity": 9
+    },
+    "title_1756183952048_q7oynbnld": {
+      "id": "title_1756183952048_q7oynbnld",
+      "name": "Pegasus' ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756314323222_w85885b56": {
+      "id": "item_1756314323222_w85885b56",
+      "name": "Recipe of Sylvan garb",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183952048_q7oynbnld",
+        "item_1756313197465_mvn918208"
+      ],
+      "complexity": 4
+    },
+    "item_1756313256916_byj4ejj2w": {
+      "id": "item_1756313256916_byj4ejj2w",
+      "name": "Sylvan garb",
+      "type": "Body Armor",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314323222_w85885b56"
+      ],
+      "complexity": 5
     },
     "item_1756314356793_p4k51be2v": {
       "id": "item_1756314356793_p4k51be2v",
@@ -7841,7 +8041,7 @@
       "children": [
         "title_1756183882623_7p8oe3nny",
         "item_1756313209963_bn50ikpvt",
-        "title_1756183885859_3c1x76mlz",
+        "title_1756183891297_55q1m4lug",
         "item_1756313255915_t6dmm7xn6"
       ],
       "complexity": 2
@@ -7901,9 +8101,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183916565_n56vjd1ua",
+        "title_1756183933724_c69vum6y9",
         "item_1756313311929_v79ydgc45",
-        "title_1756183916565_n56vjd1ua",
+        "title_1756183933724_c69vum6y9",
         "item_1756313311929_v79ydgc45"
       ],
       "complexity": 2
@@ -8086,9 +8286,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183823169_b83v8r864",
+        "title_1756183824859_1tt3ng52b",
         "item_1756313297279_nqla0ax9o",
-        "title_1756184147408_1kqsqdb12",
+        "title_1756184149777_aik1v95nn",
         "item_1756313314276_rx18pzms3"
       ],
       "complexity": 8
@@ -8111,7 +8311,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183823169_b83v8r864",
+        "title_1756183824859_1tt3ng52b",
         "item_1756313285881_2vo7r8tjc",
         "title_1756183696932_cmnow89o9",
         "item_1756313314276_rx18pzms3"
@@ -8136,9 +8336,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183823169_b83v8r864",
+        "title_1756183824859_1tt3ng52b",
         "item_1756313290240_5ib07ae7l",
-        "title_1756183823169_b83v8r864",
+        "title_1756183824859_1tt3ng52b",
         "item_1756313314276_rx18pzms3"
       ],
       "complexity": 12
@@ -8154,6 +8354,14 @@
       ],
       "complexity": 13
     },
+    "title_1756184207793_tr25wve9u": {
+      "id": "title_1756184207793_tr25wve9u",
+      "name": "Wyvern's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
     "item_1756313992048_idpgx2v60": {
       "id": "item_1756313992048_idpgx2v60",
       "name": "Recipe of Blessed Hell",
@@ -8163,7 +8371,7 @@
       "children": [
         "title_1756183411836_i0bs05sgv",
         "item_1756313329365_bso6jgho2",
-        "title_1756184205789_nfsq8riyc",
+        "title_1756184207793_tr25wve9u",
         "item_1756313329365_bso6jgho2"
       ],
       "complexity": 14
@@ -8173,9 +8381,50 @@
       "name": "Blessed Hell",
       "type": "Boots",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756313992048_idpgx2v60"
+      ],
+      "complexity": 15
+    },
+    "title_1756183919894_ap4h97m7j": {
+      "id": "title_1756183919894_ap4h97m7j",
+      "name": "Ogre king's (III) ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "title_1756183414889_s1dimluuy": {
+      "id": "title_1756183414889_s1dimluuy",
+      "name": "Bone dragon's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756314033659_tckqwipkd": {
+      "id": "item_1756314033659_tckqwipkd",
+      "name": "Recipe of Dark Whispers",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183414889_s1dimluuy",
+        "item_1756313329365_bso6jgho2",
+        "title_1756183919894_ap4h97m7j",
+        "item_1756313329365_bso6jgho2"
+      ],
+      "complexity": 14
+    },
+    "item_1756313288889_o56v6cs5c": {
+      "id": "item_1756313288889_o56v6cs5c",
+      "name": "Dark Whispers",
+      "type": "Boots",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314033659_tckqwipkd"
       ],
       "complexity": 15
     },
@@ -8186,9 +8435,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183919894_ap4h97m7j",
+        "item_1756313288889_o56v6cs5c"
       ],
-      "complexity": 2
+      "complexity": 16
     },
     "item_1756313283877_ax37pzneg": {
       "id": "item_1756313283877_ax37pzneg",
@@ -8199,7 +8450,7 @@
       "children": [
         "item_1756313994488_is6z71kf1"
       ],
-      "complexity": 3
+      "complexity": 17
     },
     "title_1756183599725_rji1gzf76": {
       "id": "title_1756183599725_rji1gzf76",
@@ -8228,9 +8479,42 @@
       "name": "Cursed Honor",
       "type": "Boots",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756314030456_gthwwt9uc"
+      ],
+      "complexity": 15
+    },
+    "title_1756183747511_70ca9yqfa": {
+      "id": "title_1756183747511_70ca9yqfa",
+      "name": "Hell hound's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756314046455_ad3yr0fx4": {
+      "id": "item_1756314046455_ad3yr0fx4",
+      "name": "Recipe of Demonic Fortune",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183747511_70ca9yqfa",
+        "item_1756313329365_bso6jgho2",
+        "title_1756183919894_ap4h97m7j",
+        "item_1756313329365_bso6jgho2"
+      ],
+      "complexity": 14
+    },
+    "item_1756313292677_ow2pzvvv0": {
+      "id": "item_1756313292677_ow2pzvvv0",
+      "name": "Demonic Fortune",
+      "type": "Boots",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314046455_ad3yr0fx4"
       ],
       "complexity": 15
     },
@@ -8241,9 +8525,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183919894_ap4h97m7j",
+        "item_1756313292677_ow2pzvvv0"
       ],
-      "complexity": 2
+      "complexity": 16
     },
     "item_1756313287885_k3gn94p6u": {
       "id": "item_1756313287885_k3gn94p6u",
@@ -8254,38 +8540,7 @@
       "children": [
         "item_1756314031543_cj0ric8dw"
       ],
-      "complexity": 3
-    },
-    "title_1756183414889_s1dimluuy": {
-      "id": "title_1756183414889_s1dimluuy",
-      "name": "Bone dragon's ...",
-      "type": "Title",
-      "nodeType": "title",
-      "children": [],
-      "complexity": 1
-    },
-    "item_1756314033659_tckqwipkd": {
-      "id": "item_1756314033659_tckqwipkd",
-      "name": "Recipe of Dark Whispers",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183414889_s1dimluuy",
-        "item_1756313329365_bso6jgho2"
-      ],
-      "complexity": 14
-    },
-    "item_1756313288889_o56v6cs5c": {
-      "id": "item_1756313288889_o56v6cs5c",
-      "name": "Dark Whispers",
-      "type": "Boots",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314033659_tckqwipkd"
-      ],
-      "complexity": 15
+      "complexity": 17
     },
     "item_1756313299405_gtxxovs5h": {
       "id": "item_1756313299405_gtxxovs5h",
@@ -8304,7 +8559,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183368046_e9or6fk9r",
+        "title_1756183370361_lkycmxfqx",
         "item_1756313299405_gtxxovs5h"
       ],
       "complexity": 2
@@ -8319,37 +8574,6 @@
         "item_1756314043039_xeaf50pxp"
       ],
       "complexity": 3
-    },
-    "title_1756183747511_70ca9yqfa": {
-      "id": "title_1756183747511_70ca9yqfa",
-      "name": "Hell hound's ...",
-      "type": "Title",
-      "nodeType": "title",
-      "children": [],
-      "complexity": 1
-    },
-    "item_1756314046455_ad3yr0fx4": {
-      "id": "item_1756314046455_ad3yr0fx4",
-      "name": "Recipe of Demonic Fortune",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183747511_70ca9yqfa",
-        "item_1756313329365_bso6jgho2"
-      ],
-      "complexity": 14
-    },
-    "item_1756313292677_ow2pzvvv0": {
-      "id": "item_1756313292677_ow2pzvvv0",
-      "name": "Demonic Fortune",
-      "type": "Boots",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314046455_ad3yr0fx4"
-      ],
-      "complexity": 15
     },
     "item_1756314079980_pv1zkwdjv": {
       "id": "item_1756314079980_pv1zkwdjv",
@@ -8391,7 +8615,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183368046_e9or6fk9r",
+        "title_1756183370361_lkycmxfqx",
         "item_1756313293894_rhdie6vmd"
       ],
       "complexity": 2
@@ -8423,9 +8647,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756184147408_1kqsqdb12",
+        "title_1756184149777_aik1v95nn",
         "item_1756313276990_tkvtwu9ve",
-        "title_1756184147408_1kqsqdb12",
+        "title_1756184149777_aik1v95nn",
         "item_1756313276990_tkvtwu9ve"
       ],
       "complexity": 2
@@ -8448,9 +8672,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183823169_b83v8r864",
+        "title_1756183824859_1tt3ng52b",
         "item_1756313307762_pvw0poiqg",
-        "title_1756183351139_6kibfjqmp",
+        "title_1756183832789_dptav6552",
         "item_1756313284880_5hyq0owxb"
       ],
       "complexity": 2
@@ -8491,6 +8715,39 @@
       ],
       "complexity": 5
     },
+    "title_1756183648278_2mwfxiumk": {
+      "id": "title_1756183648278_2mwfxiumk",
+      "name": "Ghost dragon's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756314218434_yhfh9he1c": {
+      "id": "item_1756314218434_yhfh9he1c",
+      "name": "Recipe of Muffled Steps",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183599725_rji1gzf76",
+        "item_1756313329365_bso6jgho2",
+        "title_1756183648278_2mwfxiumk",
+        "item_1756313329365_bso6jgho2"
+      ],
+      "complexity": 14
+    },
+    "item_1756313317899_ui9wvx8gd": {
+      "id": "item_1756313317899_ui9wvx8gd",
+      "name": "Muffled Steps",
+      "type": "Boots",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314218434_yhfh9he1c"
+      ],
+      "complexity": 15
+    },
     "item_1756314166918_lv8vdgl0j": {
       "id": "item_1756314166918_lv8vdgl0j",
       "name": "Recipe of Holy Tracks",
@@ -8498,9 +8755,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183919894_ap4h97m7j",
+        "item_1756313317899_ui9wvx8gd"
       ],
-      "complexity": 2
+      "complexity": 16
     },
     "item_1756313308781_ithqapxbk": {
       "id": "item_1756313308781_ithqapxbk",
@@ -8511,7 +8770,7 @@
       "children": [
         "item_1756314166918_lv8vdgl0j"
       ],
-      "complexity": 3
+      "complexity": 17
     },
     "title_1756183452920_y4spgz8cv": {
       "id": "title_1756183452920_y4spgz8cv",
@@ -8540,7 +8799,7 @@
       "name": "Ivory Spurs",
       "type": "Boots",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756314182951_w8uf5cnx6"
       ],
@@ -8563,7 +8822,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183548897_r7o7uzulo",
+        "title_1756183552151_9d8xedg29",
         "item_1756313320947_qyy9i469g"
       ],
       "complexity": 2
@@ -8586,9 +8845,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183919894_ap4h97m7j",
+        "item_1756313309799_31l39ipxr"
       ],
-      "complexity": 2
+      "complexity": 16
     },
     "item_1756313316782_5xpbg0hb8": {
       "id": "item_1756313316782_5xpbg0hb8",
@@ -8599,32 +8860,7 @@
       "children": [
         "item_1756314194359_kodpc3l8w"
       ],
-      "complexity": 3
-    },
-    "item_1756314218434_yhfh9he1c": {
-      "id": "item_1756314218434_yhfh9he1c",
-      "name": "Recipe of Muffled Steps",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183599725_rji1gzf76",
-        "item_1756313329365_bso6jgho2",
-        "title_1756183599725_rji1gzf76",
-        "item_1756313329365_bso6jgho2"
-      ],
-      "complexity": 14
-    },
-    "item_1756313317899_ui9wvx8gd": {
-      "id": "item_1756313317899_ui9wvx8gd",
-      "name": "Muffled Steps",
-      "type": "Boots",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314218434_yhfh9he1c"
-      ],
-      "complexity": 15
+      "complexity": 17
     },
     "item_1756313305260_5qp8b9lyf": {
       "id": "item_1756313305260_5qp8b9lyf",
@@ -8643,7 +8879,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183368046_e9or6fk9r",
+        "title_1756183370361_lkycmxfqx",
         "item_1756313305260_5qp8b9lyf"
       ],
       "complexity": 2
@@ -8700,9 +8936,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756184147408_1kqsqdb12",
+        "title_1756184149777_aik1v95nn",
         "item_1756313279996_4548652bw",
-        "title_1756184147408_1kqsqdb12",
+        "title_1756184149777_aik1v95nn",
         "item_1756313279996_4548652bw"
       ],
       "complexity": 4
@@ -8750,9 +8986,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183823169_b83v8r864",
+        "title_1756183824859_1tt3ng52b",
         "item_1756313295155_r0c7q7iei",
-        "title_1756183823169_b83v8r864",
+        "title_1756183824859_1tt3ng52b",
         "item_1756313295155_r0c7q7iei"
       ],
       "complexity": 4
@@ -8775,9 +9011,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183919894_ap4h97m7j",
+        "item_1756313286884_7hpwvy4df"
       ],
-      "complexity": 2
+      "complexity": 16
     },
     "item_1756313325954_iworpxh6q": {
       "id": "item_1756313325954_iworpxh6q",
@@ -8788,7 +9026,7 @@
       "children": [
         "item_1756314325616_12jiouore"
       ],
-      "complexity": 3
+      "complexity": 17
     },
     "item_1756314392855_gv9ek7lkd": {
       "id": "item_1756314392855_gv9ek7lkd",
@@ -8797,9 +9035,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183919894_ap4h97m7j",
+        "item_1756313282877_ebcp3hbg0"
       ],
-      "complexity": 2
+      "complexity": 16
     },
     "item_1756313330397_fia5uygui": {
       "id": "item_1756313330397_fia5uygui",
@@ -8810,7 +9050,7 @@
       "children": [
         "item_1756314392855_gv9ek7lkd"
       ],
-      "complexity": 3
+      "complexity": 17
     },
     "item_1756314411785_1synrowgj": {
       "id": "item_1756314411785_1synrowgj",
@@ -8854,7 +9094,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183754685_bdxkftnsm",
+        "title_1756183757194_vwc09u3fj",
         "item_1756313363767_6k4l2uh08"
       ],
       "complexity": 2
@@ -8887,7 +9127,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756184005959_kp784ujoy",
+        "title_1756184009567_z221i6mvv",
         "item_1756313344994_75f6k2q28"
       ],
       "complexity": 2
@@ -8943,9 +9183,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183491396_5yrhq00gp",
+        "title_1756183499071_ecybm2b86",
         "item_1756313408211_2fd7nllwj",
-        "title_1756183491396_5yrhq00gp",
+        "title_1756183499071_ecybm2b86",
         "item_1756313408211_2fd7nllwj"
       ],
       "complexity": 4
@@ -8978,7 +9218,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183754685_bdxkftnsm",
+        "title_1756183757194_vwc09u3fj",
         "item_1756313389910_xdcritlrk"
       ],
       "complexity": 2
@@ -9011,7 +9251,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756184005959_kp784ujoy",
+        "title_1756184009567_z221i6mvv",
         "item_1756313353344_gaoog76ym"
       ],
       "complexity": 2
@@ -9027,6 +9267,23 @@
       ],
       "complexity": 3
     },
+    "title_1756183590849_fjuoqa41f": {
+      "id": "title_1756183590849_fjuoqa41f",
+      "name": "Fallen Archangel's (III) ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756313360508_e4842asi6": {
+      "id": "item_1756313360508_e4842asi6",
+      "name": "Flawless Teardrop",
+      "type": "Amulet",
+      "isLegendary": true,
+      "nodeType": "base_item",
+      "children": [],
+      "complexity": 1
+    },
     "item_1756314023285_ayb3zq71l": {
       "id": "item_1756314023285_ayb3zq71l",
       "name": "Recipe of Clear Origin",
@@ -9034,7 +9291,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183590849_fjuoqa41f",
+        "item_1756313360508_e4842asi6"
       ],
       "complexity": 2
     },
@@ -9066,7 +9325,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756184078029_199dtozko",
+        "title_1756184081068_qqc39w0lh",
         "item_1756313351336_xxhbmeg9y"
       ],
       "complexity": 2
@@ -9090,260 +9349,13 @@
       "children": [],
       "complexity": 1
     },
-    "item_1756314219416_ucewx168c": {
-      "id": "item_1756314219416_ucewx168c",
-      "name": "Recipe of Mysterious token",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183816178_2cu7mxohs",
-        "item_1756019175288_sfh0cgwjk",
-        "title_1756183854185_cjjgcp7av",
-        "item_1756019175288_sfh0cgwjk"
-      ],
-      "complexity": 2
-    },
-    "item_1756313375404_rdhne8w5m": {
-      "id": "item_1756313375404_rdhne8w5m",
-      "name": "Mysterious token",
-      "type": "Amulet",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314219416_ucewx168c"
-      ],
-      "complexity": 3
-    },
-    "item_1756314100779_jr3v4cdhv": {
-      "id": "item_1756314100779_jr3v4cdhv",
-      "name": "Recipe of Eye of the Tempest",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183853182_myu15cnia",
-        "item_1756313375404_rdhne8w5m"
-      ],
-      "complexity": 4
-    },
-    "item_1756313356411_obxeb09xp": {
-      "id": "item_1756313356411_obxeb09xp",
-      "name": "Eye of the Tempest",
-      "type": "Amulet",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314100779_jr3v4cdhv"
-      ],
-      "complexity": 5
-    },
-    "item_1756314051692_zatxsfo9d": {
-      "id": "item_1756314051692_zatxsfo9d",
-      "name": "Recipe of Diamond amulet",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183853182_myu15cnia",
-        "item_1756313356411_obxeb09xp"
-      ],
-      "complexity": 6
-    },
-    "item_1756313352340_irg5ofap1": {
-      "id": "item_1756313352340_irg5ofap1",
-      "name": "Diamond amulet",
-      "type": "Amulet",
-      "isLegendary": true,
-      "nodeType": "base_item",
-      "children": [
-        "item_1756314051692_zatxsfo9d"
-      ],
-      "complexity": 7
-    },
-    "title_1756183484622_uv3t6mn26": {
-      "id": "title_1756183484622_uv3t6mn26",
-      "name": "Deadly Lich's ...",
+    "title_1756184052186_0c7isohkk": {
+      "id": "title_1756184052186_0c7isohkk",
+      "name": "Silver Pegasus' ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
       "complexity": 1
-    },
-    "item_1756313428509_cn2x534lc": {
-      "id": "item_1756313428509_cn2x534lc",
-      "name": "Dragon's eye",
-      "type": "Ring",
-      "isLegendary": true,
-      "nodeType": "base_item",
-      "children": [],
-      "complexity": 1
-    },
-    "item_1756314225425_masqcwcb7": {
-      "id": "item_1756314225425_masqcwcb7",
-      "name": "Recipe of Nexus prism",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183484622_uv3t6mn26",
-        "item_1756313356411_obxeb09xp",
-        "title_1756183916565_n56vjd1ua",
-        "item_1756313356411_obxeb09xp"
-      ],
-      "complexity": 6
-    },
-    "item_1756313386428_4lmvys5jt": {
-      "id": "item_1756313386428_4lmvys5jt",
-      "name": "Nexus prism",
-      "type": "Amulet",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314225425_masqcwcb7"
-      ],
-      "complexity": 7
-    },
-    "item_1756314334875_ob1ess08m": {
-      "id": "item_1756314334875_ob1ess08m",
-      "name": "Recipe of The holy spirit",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183484622_uv3t6mn26",
-        "item_1756313428509_cn2x534lc",
-        "title_1756183916565_n56vjd1ua",
-        "item_1756313386428_4lmvys5jt"
-      ],
-      "complexity": 8
-    },
-    "item_1756313406720_po44k32ph": {
-      "id": "item_1756313406720_po44k32ph",
-      "name": "The holy spirit",
-      "type": "Amulet",
-      "isLegendary": true,
-      "nodeType": "base_item",
-      "children": [
-        "item_1756314334875_ob1ess08m"
-      ],
-      "complexity": 9
-    },
-    "item_1756314066519_askpj8znz": {
-      "id": "item_1756314066519_askpj8znz",
-      "name": "Recipe of Dragon Amulet",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183916565_n56vjd1ua",
-        "item_1756313406720_po44k32ph",
-        "title_1756183484622_uv3t6mn26",
-        "item_1756313406720_po44k32ph"
-      ],
-      "complexity": 10
-    },
-    "item_1756313354348_biqpthxw7": {
-      "id": "item_1756313354348_biqpthxw7",
-      "name": "Dragon Amulet",
-      "type": "Amulet",
-      "isLegendary": true,
-      "nodeType": "base_item",
-      "children": [
-        "item_1756314066519_askpj8znz"
-      ],
-      "complexity": 11
-    },
-    "item_1756314093766_wkwgzcniy": {
-      "id": "item_1756314093766_wkwgzcniy",
-      "name": "Recipe of Erc amulet",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183853182_myu15cnia",
-        "item_1756313352340_irg5ofap1"
-      ],
-      "complexity": 8
-    },
-    "item_1756313355350_j381gsao7": {
-      "id": "item_1756313355350_j381gsao7",
-      "name": "Erc amulet",
-      "type": "Amulet",
-      "isLegendary": true,
-      "nodeType": "base_item",
-      "children": [
-        "item_1756314093766_wkwgzcniy"
-      ],
-      "complexity": 9
-    },
-    "item_1756314104244_x832wkjke": {
-      "id": "item_1756314104244_x832wkjke",
-      "name": "Recipe of Fierce Sight",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "item_1756019175266_sfh0cgwjk"
-      ],
-      "complexity": 2
-    },
-    "item_1756313359487_ept029z6f": {
-      "id": "item_1756313359487_ept029z6f",
-      "name": "Fierce Sight",
-      "type": "Amulet",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314104244_x832wkjke"
-      ],
-      "complexity": 3
-    },
-    "item_1756314135352_joz35p5tw": {
-      "id": "item_1756314135352_joz35p5tw",
-      "name": "Recipe of Gorgon Hex",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "item_1756019175266_sfh0cgwjk"
-      ],
-      "complexity": 2
-    },
-    "item_1756313361742_2u961cg6w": {
-      "id": "item_1756313361742_2u961cg6w",
-      "name": "Gorgon Hex",
-      "type": "Amulet",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314135352_joz35p5tw"
-      ],
-      "complexity": 3
-    },
-    "item_1756314170462_a3dc70we4": {
-      "id": "item_1756314170462_a3dc70we4",
-      "name": "Recipe of Hunter's mark",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183507974_r5cn9u3r2",
-        "item_1756019175288_sfh0cgwjk",
-        "title_1756183772315_95822c0ak",
-        "item_1756019175288_sfh0cgwjk"
-      ],
-      "complexity": 2
-    },
-    "item_1756313362770_8zoij6nf8": {
-      "id": "item_1756313362770_8zoij6nf8",
-      "name": "Hunter's mark",
-      "type": "Amulet",
-      "isLegendary": true,
-      "nodeType": "base_item",
-      "children": [
-        "item_1756314170462_a3dc70we4"
-      ],
-      "complexity": 3
     },
     "title_1756183657667_8p958uobd": {
       "id": "title_1756183657667_8p958uobd",
@@ -9353,9 +9365,9 @@
       "children": [],
       "complexity": 1
     },
-    "title_1756184175230_jg53cgi2k": {
-      "id": "title_1756184175230_jg53cgi2k",
-      "name": "War Zealot's ...",
+    "title_1756184219171_zpdzu1t24": {
+      "id": "title_1756184219171_zpdzu1t24",
+      "name": "Zealot's ...",
       "type": "Title",
       "nodeType": "title",
       "children": [],
@@ -9370,7 +9382,7 @@
       "children": [
         "title_1756183657667_8p958uobd",
         "item_1756019175288_sfh0cgwjk",
-        "title_1756184175230_jg53cgi2k",
+        "title_1756184219171_zpdzu1t24",
         "item_1756019175288_sfh0cgwjk"
       ],
       "complexity": 2
@@ -9410,6 +9422,311 @@
         "item_1756314185959_lpqzzppfv"
       ],
       "complexity": 5
+    },
+    "title_1756183854185_cjjgcp7av": {
+      "id": "title_1756183854185_cjjgcp7av",
+      "name": "Medusa emperor's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756314219416_ucewx168c": {
+      "id": "item_1756314219416_ucewx168c",
+      "name": "Recipe of Mysterious token",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183816178_2cu7mxohs",
+        "item_1756019175288_sfh0cgwjk",
+        "title_1756183854185_cjjgcp7av",
+        "item_1756019175288_sfh0cgwjk"
+      ],
+      "complexity": 2
+    },
+    "item_1756313375404_rdhne8w5m": {
+      "id": "item_1756313375404_rdhne8w5m",
+      "name": "Mysterious token",
+      "type": "Amulet",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314219416_ucewx168c"
+      ],
+      "complexity": 3
+    },
+    "item_1756314100779_jr3v4cdhv": {
+      "id": "item_1756314100779_jr3v4cdhv",
+      "name": "Recipe of Eye of the Tempest",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756184052186_0c7isohkk",
+        "item_1756313368069_mb30zgs5z",
+        "title_1756183853182_myu15cnia",
+        "item_1756313375404_rdhne8w5m"
+      ],
+      "complexity": 6
+    },
+    "item_1756313356411_obxeb09xp": {
+      "id": "item_1756313356411_obxeb09xp",
+      "name": "Eye of the Tempest",
+      "type": "Amulet",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314100779_jr3v4cdhv"
+      ],
+      "complexity": 7
+    },
+    "item_1756314051692_zatxsfo9d": {
+      "id": "item_1756314051692_zatxsfo9d",
+      "name": "Recipe of Diamond amulet",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183853182_myu15cnia",
+        "item_1756313356411_obxeb09xp"
+      ],
+      "complexity": 8
+    },
+    "item_1756313352340_irg5ofap1": {
+      "id": "item_1756313352340_irg5ofap1",
+      "name": "Diamond amulet",
+      "type": "Amulet",
+      "isLegendary": true,
+      "nodeType": "base_item",
+      "children": [
+        "item_1756314051692_zatxsfo9d"
+      ],
+      "complexity": 9
+    },
+    "title_1756183916565_n56vjd1ua": {
+      "id": "title_1756183916565_n56vjd1ua",
+      "name": "Ogre Mage's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "title_1756183814177_k4ipnmh08": {
+      "id": "title_1756183814177_k4ipnmh08",
+      "name": "Lich's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756313428509_cn2x534lc": {
+      "id": "item_1756313428509_cn2x534lc",
+      "name": "Dragon's eye",
+      "type": "Ring",
+      "isLegendary": true,
+      "nodeType": "base_item",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756314225425_masqcwcb7": {
+      "id": "item_1756314225425_masqcwcb7",
+      "name": "Recipe of Nexus prism",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183814177_k4ipnmh08",
+        "item_1756313356411_obxeb09xp",
+        "title_1756183916565_n56vjd1ua",
+        "item_1756313356411_obxeb09xp"
+      ],
+      "complexity": 8
+    },
+    "item_1756313386428_4lmvys5jt": {
+      "id": "item_1756313386428_4lmvys5jt",
+      "name": "Nexus prism",
+      "type": "Amulet",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314225425_masqcwcb7"
+      ],
+      "complexity": 9
+    },
+    "item_1756314334875_ob1ess08m": {
+      "id": "item_1756314334875_ob1ess08m",
+      "name": "Recipe of The holy spirit",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183814177_k4ipnmh08",
+        "item_1756313428509_cn2x534lc",
+        "title_1756183916565_n56vjd1ua",
+        "item_1756313386428_4lmvys5jt"
+      ],
+      "complexity": 10
+    },
+    "item_1756313406720_po44k32ph": {
+      "id": "item_1756313406720_po44k32ph",
+      "name": "The holy spirit",
+      "type": "Amulet",
+      "isLegendary": true,
+      "nodeType": "base_item",
+      "children": [
+        "item_1756314334875_ob1ess08m"
+      ],
+      "complexity": 11
+    },
+    "item_1756314066519_askpj8znz": {
+      "id": "item_1756314066519_askpj8znz",
+      "name": "Recipe of Dragon Amulet",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183916565_n56vjd1ua",
+        "item_1756313406720_po44k32ph",
+        "title_1756183814177_k4ipnmh08",
+        "item_1756313406720_po44k32ph"
+      ],
+      "complexity": 12
+    },
+    "item_1756313354348_biqpthxw7": {
+      "id": "item_1756313354348_biqpthxw7",
+      "name": "Dragon Amulet",
+      "type": "Amulet",
+      "isLegendary": true,
+      "nodeType": "base_item",
+      "children": [
+        "item_1756314066519_askpj8znz"
+      ],
+      "complexity": 13
+    },
+    "item_1756314093766_wkwgzcniy": {
+      "id": "item_1756314093766_wkwgzcniy",
+      "name": "Recipe of Erc amulet",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183853182_myu15cnia",
+        "item_1756313352340_irg5ofap1",
+        "title_1756184052186_0c7isohkk",
+        "item_1756313428509_cn2x534lc"
+      ],
+      "complexity": 10
+    },
+    "item_1756313355350_j381gsao7": {
+      "id": "item_1756313355350_j381gsao7",
+      "name": "Erc amulet",
+      "type": "Amulet",
+      "isLegendary": true,
+      "nodeType": "base_item",
+      "children": [
+        "item_1756314093766_wkwgzcniy"
+      ],
+      "complexity": 11
+    },
+    "item_1756313357406_jvv3etpsq": {
+      "id": "item_1756313357406_jvv3etpsq",
+      "name": "Faint Droplet",
+      "type": "Amulet",
+      "isLegendary": true,
+      "nodeType": "base_item",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756314104244_x832wkjke": {
+      "id": "item_1756314104244_x832wkjke",
+      "name": "Recipe of Fierce Sight",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183590849_fjuoqa41f",
+        "item_1756313357406_jvv3etpsq"
+      ],
+      "complexity": 2
+    },
+    "item_1756313359487_ept029z6f": {
+      "id": "item_1756313359487_ept029z6f",
+      "name": "Fierce Sight",
+      "type": "Amulet",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314104244_x832wkjke"
+      ],
+      "complexity": 3
+    },
+    "item_1756313365060_mkkjpo2qv": {
+      "id": "item_1756313365060_mkkjpo2qv",
+      "name": "Innocent Lure",
+      "type": "Amulet",
+      "isLegendary": true,
+      "nodeType": "base_item",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756314135352_joz35p5tw": {
+      "id": "item_1756314135352_joz35p5tw",
+      "name": "Recipe of Gorgon Hex",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183590849_fjuoqa41f",
+        "item_1756313365060_mkkjpo2qv"
+      ],
+      "complexity": 2
+    },
+    "item_1756313361742_2u961cg6w": {
+      "id": "item_1756313361742_2u961cg6w",
+      "name": "Gorgon Hex",
+      "type": "Amulet",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314135352_joz35p5tw"
+      ],
+      "complexity": 3
+    },
+    "title_1756183772315_95822c0ak": {
+      "id": "title_1756183772315_95822c0ak",
+      "name": "Infernal Troglodyte's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756314170462_a3dc70we4": {
+      "id": "item_1756314170462_a3dc70we4",
+      "name": "Recipe of Hunter's mark",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183507974_r5cn9u3r2",
+        "item_1756019175288_sfh0cgwjk",
+        "title_1756183772315_95822c0ak",
+        "item_1756019175288_sfh0cgwjk"
+      ],
+      "complexity": 2
+    },
+    "item_1756313362770_8zoij6nf8": {
+      "id": "item_1756313362770_8zoij6nf8",
+      "name": "Hunter's mark",
+      "type": "Amulet",
+      "isLegendary": true,
+      "nodeType": "base_item",
+      "children": [
+        "item_1756314170462_a3dc70we4"
+      ],
+      "complexity": 3
     },
     "title_1756183643266_138ncgczf": {
       "id": "title_1756183643266_138ncgczf",
@@ -9461,7 +9778,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183837818_sg1jqd8uy",
+        "title_1756183840823_6ms29qp7j",
         "item_1756313367066_4qloc2aar"
       ],
       "complexity": 2
@@ -9477,6 +9794,15 @@
       ],
       "complexity": 3
     },
+    "item_1756313337976_t4yuzpdb7": {
+      "id": "item_1756313337976_t4yuzpdb7",
+      "name": "Aged Pledge",
+      "type": "Amulet",
+      "isLegendary": true,
+      "nodeType": "base_item",
+      "children": [],
+      "complexity": 1
+    },
     "item_1756314221826_m7fpvm66g": {
       "id": "item_1756314221826_m7fpvm66g",
       "name": "Recipe of Nature's Crest",
@@ -9484,7 +9810,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183590849_fjuoqa41f",
+        "item_1756313337976_t4yuzpdb7"
       ],
       "complexity": 2
     },
@@ -9541,7 +9869,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183837818_sg1jqd8uy",
+        "title_1756183840823_6ms29qp7j",
         "item_1756313392135_qmbuxuk09"
       ],
       "complexity": 2
@@ -9557,6 +9885,14 @@
       ],
       "complexity": 3
     },
+    "title_1756183352286_pa9k51uc0": {
+      "id": "title_1756183352286_pa9k51uc0",
+      "name": "Arch magi's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
     "item_1756314265073_cumlqua1v": {
       "id": "item_1756314265073_cumlqua1v",
       "name": "Recipe of Relentless amulet",
@@ -9564,9 +9900,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183351139_6kibfjqmp",
+        "title_1756183352286_pa9k51uc0",
         "item_1756313369074_wv2nkkqdw",
-        "title_1756183351139_6kibfjqmp",
+        "title_1756183352286_pa9k51uc0",
         "item_1756313369074_wv2nkkqdw"
       ],
       "complexity": 4
@@ -9599,7 +9935,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183548897_r7o7uzulo",
+        "title_1756183552151_9d8xedg29",
         "item_1756313416018_crfs4vty1"
       ],
       "complexity": 2
@@ -9615,6 +9951,15 @@
       ],
       "complexity": 3
     },
+    "item_1756313358462_0mnr8dkof": {
+      "id": "item_1756313358462_0mnr8dkof",
+      "name": "Fair Prospect",
+      "type": "Amulet",
+      "isLegendary": true,
+      "nodeType": "base_item",
+      "children": [],
+      "complexity": 1
+    },
     "item_1756314281405_xhcbjp3y9": {
       "id": "item_1756314281405_xhcbjp3y9",
       "name": "Recipe of Scarlet Sun",
@@ -9622,7 +9967,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183590849_fjuoqa41f",
+        "item_1756313358462_0mnr8dkof"
       ],
       "complexity": 2
     },
@@ -9669,12 +10016,12 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183484622_uv3t6mn26",
+        "title_1756183814177_k4ipnmh08",
         "item_1756313355350_j381gsao7",
         "title_1756183916565_n56vjd1ua",
         "item_1756313406720_po44k32ph"
       ],
-      "complexity": 10
+      "complexity": 12
     },
     "item_1756313400454_9odr44r5s": {
       "id": "item_1756313400454_9odr44r5s",
@@ -9685,7 +10032,7 @@
       "children": [
         "item_1756314296066_r9d6749yn"
       ],
-      "complexity": 11
+      "complexity": 13
     },
     "item_1756314298517_9m7rk1bpl": {
       "id": "item_1756314298517_9m7rk1bpl",
@@ -9694,9 +10041,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183484622_uv3t6mn26",
+        "title_1756183814177_k4ipnmh08",
         "item_1756313408211_2fd7nllwj",
-        "title_1756183484622_uv3t6mn26",
+        "title_1756183814177_k4ipnmh08",
         "item_1756313408211_2fd7nllwj"
       ],
       "complexity": 4
@@ -9719,9 +10066,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183491396_5yrhq00gp",
+        "title_1756183499071_ecybm2b86",
         "item_1756313362770_8zoij6nf8",
-        "title_1756183491396_5yrhq00gp",
+        "title_1756183499071_ecybm2b86",
         "item_1756313362770_8zoij6nf8"
       ],
       "complexity": 4
@@ -9749,7 +10096,7 @@
         "title_1756183643266_138ncgczf",
         "item_1756313406720_po44k32ph"
       ],
-      "complexity": 12
+      "complexity": 14
     },
     "item_1756313409792_4ny81qoy3": {
       "id": "item_1756313409792_4ny81qoy3",
@@ -9760,7 +10107,7 @@
       "children": [
         "item_1756314353202_t85jsnu1u"
       ],
-      "complexity": 13
+      "complexity": 15
     },
     "item_1756314372026_uhk8b4cdr": {
       "id": "item_1756314372026_uhk8b4cdr",
@@ -9787,6 +10134,15 @@
       ],
       "complexity": 3
     },
+    "item_1756313373085_anquc80av": {
+      "id": "item_1756313373085_anquc80av",
+      "name": "Mellow Tribute",
+      "type": "Amulet",
+      "isLegendary": true,
+      "nodeType": "base_item",
+      "children": [],
+      "complexity": 1
+    },
     "item_1756314386780_tjwaj5yqv": {
       "id": "item_1756314386780_tjwaj5yqv",
       "name": "Recipe of Triad Umber",
@@ -9794,7 +10150,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183590849_fjuoqa41f",
+        "item_1756313373085_anquc80av"
       ],
       "complexity": 2
     },
@@ -9816,9 +10174,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183823169_b83v8r864",
+        "title_1756183824859_1tt3ng52b",
         "item_1756313362770_8zoij6nf8",
-        "title_1756183823169_b83v8r864",
+        "title_1756183824859_1tt3ng52b",
         "item_1756313362770_8zoij6nf8"
       ],
       "complexity": 4
@@ -9851,7 +10209,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756184078029_199dtozko",
+        "title_1756184081068_qqc39w0lh",
         "item_1756313466757_58par7eth"
       ],
       "complexity": 2
@@ -9875,6 +10233,14 @@
       "children": [],
       "complexity": 1
     },
+    "title_1756183871099_eje3klb54": {
+      "id": "title_1756183871099_eje3klb54",
+      "name": "Mighty Gorgons king's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
     "item_1756314003510_hd3t1vqwj": {
       "id": "item_1756314003510_hd3t1vqwj",
       "name": "Recipe of Bloodsoaked ring",
@@ -9882,9 +10248,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756184147408_1kqsqdb12",
+        "title_1756184149777_aik1v95nn",
         "item_1756313158442_o2za3xxst",
-        "title_1756183577006_c6uzu9mbz",
+        "title_1756184225033_k622d6ept",
         "item_1756019175277_sfh0cgwjk"
       ],
       "complexity": 2
@@ -9907,9 +10273,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183491396_5yrhq00gp",
+        "title_1756183499071_ecybm2b86",
         "item_1756313423192_6z5mrd70z",
-        "title_1756183491396_5yrhq00gp",
+        "title_1756183499071_ecybm2b86",
         "item_1756313423192_6z5mrd70z"
       ],
       "complexity": 4
@@ -9957,9 +10323,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183484622_uv3t6mn26",
+        "title_1756183814177_k4ipnmh08",
         "item_1756313491100_9siliw9ce",
-        "title_1756183484622_uv3t6mn26",
+        "title_1756183814177_k4ipnmh08",
         "item_1756313491100_9siliw9ce"
       ],
       "complexity": 4
@@ -10000,6 +10366,14 @@
       ],
       "complexity": 7
     },
+    "title_1756183716191_vudmylq5a": {
+      "id": "title_1756183716191_vudmylq5a",
+      "name": "Harpy Hag's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
     "item_1756314240073_e4w4lyp31": {
       "id": "item_1756314240073_e4w4lyp31",
       "name": "Recipe of Plainswalker's relic",
@@ -10007,7 +10381,7 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183351139_6kibfjqmp",
+        "title_1756183352286_pa9k51uc0",
         "item_1756313488100_fvnmemaa7",
         "title_1756183716191_vudmylq5a",
         "item_1756313488100_fvnmemaa7"
@@ -10167,7 +10541,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183474340_j7xlbxpzf",
+        "title_1756183476640_z2cri4kzt",
         "item_1756313453560_00ckgennb"
       ],
       "complexity": 2
@@ -10200,7 +10574,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756184078029_199dtozko",
+        "title_1756184081068_qqc39w0lh",
         "item_1756313441412_0zz21894y"
       ],
       "complexity": 2
@@ -10258,7 +10632,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183368046_e9or6fk9r",
+        "title_1756183370361_lkycmxfqx",
         "item_1756313458082_e3qngrhju"
       ],
       "complexity": 2
@@ -10291,7 +10665,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183583602_mt7w4ade1",
+        "title_1756183587685_xdhtskpy4",
         "item_1756313479661_p3xhstgj1"
       ],
       "complexity": 2
@@ -10306,6 +10680,14 @@
         "item_1756314054136_xlyveyoab"
       ],
       "complexity": 3
+    },
+    "title_1756183319616_osska08yf": {
+      "id": "title_1756183319616_osska08yf",
+      "name": "Almighty Archangel's ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
     },
     "item_1756314099776_yuglkeoxh": {
       "id": "item_1756314099776_yuglkeoxh",
@@ -10380,6 +10762,39 @@
       ],
       "complexity": 3
     },
+    "title_1756183606071_rymj0h0yx": {
+      "id": "title_1756183606071_rymj0h0yx",
+      "name": "Fire dragon's (III) ...",
+      "type": "Title",
+      "nodeType": "title",
+      "children": [],
+      "complexity": 1
+    },
+    "item_1756314231052_44dovs73u": {
+      "id": "item_1756314231052_44dovs73u",
+      "name": "Recipe of Obsidian Riddle",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183319616_osska08yf",
+        "item_1756313429509_hfuu4veqz",
+        "title_1756183590849_fjuoqa41f",
+        "item_1756313429509_hfuu4veqz"
+      ],
+      "complexity": 18
+    },
+    "item_1756313459180_6zs936yml": {
+      "id": "item_1756313459180_6zs936yml",
+      "name": "Obsidian Riddle",
+      "type": "Ring",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314231052_44dovs73u"
+      ],
+      "complexity": 19
+    },
     "item_1756314089214_sl3u1daqa": {
       "id": "item_1756314089214_sl3u1daqa",
       "name": "Recipe of Enigma",
@@ -10387,9 +10802,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183606071_rymj0h0yx",
+        "item_1756313459180_6zs936yml"
       ],
-      "complexity": 2
+      "complexity": 20
     },
     "item_1756313433020_4d801ff48": {
       "id": "item_1756313433020_4d801ff48",
@@ -10400,7 +10817,57 @@
       "children": [
         "item_1756314089214_sl3u1daqa"
       ],
-      "complexity": 3
+      "complexity": 21
+    },
+    "item_1756314307192_4o2y79r7t": {
+      "id": "item_1756314307192_4o2y79r7t",
+      "name": "Recipe of Soulshadow",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756184049118_cj06u3xik",
+        "item_1756313425347_l12nwshzy",
+        "title_1756184049118_cj06u3xik",
+        "item_1756313421001_dz6sgrs1m"
+      ],
+      "complexity": 16
+    },
+    "item_1756313486796_22wvuavpv": {
+      "id": "item_1756313486796_22wvuavpv",
+      "name": "Soulshadow",
+      "type": "Ring",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314307192_4o2y79r7t"
+      ],
+      "complexity": 17
+    },
+    "item_1756314155897_9j0ld7fir": {
+      "id": "item_1756314155897_9j0ld7fir",
+      "name": "Recipe of Heavenly Leaf",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183319616_osska08yf",
+        "item_1756313429509_hfuu4veqz",
+        "title_1756183319616_osska08yf",
+        "item_1756313486796_22wvuavpv"
+      ],
+      "complexity": 18
+    },
+    "item_1756313444902_tne9465b9": {
+      "id": "item_1756313444902_tne9465b9",
+      "name": "Heavenly Leaf",
+      "type": "Ring",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314155897_9j0ld7fir"
+      ],
+      "complexity": 19
     },
     "item_1756314091680_zonxsxq4y": {
       "id": "item_1756314091680_zonxsxq4y",
@@ -10409,9 +10876,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183606071_rymj0h0yx",
+        "item_1756313444902_tne9465b9"
       ],
-      "complexity": 2
+      "complexity": 20
     },
     "item_1756313434022_6rb4y7s5g": {
       "id": "item_1756313434022_6rb4y7s5g",
@@ -10422,7 +10891,7 @@
       "children": [
         "item_1756314091680_zonxsxq4y"
       ],
-      "complexity": 3
+      "complexity": 21
     },
     "item_1756314108794_nnd1ihlfs": {
       "id": "item_1756314108794_nnd1ihlfs",
@@ -10466,7 +10935,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183474340_j7xlbxpzf",
+        "title_1756183476640_z2cri4kzt",
         "item_1756313437032_4m58dypbu"
       ],
       "complexity": 2
@@ -10489,9 +10958,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183823169_b83v8r864",
+        "title_1756183824859_1tt3ng52b",
         "item_1756313372083_exubj2bab",
-        "title_1756183823169_b83v8r864",
+        "title_1756183824859_1tt3ng52b",
         "item_1756313372083_exubj2bab"
       ],
       "complexity": 4
@@ -10548,165 +11017,28 @@
       ],
       "complexity": 3
     },
-    "item_1756314307192_4o2y79r7t": {
-      "id": "item_1756314307192_4o2y79r7t",
-      "name": "Recipe of Soulshadow",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756184049118_cj06u3xik",
-        "item_1756313425347_l12nwshzy",
-        "title_1756184049118_cj06u3xik",
-        "item_1756313421001_dz6sgrs1m"
-      ],
-      "complexity": 16
-    },
-    "item_1756313486796_22wvuavpv": {
-      "id": "item_1756313486796_22wvuavpv",
-      "name": "Soulshadow",
-      "type": "Ring",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314307192_4o2y79r7t"
-      ],
-      "complexity": 17
-    },
-    "item_1756314155897_9j0ld7fir": {
-      "id": "item_1756314155897_9j0ld7fir",
-      "name": "Recipe of Heavenly Leaf",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183319616_osska08yf",
-        "item_1756313429509_hfuu4veqz",
-        "title_1756183319616_osska08yf",
-        "item_1756313486796_22wvuavpv"
-      ],
-      "complexity": 18
-    },
-    "item_1756313444902_tne9465b9": {
-      "id": "item_1756313444902_tne9465b9",
-      "name": "Heavenly Leaf",
-      "type": "Ring",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314155897_9j0ld7fir"
-      ],
-      "complexity": 19
-    },
     "item_1756314168362_bunswri08": {
       "id": "item_1756314168362_bunswri08",
       "name": "Recipe of Honest Star",
       "type": "Recipe",
       "isLegendary": false,
       "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
+      "children": [
+        "title_1756183590849_fjuoqa41f",
+        "item_1756313486796_22wvuavpv",
+        "title_1756183606071_rymj0h0yx",
+        "item_1756313486796_22wvuavpv"
+      ],
+      "complexity": 18
     },
     "item_1756313448058_9pttuulc3": {
       "id": "item_1756313448058_9pttuulc3",
       "name": "Honest Star",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756314168362_bunswri08"
-      ],
-      "complexity": 2
-    },
-    "item_1756314189971_4ojpso6mk": {
-      "id": "item_1756314189971_4ojpso6mk",
-      "name": "Recipe of Lethal Rumors",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "item_1756019175266_sfh0cgwjk"
-      ],
-      "complexity": 2
-    },
-    "item_1756313452556_fyvszyl4b": {
-      "id": "item_1756313452556_fyvszyl4b",
-      "name": "Lethal Rumors",
-      "type": "Ring",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314189971_4ojpso6mk"
-      ],
-      "complexity": 3
-    },
-    "item_1756314196983_l882j5fa1": {
-      "id": "item_1756314196983_l882j5fa1",
-      "name": "Recipe of Lorethal's eminence",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183882623_7p8oe3nny",
-        "item_1756313443540_03fdwrlyz",
-        "title_1756183882623_7p8oe3nny",
-        "item_1756313443540_03fdwrlyz"
-      ],
-      "complexity": 4
-    },
-    "item_1756313455074_263340sb9": {
-      "id": "item_1756313455074_263340sb9",
-      "name": "Lorethal's eminence",
-      "type": "Ring",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314196983_l882j5fa1"
-      ],
-      "complexity": 5
-    },
-    "item_1756314213403_d38u415t5": {
-      "id": "item_1756314213403_d38u415t5",
-      "name": "Recipe of Moon Pin",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "item_1756019175266_sfh0cgwjk"
-      ],
-      "complexity": 2
-    },
-    "item_1756313456068_w9ja5jlhp": {
-      "id": "item_1756313456068_w9ja5jlhp",
-      "name": "Moon Pin",
-      "type": "Ring",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314213403_d38u415t5"
-      ],
-      "complexity": 3
-    },
-    "item_1756314231052_44dovs73u": {
-      "id": "item_1756314231052_44dovs73u",
-      "name": "Recipe of Obsidian Riddle",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [
-        "title_1756183319616_osska08yf",
-        "item_1756313429509_hfuu4veqz"
-      ],
-      "complexity": 18
-    },
-    "item_1756313459180_6zs936yml": {
-      "id": "item_1756313459180_6zs936yml",
-      "name": "Obsidian Riddle",
-      "type": "Ring",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314231052_44dovs73u"
       ],
       "complexity": 19
     },
@@ -10760,6 +11092,104 @@
       ],
       "complexity": 17
     },
+    "item_1756314287070_az333tedy": {
+      "id": "item_1756314287070_az333tedy",
+      "name": "Recipe of Shadow Vow",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183606071_rymj0h0yx",
+        "item_1756313486796_22wvuavpv",
+        "title_1756183606071_rymj0h0yx",
+        "item_1756313502350_m4fb3i92n"
+      ],
+      "complexity": 18
+    },
+    "item_1756313485365_g5sdkvbky": {
+      "id": "item_1756313485365_g5sdkvbky",
+      "name": "Shadow Vow",
+      "type": "Ring",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314287070_az333tedy"
+      ],
+      "complexity": 19
+    },
+    "item_1756314189971_4ojpso6mk": {
+      "id": "item_1756314189971_4ojpso6mk",
+      "name": "Recipe of Lethal Rumors",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183606071_rymj0h0yx",
+        "item_1756313485365_g5sdkvbky"
+      ],
+      "complexity": 20
+    },
+    "item_1756313452556_fyvszyl4b": {
+      "id": "item_1756313452556_fyvszyl4b",
+      "name": "Lethal Rumors",
+      "type": "Ring",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314189971_4ojpso6mk"
+      ],
+      "complexity": 21
+    },
+    "item_1756314196983_l882j5fa1": {
+      "id": "item_1756314196983_l882j5fa1",
+      "name": "Recipe of Lorethal's eminence",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "title_1756183882623_7p8oe3nny",
+        "item_1756313443540_03fdwrlyz",
+        "title_1756183882623_7p8oe3nny",
+        "item_1756313443540_03fdwrlyz"
+      ],
+      "complexity": 4
+    },
+    "item_1756313455074_263340sb9": {
+      "id": "item_1756313455074_263340sb9",
+      "name": "Lorethal's eminence",
+      "type": "Ring",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314196983_l882j5fa1"
+      ],
+      "complexity": 5
+    },
+    "item_1756314213403_d38u415t5": {
+      "id": "item_1756314213403_d38u415t5",
+      "name": "Recipe of Moon Pin",
+      "type": "Recipe",
+      "isLegendary": false,
+      "nodeType": "recipe",
+      "children": [
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183606071_rymj0h0yx",
+        "item_1756313448058_9pttuulc3"
+      ],
+      "complexity": 20
+    },
+    "item_1756313456068_w9ja5jlhp": {
+      "id": "item_1756313456068_w9ja5jlhp",
+      "name": "Moon Pin",
+      "type": "Ring",
+      "isLegendary": true,
+      "nodeType": "item",
+      "children": [
+        "item_1756314213403_d38u415t5"
+      ],
+      "complexity": 21
+    },
     "item_1756314232052_lm8fv9mha": {
       "id": "item_1756314232052_lm8fv9mha",
       "name": "Recipe of Oculus Pin",
@@ -10768,6 +11198,8 @@
       "nodeType": "recipe",
       "children": [
         "title_1756184049118_cj06u3xik",
+        "item_1756313502350_m4fb3i92n",
+        "title_1756183606071_rymj0h0yx",
         "item_1756313502350_m4fb3i92n"
       ],
       "complexity": 18
@@ -10777,7 +11209,7 @@
       "name": "Oculus Pin",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756314232052_lm8fv9mha"
       ],
@@ -10802,7 +11234,7 @@
       "name": "Precious Force",
       "type": "Ring",
       "isLegendary": true,
-      "nodeType": "item",
+      "nodeType": "base_item",
       "children": [
         "item_1756314244880_cdhtzzb4m"
       ],
@@ -10840,9 +11272,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183351139_6kibfjqmp",
+        "title_1756183352286_pa9k51uc0",
         "item_1756313472752_arycd8dmv",
-        "title_1756183351139_6kibfjqmp",
+        "title_1756183352286_pa9k51uc0",
         "item_1756313472752_arycd8dmv"
       ],
       "complexity": 4
@@ -10875,7 +11307,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183583602_mt7w4ade1",
+        "title_1756183587685_xdhtskpy4",
         "item_1756313474201_aomx599zg"
       ],
       "complexity": 2
@@ -10908,7 +11340,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183474340_j7xlbxpzf",
+        "title_1756183476640_z2cri4kzt",
         "item_1756313431998_p5ew3g2h2"
       ],
       "complexity": 2
@@ -10941,7 +11373,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183548897_r7o7uzulo",
+        "title_1756183552151_9d8xedg29",
         "item_1756313501001_xruzdtg5t"
       ],
       "complexity": 2
@@ -10957,26 +11389,6 @@
       ],
       "complexity": 3
     },
-    "item_1756314287070_az333tedy": {
-      "id": "item_1756314287070_az333tedy",
-      "name": "Recipe of Shadow Vow",
-      "type": "Recipe",
-      "isLegendary": false,
-      "nodeType": "recipe",
-      "children": [],
-      "complexity": 1
-    },
-    "item_1756313485365_g5sdkvbky": {
-      "id": "item_1756313485365_g5sdkvbky",
-      "name": "Shadow Vow",
-      "type": "Ring",
-      "isLegendary": true,
-      "nodeType": "item",
-      "children": [
-        "item_1756314287070_az333tedy"
-      ],
-      "complexity": 2
-    },
     "item_1756314317353_h7zob6301": {
       "id": "item_1756314317353_h7zob6301",
       "name": "Recipe of Stoutgrip",
@@ -10984,9 +11396,9 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "title_1756183871099_eje3klb54",
+        "title_1756183872782_gk2lo56s5",
         "item_1756313436027_n2q5xmx4o",
-        "title_1756183871099_eje3klb54",
+        "title_1756183872782_gk2lo56s5",
         "item_1756313436027_n2q5xmx4o"
       ],
       "complexity": 4
@@ -11019,7 +11431,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756184078029_199dtozko",
+        "title_1756184081068_qqc39w0lh",
         "item_1756313451557_tbkqju2zq"
       ],
       "complexity": 2
@@ -11052,7 +11464,7 @@
       "nodeType": "recipe",
       "children": [
         "item_1756019175266_sfh0cgwjk",
-        "title_1756183754685_bdxkftnsm",
+        "title_1756183757194_vwc09u3fj",
         "item_1756313460565_j3o3mtlpq"
       ],
       "complexity": 2
@@ -11100,9 +11512,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183606071_rymj0h0yx",
+        "item_1756313463748_tm7rd9idu"
       ],
-      "complexity": 2
+      "complexity": 20
     },
     "item_1756313498260_6ltv3vn4n": {
       "id": "item_1756313498260_6ltv3vn4n",
@@ -11113,7 +11527,7 @@
       "children": [
         "item_1756314394175_8t485uzmh"
       ],
-      "complexity": 3
+      "complexity": 21
     },
     "item_1756314396614_uvcl0oyw7": {
       "id": "item_1756314396614_uvcl0oyw7",
@@ -11122,9 +11536,11 @@
       "isLegendary": false,
       "nodeType": "recipe",
       "children": [
-        "item_1756019175266_sfh0cgwjk"
+        "item_1756019175266_sfh0cgwjk",
+        "title_1756183606071_rymj0h0yx",
+        "item_1756313467758_k2nt7q3f3"
       ],
-      "complexity": 2
+      "complexity": 20
     },
     "item_1756313499590_o8cb6yvmv": {
       "id": "item_1756313499590_o8cb6yvmv",
@@ -11135,7 +11551,7 @@
       "children": [
         "item_1756314396614_uvcl0oyw7"
       ],
-      "complexity": 3
+      "complexity": 21
     }
   }
 }

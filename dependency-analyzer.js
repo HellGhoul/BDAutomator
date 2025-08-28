@@ -328,17 +328,11 @@ class DependencyAnalyzer {
       return null;
     }
     
-    // Find the title by prefix (more flexible matching)
+    // Find the title by exact name match
     let title = this.titleMap.get(titleName);
     if (!title) {
-      // Try to find by prefix that contains the title name
-      for (const [name, titleData] of this.titleMap) {
-        if (titleData.prefix && titleData.prefix.toLowerCase().includes(titleName.toLowerCase())) {
-          title = titleData;
-          console.log(`✅ Found title by prefix: "${titleData.prefix}" for "${titleName}"`);
-          break;
-        }
-      }
+      console.log(`❌ Title not found: ${titleName}`);
+      return null;
     }
     
     if (!title) {
@@ -346,29 +340,11 @@ class DependencyAnalyzer {
       return null;
     }
     
-    // Find the base item - try exact match first, then try without suffixes
+    // Find the base item by exact name match
     let baseItem = this.itemMap.get(baseItemName);
     if (!baseItem) {
-      // Try to find by removing common suffixes like (III), (II), etc.
-      const baseItemWithoutSuffix = baseItemName.replace(/\s*\([^)]+\)$/, '');
-      if (baseItemWithoutSuffix !== baseItemName) {
-        baseItem = this.itemMap.get(baseItemWithoutSuffix);
-        if (baseItem) {
-          console.log(`✅ Found base item without suffix: "${baseItemWithoutSuffix}" for "${baseItemName}"`);
-        }
-      }
-      
-      // If still not found, try to find items that contain the base name
-      if (!baseItem) {
-        for (const [name, itemData] of this.itemMap) {
-          if (name.toLowerCase().includes(baseItemName.toLowerCase()) || 
-              baseItemName.toLowerCase().includes(name.toLowerCase())) {
-            baseItem = itemData;
-            console.log(`✅ Found base item by partial match: "${name}" for "${baseItemName}"`);
-            break;
-          }
-        }
-      }
+      console.log(`❌ Base item not found: ${baseItemName}`);
+      return null;
     }
     
     if (!baseItem) {
@@ -398,36 +374,55 @@ class DependencyAnalyzer {
       };
     }
     
-    // Handle patterns like "Title's Base Item (III)" or "Title Base Item"
-    // IMPORTANT: More specific patterns must come FIRST to avoid false matches
-    const titlePatterns = [
-      /^(.+?)'s (.+?)(?:\s*\([^)]+\))?$/,  // e.g., "Azure dragon's God Forged Boots (III)" - CHECK FIRST
-      /^(.+?) (.+?)(?:\s*\([^)]+\))?$/     // e.g., "Minotaur king Great axe (II)" - CHECK SECOND
-    ];
-    
-    for (const pattern of titlePatterns) {
-      const match = titledItemName.match(pattern);
-      if (match) {
-        let titleName = match[1].trim();
-        let baseItemName = match[2].trim();
-        
-        // Validate that the extracted base item name is actually a valid item
-        // This prevents incorrect splitting like "Keh's might" being split into "Keh" and "might"
-        if (this.itemMap.has(baseItemName)) {
-          console.log(`✅ Extracted: title="${titleName}", base="${baseItemName}"`);
-          return {
-            titleName: titleName,
-            baseItemName: baseItemName
-          };
-        } else {
-          console.log(`⚠️ Extracted base item "${baseItemName}" is not a valid item, trying next pattern`);
-          continue;
+    // Instead of using regex patterns, use the actual title data from titles.json
+    // This ensures we match exact titles, not partial matches
+    for (const [titleId, titleData] of this.titleMap) {
+      const titleName = titleData.name;
+      const prefix = titleData.prefix || '';
+      const suffix = titleData.suffix || '';
+      
+      // Check if the titled item name starts with the title's prefix and ends with its suffix
+      if (prefix && suffix) {
+        // Title has both prefix and suffix
+        if (titledItemName.startsWith(prefix) && titledItemName.endsWith(suffix)) {
+          const baseItemName = titledItemName.substring(prefix.length, titledItemName.length - suffix.length).trim();
+          if (this.itemMap.has(baseItemName)) {
+            console.log(`✅ Found title with prefix+suffix: "${titleName}" for "${titledItemName}"`);
+            return {
+              titleName: titleName,
+              baseItemName: baseItemName
+            };
+          }
+        }
+      } else if (prefix) {
+        // Title has only prefix (e.g., "Azure dragon's")
+        if (titledItemName.startsWith(prefix)) {
+          const baseItemName = titledItemName.substring(prefix.length).trim();
+          if (this.itemMap.has(baseItemName)) {
+            console.log(`✅ Found title with prefix: "${titleName}" for "${titledItemName}"`);
+            return {
+              titleName: titleName,
+              baseItemName: baseItemName
+            };
+          }
+        }
+      } else if (suffix) {
+        // Title has only suffix
+        if (titledItemName.endsWith(suffix)) {
+          const baseItemName = titledItemName.substring(0, titledItemName.length - suffix.length).trim();
+          if (this.itemMap.has(baseItemName)) {
+            console.log(`✅ Found title with suffix: "${titleName}" for "${titledItemName}"`);
+            return {
+              titleName: titleName,
+              baseItemName: baseItemName
+            };
+          }
         }
       }
     }
     
-    console.log(`❌ No valid pattern matched for: "${titledItemName}"`);
-    // If no pattern matches, treat the whole name as base item
+    console.log(`❌ No exact title match found for: "${titledItemName}"`);
+    // If no exact title match, treat the whole name as base item
     return {
       titleName: null,
       baseItemName: titledItemName
