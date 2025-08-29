@@ -4,6 +4,7 @@ const fs = require('fs');
 const { spawn } = require('child_process');
 const { fork } = require('child_process');
 const DependencyAnalyzer = require('./dependency-analyzer');
+const { logger } = require('./logger');
 
 let win;
 let automationProcesses = {}; // { accountId: childProcess }
@@ -299,6 +300,19 @@ ipcMain.handle('get-encyclopedia-items', async (event, filters = {}) => {
       items = items.filter(item => item.type === 'Recipe');
     }
     
+    // Apply title filter
+    if (filters.titleFilter) {
+      items = items.filter(item => {
+        // Check if item has title-related properties
+        return (
+          (item.title && item.title.toLowerCase().includes(filters.titleFilter.toLowerCase())) ||
+          (item.prefix && item.prefix.toLowerCase().includes(filters.titleFilter.toLowerCase())) ||
+          (item.suffix && item.suffix.toLowerCase().includes(filters.titleFilter.toLowerCase())) ||
+          (item.name && item.name.toLowerCase().includes(filters.titleFilter.toLowerCase()))
+        );
+      });
+    }
+    
     console.log('📊 After applying filters, items count:', items.length);
     console.log('🔍 Sample items:', items.slice(0, 3).map(item => ({ 
       name: item.name, 
@@ -309,28 +323,88 @@ ipcMain.handle('get-encyclopedia-items', async (event, filters = {}) => {
     // Apply sorting
     if (filters.sortBy) {
       items.sort((a, b) => {
+        let comparison = 0;
+        
         switch (filters.sortBy) {
           case 'name':
-            return a.name.localeCompare(b.name);
+            comparison = a.name.localeCompare(b.name);
+            break;
           case 'level':
             const levelA = a.requirements?.Level || 0;
             const levelB = b.requirements?.Level || 0;
-            return levelA - levelB;
+            comparison = levelA - levelB;
+            break;
           case 'damage':
             const damageA = a.attributes?.DamageMin || 0;
             const damageB = b.attributes?.DamageMin || 0;
-            return damageB - damageA; // Highest first
+            comparison = damageA - damageB;
+            break;
           case 'armor':
             const armorA = a.attributes?.Armor || 0;
             const armorB = b.attributes?.Armor || 0;
-            return armorB - armorA; // Highest first
+            comparison = armorA - armorB;
+            break;
           case 'type':
-            return a.type.localeCompare(b.type);
+            comparison = a.type.localeCompare(b.type);
+            break;
+          case 'strength':
+            const strengthA = a.attributes?.Strength || 0;
+            const strengthB = b.attributes?.Strength || 0;
+            comparison = strengthA - strengthB;
+            break;
+          case 'dexterity':
+            const dexterityA = a.attributes?.Dexterity || 0;
+            const dexterityB = b.attributes?.Dexterity || 0;
+            comparison = dexterityA - dexterityB;
+            break;
+          case 'endurance':
+            const enduranceA = a.attributes?.Endurance || 0;
+            const enduranceB = b.attributes?.Endurance || 0;
+            comparison = enduranceA - enduranceB;
+            break;
+          case 'wisdom':
+            const wisdomA = a.attributes?.Wisdom || 0;
+            const wisdomB = b.attributes?.Wisdom || 0;
+            comparison = wisdomA - wisdomB;
+            break;
+          case 'health':
+            const healthA = a.attributes?.Health || 0;
+            const healthB = b.attributes?.Health || 0;
+            comparison = healthA - healthB;
+            break;
+          case 'mana':
+            const manaA = a.attributes?.Mana || 0;
+            const manaB = b.attributes?.Mana || 0;
+            comparison = manaA - manaB;
+            break;
+          case 'stamina':
+            const staminaA = a.attributes?.Stamina || 0;
+            const staminaB = b.attributes?.Stamina || 0;
+            comparison = staminaA - staminaB;
+            break;
+          case 'block':
+            const blockA = a.attributes?.Block || 0;
+            const blockB = b.attributes?.Block || 0;
+            comparison = blockA - blockB;
+            break;
+          case 'title':
+            const titleA = (a.title || a.prefix || a.suffix || '').toLowerCase();
+            const titleB = (b.title || b.prefix || b.suffix || '').toLowerCase();
+            comparison = titleA.localeCompare(titleB);
+            break;
           case 'crawled_at':
-            return new Date(b.crawled_at) - new Date(a.crawled_at); // Newest first
+            comparison = new Date(a.crawled_at) - new Date(b.crawled_at);
+            break;
           default:
-            return 0;
+            comparison = 0;
         }
+        
+        // Apply sort order
+        if (filters.sortOrder === 'desc') {
+          comparison = -comparison;
+        }
+        
+        return comparison;
       });
     }
     
@@ -563,4 +637,177 @@ ipcMain.handle('search-dependencies', async (event, query) => {
     console.error('Error searching dependencies:', error);
     return [];
   }
-}); 
+});
+
+// ===== LOG VIEWER API ENDPOINTS =====
+
+// Get available log files
+ipcMain.handle('get-log-files', async () => {
+  try {
+    const logsDir = path.join(__dirname, 'logs');
+    if (!fs.existsSync(logsDir)) {
+      return { files: [] };
+    }
+
+    const files = fs.readdirSync(logsDir)
+      .filter(file => file.endsWith('.log'))
+      .map(file => {
+        const filePath = path.join(logsDir, file);
+        const stats = fs.statSync(filePath);
+        return {
+          name: file,
+          path: filePath,
+          size: stats.size,
+          modified: stats.mtime,
+          sizeFormatted: formatFileSize(stats.size)
+        };
+      })
+      .sort((a, b) => b.modified - a.modified);
+
+    return { files };
+  } catch (error) {
+    logger.exception('Error getting log files', error);
+    throw error;
+  }
+});
+
+// Get logs with filtering and pagination
+ipcMain.handle('get-logs', async (event, { file = 'automation.log', page = 1, limit = 100, level, search }) => {
+  try {
+    const logFilePath = path.join(__dirname, 'logs', file);
+    
+    if (!fs.existsSync(logFilePath)) {
+      return { logs: [], total: 0, page: 1, totalPages: 0 };
+    }
+
+    const content = fs.readFileSync(logFilePath, 'utf8');
+    const lines = content.split('\n').filter(line => line.trim().length > 0);
+    
+    let logs = lines.map(line => {
+      try {
+        return JSON.parse(line);
+      } catch (error) {
+        return null;
+      }
+    }).filter(log => log !== null);
+
+    // Apply filters
+    if (level) {
+      logs = logs.filter(log => log.level === level.toUpperCase());
+    }
+
+    if (search) {
+      const searchLower = search.toLowerCase();
+      logs = logs.filter(log => 
+        log.message.toLowerCase().includes(searchLower) ||
+        (log.details && JSON.stringify(log.details).toLowerCase().includes(searchLower))
+      );
+    }
+
+    // Pagination
+    const total = logs.length;
+    const totalPages = Math.ceil(total / limit);
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + parseInt(limit);
+    const paginatedLogs = logs.slice(startIndex, endIndex);
+
+    return {
+      logs: paginatedLogs,
+      total,
+      page: parseInt(page),
+      totalPages,
+      hasNext: page < totalPages,
+      hasPrev: page > 1
+    };
+  } catch (error) {
+    logger.exception('Error getting logs', error);
+    throw error;
+  }
+});
+
+// Get log statistics
+ipcMain.handle('get-log-stats', async (event, { file = 'automation.log' }) => {
+  try {
+    const logFilePath = path.join(__dirname, 'logs', file);
+    
+    if (!fs.existsSync(logFilePath)) {
+      return {
+        total: 0,
+        byLevel: {},
+        byFile: {},
+        byFunction: {},
+        timeRange: { start: null, end: null }
+      };
+    }
+
+    const content = fs.readFileSync(logFilePath, 'utf8');
+    const lines = content.split('\n').filter(line => line.trim().length > 0);
+    
+    const logs = lines.map(line => {
+      try {
+        return JSON.parse(line);
+      } catch (error) {
+        return null;
+      }
+    }).filter(log => log !== null);
+
+    const stats = {
+      total: logs.length,
+      byLevel: {},
+      byFile: {},
+      byFunction: {},
+      timeRange: { start: null, end: null }
+    };
+
+    logs.forEach(log => {
+      // Count by level
+      stats.byLevel[log.level] = (stats.byLevel[log.level] || 0) + 1;
+      
+      // Count by file
+      stats.byFile[log.file] = (stats.byFile[log.file] || 0) + 1;
+      
+      // Count by function
+      stats.byFunction[log.function] = (stats.byFunction[log.function] || 0) + 1;
+      
+      // Track time range
+      const timestamp = new Date(log.timestamp);
+      if (!stats.timeRange.start || timestamp < stats.timeRange.start) {
+        stats.timeRange.start = timestamp;
+      }
+      if (!stats.timeRange.end || timestamp > stats.timeRange.end) {
+        stats.timeRange.end = timestamp;
+      }
+    });
+
+    return stats;
+  } catch (error) {
+    logger.exception('Error getting log stats', error);
+    throw error;
+  }
+});
+
+// Clear logs
+ipcMain.handle('clear-logs', async (event, { file = 'automation.log' }) => {
+  try {
+    const logFilePath = path.join(__dirname, 'logs', file);
+    
+    if (fs.existsSync(logFilePath)) {
+      fs.writeFileSync(logFilePath, '');
+      logger.info(`Log file cleared: ${file}`);
+    }
+
+    return { success: true, message: `Log file ${file} cleared successfully` };
+  } catch (error) {
+    logger.exception('Error clearing logs', error);
+    throw error;
+  }
+});
+
+// Helper function to format file size
+function formatFileSize(bytes) {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+} 

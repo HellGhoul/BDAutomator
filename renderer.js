@@ -18,6 +18,256 @@ let encyclopediaData = {
 let isCrawling = false;
 let crawlProgress = 0;
 
+// ===== LOG VIEWER FUNCTIONALITY =====
+
+let currentLogPage = 1;
+let currentLogFile = 'automation.log';
+
+function initializeLogViewer() {
+  // Load available log files
+  loadLogFiles();
+  
+  // Load initial logs and stats
+  loadLogStats();
+  loadLogs();
+  
+  // Add event listeners
+  document.getElementById('applyLogFilters')?.addEventListener('click', () => {
+    currentLogPage = 1;
+    loadLogs();
+  });
+  
+  document.getElementById('logFileSelect')?.addEventListener('change', (e) => {
+    currentLogFile = e.target.value;
+    currentLogPage = 1;
+    loadLogs();
+    loadLogStats();
+  });
+  
+  document.getElementById('logLevelSelect')?.addEventListener('change', () => {
+    currentLogPage = 1;
+    loadLogs();
+  });
+  
+  document.getElementById('logSearchInput')?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      currentLogPage = 1;
+      loadLogs();
+    }
+  });
+  
+  document.getElementById('prevLogPage')?.addEventListener('click', () => {
+    if (currentLogPage > 1) {
+      currentLogPage--;
+      loadLogs();
+    }
+  });
+  
+  document.getElementById('nextLogPage')?.addEventListener('click', () => {
+    currentLogPage++;
+    loadLogs();
+  });
+  
+  document.getElementById('clearLogsBtn')?.addEventListener('click', () => {
+    if (confirm('Are you sure you want to clear all logs?')) {
+      clearLogs();
+    }
+  });
+  
+  document.getElementById('exportLogsBtn')?.addEventListener('click', () => {
+    exportLogs();
+  });
+  
+  document.getElementById('refreshLogsBtn')?.addEventListener('click', () => {
+    loadLogs();
+    loadLogStats();
+  });
+}
+
+async function loadLogFiles() {
+  try {
+    const data = await ipcRenderer.invoke('get-log-files');
+    
+    const select = document.getElementById('logFileSelect');
+    if (select) {
+      select.innerHTML = '';
+      data.files.forEach(file => {
+        const option = document.createElement('option');
+        option.value = file.name;
+        option.textContent = `${file.name} (${file.sizeFormatted})`;
+        select.appendChild(option);
+      });
+    }
+  } catch (error) {
+    console.error('Error loading log files:', error);
+  }
+}
+
+async function loadLogStats() {
+  try {
+    const data = await ipcRenderer.invoke('get-log-stats', { file: currentLogFile });
+    
+    updateLogStatsDisplay(data);
+  } catch (error) {
+    console.error('Error loading log stats:', error);
+  }
+}
+
+async function loadLogs() {
+  const container = document.getElementById('logsContainer');
+  if (!container) return;
+  
+  container.innerHTML = '<div class="text-center text-gray-400 py-8"><div class="text-lg">🔄 Loading logs...</div></div>';
+  
+  try {
+    const level = document.getElementById('logLevelSelect')?.value;
+    const search = document.getElementById('logSearchInput')?.value;
+
+    const data = await ipcRenderer.invoke('get-logs', {
+      file: currentLogFile,
+      page: currentLogPage,
+      limit: 100,
+      level: level,
+      search: search
+    });
+    
+    displayLogs(data.logs);
+    updateLogPagination(data);
+    updateLogCount(data.total);
+  } catch (error) {
+    console.error('Error loading logs:', error);
+    container.innerHTML = '<div class="alert alert-danger text-red-400">Error loading logs</div>';
+  }
+}
+
+function displayLogs(logs) {
+  const container = document.getElementById('logsContainer');
+  if (!container) return;
+  
+  if (logs.length === 0) {
+    container.innerHTML = '<div class="text-center text-gray-400 py-8"><p>No logs found</p></div>';
+    return;
+  }
+
+  const html = logs.map(log => createLogEntry(log)).join('');
+  container.innerHTML = html;
+}
+
+function createLogEntry(log) {
+  const timestamp = new Date(log.timestamp).toLocaleString();
+  const details = log.details ? JSON.stringify(log.details, null, 2) : '';
+  
+  const levelClass = {
+    'INFO': 'border-blue-500',
+    'WARN': 'border-yellow-500',
+    'ERROR': 'border-red-500',
+    'DEBUG': 'border-gray-500'
+  }[log.level] || 'border-gray-500';
+  
+  const levelColor = {
+    'INFO': 'text-blue-400',
+    'WARN': 'text-yellow-400',
+    'ERROR': 'text-red-400',
+    'DEBUG': 'text-gray-400'
+  }[log.level] || 'text-gray-400';
+  
+  return `
+    <div class="log-entry mb-3 p-3 border-l-4 ${levelClass} bg-rpg-darker/30 rounded">
+      <div class="flex justify-between items-start mb-2">
+        <div class="flex items-center gap-3">
+          <span class="text-xs text-gray-400">${timestamp}</span>
+          <span class="font-bold ${levelColor}">[${log.level}]</span>
+          <span class="text-xs text-green-400">${log.file}:${log.function}:${log.line}</span>
+        </div>
+      </div>
+      <div class="text-white mb-2">${escapeHtml(log.message)}</div>
+      ${details ? `<div class="text-xs text-gray-400 bg-black/20 p-2 rounded whitespace-pre-wrap">${escapeHtml(details)}</div>` : ''}
+    </div>
+  `;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function updateLogStatsDisplay(stats) {
+  const totalElement = document.getElementById('totalLogs');
+  const errorElement = document.getElementById('errorCount');
+  const warningElement = document.getElementById('warningCount');
+  const timeRangeElement = document.getElementById('timeRange');
+  
+  if (totalElement) totalElement.textContent = stats.total.toLocaleString();
+  if (errorElement) errorElement.textContent = (stats.byLevel.ERROR || 0).toLocaleString();
+  if (warningElement) warningElement.textContent = (stats.byLevel.WARN || 0).toLocaleString();
+  
+  if (timeRangeElement && stats.timeRange.start && stats.timeRange.end) {
+    const start = new Date(stats.timeRange.start).toLocaleDateString();
+    const end = new Date(stats.timeRange.end).toLocaleDateString();
+    timeRangeElement.textContent = `${start} - ${end}`;
+  }
+}
+
+function updateLogPagination(data) {
+  const pageInfo = document.getElementById('logPageInfo');
+  const prevBtn = document.getElementById('prevLogPage');
+  const nextBtn = document.getElementById('nextLogPage');
+  
+  if (pageInfo) pageInfo.textContent = `Page ${data.page} of ${data.totalPages}`;
+  if (prevBtn) prevBtn.disabled = !data.hasPrev;
+  if (nextBtn) nextBtn.disabled = !data.hasNext;
+}
+
+function updateLogCount(total) {
+  const countElement = document.getElementById('logCount');
+  if (countElement) countElement.textContent = `${total.toLocaleString()} logs`;
+}
+
+async function clearLogs() {
+  try {
+    const result = await ipcRenderer.invoke('clear-logs', { file: currentLogFile });
+    
+    if (result.success) {
+      alert('Logs cleared successfully');
+      loadLogs();
+      loadLogStats();
+    } else {
+      alert('Error clearing logs');
+    }
+  } catch (error) {
+    console.error('Error clearing logs:', error);
+    alert('Error clearing logs');
+  }
+}
+
+async function exportLogs() {
+  try {
+    const level = document.getElementById('logLevelSelect')?.value;
+    const search = document.getElementById('logSearchInput')?.value;
+
+    const data = await ipcRenderer.invoke('get-logs', {
+      file: currentLogFile,
+      page: 1,
+      limit: 10000, // Export all logs
+      level: level,
+      search: search
+    });
+
+    // Create and download the file
+    const blob = new Blob([JSON.stringify(data.logs, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${currentLogFile.replace('.log', '')}_export.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Error exporting logs:', error);
+    alert('Error exporting logs');
+  }
+}
+
 function renderAccounts() {
   const list = document.getElementById('account-list');
   list.innerHTML = '';
@@ -79,8 +329,19 @@ function renderTabs() {
   outputTab.onclick = () => switchTab('output');
   tabBar.appendChild(outputTab);
 
+  // Logs tab
+  const logsTab = document.createElement('div');
+  logsTab.className = `tab px-4 py-2 rounded-t-lg ${activeTab === 'logs' ? 'active' : ''}`;
+  logsTab.innerHTML = '📋 Logs';
+  logsTab.onclick = () => switchTab('logs');
+  tabBar.appendChild(logsTab);
+
   // Render tab content
-  renderOutputTab();
+  if (activeTab === 'output') {
+    renderOutputTab();
+  } else if (activeTab === 'logs') {
+    renderLogsTab();
+  }
 }
 
 function renderOutputTab() {
@@ -98,6 +359,112 @@ function renderOutputTab() {
   });
   outDiv.innerHTML = outputEntries.reverse().join('');
   tabContent.appendChild(outDiv);
+}
+
+function renderLogsTab() {
+  const tabContent = document.getElementById('tab-content');
+  
+  // Logs tab content
+  const logsDiv = document.createElement('div');
+  logsDiv.className = 'p-4';
+  logsDiv.innerHTML = `
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-rpg-gold mb-4">📋 Application Logs</h2>
+      <p class="text-gray-400">View and analyze logs from all automation scripts and processes</p>
+    </div>
+    
+    <!-- Log Controls -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div>
+        <label class="block text-sm font-medium text-gray-300 mb-2">Log File</label>
+        <select id="logFileSelect" class="w-full bg-rpg-darker border border-rpg-gold text-white rounded px-3 py-2">
+          <option value="automation.log">automation.log</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-300 mb-2">Log Level</label>
+        <select id="logLevelSelect" class="w-full bg-rpg-darker border border-rpg-gold text-white rounded px-3 py-2">
+          <option value="">All Levels</option>
+          <option value="DEBUG">DEBUG</option>
+          <option value="INFO">INFO</option>
+          <option value="WARN">WARN</option>
+          <option value="ERROR">ERROR</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-300 mb-2">Search</label>
+        <input type="text" id="logSearchInput" placeholder="Search in logs..." 
+               class="w-full bg-rpg-darker border border-rpg-gold text-white rounded px-3 py-2">
+      </div>
+      <div class="flex items-end">
+        <button id="applyLogFilters" class="w-full bg-rpg-gold text-black font-bold py-2 px-4 rounded hover:bg-yellow-400 transition-colors">
+          🔍 Apply Filters
+        </button>
+      </div>
+    </div>
+    
+    <!-- Log Statistics -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div class="bg-rpg-darker border border-rpg-gold rounded-lg p-4 text-center">
+        <div class="text-2xl font-bold text-rpg-gold" id="totalLogs">0</div>
+        <div class="text-sm text-gray-400">Total Logs</div>
+      </div>
+      <div class="bg-rpg-darker border border-rpg-gold rounded-lg p-4 text-center">
+        <div class="text-2xl font-bold text-red-400" id="errorCount">0</div>
+        <div class="text-sm text-gray-400">Errors</div>
+      </div>
+      <div class="bg-rpg-darker border border-rpg-gold rounded-lg p-4 text-center">
+        <div class="text-2xl font-bold text-yellow-400" id="warningCount">0</div>
+        <div class="text-sm text-gray-400">Warnings</div>
+      </div>
+      <div class="bg-rpg-darker border border-rpg-gold rounded-lg p-4 text-center">
+        <div class="text-sm text-gray-400" id="timeRange">-</div>
+        <div class="text-sm text-gray-400">Time Range</div>
+      </div>
+    </div>
+    
+    <!-- Log Entries -->
+    <div class="bg-rpg-darker border border-rpg-gold rounded-lg">
+      <div class="border-b border-rpg-gold p-4 flex justify-between items-center">
+        <h3 class="text-lg font-semibold text-white">Log Entries</h3>
+        <div class="flex items-center gap-4">
+          <span class="text-sm text-gray-400" id="logCount">0 logs</span>
+          <div class="flex gap-2">
+            <button id="prevLogPage" class="bg-rpg-gold text-black px-3 py-1 rounded text-sm hover:bg-yellow-400 disabled:opacity-50">
+              Previous
+            </button>
+            <span id="logPageInfo" class="bg-rpg-darker text-white px-3 py-1 rounded text-sm">Page 1</span>
+            <button id="nextLogPage" class="bg-rpg-gold text-black px-3 py-1 rounded text-sm hover:bg-yellow-400 disabled:opacity-50">
+              Next
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="logsContainer" class="p-4 h-96 overflow-y-auto">
+        <div class="text-center text-gray-400 py-8">
+          <div class="text-lg">🔄 Loading logs...</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="flex gap-4 mt-6">
+      <button id="clearLogsBtn" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors">
+        🗑️ Clear Logs
+      </button>
+      <button id="exportLogsBtn" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors">
+        📥 Export Logs
+      </button>
+      <button id="refreshLogsBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
+        🔄 Refresh
+      </button>
+    </div>
+  `;
+  
+  tabContent.appendChild(logsDiv);
+  
+  // Initialize log functionality
+  initializeLogViewer();
 }
 
 function switchTab(tabId) {
@@ -268,26 +635,90 @@ function updateCrawlProgress(progress) {
 }
 
 // Encyclopedia functions
+window.populateTitleFilter = async function() {
+  try {
+    const titleSelect = document.getElementById('filter-title');
+    if (!titleSelect) return;
+    
+    // Get titles from encyclopedia data
+    if (encyclopediaData && encyclopediaData.titles) {
+      const titles = encyclopediaData.titles;
+      
+      // Clear existing options except the first one
+      titleSelect.innerHTML = '<option value="">All Titles</option>';
+      
+      // Add title options
+      titles.forEach(title => {
+        const option = document.createElement('option');
+        option.value = title.name;
+        option.textContent = title.name;
+        titleSelect.appendChild(option);
+      });
+      
+      console.log(`✅ Populated title filter with ${titles.length} titles`);
+    } else {
+      // Fallback to server-side fetch
+      const titles = await ipcRenderer.invoke('get-encyclopedia-titles');
+      if (titles && titles.length > 0) {
+        titleSelect.innerHTML = '<option value="">All Titles</option>';
+        titles.forEach(title => {
+          const option = document.createElement('option');
+          option.value = title.name;
+          option.textContent = title.name;
+          titleSelect.appendChild(option);
+        });
+        console.log(`✅ Populated title filter with ${titles.length} titles from server`);
+      }
+    }
+  } catch (error) {
+    console.error('Error populating title filter:', error);
+  }
+};
+
 window.searchEncyclopedia = async function() {
   const query = document.getElementById('encyclopedia-search').value.trim();
   if (!query) return;
 
   try {
     // Search in the current encyclopedia data
-    if (encyclopediaData && encyclopediaData.items) {
-      const searchResults = encyclopediaData.items.filter(item => {
-        const searchText = query.toLowerCase();
-        return (
+    if (encyclopediaData) {
+      const searchText = query.toLowerCase();
+      const results = { items: [], titles: [], total: 0 };
+      
+      // Search in items
+      if (encyclopediaData.items) {
+        results.items = encyclopediaData.items.filter(item => (
           item.name.toLowerCase().includes(searchText) ||
           item.type.toLowerCase().includes(searchText) ||
           (item.requirements.Class && item.requirements.Class.toLowerCase().includes(searchText)) ||
           (item.description && item.description.toLowerCase().includes(searchText)) ||
           (item.plainAttributes && item.plainAttributes.some(attr => attr.toLowerCase().includes(searchText))) ||
-          (item.plainReq && item.plainReq.some(req => req.toLowerCase().includes(searchText)))
-        );
-      });
+          (item.plainReq && item.plainReq.some(req => req.toLowerCase().includes(searchText))) ||
+          // Search in titles
+          (item.title && item.title.toLowerCase().includes(searchText)) ||
+          (item.prefix && item.prefix.toLowerCase().includes(searchText)) ||
+          (item.suffix && item.suffix.toLowerCase().includes(searchText))
+        ));
+      }
       
-      displayEncyclopediaResults({ items: searchResults }, `Search results for: "${query}" (${searchResults.length} items)`);
+      // Search in titles
+      if (encyclopediaData.titles) {
+        results.titles = encyclopediaData.titles.filter(title => (
+          title.name.toLowerCase().includes(searchText) ||
+          (title.prefix && title.prefix.toLowerCase().includes(searchText)) ||
+          (title.suffix && title.suffix.toLowerCase().includes(searchText)) ||
+          (title.plainAttributes && title.plainAttributes.some(attr => attr.toLowerCase().includes(searchText))) ||
+          (title.plainReq && title.plainReq.some(req => req.toLowerCase().includes(searchText)))
+        ));
+      }
+      
+      results.total = results.items.length + results.titles.length;
+      
+      if (results.total > 0) {
+        displayEncyclopediaResults(results, `Search results for: "${query}" (${results.total} total)`);
+      } else {
+        displayEncyclopediaResults(results, `No results found for: "${query}"`);
+      }
     } else {
       // Fallback to server-side search if no local data
       const results = await ipcRenderer.invoke('search-encyclopedia', query);
@@ -355,6 +786,8 @@ window.applyAdvancedFilters = async function() {
     const levelMin = document.getElementById('filter-level-min').value;
     const levelMax = document.getElementById('filter-level-max').value;
     const sortBy = document.getElementById('filter-sort-by').value;
+    const sortOrder = document.getElementById('filter-sort-order').value;
+    const titleFilter = document.getElementById('filter-title').value;
     
     // Boolean filters
     const legendaryOnly = document.getElementById('filter-legendary').checked;
@@ -368,6 +801,8 @@ window.applyAdvancedFilters = async function() {
       levelMin: levelMin ? parseInt(levelMin) : null,
       levelMax: levelMax ? parseInt(levelMax) : null,
       sortBy: sortBy,
+      sortOrder: sortOrder,
+      titleFilter: titleFilter,
       legendaryOnly: legendaryOnly,
       dropsOnly: dropsOnly,
       craftableOnly: craftableOnly,
@@ -388,6 +823,8 @@ window.clearAllFilters = function() {
   document.getElementById('filter-level-min').value = '';
   document.getElementById('filter-level-max').value = '';
   document.getElementById('filter-sort-by').value = 'name';
+  document.getElementById('filter-sort-order').value = 'asc';
+  document.getElementById('filter-title').value = '';
   
   // Uncheck all checkboxes
   document.getElementById('filter-legendary').checked = false;
@@ -1842,8 +2279,35 @@ function displayEncyclopediaResults(results, title) {
 function renderItemsGrid(items) {
   return `
     <div class="mb-6">
-      <h4 class="text-xl font-bold mb-3 text-rpg-gold">Items (${items.length})</h4>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="flex justify-between items-center mb-3">
+        <h4 class="text-xl font-bold text-rpg-gold">Items (${items.length})</h4>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2">
+            <label class="text-sm text-rpg-gold">Sort by:</label>
+            <select id="item-sort-by" class="p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded text-sm" onchange="sortItems()">
+              <option value="name">Name</option>
+              <option value="level">Level</option>
+              <option value="type">Type</option>
+              <option value="damage">Damage</option>
+              <option value="armor">Armor</option>
+              <option value="strength">Strength</option>
+              <option value="dexterity">Dexterity</option>
+              <option value="endurance">Endurance</option>
+              <option value="wisdom">Wisdom</option>
+              <option value="health">Health</option>
+              <option value="mana">Mana</option>
+              <option value="stamina">Stamina</option>
+              <option value="block">Block</option>
+              <option value="crawled_at">Date Added</option>
+            </select>
+            <select id="item-sort-order" class="p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded text-sm" onchange="sortItems()">
+              <option value="asc">↑ Asc</option>
+              <option value="desc">↓ Desc</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div id="items-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         ${items.map(item => `
           <div class="encyclopedia-card p-4 rounded-lg border border-rpg-gold hover:border-rpg-gold/80 transition-all cursor-pointer" onclick="showItemDetails('${item.id}')">
             <div class="flex items-center justify-between mb-2">
@@ -1906,8 +2370,28 @@ function renderItemsGrid(items) {
 function renderMonstersGrid(monsters) {
   return `
     <div class="mb-6">
-      <h4 class="text-xl font-bold mb-3 text-rpg-gold">Monsters (${monsters.length})</h4>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="flex justify-between items-center mb-3">
+        <h4 class="text-xl font-bold text-rpg-gold">Monsters (${monsters.length})</h4>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2">
+            <label class="text-sm text-rpg-gold">Sort by:</label>
+            <select id="monster-sort-by" class="p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded text-sm" onchange="sortMonsters()">
+              <option value="name">Name</option>
+              <option value="level">Level</option>
+              <option value="hp">HP</option>
+              <option value="attack">Attack</option>
+              <option value="defense">Defense</option>
+              <option value="location">Location</option>
+              <option value="crawled_at">Date Added</option>
+            </select>
+            <select id="monster-sort-order" class="p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded text-sm" onchange="sortMonsters()">
+              <option value="asc">↑ Asc</option>
+              <option value="desc">↓ Desc</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div id="monsters-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         ${monsters.map(monster => `
           <div class="encyclopedia-card p-4 rounded-lg">
             <div class="flex items-center space-x-3 mb-2">
@@ -1931,8 +2415,28 @@ function renderMonstersGrid(monsters) {
 function renderSkillsGrid(skills) {
   return `
     <div class="mb-6">
-      <h4 class="text-xl font-bold mb-3 text-rpg-gold">Skills (${skills.length})</h4>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="flex justify-between items-center mb-3">
+        <h4 class="text-xl font-bold text-rpg-gold">Skills (${skills.length})</h4>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2">
+            <label class="text-sm text-rpg-gold">Sort by:</label>
+            <select id="skill-sort-by" class="p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded text-sm" onchange="sortSkills()">
+              <option value="name">Name</option>
+              <option value="level">Level</option>
+              <option value="type">Type</option>
+              <option value="damage">Damage</option>
+              <option value="mana">Mana Cost</option>
+              <option value="cooldown">Cooldown</option>
+              <option value="crawled_at">Date Added</option>
+            </select>
+            <select id="skill-sort-order" class="p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded text-sm" onchange="sortSkills()">
+              <option value="asc">↑ Asc</option>
+              <option value="desc">↓ Desc</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div id="skills-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         ${skills.map(skill => `
           <div class="encyclopedia-card p-4 rounded-lg">
             <div class="flex items-center space-x-3 mb-2">
@@ -1955,8 +2459,31 @@ function renderSkillsGrid(skills) {
 function renderTitlesGrid(titles) {
   return `
     <div class="mb-6">
-      <h4 class="text-xl font-bold mb-3 text-rpg-gold">Titles (${titles.length})</h4>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="flex justify-between items-center mb-3">
+        <h4 class="text-xl font-bold text-rpg-gold">Titles (${titles.length})</h4>
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2">
+            <label class="text-sm text-rpg-gold">Sort by:</label>
+            <select id="title-sort-by" class="p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded text-sm" onchange="sortTitles()">
+              <option value="name">Name</option>
+              <option value="level">Level</option>
+              <option value="strength">Strength</option>
+              <option value="dexterity">Dexterity</option>
+              <option value="endurance">Endurance</option>
+              <option value="wisdom">Wisdom</option>
+              <option value="health">Health</option>
+              <option value="mana">Mana</option>
+              <option value="stamina">Stamina</option>
+              <option value="crawled_at">Date Added</option>
+            </select>
+            <select id="title-sort-order" class="p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded text-sm" onchange="sortTitles()">
+              <option value="asc">↑ Asc</option>
+              <option value="desc">↓ Desc</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div id="titles-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         ${titles.map(title => `
           <div class="encyclopedia-card p-4 rounded-lg">
             <div class="flex items-center space-x-3 mb-2">
@@ -2012,6 +2539,424 @@ function renderTitlesGrid(titles) {
     </div>
   `;
 }
+
+// Title sorting functionality
+window.sortTitles = function() {
+  const sortBy = document.getElementById('title-sort-by').value;
+  const sortOrder = document.getElementById('title-sort-order').value;
+  
+  if (!encyclopediaData || !encyclopediaData.titles) return;
+  
+  const titles = [...encyclopediaData.titles];
+  
+  titles.sort((a, b) => {
+    let comparison = 0;
+    
+    switch (sortBy) {
+      case 'name':
+        comparison = a.name.localeCompare(b.name);
+        break;
+      case 'level':
+        const levelA = a.requirements?.Level || 0;
+        const levelB = b.requirements?.Level || 0;
+        comparison = levelA - levelB;
+        break;
+      case 'strength':
+        const strengthA = a.attributes?.Strength || 0;
+        const strengthB = b.attributes?.Strength || 0;
+        comparison = strengthA - strengthB;
+        break;
+      case 'dexterity':
+        const dexterityA = a.attributes?.Dexterity || 0;
+        const dexterityB = b.attributes?.Dexterity || 0;
+        comparison = dexterityA - dexterityB;
+        break;
+      case 'endurance':
+        const enduranceA = a.attributes?.Endurance || 0;
+        const enduranceB = b.attributes?.Endurance || 0;
+        comparison = enduranceA - enduranceB;
+        break;
+      case 'wisdom':
+        const wisdomA = a.attributes?.Wisdom || 0;
+        const wisdomB = b.attributes?.Wisdom || 0;
+        comparison = wisdomA - wisdomB;
+        break;
+      case 'health':
+        const healthA = a.attributes?.Health || 0;
+        const healthB = b.attributes?.Health || 0;
+        comparison = healthA - healthB;
+        break;
+      case 'mana':
+        const manaA = a.attributes?.Mana || 0;
+        const manaB = b.attributes?.Mana || 0;
+        comparison = manaA - manaB;
+        break;
+      case 'stamina':
+        const staminaA = a.attributes?.Stamina || 0;
+        const staminaB = b.attributes?.Stamina || 0;
+        comparison = staminaA - staminaB;
+        break;
+      case 'crawled_at':
+        comparison = new Date(a.crawled_at) - new Date(b.crawled_at);
+        break;
+      default:
+        comparison = 0;
+    }
+    
+    // Apply sort order
+    if (sortOrder === 'desc') {
+      comparison = -comparison;
+    }
+    
+    return comparison;
+  });
+  
+  // Update the titles display
+  const titlesContainer = document.getElementById('titles-container');
+  if (titlesContainer) {
+    titlesContainer.innerHTML = titles.map(title => `
+      <div class="encyclopedia-card p-4 rounded-lg">
+        <div class="flex items-center space-x-3 mb-2">
+          <span class="text-2xl">📋</span>
+          <h5 class="font-bold text-rpg-gold">${title.name}</h5>
+        </div>
+        <div class="text-sm space-y-1">
+
+          ${Object.keys(title.attributes).length > 0 ? `
+            <div>
+              <h4 class="text-lg font-bold text-rpg-gold mb-2">Attributes</h4>
+              <div class="grid grid-cols-2 gap-2 text-sm">
+                ${Object.entries(title.attributes).map(([key, value]) => `
+                  <div class="flex justify-between">
+                    <span class="text-gray-400">${key}:</span>
+                    <span class="text-rpg-gold">${typeof value === 'number' && key !== 'DamageMin' && key !== 'DamageMax' ? '+' : ''}${ key.includes('Prot')  || key.includes('Block')?  value*100+'%': value}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
+          <hr/>
+          ${Object.keys(title.requirements).length > 0 ? `
+            <div>
+              <h4 class="text-lg font-bold text-rpg-gold mb-2">Requirements</h4>
+              <div class="grid grid-cols-2 gap-2 text-sm">
+                ${Object.entries(title.requirements).map(([key, value]) => `
+                  <div class="flex justify-between">
+                    <span class="text-gray-400">${key}:</span>
+                    <span class="text-rpg-gold">${value}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
+
+          <div class="mt-3 pt-2 border-t border-rpg-gold/30">
+            <div class="flex flex-wrap gap-2 text-xs">
+              ${title.slots.Weapon ? '<span class="bg-grey-500 text-white px-2 py-1 rounded">Weapon</span>' : ''}
+              ${title.slots.Shield ? '<span class="bg-grey-500 text-white px-2 py-1 rounded">Shield</span>' : ''}
+              ${title.slots.Helm ? '<span class="bg-grey-500 text-white px-2 py-1 rounded">Helm</span>' : ''}
+              ${title.slots.BodyArmor ? '<span class="bg-grey-500 text-white px-2 py-1 rounded">Body Armor</span>' : ''}
+              ${title.slots.Boots ? '<span class="bg-grey-500 text-white px-2 py-1 rounded">Boots</span>' : ''}
+              ${title.slots.Amulet ? '<span class="bg-grey-500 text-white px-2 py-1 rounded">Amulet</span>' : ''}
+              ${title.slots.Ring ? '<span class="bg-grey-500 text-white px-2 py-1 rounded">Ring</span>' : ''}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  console.log(`✅ Titles sorted by ${sortBy} in ${sortOrder} order`);
+};
+
+// Items sorting functionality
+window.sortItems = function() {
+  const sortBy = document.getElementById('item-sort-by').value;
+  const sortOrder = document.getElementById('item-sort-order').value;
+  
+  if (!encyclopediaData || !encyclopediaData.items) return;
+  
+  const items = [...encyclopediaData.items];
+  
+  items.sort((a, b) => {
+    let comparison = 0;
+    
+    switch (sortBy) {
+      case 'name':
+        comparison = a.name.localeCompare(b.name);
+        break;
+      case 'level':
+        const levelA = a.requirements?.Level || 0;
+        const levelB = b.requirements?.Level || 0;
+        comparison = levelA - levelB;
+        break;
+      case 'type':
+        comparison = a.type.localeCompare(b.type);
+        break;
+      case 'damage':
+        const damageA = (a.attributes?.DamageMin || 0) + (a.attributes?.DamageMax || 0);
+        const damageB = (b.attributes?.DamageMin || 0) + (b.attributes?.DamageMax || 0);
+        comparison = damageA - damageB;
+        break;
+      case 'armor':
+        const armorA = a.attributes?.Armor || 0;
+        const armorB = b.attributes?.Armor || 0;
+        comparison = armorA - armorB;
+        break;
+      case 'strength':
+        const strengthA = a.attributes?.Strength || 0;
+        const strengthB = b.attributes?.Strength || 0;
+        comparison = strengthA - strengthB;
+        break;
+      case 'dexterity':
+        const dexterityA = a.attributes?.Dexterity || 0;
+        const dexterityB = b.attributes?.Dexterity || 0;
+        comparison = dexterityA - dexterityB;
+        break;
+      case 'endurance':
+        const enduranceA = a.attributes?.Endurance || 0;
+        const enduranceB = b.attributes?.Endurance || 0;
+        comparison = enduranceA - enduranceB;
+        break;
+      case 'wisdom':
+        const wisdomA = a.attributes?.Wisdom || 0;
+        const wisdomB = b.attributes?.Wisdom || 0;
+        comparison = wisdomA - wisdomB;
+        break;
+      case 'health':
+        const healthA = a.attributes?.Health || 0;
+        const healthB = b.attributes?.Health || 0;
+        comparison = healthA - healthB;
+        break;
+      case 'mana':
+        const manaA = a.attributes?.Mana || 0;
+        const manaB = b.attributes?.Mana || 0;
+        comparison = manaA - manaB;
+        break;
+      case 'stamina':
+        const staminaA = a.attributes?.Stamina || 0;
+        const staminaB = b.attributes?.Stamina || 0;
+        comparison = staminaA - staminaB;
+        break;
+      case 'block':
+        const blockA = a.attributes?.Block || 0;
+        const blockB = b.attributes?.Block || 0;
+        comparison = blockA - blockB;
+        break;
+      case 'crawled_at':
+        comparison = new Date(a.crawled_at) - new Date(b.crawled_at);
+        break;
+      default:
+        comparison = 0;
+    }
+    
+    // Apply sort order
+    if (sortOrder === 'desc') {
+      comparison = -comparison;
+    }
+    
+    return comparison;
+  });
+  
+  // Update the items display
+  const itemsContainer = document.getElementById('items-container');
+  if (itemsContainer) {
+    itemsContainer.innerHTML = items.map(item => `
+      <div class="encyclopedia-card p-4 rounded-lg border border-rpg-gold hover:border-rpg-gold/80 transition-all cursor-pointer" onclick="showItemDetails('${item.id}')">
+        <div class="flex items-center justify-between mb-2">
+          <h5 class="font-bold text-rpg-gold text-lg">${item.name}</h5>
+          ${item.isLegendary ? '<span class="text-yellow-400 text-sm">⭐ Legendary</span>' : ''}
+        </div>
+        
+        <div class="flex justify-center mb-3">
+          <img src="${item.image_url}" alt="${item.name}" class="max-w-20 max-h-20 object-contain">
+        </div>
+        
+        <div class="text-sm space-y-2">
+          <div class="flex justify-between">
+            <span class="text-gray-400">Type:</span>
+            <span class="text-rpg-gold">${item.type}</span>
+          </div>
+          ${Object.keys(item.attributes).length > 0 ? `
+            <div>
+              <h4 class="text-lg font-bold text-rpg-gold mb-2">Attributes</h4>
+              <div class="grid grid-cols-2 gap-2 text-sm">
+                ${Object.entries(item.attributes).map(([key, value]) => `
+                  <div class="flex justify-between">
+                    <span class="text-gray-400">${key}:</span>
+                    <span class="text-rpg-gold">${typeof value === 'number' && key !== 'DamageMin' && key !== 'DamageMax' ? '+' : ''}${ key.includes('Prot')  || key.includes('Block')?  value*100+'%': value}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
+          ${Object.keys(item.requirements).length > 0 ? `
+            <hr/>
+            <div>
+              <h4 class="text-lg font-bold text-rpg-gold mb-2">Requirements</h4>
+              <div class="grid grid-cols-2 gap-2 text-sm">
+                ${Object.entries(item.requirements).map(([key, value]) => `
+                  <div class="flex justify-between">
+                    <span class="text-gray-400">${key}:</span>
+                    <span class="text-rpg-gold">${value}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
+        </div>
+        <div class="mt-3 pt-2 border-t border-rpg-gold/30">
+          <div class="flex flex-wrap gap-2 text-xs">
+            ${item.isDrop ? '<span class="bg-red-500 text-white px-2 py-1 rounded">Drop</span>' : ''}
+            ${item.isCraftable ? '<span class="bg-blue-500 text-white px-2 py-1 rounded">Craftable</span>' : ''}
+            ${item.type === 'Recipe' ? '<span class="bg-green-500 text-white px-2 py-1 rounded">Recipe</span>' : ''}
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  console.log(`✅ Items sorted by ${sortBy} in ${sortOrder} order`);
+};
+
+// Monsters sorting functionality
+window.sortMonsters = function() {
+  const sortBy = document.getElementById('monster-sort-by').value;
+  const sortOrder = document.getElementById('monster-sort-order').value;
+  
+  if (!encyclopediaData || !encyclopediaData.monsters) return;
+  
+  const monsters = [...encyclopediaData.monsters];
+  
+  monsters.sort((a, b) => {
+    let comparison = 0;
+    
+    switch (sortBy) {
+      case 'name':
+        comparison = a.name.localeCompare(b.name);
+        break;
+      case 'level':
+        comparison = (a.level || 0) - (b.level || 0);
+        break;
+      case 'hp':
+        comparison = (a.hp || 0) - (b.hp || 0);
+        break;
+      case 'attack':
+        comparison = (a.attack || 0) - (b.attack || 0);
+        break;
+      case 'defense':
+        comparison = (a.defense || 0) - (b.defense || 0);
+        break;
+      case 'location':
+        comparison = (a.location || '').localeCompare(b.location || '');
+        break;
+      case 'crawled_at':
+        comparison = new Date(a.crawled_at) - new Date(b.crawled_at);
+        break;
+      default:
+        comparison = 0;
+    }
+    
+    // Apply sort order
+    if (sortOrder === 'desc') {
+      comparison = -comparison;
+    }
+    
+    return comparison;
+  });
+  
+  // Update the monsters display
+  const monstersContainer = document.getElementById('monsters-container');
+  if (monstersContainer) {
+    monstersContainer.innerHTML = monsters.map(monster => `
+      <div class="encyclopedia-card p-4 rounded-lg">
+        <div class="flex items-center space-x-3 mb-2">
+          <span class="text-2xl">👹</span>
+          <h5 class="font-bold text-rpg-gold">${monster.name}</h5>
+        </div>
+        <div class="text-sm space-y-1">
+          <p><span class="text-gray-400">Level:</span> ${monster.level}</p>
+          <p><span class="text-gray-400">HP:</span> ${monster.hp}</p>
+          <p><span class="text-gray-400">Attack:</span> ${monster.attack}</p>
+          <p><span class="text-gray-400">Defense:</span> ${monster.defense}</p>
+          <p><span class="text-gray-400">Location:</span> ${monster.location}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  console.log(`✅ Monsters sorted by ${sortBy} in ${sortOrder} order`);
+};
+
+// Skills sorting functionality
+window.sortSkills = function() {
+  const sortBy = document.getElementById('skill-sort-by').value;
+  const sortOrder = document.getElementById('skill-sort-order').value;
+  
+  if (!encyclopediaData || !encyclopediaData.skills) return;
+  
+  const skills = [...encyclopediaData.skills];
+  
+  skills.sort((a, b) => {
+    let comparison = 0;
+    
+    switch (sortBy) {
+      case 'name':
+        comparison = a.name.localeCompare(b.name);
+        break;
+      case 'level':
+        comparison = (a.level || 0) - (b.level || 0);
+        break;
+      case 'type':
+        comparison = (a.type || '').localeCompare(b.type || '');
+        break;
+      case 'damage':
+        comparison = (a.damage || 0) - (b.damage || 0);
+        break;
+      case 'mana':
+        comparison = (a.mana || 0) - (b.mana || 0);
+        break;
+      case 'cooldown':
+        comparison = (a.cooldown || 0) - (b.cooldown || 0);
+        break;
+      case 'crawled_at':
+        comparison = new Date(a.crawled_at) - new Date(b.crawled_at);
+        break;
+      default:
+        comparison = 0;
+    }
+    
+    // Apply sort order
+    if (sortOrder === 'desc') {
+      comparison = -comparison;
+    }
+    
+    return comparison;
+  });
+  
+  // Update the skills display
+  const skillsContainer = document.getElementById('skills-container');
+  if (skillsContainer) {
+    skillsContainer.innerHTML = skills.map(skill => `
+      <div class="encyclopedia-card p-4 rounded-lg">
+        <div class="flex items-center space-x-3 mb-2">
+          <span class="text-2xl">⚡</span>
+          <h5 class="font-bold text-rpg-gold">${skill.name}</h5>
+        </div>
+        <div class="text-sm space-y-1">
+          <p><span class="text-gray-400">Level:</span> ${skill.level}</p>
+          <p><span class="text-gray-400">Type:</span> ${skill.type}</p>
+          <p><span class="text-gray-400">Damage:</span> ${skill.damage}</p>
+          <p><span class="text-gray-400">Mana Cost:</span> ${skill.mana}</p>
+          <p><span class="text-gray-400">Cooldown:</span> ${skill.cooldown}</p>
+        </div>
+      </div>
+    `).join('');
+  }
+  
+  console.log(`✅ Skills sorted by ${sortBy} in ${sortOrder} order`);
+};
 
 // Add helper to get config from form
 function getConfigFromForm() {

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { logger } = require('./logger');
 
 class DependencyAnalyzer {
   constructor() {
@@ -22,7 +23,7 @@ class DependencyAnalyzer {
             this.recipeMap.set(item.name, item);
           }
         });
-        console.log(`Loaded ${items.length} items`);
+        logger.info(`Loaded ${items.length} items`);
       }
 
       // Load titles
@@ -32,12 +33,12 @@ class DependencyAnalyzer {
         titles.forEach(title => {
           this.titleMap.set(title.name, title);
         });
-        console.log(`Loaded ${titles.length} titles`);
+        logger.info(`Loaded ${titles.length} titles`);
       }
 
       return true;
     } catch (error) {
-      console.error('Error loading data:', error);
+      logger.exception('Error loading data', error);
       return false;
     }
   }
@@ -52,7 +53,7 @@ class DependencyAnalyzer {
   }
 
   analyzeDependencies() {
-    console.log('Starting dependency analysis...');
+    logger.info('Starting dependency analysis...');
     this.flatDependencies = {};
     this.processedItems.clear();
 
@@ -65,7 +66,7 @@ class DependencyAnalyzer {
       }
     });
 
-    console.log(`Processed ${craftableCount} craftable legendary items`);
+    logger.info(`Processed ${craftableCount} craftable legendary items`);
     this.saveFlatDependencies();
     return this.flatDependencies;
   }
@@ -109,7 +110,7 @@ class DependencyAnalyzer {
       return recipe.id;
     }
     
-    console.log(`Processing recipe: ${recipe.name}`);
+    logger.dependencyAnalysis(`Processing recipe: ${recipe.name}`, recipe.name);
     this.processedItems.add(recipe.id);
     
     // Create the recipe record
@@ -134,7 +135,7 @@ class DependencyAnalyzer {
           } else if (ingredientResult.type === 'titled_ingredient') {
             // Titled ingredient - we need to process both title and base item dependencies
             // to ensure they are created in flatDependencies before adding their IDs
-            console.log(`🔧 Processing titled ingredient: titleId=${ingredientResult.titleId}, baseItemId=${ingredientResult.baseItemId}`);
+            logger.dependencyAnalysis(`Processing titled ingredient: titleId=${ingredientResult.titleId}, baseItemId=${ingredientResult.baseItemId}`, 'titled_ingredient');
             
             // The parseTitledIngredient function returns IDs, but we need to find the actual objects
             // We need to search through the maps to find the objects with these IDs
@@ -164,7 +165,7 @@ class DependencyAnalyzer {
                 recipeRecord.children.push(processedTitleId);
               }
             } else {
-              console.log(`⚠️ Title not found in titleMap: ${ingredientResult.titleId}`);
+              logger.warn(`Title not found in titleMap: ${ingredientResult.titleId}`);
               recipeRecord.children.push(ingredientResult.titleId);
             }
             
@@ -209,12 +210,12 @@ class DependencyAnalyzer {
     
     // Try to parse as "Title's Base Item" pattern
     if (ingredientName.includes("'s ")) {
-      console.log(`🔧 Parsing titled ingredient: ${ingredientName}`);
+      logger.titleParsing(`Parsing titled ingredient: ${ingredientName}`);
       return this.parseTitledIngredient(ingredientName);
     }
     
     // For now, just log unknown ingredients and return null
-    console.log(`❌ Unknown ingredient: ${ingredientName} - skipping to avoid circular dependency`);
+    logger.warn(`Unknown ingredient: ${ingredientName} - skipping to avoid circular dependency`);
     return null;
   }
 
@@ -259,7 +260,7 @@ class DependencyAnalyzer {
   processBaseItemDependencies(baseItem) {
     // For base items, we want to allow unlimited recursion to show all layers
     // So we don't check if it's already processed
-    console.log(`🔍 Processing base item: ${baseItem.name} (craftable: ${baseItem.isCraftable})`);
+    logger.dependencyAnalysis(`Processing base item: ${baseItem.name}`, baseItem.name, { craftable: baseItem.isCraftable });
     
     const baseItemRecord = {
       id: baseItem.id,
@@ -275,7 +276,7 @@ class DependencyAnalyzer {
     if (baseItem.isCraftable) {
       const recipe = this.findRecipeForItem(baseItem.name);
       if (recipe) {
-        console.log(`🔍 Base item ${baseItem.name} is craftable, processing its recipe: ${recipe.name}`);
+        logger.dependencyAnalysis(`Base item ${baseItem.name} is craftable, processing its recipe: ${recipe.name}`, baseItem.name);
         const recipeId = this.processRecipeDependencies(recipe);
         if (recipeId) {
           baseItemRecord.children.push(recipeId);
@@ -318,41 +319,31 @@ class DependencyAnalyzer {
   }
 
   parseTitledIngredient(ingredientName) {
-    console.log(`🔧 Parsing titled ingredient: ${ingredientName}`);
+    logger.titleParsing(`Parsing titled ingredient: ${ingredientName}`);
     
     // Extract title and base item from the ingredient name
     const { titleName, baseItemName } = this.extractTitleAndBase(ingredientName);
     
     if (!titleName || !baseItemName) {
-      console.log(`❌ Could not extract title and base from: ${ingredientName}`);
+      logger.warn(`Could not extract title and base from: ${ingredientName}`);
       return null;
     }
     
     // Find the title by exact name match
     let title = this.titleMap.get(titleName);
     if (!title) {
-      console.log(`❌ Title not found: ${titleName}`);
-      return null;
-    }
-    
-    if (!title) {
-      console.log(`❌ Title not found: ${titleName}`);
+      logger.warn(`Title not found: ${titleName}`);
       return null;
     }
     
     // Find the base item by exact name match
     let baseItem = this.itemMap.get(baseItemName);
     if (!baseItem) {
-      console.log(`❌ Base item not found: ${baseItemName}`);
+      logger.warn(`Base item not found: ${baseItemName}`);
       return null;
     }
     
-    if (!baseItem) {
-      console.log(`❌ Base item not found: ${baseItemName}`);
-      return null;
-    }
-    
-    console.log(`✅ Successfully parsed: title="${title.name}", base="${baseItem.name}"`);
+    logger.titleParsing(`Successfully parsed: title="${title.name}", base="${baseItem.name}"`);
     
     // Return both IDs as a special object that the recipe can use
     return {
@@ -363,11 +354,11 @@ class DependencyAnalyzer {
   }
 
   extractTitleAndBase(titledItemName) {
-    console.log(`🔍 Extracting title and base from: "${titledItemName}"`);
+    logger.titleParsing(`Extracting title and base from: "${titledItemName}"`);
     
     // First, check if the entire string is a base item name
     if (this.itemMap.has(titledItemName)) {
-      console.log(`✅ Entire string is a base item: "${titledItemName}"`);
+      logger.titleParsing(`Entire string is a base item: "${titledItemName}"`);
       return {
         titleName: null,
         baseItemName: titledItemName
@@ -387,19 +378,19 @@ class DependencyAnalyzer {
         if (titledItemName.startsWith(prefix) && titledItemName.endsWith(suffix)) {
           const baseItemName = titledItemName.substring(prefix.length, titledItemName.length - suffix.length).trim();
           if (this.itemMap.has(baseItemName)) {
-            console.log(`✅ Found title with prefix+suffix: "${titleName}" for "${titledItemName}"`);
+            logger.titleParsing(`Found title with prefix+suffix: "${titleName}" for "${titledItemName}"`);
             return {
               titleName: titleName,
               baseItemName: baseItemName
             };
           }
         }
-      } else if (prefix) {
+              } else if (prefix) {
         // Title has only prefix (e.g., "Azure dragon's")
         if (titledItemName.startsWith(prefix)) {
           const baseItemName = titledItemName.substring(prefix.length).trim();
           if (this.itemMap.has(baseItemName)) {
-            console.log(`✅ Found title with prefix: "${titleName}" for "${titledItemName}"`);
+            logger.titleParsing(`Found title with prefix: "${titleName}" for "${titledItemName}"`);
             return {
               titleName: titleName,
               baseItemName: baseItemName
@@ -411,7 +402,7 @@ class DependencyAnalyzer {
         if (titledItemName.endsWith(suffix)) {
           const baseItemName = titledItemName.substring(0, titledItemName.length - suffix.length).trim();
           if (this.itemMap.has(baseItemName)) {
-            console.log(`✅ Found title with suffix: "${titleName}" for "${titledItemName}"`);
+            logger.titleParsing(`Found title with suffix: "${titleName}" for "${titledItemName}"`);
             return {
               titleName: titleName,
               baseItemName: baseItemName
@@ -421,7 +412,7 @@ class DependencyAnalyzer {
       }
     }
     
-    console.log(`❌ No exact title match found for: "${titledItemName}"`);
+    logger.warn(`No exact title match found for: "${titledItemName}"`);
     // If no exact title match, treat the whole name as base item
     return {
       titleName: null,
@@ -455,7 +446,7 @@ class DependencyAnalyzer {
     };
     
     fs.writeFileSync(outputPath, JSON.stringify(data, null, 2));
-    console.log(`Saved ${Object.keys(this.flatDependencies).length} dependency records to ${outputPath}`);
+    logger.info(`Saved ${Object.keys(this.flatDependencies).length} dependency records to ${outputPath}`);
   }
 
   getItemDependencies(itemName) {
@@ -555,3 +546,33 @@ class DependencyAnalyzer {
 }
 
 module.exports = DependencyAnalyzer;
+
+// Main execution block for testing
+if (require.main === module) {
+  const analyzer = new DependencyAnalyzer();
+  
+  try {
+    logger.automation('Starting dependency analyzer', 'dependency-analyzer.js');
+    
+    // Load data
+    const dataLoaded = analyzer.loadData();
+    if (!dataLoaded) {
+      logger.error('Failed to load data');
+      process.exit(1);
+    }
+    
+    // Build maps
+    analyzer.buildMaps();
+    
+    // Analyze dependencies
+    const dependencies = analyzer.analyzeDependencies();
+    
+    logger.automation('Dependency analysis completed', 'dependency-analyzer.js', { 
+      totalDependencies: Object.keys(dependencies).length 
+    });
+    
+  } catch (error) {
+    logger.exception('Dependency analysis failed', error);
+    process.exit(1);
+  }
+}
