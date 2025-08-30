@@ -2,6 +2,7 @@ const puppeteer = require('puppeteer');
 const BlackDragonHelpers = require('./blackdragon-helpers');
 const fs = require('fs');
 const path = require('path');
+const { logger } = require('./logger');
 
 class ItemAttributes {
   constructor(statsArray) {
@@ -97,7 +98,9 @@ class Item {
         await this.crawlItems(this.helpers);
       }
       //await this.crawlMonsters(this.helpers);
-      //await this.crawlSkills(this.helpers);
+      if(config.translations){
+      await this.crawlTranslations(this.helpers);
+    }
       if(config.titles){
         await this.crawlTitles(this.helpers);
       }
@@ -380,52 +383,84 @@ class Item {
     }
   }
 
-  async crawlSkills(helpers) {
-    console.log('Starting to crawl skills...');
+  async crawlTranslations(helpers) {
+    console.log('Starting to crawl translations...');
     
     try {
-      // Navigate to skills page (if it exists)
-      await helpers.navigateTo('https://blackdragon.mobi/skills/index');
-      
-      // Check if skills page exists
-      const pageExists = await helpers.page.evaluate(() => {
-        return !document.querySelector('body').textContent.includes('Page not found');
-      });
+      let maxPage = 251;
+      let translationsFound = 0;
+      let translationsError = 0;
+      const allTranslations = [];
+          // Get pages
+          for (let libPage = 1; libPage <= maxPage; libPage++) {
 
-      if (!pageExists) {
-        console.log('Skills page not found, skipping skills crawling');
-        return;
-      }
+          await helpers.navigateTo('https://blackdragon.mobi/translator/view/type=0/page=' + libPage);
 
-      const skills = await helpers.page.evaluate(() => {
-        const skillElements = Array.from(document.querySelectorAll('.skill, .list'));
-        return skillElements.map(el => {
-          const nameEl = el.querySelector('strong, .name');
-          const imgEl = el.querySelector('img');
-          const descEl = el.querySelector('.description, small');
-          
-          return {
-            id: `skill_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-            name: nameEl ? nameEl.textContent.trim() : '',
-            type: 'unknown',
-            description: descEl ? descEl.textContent.trim() : '',
-            image_url: imgEl ? imgEl.src : '',
-            source: 'encyclopedia_crawler',
-            crawled_at: new Date().toISOString()
-          };
-        }).filter(skill => skill.name);
-      });
+            // Get all title in the current page
+          const translations = await helpers.page.evaluate(() => {
+          const translationLinks = Array.from(document.querySelectorAll('a[href*="https://blackdragon.mobi/translator/edit/id="]'));
+          return translationLinks.map(link => ({
 
-      // Save all skills to JSON file
-      const skillsFile = path.join(this.dataDir, 'skills.json');
-      fs.writeFileSync(skillsFile, JSON.stringify(skills, null, 2));
-      console.log(`Total skills found: ${skills.length}`);
-      console.log(`Skills saved to: ${skillsFile}`);
+                url: link.href,
+                name: link.textContent.trim()
+              }));
+
+            });
+
+            for (const translation of translations) {
+              try{
+                                
+                // Go into each translation
+                await helpers.navigateTo(translation.url); 
+                // Extract title details from this title page
+                const translationDetails = await helpers.page.evaluate((translationName,url) => {
+                // Look for the main translation container - be more specific to avoid duplicates
+                const translationContainer = document.querySelector('.main');
+                if (!translationContainer) return null;
+                
+                  const originalText = translationContainer.querySelector('body > div.main > div.list');
+                  const translatedText = translationContainer.querySelector('textarea');
+                  const id = (url.match(/id=(\d+)/) || [])[1];
+
+              return {
+                  id: `translation_${id}`,
+                  name: translationName,
+                  type: 'Translation',
+                  originalText: originalText ? originalText.textContent.trim() : '',
+                  translatedText: translatedText ? translatedText.value.trim() : '',
+                  id: id,
+                  url: url,
+                  source: 'encyclopedia_crawler',
+                  crawled_at: new Date().toISOString()
+                };
+              }, translation.name, translation.url);
+
+              // Add title to collection (only if we found details)
+              if (translationDetails) {
+                allTranslations.push(translationDetails);
+                translationsFound += 1;
+                console.log(`Found ${translation.name}`);
+                }
+              }
+              catch(error){
+                logger.exception('Error loading Translation: ' + translation.name + " URL: " + translation.url, error);
+                continue;
+              }
+
+            }
+          }
+
+      // Save all titles to JSON file
+      const translationsFile = path.join(this.dataDir, 'translations.json');
+      fs.writeFileSync(translationsFile, JSON.stringify(allTranslations, null, 2));
+      console.log(`Total translation found: ${translationsFound}`);
+      console.log(`Translation saved to: ${translationsFile}`);
       
     } catch (error) {
-      console.error('Error crawling skills:', error);
+      console.error('Error crawling translations:', error);
     }
   }
+
 
   async crawlTitles(helpers) {
     console.log('Starting to crawl titles...');
@@ -578,13 +613,13 @@ class Item {
         crawl_date: new Date().toISOString(),
         total_items: 0,
         total_monsters: 0,
-        total_skills: 0,
+        total_translations: 0,
         total_quests: 0,
         files: []
       };
 
       // Count items in each file
-      const files = ['items.json', 'monsters.json', 'skills.json', 'quests.json'];
+      const files = ['items.json', 'monsters.json', 'translations.json', 'quests.json'];
       files.forEach(filename => {
         const filepath = path.join(this.dataDir, filename);
         if (fs.existsSync(filepath)) {
@@ -599,8 +634,8 @@ class Item {
               case 'monsters.json':
                 summary.total_monsters = count;
                 break;
-              case 'skills.json':
-                summary.total_skills = count;
+              case 'translations.json':
+                summary.total_translations = count;
                 break;
               case 'quests.json':
                 summary.total_quests = count;
@@ -622,7 +657,7 @@ class Item {
       const summaryFile = path.join(this.dataDir, 'summary.json');
       fs.writeFileSync(summaryFile, JSON.stringify(summary, null, 2));
       console.log(`Summary saved to: ${summaryFile}`);
-      console.log(`Total data: ${summary.total_items + summary.total_monsters + summary.total_skills + summary.total_quests} entries`);
+      console.log(`Total data: ${summary.total_items + summary.total_monsters + summary.total_translations + summary.total_quests} entries`);
 
     } catch (error) {
       console.error('Error creating summary:', error);
@@ -649,11 +684,11 @@ class Item {
     const results = {
       items: [],
       monsters: [],
-      skills: [],
+      translations: [],
       quests: []
     };
 
-    const types = ['items', 'monsters', 'skills', 'quests'];
+    const types = ['items', 'monsters', 'translations', 'quests'];
     types.forEach(type => {
       const data = this.readData(type);
       if (Array.isArray(data)) {

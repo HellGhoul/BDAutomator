@@ -21,7 +21,27 @@
     }
   },
   {
-    "id": "jdych9uaw",
+    "id": "b6qbl2wtx",
+    "username": "-takkar-",
+    "password": "0908152508",
+    "config": {
+      "all": false,
+      "recipe": true,
+      "charm": true,
+      "pieceGear": false,
+      "jewel": false,
+      "rune": true,
+      "epicGear": false,
+      "magicScroll": false,
+      "monsterScroll": true,
+      "staminaPotion": true,
+      "ancientPotion": false,
+      "monsterList": "",
+      "hpThreshold": ""
+    }
+  },
+  {
+    "id": "uiuee4b5o",
     "username": "wuchang",
     "password": "09081508",
     "config": {
@@ -33,31 +53,11 @@
       "rune": true,
       "epicGear": false,
       "magicScroll": false,
-      "monsterScroll": false,
-      "staminaPotion": false,
-      "ancientPotion": true,
-      "monsterList": "ghost_behemoth,ancient_behemoth",
-      "hpThreshold": "1500000"
-    }
-  },
-  {
-    "id": "bb41q9eno",
-    "username": "wangchu",
-    "password": "09081508",
-    "config": {
-      "all": false,
-      "recipe": true,
-      "charm": true,
-      "pieceGear": true,
-      "jewel": true,
-      "rune": true,
-      "epicGear": false,
-      "magicScroll": false,
       "monsterScroll": true,
       "staminaPotion": true,
-      "ancientPotion": true,
+      "ancientPotion": false,
       "monsterList": "",
-      "hpThreshold": "0"
+      "hpThreshold": ""
     }
   }
 ]

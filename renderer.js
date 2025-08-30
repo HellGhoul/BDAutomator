@@ -11,7 +11,7 @@ let unscrollState = {}; // { [id]: 'running' | 'paused' | undefined }
 let encyclopediaData = {
   items: [],
   monsters: [],
-  skills: [],
+  translations: [],
   titles: [],
   stats: null
 };
@@ -527,7 +527,7 @@ window.openEncyclopedia = function() {
           <div class="text-xs text-gray-500 mt-2">
             📊 Data loaded: ${encyclopediaData?.items?.length || 0} items, 
             ${encyclopediaData?.monsters?.length || 0} monsters, 
-            ${encyclopediaData?.skills?.length || 0} skills, 
+            ${encyclopediaData?.translations?.length || 0} translations, 
             ${encyclopediaData?.titles?.length || 0} titles
           </div>
         `;
@@ -570,7 +570,7 @@ window.startCrawling = async function() {
   const crawlOptions = {
     items: document.getElementById('crawl-items').checked,
     monsters: document.getElementById('crawl-monsters').checked,
-    skills: document.getElementById('crawl-skills').checked,
+    translations: document.getElementById('crawl-translations').checked,
     titles: document.getElementById('crawl-titles').checked
   };
 
@@ -746,10 +746,10 @@ window.filterEncyclopedia = async function(type) {
         data = await ipcRenderer.invoke('get-encyclopedia-monsters');
         title = 'Monsters';
         break;
-      case 'skills':
-        console.log('⚡ Fetching skills...');
-        data = await ipcRenderer.invoke('get-encyclopedia-skills');
-        title = 'Skills';
+      case 'translations':
+        console.log('⚡ Fetching translations...');
+        data = await ipcRenderer.invoke('get-encyclopedia-translations');
+        title = 'Translations';
         break;
       case 'titles':
         console.log('📋 Fetching titles...');
@@ -2217,10 +2217,10 @@ window.showDependencyStats = async function() {
 window.loadAllEncyclopediaData = async function() {
   try {
     console.log('🔄 Loading encyclopedia data...');
-    const [items, monsters, skills, titles, stats] = await Promise.all([
+    const [items, monsters, translations, titles, stats] = await Promise.all([
       ipcRenderer.invoke('get-encyclopedia-items'),
       ipcRenderer.invoke('get-encyclopedia-monsters'),
-      ipcRenderer.invoke('get-encyclopedia-skills'),
+      ipcRenderer.invoke('get-encyclopedia-translations'),
       ipcRenderer.invoke('get-encyclopedia-titles'),
       ipcRenderer.invoke('get-encyclopedia-stats')
     ]);
@@ -2228,7 +2228,7 @@ window.loadAllEncyclopediaData = async function() {
     console.log('📊 Data loaded:', {
       items: items?.length || 0,
       monsters: monsters?.length || 0,
-      skills: skills?.length || 0,
+      translations: translations?.length || 0,
       titles: titles?.length || 0,
       stats: stats ? 'loaded' : 'not loaded'
     });
@@ -2243,7 +2243,7 @@ window.loadAllEncyclopediaData = async function() {
       })));
     }
     
-    encyclopediaData = { items, monsters, skills, titles, stats };
+    encyclopediaData = { items, monsters, translations, titles, stats };
     console.log('✅ Encyclopedia data loaded successfully');
   } catch (error) {
     console.error('❌ Error loading encyclopedia data:', error);
@@ -2262,14 +2262,14 @@ function displayEncyclopediaResults(results, title) {
   if (results.monsters && results.monsters.length > 0) {
     html += renderMonstersGrid(results.monsters);
   }
-  if (results.skills && results.skills.length > 0) {
-    html += renderSkillsGrid(results.skills);
+  if (results.translations && results.translations.length > 0) {
+    html += renderTranslationsGrid(results.translations);
   }
   if (results.titles && results.titles.length > 0) {
     html += renderTitlesGrid(results.titles);
   }
   
-  if (results.total === 0 || (!results.items && !results.monsters && !results.skills && !results.titles)) {
+  if (results.total === 0 || (!results.items && !results.monsters && !results.translations && !results.titles)) {
     html = '<div class="text-center text-gray-400 mt-8">No results found</div>';
   }
   
@@ -2412,15 +2412,15 @@ function renderMonstersGrid(monsters) {
   `;
 }
 
-function renderSkillsGrid(skills) {
+function renderTranslationsGrid(translations) {
   return `
     <div class="mb-6">
       <div class="flex justify-between items-center mb-3">
-        <h4 class="text-xl font-bold text-rpg-gold">Skills (${skills.length})</h4>
+        <h4 class="text-xl font-bold text-rpg-gold">Translations (${translations.length})</h4>
         <div class="flex items-center gap-3">
           <div class="flex items-center gap-2">
             <label class="text-sm text-rpg-gold">Sort by:</label>
-            <select id="skill-sort-by" class="p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded text-sm" onchange="sortSkills()">
+            <select id="translation-sort-by" class="p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded text-sm" onchange="sortTranslations()">
               <option value="name">Name</option>
               <option value="level">Level</option>
               <option value="type">Type</option>
@@ -2429,25 +2429,25 @@ function renderSkillsGrid(skills) {
               <option value="cooldown">Cooldown</option>
               <option value="crawled_at">Date Added</option>
             </select>
-            <select id="skill-sort-order" class="p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded text-sm" onchange="sortSkills()">
+            <select id="translation-sort-order" class="p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded text-sm" onchange="sortTranslations()">
               <option value="asc">↑ Asc</option>
               <option value="desc">↓ Desc</option>
             </select>
           </div>
         </div>
       </div>
-      <div id="skills-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        ${skills.map(skill => `
+      <div id="translations-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        ${translations.map(translation => `
           <div class="encyclopedia-card p-4 rounded-lg">
             <div class="flex items-center space-x-3 mb-2">
               <span class="text-2xl">⚡</span>
-              <h5 class="font-bold text-rpg-gold">${skill.name}</h5>
+              <h5 class="font-bold text-rpg-gold">${translation.name}</h5>
             </div>
             <div class="text-sm space-y-1">
-              <p><span class="text-gray-400">Type:</span> ${skill.type}</p>
-              <p><span class="text-gray-400">Level:</span> ${skill.level}</p>
-              <p><span class="text-gray-400">Cooldown:</span> ${skill.cooldown}s</p>
-              ${skill.description ? `<p class="text-gray-300">${skill.description}</p>` : ''}
+              <p><span class="text-gray-400">Type:</span> ${translation.type}</p>
+              <p><span class="text-gray-400">Level:</span> ${translation.level}</p>
+              <p><span class="text-gray-400">Cooldown:</span> ${translation.cooldown}s</p>
+              ${translation.description ? `<p class="text-gray-300">${translation.description}</p>` : ''}
             </div>
           </div>
         `).join('')}
@@ -2889,16 +2889,16 @@ window.sortMonsters = function() {
   console.log(`✅ Monsters sorted by ${sortBy} in ${sortOrder} order`);
 };
 
-// Skills sorting functionality
-window.sortSkills = function() {
-  const sortBy = document.getElementById('skill-sort-by').value;
-  const sortOrder = document.getElementById('skill-sort-order').value;
+// Translations sorting functionality
+window.sortTranslations = function() {
+  const sortBy = document.getElementById('translation-sort-by').value;
+  const sortOrder = document.getElementById('translation-sort-order').value;
   
-  if (!encyclopediaData || !encyclopediaData.skills) return;
+  if (!encyclopediaData || !encyclopediaData.translations) return;
   
-  const skills = [...encyclopediaData.skills];
+  const translations = [...encyclopediaData.translations];
   
-  skills.sort((a, b) => {
+  translations.sort((a, b) => {
     let comparison = 0;
     
     switch (sortBy) {
@@ -2935,10 +2935,10 @@ window.sortSkills = function() {
     return comparison;
   });
   
-  // Update the skills display
-  const skillsContainer = document.getElementById('skills-container');
-  if (skillsContainer) {
-    skillsContainer.innerHTML = skills.map(skill => `
+  // Update the translations display
+  const translationsContainer = document.getElementById('translations-container');
+  if (translationsContainer) {
+    translationsContainer.innerHTML = translations.map(translation => `
       <div class="encyclopedia-card p-4 rounded-lg">
         <div class="flex items-center space-x-3 mb-2">
           <span class="text-2xl">⚡</span>
@@ -2955,7 +2955,7 @@ window.sortSkills = function() {
     `).join('');
   }
   
-  console.log(`✅ Skills sorted by ${sortBy} in ${sortOrder} order`);
+  console.log(`✅ Translations sorted by ${sortBy} in ${sortOrder} order`);
 };
 
 // Add helper to get config from form
