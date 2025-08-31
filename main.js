@@ -540,27 +540,334 @@ ipcMain.handle('save-translation', async (event, translationData) => {
 // Get AI translation suggestion
 ipcMain.handle('get-ai-translation-suggestion', async (event, originalText) => {
   try {
-    // For now, return a placeholder suggestion
-    // In a real implementation, you would call an AI translation service
-    const suggestions = [
-      `[AI] ${originalText}`, // Placeholder
-      `[AI] Vietnamese translation of: ${originalText}`,
-      `[AI] Suggested: ${originalText}`
+    console.log(`🤖 Getting AI translation for: "${originalText}"`);
+    
+    // Try multiple translation services in order of preference
+    const translationServices = [
+      { name: 'LibreTranslate', url: 'https://libretranslate.de/translate' },
+      { name: 'MyMemory', url: 'https://api.mymemory.translated.net/get' },
+      { name: 'Fallback', url: null }
     ];
     
-    // Simulate AI processing delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    for (const service of translationServices) {
+      try {
+        let result;
+        
+        if (service.name === 'LibreTranslate') {
+          result = await translateWithLibreTranslate(originalText, service.url);
+        } else if (service.name === 'MyMemory') {
+          result = await translateWithMyMemory(originalText, service.url);
+        } else {
+          // Fallback to enhanced dictionary translation
+          result = await translateWithEnhancedDictionary(originalText);
+        }
+        
+        if (result.success) {
+          console.log(`✅ Translation successful using ${service.name}: "${result.suggestion}"`);
+          return result;
+        }
+      } catch (error) {
+        console.log(`❌ ${service.name} failed:`, error.message);
+        continue;
+      }
+    }
     
-    return {
-      success: true,
-      suggestion: suggestions[Math.floor(Math.random() * suggestions.length)],
-      confidence: Math.random() * 0.3 + 0.7 // 70-100% confidence
+    // If all services fail, return error
+    return { 
+      success: false, 
+      error: 'All translation services are currently unavailable' 
     };
+    
   } catch (error) {
     console.error('Error getting AI translation suggestion:', error);
     return { success: false, error: error.message };
   }
 });
+
+// LibreTranslate API (completely free and open-source)
+async function translateWithLibreTranslate(text, apiUrl) {
+  const response = await fetch(apiUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      q: text,
+      source: 'en',
+      target: 'vi',
+      format: 'text'
+    })
+  });
+  
+  if (!response.ok) {
+    throw new Error(`LibreTranslate API error: ${response.status}`);
+  }
+  
+  const data = await response.json();
+  
+  if (data.translatedText) {
+    return {
+      success: true,
+      suggestion: data.translatedText,
+      confidence: 0.85,
+      service: 'LibreTranslate'
+    };
+  }
+  
+  throw new Error('No translation received from LibreTranslate');
+}
+
+// MyMemory API (free tier available)
+async function translateWithMyMemory(text, apiUrl) {
+  const params = new URLSearchParams({
+    q: text,
+    langpair: 'en|vi'
+  });
+  
+  const response = await fetch(`${apiUrl}?${params}`);
+  
+  if (!response.ok) {
+    throw new Error(`MyMemory API error: ${response.status}`);
+  }
+  
+  const data = await response.json();
+  
+  if (data.responseStatus === 200 && data.responseData && data.responseData.translatedText) {
+    return {
+      success: true,
+      suggestion: data.responseData.translatedText,
+      confidence: 0.80,
+      service: 'MyMemory'
+    };
+  }
+  
+  throw new Error('No translation received from MyMemory');
+}
+
+// Enhanced dictionary-based translation as fallback
+async function translateWithEnhancedDictionary(text) {
+  // Enhanced Vietnamese translation dictionary for game terms
+  const translationDict = {
+    // Common game terms
+    'select': 'chọn',
+    'gear': 'trang bị',
+    'equipment': 'trang bị',
+    'weapon': 'vũ khí',
+    'armor': 'áo giáp',
+    'helmet': 'mũ',
+    'shield': 'khiên',
+    'sword': 'kiếm',
+    'bow': 'cung',
+    'staff': 'gậy',
+    'ring': 'nhẫn',
+    'necklace': 'dây chuyền',
+    'bracelet': 'vòng tay',
+    'boots': 'giày',
+    'gloves': 'găng tay',
+    'belt': 'thắt lưng',
+    
+    // Attributes
+    'strength': 'sức mạnh',
+    'dexterity': 'khéo léo',
+    'endurance': 'sức chịu đựng',
+    'wisdom': 'trí tuệ',
+    'intelligence': 'trí thông minh',
+    'health': 'sức khỏe',
+    'mana': 'năng lượng phép thuật',
+    'stamina': 'thể lực',
+    'damage': 'sát thương',
+    'attack': 'tấn công',
+    'defense': 'phòng thủ',
+    'block': 'chặn',
+    'critical': 'chí mạng',
+    'speed': 'tốc độ',
+    'accuracy': 'độ chính xác',
+    
+    // Game actions
+    'use': 'sử dụng',
+    'equip': 'trang bị',
+    'unequip': 'tháo trang bị',
+    'drop': 'vứt bỏ',
+    'sell': 'bán',
+    'buy': 'mua',
+    'craft': 'chế tạo',
+    'upgrade': 'nâng cấp',
+    'repair': 'sửa chữa',
+    'enchant': 'phù phép',
+    
+    // Items
+    'potion': 'thuốc',
+    'scroll': 'cuộn giấy',
+    'gem': 'đá quý',
+    'crystal': 'tinh thể',
+    'ore': 'quặng',
+    'wood': 'gỗ',
+    'leather': 'da',
+    'cloth': 'vải',
+    'metal': 'kim loại',
+    'stone': 'đá',
+    
+    // Monsters
+    'dragon': 'rồng',
+    'goblin': 'yêu tinh',
+    'orc': 'người orc',
+    'troll': 'quái vật troll',
+    'skeleton': 'bộ xương',
+    'zombie': 'thây ma',
+    'ghost': 'ma',
+    'demon': 'quỷ',
+    'angel': 'thiên thần',
+    'beast': 'thú dữ',
+    
+    // Locations
+    'dungeon': 'hầm ngục',
+    'cave': 'hang động',
+    'forest': 'rừng',
+    'mountain': 'núi',
+    'castle': 'lâu đài',
+    'village': 'làng',
+    'city': 'thành phố',
+    'tower': 'tháp',
+    'temple': 'đền thờ',
+    'ruins': 'tàn tích',
+    
+    // Common words
+    'the': 'cái',
+    'a': 'một',
+    'an': 'một',
+    'of': 'của',
+    'and': 'và',
+    'or': 'hoặc',
+    'with': 'với',
+    'from': 'từ',
+    'to': 'đến',
+    'in': 'trong',
+    'on': 'trên',
+    'at': 'tại',
+    'by': 'bởi',
+    'for': 'cho',
+    'is': 'là',
+    'are': 'là',
+    'was': 'đã là',
+    'were': 'đã là',
+    'will': 'sẽ',
+    'can': 'có thể',
+    'should': 'nên',
+    'must': 'phải',
+    'may': 'có thể',
+    'might': 'có thể',
+    'good': 'tốt',
+    'bad': 'xấu',
+    'great': 'tuyệt vời',
+    'small': 'nhỏ',
+    'large': 'lớn',
+    'big': 'to',
+    'new': 'mới',
+    'old': 'cũ',
+    'high': 'cao',
+    'low': 'thấp',
+    'fast': 'nhanh',
+    'slow': 'chậm',
+    'strong': 'mạnh',
+    'weak': 'yếu',
+    'powerful': 'mạnh mẽ',
+    'magic': 'phép thuật',
+    'fire': 'lửa',
+    'water': 'nước',
+    'earth': 'đất',
+    'air': 'không khí',
+    'light': 'ánh sáng',
+    'dark': 'bóng tối',
+    'ice': 'băng',
+    'thunder': 'sấm sét',
+    'poison': 'độc',
+    'heal': 'chữa lành',
+    'cure': 'chữa trị',
+    'restore': 'phục hồi',
+    'increase': 'tăng',
+    'decrease': 'giảm',
+    'boost': 'tăng cường',
+    'reduce': 'giảm bớt',
+    'enhance': 'tăng cường',
+    'improve': 'cải thiện',
+    'upgrade': 'nâng cấp',
+    'level': 'cấp độ',
+    'experience': 'kinh nghiệm',
+    'skill': 'kỹ năng',
+    'ability': 'khả năng',
+    'spell': 'phép thuật',
+    'item': 'vật phẩm',
+    'inventory': 'túi đồ',
+    'quest': 'nhiệm vụ',
+    'mission': 'nhiệm vụ',
+    'reward': 'phần thưởng',
+    'prize': 'giải thưởng',
+    'gold': 'vàng',
+    'silver': 'bạc',
+    'copper': 'đồng',
+    'coin': 'đồng xu',
+    'money': 'tiền',
+    'price': 'giá',
+    'cost': 'chi phí',
+    'free': 'miễn phí',
+    'cheap': 'rẻ',
+    'expensive': 'đắt',
+    'rare': 'hiếm',
+    'common': 'thường',
+    'legendary': 'huyền thoại',
+    'epic': 'sử thi',
+    'unique': 'độc nhất',
+    'special': 'đặc biệt',
+    'normal': 'bình thường',
+    'quality': 'chất lượng',
+    'durability': 'độ bền',
+    'weight': 'trọng lượng',
+    'size': 'kích thước',
+    'color': 'màu sắc',
+    'red': 'đỏ',
+    'blue': 'xanh dương',
+    'green': 'xanh lá',
+    'yellow': 'vàng',
+    'black': 'đen',
+    'white': 'trắng',
+    'purple': 'tím',
+    'orange': 'cam',
+    'pink': 'hồng',
+    'brown': 'nâu',
+    'gray': 'xám',
+    'grey': 'xám'
+  };
+  
+  // Enhanced translation function
+  function translateToVietnamese(text) {
+    const words = text.toLowerCase().split(/\s+/);
+    const translatedWords = words.map(word => {
+      // Remove punctuation for lookup
+      const cleanWord = word.replace(/[^\w]/g, '');
+      return translationDict[cleanWord] || word;
+    });
+    
+    // Join words and restore some basic punctuation
+    let result = translatedWords.join(' ');
+    
+    // Capitalize first letter
+    result = result.charAt(0).toUpperCase() + result.slice(1);
+    
+    return result;
+  }
+  
+  // Simulate processing delay
+  await new Promise(resolve => setTimeout(resolve, 500));
+  
+  const vietnameseTranslation = translateToVietnamese(text);
+  
+  return {
+    success: true,
+    suggestion: vietnameseTranslation,
+    confidence: 0.75,
+    service: 'Enhanced Dictionary'
+  };
+}
 
 ipcMain.handle('get-encyclopedia-titles', async (event, filters) => {
   try {

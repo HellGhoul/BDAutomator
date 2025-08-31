@@ -338,7 +338,7 @@ function renderTabs() {
 
   // Render tab content
   if (activeTab === 'output') {
-    renderOutputTab();
+  renderOutputTab();
   } else if (activeTab === 'logs') {
     renderLogsTab();
   }
@@ -739,8 +739,8 @@ window.searchEncyclopedia = async function() {
       }
     } else {
       // Fallback to server-side search if no local data
-      const results = await ipcRenderer.invoke('search-encyclopedia', query);
-      displayEncyclopediaResults(results, `Search results for: "${query}"`);
+    const results = await ipcRenderer.invoke('search-encyclopedia', query);
+    displayEncyclopediaResults(results, `Search results for: "${query}"`);
     }
   } catch (error) {
     console.error('Search error:', error);
@@ -2335,7 +2335,7 @@ function renderItemsGrid(items) {
             
             <div class="flex justify-center mb-3">
               <img src="${item.image_url}" alt="${item.name}" class="max-w-20 max-h-20 object-contain">
-            </div>
+              </div>
             
             <div class="text-sm space-y-2">
               <div class="flex justify-between">
@@ -2650,12 +2650,12 @@ window.sortTitles = function() {
   const titlesContainer = document.getElementById('titles-container');
   if (titlesContainer) {
     titlesContainer.innerHTML = titles.map(title => `
-      <div class="encyclopedia-card p-4 rounded-lg">
-        <div class="flex items-center space-x-3 mb-2">
-          <span class="text-2xl">📋</span>
+          <div class="encyclopedia-card p-4 rounded-lg">
+            <div class="flex items-center space-x-3 mb-2">
+              <span class="text-2xl">📋</span>
           <h5 class="font-bold text-rpg-gold">${title.name}</h5>
-        </div>
-        <div class="text-sm space-y-1">
+            </div>
+            <div class="text-sm space-y-1">
 
           ${Object.keys(title.attributes).length > 0 ? `
             <div>
@@ -2665,7 +2665,7 @@ window.sortTitles = function() {
                   <div class="flex justify-between">
                     <span class="text-gray-400">${key}:</span>
                     <span class="text-rpg-gold">${typeof value === 'number' && key !== 'DamageMin' && key !== 'DamageMax' ? '+' : ''}${ key.includes('Prot')  || key.includes('Block')?  value*100+'%': value}</span>
-                  </div>
+            </div>
                 `).join('')}
               </div>
             </div>
@@ -2679,8 +2679,8 @@ window.sortTitles = function() {
                   <div class="flex justify-between">
                     <span class="text-gray-400">${key}:</span>
                     <span class="text-rpg-gold">${value}</span>
-                  </div>
-                `).join('')}
+          </div>
+        `).join('')}
               </div>
             </div>
           ` : ''}
@@ -3119,9 +3119,9 @@ window.showTranslationDetails = async function(translationId) {
               Save Changes
             </button>
           </div>
-        </div>
       </div>
-    `;
+    </div>
+  `;
     
     // Add modal to page
     document.body.insertAdjacentHTML('beforeend', modalHtml);
@@ -3158,6 +3158,14 @@ window.getAISuggestionForModal = async function(translationId) {
       suggestionText.textContent = result.suggestion;
       // Store the suggestion for the "Use Suggestion" button
       window.currentAISuggestion = result.suggestion;
+      
+      // Show service information if available
+      if (result.service) {
+        const serviceInfo = document.createElement('div');
+        serviceInfo.className = 'text-xs text-blue-300 mt-1';
+        serviceInfo.textContent = `Powered by ${result.service} (${Math.round(result.confidence * 100)}% confidence)`;
+        suggestionText.parentNode.appendChild(serviceInfo);
+      }
     } else {
       suggestionText.textContent = 'Failed to get AI suggestion: ' + result.error;
     }
@@ -3241,8 +3249,9 @@ window.getAISuggestion = async function(translationId) {
     const result = await ipcRenderer.invoke('get-ai-translation-suggestion', translation.originalText);
     
     if (result.success) {
-      // Show suggestion in a simple alert for now
-      const useSuggestion = confirm(`AI Suggestion:\n\n"${result.suggestion}"\n\nDo you want to use this suggestion?`);
+      // Show suggestion with service information
+      const serviceInfo = result.service ? `\n\nPowered by ${result.service} (${Math.round(result.confidence * 100)}% confidence)` : '';
+      const useSuggestion = confirm(`AI Suggestion:\n\n"${result.suggestion}"${serviceInfo}\n\nDo you want to use this suggestion?`);
       if (useSuggestion) {
         // Open the detail modal with the suggestion pre-filled
         showTranslationDetails(translationId);
