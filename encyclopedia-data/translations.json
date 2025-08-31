@@ -4,10 +4,11 @@
     "name": "SELECT_GEAR",
     "type": "Translation",
     "originalText": "Select gear",
-    "translatedText": "Select gear",
+    "translatedText": "Chọn",
     "url": "https://blackdragon.mobi/translator/edit/id=201216/type=0/page=1/c=86199",
     "source": "encyclopedia_crawler",
-    "crawled_at": "2025-08-30T14:31:39.125Z"
+    "crawled_at": "2025-08-30T14:31:39.125Z",
+    "updated_at": "2025-08-31T04:52:03.816Z"
   },
   {
     "id": "205056",

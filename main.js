@@ -441,13 +441,124 @@ ipcMain.handle('get-encyclopedia-translations', async (event, filters) => {
     const translationsFile = path.join(dataDir, 'translations.json');
     
     if (fs.existsSync(translationsFile)) {
-      const translations = JSON.parse(fs.readFileSync(translationsFile, 'utf8'));
+      let translations = JSON.parse(fs.readFileSync(translationsFile, 'utf8'));
+      
+      // Apply filters if provided
+      if (filters) {
+        if (filters.search) {
+          const searchTerm = filters.search.toLowerCase();
+          translations = translations.filter(translation => 
+            translation.name.toLowerCase().includes(searchTerm) ||
+            translation.originalText.toLowerCase().includes(searchTerm) ||
+            translation.translatedText.toLowerCase().includes(searchTerm)
+          );
+        }
+        
+        if (filters.sortBy) {
+          translations.sort((a, b) => {
+            let comparison = 0;
+            switch (filters.sortBy) {
+              case 'name':
+                comparison = a.name.localeCompare(b.name);
+                break;
+              case 'originalText':
+                comparison = a.originalText.localeCompare(b.originalText);
+                break;
+              case 'translatedText':
+                comparison = a.translatedText.localeCompare(b.translatedText);
+                break;
+              case 'crawled_at':
+                comparison = new Date(a.crawled_at) - new Date(b.crawled_at);
+                break;
+              default:
+                comparison = 0;
+            }
+            return filters.sortOrder === 'desc' ? -comparison : comparison;
+          });
+        }
+      }
+      
       return translations;
     }
     return [];
   } catch (error) {
     console.error('Error getting translations:', error);
     return [];
+  }
+});
+
+// Get single translation by ID
+ipcMain.handle('get-translation-details', async (event, translationId) => {
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const dataDir = './encyclopedia-data';
+    const translationsFile = path.join(dataDir, 'translations.json');
+    
+    if (fs.existsSync(translationsFile)) {
+      const translations = JSON.parse(fs.readFileSync(translationsFile, 'utf8'));
+      const translation = translations.find(t => t.id === translationId);
+      return translation || null;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error getting translation details:', error);
+    return null;
+  }
+});
+
+// Save translation update
+ipcMain.handle('save-translation', async (event, translationData) => {
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    const dataDir = './encyclopedia-data';
+    const translationsFile = path.join(dataDir, 'translations.json');
+    
+    if (fs.existsSync(translationsFile)) {
+      const translations = JSON.parse(fs.readFileSync(translationsFile, 'utf8'));
+      const index = translations.findIndex(t => t.id === translationData.id);
+      
+      if (index !== -1) {
+        translations[index] = {
+          ...translations[index],
+          ...translationData,
+          updated_at: new Date().toISOString()
+        };
+        
+        fs.writeFileSync(translationsFile, JSON.stringify(translations, null, 2));
+        return { success: true, translation: translations[index] };
+      }
+    }
+    return { success: false, error: 'Translation not found' };
+  } catch (error) {
+    console.error('Error saving translation:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+// Get AI translation suggestion
+ipcMain.handle('get-ai-translation-suggestion', async (event, originalText) => {
+  try {
+    // For now, return a placeholder suggestion
+    // In a real implementation, you would call an AI translation service
+    const suggestions = [
+      `[AI] ${originalText}`, // Placeholder
+      `[AI] Vietnamese translation of: ${originalText}`,
+      `[AI] Suggested: ${originalText}`
+    ];
+    
+    // Simulate AI processing delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    return {
+      success: true,
+      suggestion: suggestions[Math.floor(Math.random() * suggestions.length)],
+      confidence: Math.random() * 0.3 + 0.7 // 70-100% confidence
+    };
+  } catch (error) {
+    console.error('Error getting AI translation suggestion:', error);
+    return { success: false, error: error.message };
   }
 });
 

@@ -683,7 +683,7 @@ window.searchEncyclopedia = async function() {
     // Search in the current encyclopedia data
     if (encyclopediaData) {
       const searchText = query.toLowerCase();
-      const results = { items: [], titles: [], total: 0 };
+      const results = { items: [], monsters: [], translations: [], titles: [], total: 0 };
       
       // Search in items
       if (encyclopediaData.items) {
@@ -701,6 +701,24 @@ window.searchEncyclopedia = async function() {
         ));
       }
       
+      // Search in monsters
+      if (encyclopediaData.monsters) {
+        results.monsters = encyclopediaData.monsters.filter(monster => (
+          monster.name.toLowerCase().includes(searchText) ||
+          (monster.location && monster.location.toLowerCase().includes(searchText)) ||
+          (monster.type && monster.type.toLowerCase().includes(searchText))
+        ));
+      }
+      
+      // Search in translations
+      if (encyclopediaData.translations) {
+        results.translations = encyclopediaData.translations.filter(translation => (
+          translation.name.toLowerCase().includes(searchText) ||
+          translation.originalText.toLowerCase().includes(searchText) ||
+          translation.translatedText.toLowerCase().includes(searchText)
+        ));
+      }
+      
       // Search in titles
       if (encyclopediaData.titles) {
         results.titles = encyclopediaData.titles.filter(title => (
@@ -712,7 +730,7 @@ window.searchEncyclopedia = async function() {
         ));
       }
       
-      results.total = results.items.length + results.titles.length;
+      results.total = results.items.length + results.monsters.length + results.translations.length + results.titles.length;
       
       if (results.total > 0) {
         displayEncyclopediaResults(results, `Search results for: "${query}" (${results.total} total)`);
@@ -2422,11 +2440,8 @@ function renderTranslationsGrid(translations) {
             <label class="text-sm text-rpg-gold">Sort by:</label>
             <select id="translation-sort-by" class="p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded text-sm" onchange="sortTranslations()">
               <option value="name">Name</option>
-              <option value="level">Level</option>
-              <option value="type">Type</option>
-              <option value="damage">Damage</option>
-              <option value="mana">Mana Cost</option>
-              <option value="cooldown">Cooldown</option>
+              <option value="originalText">Original Text</option>
+              <option value="translatedText">Translated Text</option>
               <option value="crawled_at">Date Added</option>
             </select>
             <select id="translation-sort-order" class="p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded text-sm" onchange="sortTranslations()">
@@ -2438,16 +2453,36 @@ function renderTranslationsGrid(translations) {
       </div>
       <div id="translations-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         ${translations.map(translation => `
-          <div class="encyclopedia-card p-4 rounded-lg">
-            <div class="flex items-center space-x-3 mb-2">
-              <span class="text-2xl">⚡</span>
-              <h5 class="font-bold text-rpg-gold">${translation.name}</h5>
+          <div class="encyclopedia-card p-4 rounded-lg border border-rpg-gold hover:border-rpg-gold/80 transition-all cursor-pointer" onclick="showTranslationDetails('${translation.id}')">
+            <div class="flex items-center justify-between mb-2">
+              <h5 class="font-bold text-rpg-gold text-lg">${translation.name}</h5>
+              <span class="text-blue-400 text-sm">🌐</span>
             </div>
-            <div class="text-sm space-y-1">
-              <p><span class="text-gray-400">Type:</span> ${translation.type}</p>
-              <p><span class="text-gray-400">Level:</span> ${translation.level}</p>
-              <p><span class="text-gray-400">Cooldown:</span> ${translation.cooldown}s</p>
-              ${translation.description ? `<p class="text-gray-300">${translation.description}</p>` : ''}
+            
+            <div class="text-sm space-y-2">
+              <div class="bg-gray-800 p-2 rounded">
+                <div class="text-gray-400 text-xs mb-1">Original:</div>
+                <div class="text-white text-sm">${translation.originalText}</div>
+              </div>
+              
+              <div class="bg-gray-800 p-2 rounded">
+                <div class="text-gray-400 text-xs mb-1">Translated:</div>
+                <div class="text-rpg-gold text-sm">${translation.translatedText}</div>
+              </div>
+              
+              <div class="flex justify-between text-xs text-gray-400">
+                <span>ID: ${translation.id}</span>
+                <span>${new Date(translation.crawled_at).toLocaleDateString()}</span>
+              </div>
+            </div>
+            
+            <div class="mt-3 pt-2 border-t border-rpg-gold/30">
+              <div class="flex justify-between items-center">
+                <span class="text-xs text-gray-400">Click to edit</span>
+                <button class="text-blue-400 hover:text-blue-300 text-xs" onclick="event.stopPropagation(); getAISuggestion('${translation.id}')">
+                  🤖 AI Suggest
+                </button>
+              </div>
             </div>
           </div>
         `).join('')}
@@ -2905,20 +2940,11 @@ window.sortTranslations = function() {
       case 'name':
         comparison = a.name.localeCompare(b.name);
         break;
-      case 'level':
-        comparison = (a.level || 0) - (b.level || 0);
+      case 'originalText':
+        comparison = a.originalText.localeCompare(b.originalText);
         break;
-      case 'type':
-        comparison = (a.type || '').localeCompare(b.type || '');
-        break;
-      case 'damage':
-        comparison = (a.damage || 0) - (b.damage || 0);
-        break;
-      case 'mana':
-        comparison = (a.mana || 0) - (b.mana || 0);
-        break;
-      case 'cooldown':
-        comparison = (a.cooldown || 0) - (b.cooldown || 0);
+      case 'translatedText':
+        comparison = a.translatedText.localeCompare(b.translatedText);
         break;
       case 'crawled_at':
         comparison = new Date(a.crawled_at) - new Date(b.crawled_at);
@@ -2939,23 +2965,303 @@ window.sortTranslations = function() {
   const translationsContainer = document.getElementById('translations-container');
   if (translationsContainer) {
     translationsContainer.innerHTML = translations.map(translation => `
-      <div class="encyclopedia-card p-4 rounded-lg">
-        <div class="flex items-center space-x-3 mb-2">
-          <span class="text-2xl">⚡</span>
-          <h5 class="font-bold text-rpg-gold">${skill.name}</h5>
+      <div class="encyclopedia-card p-4 rounded-lg border border-rpg-gold hover:border-rpg-gold/80 transition-all cursor-pointer" onclick="showTranslationDetails('${translation.id}')">
+        <div class="flex items-center justify-between mb-2">
+          <h5 class="font-bold text-rpg-gold text-lg">${translation.name}</h5>
+          <span class="text-blue-400 text-sm">🌐</span>
         </div>
-        <div class="text-sm space-y-1">
-          <p><span class="text-gray-400">Level:</span> ${skill.level}</p>
-          <p><span class="text-gray-400">Type:</span> ${skill.type}</p>
-          <p><span class="text-gray-400">Damage:</span> ${skill.damage}</p>
-          <p><span class="text-gray-400">Mana Cost:</span> ${skill.mana}</p>
-          <p><span class="text-gray-400">Cooldown:</span> ${skill.cooldown}</p>
+        
+        <div class="text-sm space-y-2">
+          <div class="bg-gray-800 p-2 rounded">
+            <div class="text-gray-400 text-xs mb-1">Original:</div>
+            <div class="text-white text-sm">${translation.originalText}</div>
+          </div>
+          
+          <div class="bg-gray-800 p-2 rounded">
+            <div class="text-gray-400 text-xs mb-1">Translated:</div>
+            <div class="text-rpg-gold text-sm">${translation.translatedText}</div>
+          </div>
+          
+          <div class="flex justify-between text-xs text-gray-400">
+            <span>ID: ${translation.id}</span>
+            <span>${new Date(translation.crawled_at).toLocaleDateString()}</span>
+          </div>
+        </div>
+        
+        <div class="mt-3 pt-2 border-t border-rpg-gold/30">
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-gray-400">Click to edit</span>
+            <button class="text-blue-400 hover:text-blue-300 text-xs" onclick="event.stopPropagation(); getAISuggestion('${translation.id}')">
+              🤖 AI Suggest
+            </button>
+          </div>
         </div>
       </div>
     `).join('');
   }
   
   console.log(`✅ Translations sorted by ${sortBy} in ${sortOrder} order`);
+};
+
+// Show translation details modal
+window.showTranslationDetails = async function(translationId) {
+  try {
+    console.log(`🔍 Loading translation details for ID: ${translationId}`);
+    
+    const translation = await ipcRenderer.invoke('get-translation-details', translationId);
+    if (!translation) {
+      console.error('Translation not found');
+      return;
+    }
+    
+    // Create modal HTML
+    const modalHtml = `
+      <div id="translation-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+        <div class="bg-rpg-darker border border-rpg-gold rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-rpg-gold">Translation Editor</h3>
+            <button onclick="closeTranslationModal()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+          </div>
+          
+          <div class="space-y-4">
+            <!-- Translation Info -->
+            <div class="bg-gray-800 p-4 rounded">
+              <div class="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span class="text-gray-400">ID:</span>
+                  <span class="text-rpg-gold ml-2">${translation.id}</span>
+                </div>
+                <div>
+                  <span class="text-gray-400">Name:</span>
+                  <span class="text-rpg-gold ml-2">${translation.name}</span>
+                </div>
+                <div>
+                  <span class="text-gray-400">Type:</span>
+                  <span class="text-rpg-gold ml-2">${translation.type}</span>
+                </div>
+                <div>
+                  <span class="text-gray-400">Source:</span>
+                  <span class="text-rpg-gold ml-2">${translation.source}</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Original Text -->
+            <div>
+              <label class="block text-sm font-medium text-rpg-gold mb-2">Original Text</label>
+              <div class="bg-gray-800 p-3 rounded border border-gray-600">
+                <p class="text-white">${translation.originalText}</p>
+              </div>
+            </div>
+            
+            <!-- Translated Text Editor -->
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <label class="block text-sm font-medium text-rpg-gold">Translated Text</label>
+                <button onclick="getAISuggestionForModal('${translation.id}')" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm flex items-center gap-1">
+                  🤖 AI Suggest
+                </button>
+              </div>
+              <textarea 
+                id="translated-text-editor" 
+                class="w-full h-32 p-3 bg-gray-800 border border-gray-600 rounded text-white resize-none"
+                placeholder="Enter Vietnamese translation..."
+              >${translation.translatedText}</textarea>
+            </div>
+            
+            <!-- AI Suggestion Display -->
+            <div id="ai-suggestion-container" class="hidden">
+              <label class="block text-sm font-medium text-rpg-gold mb-2">AI Suggestion</label>
+              <div class="bg-blue-900 p-3 rounded border border-blue-600">
+                <p id="ai-suggestion-text" class="text-blue-100 mb-2"></p>
+                <div class="flex gap-2">
+                  <button onclick="useAISuggestion()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm">
+                    Use Suggestion
+                  </button>
+                  <button onclick="hideAISuggestion()" class="bg-gray-600 hover:bg-gray-700 text-white px-3 py-1 rounded text-sm">
+                    Dismiss
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- URL -->
+            <div>
+              <label class="block text-sm font-medium text-rpg-gold mb-2">Source URL</label>
+              <div class="bg-gray-800 p-3 rounded border border-gray-600">
+                <a href="${translation.url}" target="_blank" class="text-blue-400 hover:text-blue-300 break-all">
+                  ${translation.url}
+                </a>
+              </div>
+            </div>
+            
+            <!-- Timestamps -->
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span class="text-gray-400">Crawled:</span>
+                <span class="text-rpg-gold ml-2">${new Date(translation.crawled_at).toLocaleString()}</span>
+              </div>
+              ${translation.updated_at ? `
+                <div>
+                  <span class="text-gray-400">Updated:</span>
+                  <span class="text-rpg-gold ml-2">${new Date(translation.updated_at).toLocaleString()}</span>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-600">
+            <button onclick="closeTranslationModal()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded">
+              Cancel
+            </button>
+            <button onclick="saveTranslation('${translation.id}')" class="bg-rpg-gold hover:bg-yellow-600 text-black px-4 py-2 rounded font-medium">
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // Add modal to page
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
+  } catch (error) {
+    console.error('Error showing translation details:', error);
+  }
+};
+
+// Close translation modal
+window.closeTranslationModal = function() {
+  const modal = document.getElementById('translation-modal');
+  if (modal) {
+    modal.remove();
+  }
+};
+
+// Get AI suggestion for modal
+window.getAISuggestionForModal = async function(translationId) {
+  try {
+    const translation = await ipcRenderer.invoke('get-translation-details', translationId);
+    if (!translation) return;
+    
+    const suggestionContainer = document.getElementById('ai-suggestion-container');
+    const suggestionText = document.getElementById('ai-suggestion-text');
+    
+    // Show loading state
+    suggestionContainer.classList.remove('hidden');
+    suggestionText.textContent = 'Getting AI suggestion...';
+    
+    const result = await ipcRenderer.invoke('get-ai-translation-suggestion', translation.originalText);
+    
+    if (result.success) {
+      suggestionText.textContent = result.suggestion;
+      // Store the suggestion for the "Use Suggestion" button
+      window.currentAISuggestion = result.suggestion;
+    } else {
+      suggestionText.textContent = 'Failed to get AI suggestion: ' + result.error;
+    }
+    
+  } catch (error) {
+    console.error('Error getting AI suggestion:', error);
+    const suggestionText = document.getElementById('ai-suggestion-text');
+    if (suggestionText) {
+      suggestionText.textContent = 'Error getting AI suggestion';
+    }
+  }
+};
+
+// Use AI suggestion
+window.useAISuggestion = function() {
+  const editor = document.getElementById('translated-text-editor');
+  if (editor && window.currentAISuggestion) {
+    editor.value = window.currentAISuggestion;
+  }
+  hideAISuggestion();
+};
+
+// Hide AI suggestion
+window.hideAISuggestion = function() {
+  const suggestionContainer = document.getElementById('ai-suggestion-container');
+  if (suggestionContainer) {
+    suggestionContainer.classList.add('hidden');
+  }
+  window.currentAISuggestion = null;
+};
+
+// Save translation
+window.saveTranslation = async function(translationId) {
+  try {
+    const translatedText = document.getElementById('translated-text-editor').value;
+    
+    if (!translatedText.trim()) {
+      alert('Please enter a translation');
+      return;
+    }
+    
+    const result = await ipcRenderer.invoke('save-translation', {
+      id: translationId,
+      translatedText: translatedText.trim()
+    });
+    
+    if (result.success) {
+      console.log('Translation saved successfully');
+      closeTranslationModal();
+      
+      // Refresh the translations display
+      if (encyclopediaData && encyclopediaData.translations) {
+        const translationIndex = encyclopediaData.translations.findIndex(t => t.id === translationId);
+        if (translationIndex !== -1) {
+          encyclopediaData.translations[translationIndex] = result.translation;
+          // Re-render the translations grid
+          const currentFilter = document.getElementById('encyclopedia-search').value;
+          if (currentFilter) {
+            searchEncyclopedia();
+          } else {
+            filterEncyclopedia('translations');
+          }
+        }
+      }
+    } else {
+      alert('Failed to save translation: ' + result.error);
+    }
+    
+  } catch (error) {
+    console.error('Error saving translation:', error);
+    alert('Error saving translation');
+  }
+};
+
+// Get AI suggestion for grid item
+window.getAISuggestion = async function(translationId) {
+  try {
+    const translation = await ipcRenderer.invoke('get-translation-details', translationId);
+    if (!translation) return;
+    
+    const result = await ipcRenderer.invoke('get-ai-translation-suggestion', translation.originalText);
+    
+    if (result.success) {
+      // Show suggestion in a simple alert for now
+      const useSuggestion = confirm(`AI Suggestion:\n\n"${result.suggestion}"\n\nDo you want to use this suggestion?`);
+      if (useSuggestion) {
+        // Open the detail modal with the suggestion pre-filled
+        showTranslationDetails(translationId);
+        // Wait for modal to load, then set the suggestion
+        setTimeout(() => {
+          const editor = document.getElementById('translated-text-editor');
+          if (editor) {
+            editor.value = result.suggestion;
+          }
+        }, 100);
+      }
+    } else {
+      alert('Failed to get AI suggestion: ' + result.error);
+    }
+    
+  } catch (error) {
+    console.error('Error getting AI suggestion:', error);
+    alert('Error getting AI suggestion');
+  }
 };
 
 // Add helper to get config from form
