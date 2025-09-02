@@ -21,41 +21,121 @@
     }
   },
   {
-    "id": "b6qbl2wtx",
-    "username": "-takkar-",
-    "password": "0908152508",
+    "id": "1r4z70avl",
+    "username": "korvak",
+    "password": "09081508",
     "config": {
       "all": false,
-      "recipe": true,
+      "recipe": false,
       "charm": true,
-      "pieceGear": false,
-      "jewel": false,
+      "pieceGear": true,
+      "jewel": true,
       "rune": true,
       "epicGear": false,
       "magicScroll": false,
       "monsterScroll": true,
       "staminaPotion": true,
-      "ancientPotion": false,
+      "ancientPotion": true,
       "monsterList": "",
       "hpThreshold": ""
     }
   },
   {
-    "id": "uiuee4b5o",
-    "username": "wuchang",
+    "id": "xz350u2t0",
+    "username": "thandis",
     "password": "09081508",
     "config": {
       "all": false,
       "recipe": true,
       "charm": true,
-      "pieceGear": false,
-      "jewel": false,
+      "pieceGear": true,
+      "jewel": true,
       "rune": true,
       "epicGear": false,
       "magicScroll": false,
       "monsterScroll": true,
       "staminaPotion": true,
-      "ancientPotion": false,
+      "ancientPotion": true,
+      "monsterList": "",
+      "hpThreshold": ""
+    }
+  },
+  {
+    "id": "6okipvlwy",
+    "username": "altharion",
+    "password": "09081508",
+    "config": {
+      "all": false,
+      "recipe": true,
+      "charm": false,
+      "pieceGear": true,
+      "jewel": true,
+      "rune": true,
+      "epicGear": false,
+      "magicScroll": false,
+      "monsterScroll": true,
+      "staminaPotion": true,
+      "ancientPotion": true,
+      "monsterList": "",
+      "hpThreshold": ""
+    }
+  },
+  {
+    "id": "x6m407y2h",
+    "username": "eryndor",
+    "password": "09081508",
+    "config": {
+      "all": false,
+      "recipe": true,
+      "charm": true,
+      "pieceGear": true,
+      "jewel": true,
+      "rune": true,
+      "epicGear": false,
+      "magicScroll": false,
+      "monsterScroll": true,
+      "staminaPotion": true,
+      "ancientPotion": true,
+      "monsterList": "",
+      "hpThreshold": ""
+    }
+  },
+  {
+    "id": "50y7djgx5",
+    "username": "Malrik",
+    "password": "09081508",
+    "config": {
+      "all": false,
+      "recipe": true,
+      "charm": true,
+      "pieceGear": true,
+      "jewel": true,
+      "rune": true,
+      "epicGear": false,
+      "magicScroll": false,
+      "monsterScroll": true,
+      "staminaPotion": true,
+      "ancientPotion": true,
+      "monsterList": "",
+      "hpThreshold": ""
+    }
+  },
+  {
+    "id": "cfvlsdzkf",
+    "username": "SYLRA",
+    "password": "09081508",
+    "config": {
+      "all": false,
+      "recipe": true,
+      "charm": true,
+      "pieceGear": true,
+      "jewel": true,
+      "rune": true,
+      "epicGear": false,
+      "magicScroll": false,
+      "monsterScroll": true,
+      "staminaPotion": true,
+      "ancientPotion": true,
       "monsterList": "",
       "hpThreshold": ""
     }

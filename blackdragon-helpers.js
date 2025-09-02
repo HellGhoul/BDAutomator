@@ -217,10 +217,11 @@ class BlackDragonHelpers {
       || (config.charm && name.includes("charm"))
       || (config.jewel && (name.includes("jewel") || name.includes("elixir")))
       || (config.rune && name.includes("rune "))
-      || (config.epicGear && (name.includes("(vi)") || name.includes("(v)") || 
-          quality.toLowerCase().includes("epic") || 
+      || (config.epicGear && (name.includes("(v)") || name.includes("(v)")  || name.includes("(vi)")|| 
           quality.toLowerCase().includes("mythic") || 
-          quality.toLowerCase().includes("heroic")))
+          quality.toLowerCase().includes("mythic") || 
+          quality.toLowerCase().includes("heroic") || 
+          quality.toLowerCase().includes("devine")))
       || (config.magicScroll && name.includes("magic scroll"))
       || (config.monsterScroll && name.includes("s magic scroll"))
       || (config.staminaPotion && name.includes("stamina potion"))

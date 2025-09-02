@@ -39,6 +39,10 @@ async function runAutomation({ username, password, config }) {
         await helpers.goToMaps();
         process.send && process.send('✅ Arrived at maps page, starting target selection...');
         await choosing();
+      }else{
+        await helpers.goToMaps();
+        process.send && process.send('✅ Arrived at maps page, starting target selection...');
+        await choosing();
       }
     } catch (error) {
       await helpers.goToMaps();
@@ -134,9 +138,17 @@ async function runAutomation({ username, password, config }) {
   // Start automation
   process.send && process.send('🚀 Starting automation...');
   process.send && process.send('🗺️ Navigating to maps page...');
-  await helpers.goToMaps();
-  process.send && process.send('✅ Arrived at maps page, starting target selection...');
-  await choosing();
+  try{
+    await helpers.goToMaps();
+    process.send && process.send('✅ Arrived at maps page, starting target selection...');
+    await choosing();
+  }
+  catch{
+    process.send && process.send('❌ Error in navigating to maps page');
+    process.send && process.send('🗺️ Navigating to maps page...');
+    await helpers.goToMaps();
+    await choosing();
+  }
 
   // Clean up on stop
   process.on('SIGTERM', async () => {
