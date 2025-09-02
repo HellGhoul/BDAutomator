@@ -2436,7 +2436,23 @@ function renderTranslationsGrid(translations) {
       <div class="flex justify-between items-center mb-3">
         <h4 class="text-xl font-bold text-rpg-gold">Translations (${translations.length})</h4>
         <div class="flex items-center gap-3">
+          <button onclick="exportTranslationsToExcel()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded transition-colors flex items-center gap-2">
+            📊 Export to Excel
+          </button>
+          <button onclick="uploadExcelFile()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded transition-colors flex items-center gap-2">
+            📤 Upload Excel
+          </button>
+          <button onclick="showContextSettings()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded transition-colors flex items-center gap-2">
+            ⚙️ Context Settings
+          </button>
           <div class="flex items-center gap-2">
+            <label class="text-sm text-rpg-gold">Filter:</label>
+            <select id="translation-status-filter" class="p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded text-sm" onchange="filterTranslationsByStatus()">
+              <option value="all">All Status</option>
+              <option value="translated">✅ Translated</option>
+              <option value="pending">⏳ Pending</option>
+              <option value="untranslated">❌ Untranslated</option>
+            </select>
             <label class="text-sm text-rpg-gold">Sort by:</label>
             <select id="translation-sort-by" class="p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded text-sm" onchange="sortTranslations()">
               <option value="name">Name</option>
@@ -2452,14 +2468,46 @@ function renderTranslationsGrid(translations) {
         </div>
       </div>
       <div id="translations-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        ${translations.map(translation => `
-          <div class="encyclopedia-card p-4 rounded-lg border border-rpg-gold hover:border-rpg-gold/80 transition-all cursor-pointer" onclick="showTranslationDetails('${translation.id}')">
+        ${translations.map(translation => {
+          const isTranslated = translation.translatedText && translation.translatedText.trim() !== '';
+          const hasChanges = isTranslated && translation.translatedText !== translation.originalText;
+          const cardClass = isTranslated 
+            ? (hasChanges ? 'encyclopedia-card-translated' : 'encyclopedia-card-pending')
+            : 'encyclopedia-card-untranslated';
+          const borderClass = isTranslated 
+            ? (hasChanges ? 'border-green-500 hover:border-green-400' : 'border-yellow-500 hover:border-yellow-400')
+            : 'border-red-500 hover:border-red-400';
+          const statusIcon = isTranslated 
+            ? (hasChanges ? '✅' : '⏳')
+            : '❌';
+          const statusText = isTranslated 
+            ? (hasChanges ? 'Translated' : 'Pending')
+            : 'Untranslated';
+          const statusColor = isTranslated 
+            ? (hasChanges ? 'text-green-400' : 'text-yellow-400')
+            : 'text-red-400';
+          
+          return `
+          <div class="${cardClass} p-4 rounded-lg border ${borderClass} transition-all cursor-pointer" onclick="showTranslationDetails('${translation.id}')">
             <div class="flex items-center justify-between mb-2">
               <h5 class="font-bold text-rpg-gold text-lg">${translation.name}</h5>
-              <span class="text-blue-400 text-sm">🌐</span>
+              <div class="flex items-center gap-2">
+                <span class="text-sm">${statusIcon}</span>
+                <span class="text-blue-400 text-sm">🌐</span>
+              </div>
             </div>
             
             <div class="text-sm space-y-2">
+              <!-- Status Badge -->
+              <div class="flex justify-between items-center">
+                <span class="px-2 py-1 rounded text-xs font-bold ${statusColor} bg-gray-800">
+                  ${statusText}
+                </span>
+                <span class="text-xs text-gray-400">
+                  ${translation.crawled_at ? new Date(translation.crawled_at).toLocaleDateString() : 'Unknown'}
+                </span>
+              </div>
+              
               <div class="bg-gray-800 p-2 rounded">
                 <div class="text-gray-400 text-xs mb-1">Original:</div>
                 <div class="text-white text-sm">${translation.originalText}</div>
@@ -2467,12 +2515,14 @@ function renderTranslationsGrid(translations) {
               
               <div class="bg-gray-800 p-2 rounded">
                 <div class="text-gray-400 text-xs mb-1">Translated:</div>
-                <div class="text-rpg-gold text-sm">${translation.translatedText}</div>
+                <div class="text-sm ${!isTranslated ? 'text-red-300 italic' : 'text-rpg-gold'}">
+                  ${translation.translatedText || 'Not translated'}
+                </div>
               </div>
               
               <div class="flex justify-between text-xs text-gray-400">
                 <span>ID: ${translation.id}</span>
-                <span>${new Date(translation.crawled_at).toLocaleDateString()}</span>
+                ${translation.updated_at ? `<span>Updated: ${new Date(translation.updated_at).toLocaleDateString()}</span>` : ''}
               </div>
             </div>
             
@@ -2485,7 +2535,8 @@ function renderTranslationsGrid(translations) {
               </div>
             </div>
           </div>
-        `).join('')}
+        `;
+        }).join('')}
       </div>
     </div>
   `;
@@ -3003,6 +3054,47 @@ window.sortTranslations = function() {
   console.log(`✅ Translations sorted by ${sortBy} in ${sortOrder} order`);
 };
 
+// Filter translations by status
+window.filterTranslationsByStatus = function() {
+  const statusFilter = document.getElementById('translation-status-filter')?.value || 'all';
+  
+  // Get all translation cards
+  const container = document.getElementById('translations-container');
+  if (!container) return;
+  
+  const cards = container.querySelectorAll('.encyclopedia-card-translated, .encyclopedia-card-pending, .encyclopedia-card-untranslated');
+  
+  cards.forEach(card => {
+    let shouldShow = true;
+    
+    if (statusFilter !== 'all') {
+      if (statusFilter === 'translated' && !card.classList.contains('encyclopedia-card-translated')) {
+        shouldShow = false;
+      } else if (statusFilter === 'pending' && !card.classList.contains('encyclopedia-card-pending')) {
+        shouldShow = false;
+      } else if (statusFilter === 'untranslated' && !card.classList.contains('encyclopedia-card-untranslated')) {
+        shouldShow = false;
+      }
+    }
+    
+    card.style.display = shouldShow ? 'block' : 'none';
+  });
+  
+  // Update the count in the header
+  const visibleCards = Array.from(cards).filter(card => card.style.display !== 'none').length;
+  const header = document.querySelector('h4.text-xl.font-bold.text-rpg-gold');
+  if (header) {
+    const totalCount = cards.length;
+    if (statusFilter === 'all') {
+      header.textContent = `Translations (${totalCount})`;
+    } else {
+      header.textContent = `Translations (${visibleCards} of ${totalCount})`;
+    }
+  }
+  
+  console.log('Filtering translations by status:', statusFilter, `- Showing ${visibleCards} of ${cards.length} cards`);
+};
+
 // Show translation details modal
 window.showTranslationDetails = async function(translationId) {
   try {
@@ -3152,20 +3244,14 @@ window.getAISuggestionForModal = async function(translationId) {
     suggestionContainer.classList.remove('hidden');
     suggestionText.textContent = 'Getting AI suggestion...';
     
-    const result = await ipcRenderer.invoke('get-ai-translation-suggestion', translation.originalText);
+    const result = await ipcRenderer.invoke('get-ai-translation-suggestion', translation.originalText, {
+      name: translation.name,
+      type: translation.type
+    });
     
-    if (result.success) {
-      suggestionText.textContent = result.suggestion;
-      // Store the suggestion for the "Use Suggestion" button
-      window.currentAISuggestion = result.suggestion;
-      
-      // Show service information if available
-      if (result.service) {
-        const serviceInfo = document.createElement('div');
-        serviceInfo.className = 'text-xs text-blue-300 mt-1';
-        serviceInfo.textContent = `Powered by ${result.service} (${Math.round(result.confidence * 100)}% confidence)`;
-        suggestionText.parentNode.appendChild(serviceInfo);
-      }
+    if (result.success && result.suggestions) {
+      // Display multiple suggestions
+      displayMultipleSuggestions(result.suggestions, result.style);
     } else {
       suggestionText.textContent = 'Failed to get AI suggestion: ' + result.error;
     }
@@ -3179,7 +3265,58 @@ window.getAISuggestionForModal = async function(translationId) {
   }
 };
 
-// Use AI suggestion
+// Display multiple suggestions
+window.displayMultipleSuggestions = function(suggestions, style) {
+  const suggestionContainer = document.getElementById('ai-suggestion-container');
+  const suggestionText = document.getElementById('ai-suggestion-text');
+  
+  if (!suggestionContainer || !suggestionText) return;
+  
+  // Clear previous content
+  suggestionText.innerHTML = '';
+  
+  // Create suggestions list
+  const suggestionsList = document.createElement('div');
+  suggestionsList.className = 'space-y-2';
+  
+  suggestions.forEach((suggestion, index) => {
+    const suggestionItem = document.createElement('div');
+    suggestionItem.className = 'bg-gray-700 p-3 rounded border border-gray-600 hover:border-blue-500 cursor-pointer transition-colors';
+    
+    const styleInfo = suggestion.style && suggestion.style !== 'standard' ? ` - ${suggestion.style.replace('_', ' ')} style` : '';
+    const confidenceText = Math.round(suggestion.confidence * 100);
+    
+    suggestionItem.innerHTML = `
+      <div class="flex justify-between items-start">
+        <div class="flex-1">
+          <div class="text-blue-100 font-medium">${suggestion.suggestion}</div>
+          <div class="text-xs text-gray-400 mt-1">
+            ${suggestion.service}${styleInfo} (${confidenceText}% confidence)
+          </div>
+        </div>
+        <button onclick="useSuggestion('${suggestion.suggestion}')" class="ml-2 bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs">
+          Use
+        </button>
+      </div>
+    `;
+    
+    suggestionsList.appendChild(suggestionItem);
+  });
+  
+  suggestionText.appendChild(suggestionsList);
+  suggestionContainer.classList.remove('hidden');
+};
+
+// Use specific suggestion
+window.useSuggestion = function(suggestion) {
+  const editor = document.getElementById('translated-text-editor');
+  if (editor) {
+    editor.value = suggestion;
+  }
+  hideAISuggestion();
+};
+
+// Use AI suggestion (legacy function for compatibility)
 window.useAISuggestion = function() {
   const editor = document.getElementById('translated-text-editor');
   if (editor && window.currentAISuggestion) {
@@ -3240,29 +3377,466 @@ window.saveTranslation = async function(translationId) {
   }
 };
 
+// Show suggestion selection dialog
+window.showSuggestionSelection = function(suggestions, translationId) {
+  // Create modal for suggestion selection
+  const modalHtml = `
+    <div id="suggestion-selection-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+      <div class="bg-rpg-darker border border-rpg-gold rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-bold text-rpg-gold">Choose Translation Suggestion</h3>
+          <button onclick="closeSuggestionSelection()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        </div>
+        
+        <div class="space-y-3 mb-6">
+          ${suggestions.map((suggestion, index) => {
+            const styleInfo = suggestion.style && suggestion.style !== 'standard' ? ` - ${suggestion.style.replace('_', ' ')} style` : '';
+            const confidenceText = Math.round(suggestion.confidence * 100);
+            return `
+              <div class="bg-gray-800 p-4 rounded border border-gray-600 hover:border-rpg-gold cursor-pointer transition-colors" onclick="selectSuggestion('${suggestion.suggestion}', '${translationId}')">
+                <div class="flex justify-between items-start">
+                  <div class="flex-1">
+                    <div class="text-rpg-gold font-medium text-lg">${suggestion.suggestion}</div>
+                    <div class="text-sm text-gray-400 mt-1">
+                      ${suggestion.service}${styleInfo} (${confidenceText}% confidence)
+                    </div>
+                  </div>
+                  <div class="ml-3 text-rpg-gold">→</div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+        
+        <div class="flex justify-end">
+          <button onclick="closeSuggestionSelection()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Add modal to page
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+};
+
+// Select a suggestion
+window.selectSuggestion = function(suggestion, translationId) {
+  // Close the selection modal
+  closeSuggestionSelection();
+  
+  // Open the detail modal with the suggestion pre-filled
+  showTranslationDetails(translationId);
+  
+  // Wait for modal to load, then set the suggestion
+  setTimeout(() => {
+    const editor = document.getElementById('translated-text-editor');
+    if (editor) {
+      editor.value = suggestion;
+    }
+  }, 100);
+};
+
+// Close suggestion selection modal
+window.closeSuggestionSelection = function() {
+  const modal = document.getElementById('suggestion-selection-modal');
+  if (modal) {
+    modal.remove();
+  }
+};
+
+// Export translations to Excel
+window.exportTranslationsToExcel = async function() {
+  try {
+    // Show loading state
+    const exportButton = event.target;
+    const originalText = exportButton.innerHTML;
+    exportButton.innerHTML = '⏳ Exporting...';
+    exportButton.disabled = true;
+    
+    // Get current filters
+    const searchTerm = document.getElementById('translation-search')?.value || '';
+    const sortBy = document.getElementById('translation-sort-by')?.value || 'name';
+    const sortOrder = document.getElementById('translation-sort-order')?.value || 'asc';
+    
+    const filters = {
+      search: searchTerm,
+      sortBy: sortBy,
+      sortOrder: sortOrder
+    };
+    
+    console.log('📊 Starting Excel export with filters:', filters);
+    
+    // Call the backend to export
+    const result = await ipcRenderer.invoke('export-translations-to-excel', filters);
+    
+    if (result.success) {
+      // Show success message
+      exportButton.innerHTML = '✅ Exported!';
+      exportButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+      exportButton.classList.add('bg-green-500');
+      
+      // Show success notification
+      showNotification(`Excel export completed! File saved as: ${result.filename}`, 'success');
+      
+      console.log('✅ Excel export successful:', {
+        filename: result.filename,
+        recordCount: result.recordCount,
+        filepath: result.filepath
+      });
+      
+      // Reset button after 3 seconds
+      setTimeout(() => {
+        exportButton.innerHTML = originalText;
+        exportButton.disabled = false;
+        exportButton.classList.remove('bg-green-500');
+        exportButton.classList.add('bg-green-600', 'hover:bg-green-700');
+      }, 3000);
+      
+    } else {
+      throw new Error(result.error || 'Export failed');
+    }
+    
+  } catch (error) {
+    console.error('❌ Excel export failed:', error);
+    
+    // Show error state
+    const exportButton = event.target;
+    exportButton.innerHTML = '❌ Export Failed';
+    exportButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+    exportButton.classList.add('bg-red-600');
+    
+    // Show error notification
+    showNotification(`Excel export failed: ${error.message}`, 'error');
+    
+    // Reset button after 3 seconds
+    setTimeout(() => {
+      exportButton.innerHTML = '📊 Export to Excel';
+      exportButton.disabled = false;
+      exportButton.classList.remove('bg-red-600');
+      exportButton.classList.add('bg-green-600', 'hover:bg-green-700');
+    }, 3000);
+  }
+};
+
+// Show notification
+function showNotification(message, type = 'info') {
+  // Create notification element
+  const notification = document.createElement('div');
+  notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 max-w-md ${
+    type === 'success' ? 'bg-green-600 text-white' :
+    type === 'error' ? 'bg-red-600 text-white' :
+    'bg-blue-600 text-white'
+  }`;
+  
+  notification.innerHTML = `
+    <div class="flex items-center gap-2">
+      <span class="text-lg">
+        ${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'}
+      </span>
+      <span>${message}</span>
+    </div>
+  `;
+  
+  // Add to page
+  document.body.appendChild(notification);
+  
+  // Auto remove after 5 seconds
+  setTimeout(() => {
+    if (notification.parentNode) {
+      notification.parentNode.removeChild(notification);
+    }
+  }, 5000);
+}
+
+// Upload Excel file
+window.uploadExcelFile = async function() {
+  try {
+    // Create file input element
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.xlsx,.xls';
+    fileInput.style.display = 'none';
+    
+    // Add to page temporarily
+    document.body.appendChild(fileInput);
+    
+    // Show file picker
+    fileInput.click();
+    
+    // Handle file selection
+    fileInput.onchange = async function(event) {
+      const file = event.target.files[0];
+      if (!file) {
+        document.body.removeChild(fileInput);
+        return;
+      }
+      
+      // Show loading state
+      showNotification('Processing Excel file...', 'info');
+      
+      try {
+        // Read file and send to backend
+        const arrayBuffer = await file.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        
+        // Save file temporarily
+        const fs = require('fs');
+        const path = require('path');
+        const tempFile = path.join(process.cwd(), `temp_upload_${Date.now()}.xlsx`);
+        fs.writeFileSync(tempFile, buffer);
+        
+        // Process file
+        const result = await ipcRenderer.invoke('upload-excel-translations', tempFile);
+        
+        // Clean up temp file
+        if (fs.existsSync(tempFile)) {
+          fs.unlinkSync(tempFile);
+        }
+        
+        if (result.success) {
+          // Show success message with stats
+          const stats = result.stats;
+          const message = `Excel upload completed! Updated: ${stats.updated}, Added: ${stats.added}, Skipped: ${stats.skipped}, Errors: ${stats.errors}`;
+          showNotification(message, 'success');
+          
+          // Refresh translations grid
+          if (window.currentEncyclopediaType === 'translations') {
+            filterEncyclopedia('translations');
+          }
+        } else {
+          throw new Error(result.error || 'Upload failed');
+        }
+        
+      } catch (error) {
+        console.error('Excel upload error:', error);
+        showNotification(`Excel upload failed: ${error.message}`, 'error');
+      }
+      
+      // Clean up
+      document.body.removeChild(fileInput);
+    };
+    
+  } catch (error) {
+    console.error('Error setting up file upload:', error);
+    showNotification('Error setting up file upload', 'error');
+  }
+};
+
+// Show context settings modal
+window.showContextSettings = async function() {
+  try {
+    // Load current settings
+    const result = await ipcRenderer.invoke('get-context-settings');
+    const settings = result.success ? result.settings : {
+      generalContext: 'This is a fantasy RPG game with magical elements, medieval themes, and epic adventures.',
+      additionalRequirements: [
+        'Use appropriate fantasy terminology',
+        'Maintain consistency with game lore',
+        'Keep translations concise and impactful',
+        'Use proper Vietnamese grammar and spelling'
+      ],
+      translationPreferences: {
+        nameStyle: 'chinese_style',
+        itemStyle: 'chinese_style',
+        monsterStyle: 'chinese_style',
+        locationStyle: 'chinese_style',
+        skillStyle: 'chinese_style',
+        defaultStyle: 'standard'
+      }
+    };
+    
+    // Create modal
+    const modalHtml = `
+      <div id="context-settings-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+        <div class="bg-rpg-darker border border-rpg-gold rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-bold text-rpg-gold">⚙️ Context Settings</h3>
+            <button onclick="closeContextSettings()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+          </div>
+          
+          <div class="space-y-6">
+            <!-- General Context -->
+            <div>
+              <label class="block text-lg font-bold text-rpg-gold mb-2">General Context</label>
+              <textarea id="general-context" class="w-full p-3 bg-rpg-darker border border-rpg-gold text-white rounded h-24 resize-none" placeholder="Describe the general context for translations...">${settings.generalContext || ''}</textarea>
+            </div>
+            
+            <!-- Additional Requirements -->
+            <div>
+              <label class="block text-lg font-bold text-rpg-gold mb-2">Additional Requirements</label>
+              <div id="requirements-list" class="space-y-2">
+                ${(settings.additionalRequirements || []).map(req => `
+                  <div class="flex items-center gap-2">
+                    <input type="text" value="${req}" class="flex-1 p-2 bg-rpg-darker border border-rpg-gold text-white rounded" onchange="updateRequirement(this)">
+                    <button onclick="removeRequirement(this)" class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded">Remove</button>
+                  </div>
+                `).join('')}
+              </div>
+              <button onclick="addRequirement()" class="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">+ Add Requirement</button>
+            </div>
+            
+            <!-- Translation Preferences -->
+            <div>
+              <label class="block text-lg font-bold text-rpg-gold mb-3">Translation Style Preferences</label>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-rpg-gold mb-1">Name Style:</label>
+                  <select id="name-style" class="w-full p-2 bg-rpg-darker border border-rpg-gold text-white rounded">
+                    <option value="chinese_style" ${settings.translationPreferences?.nameStyle === 'chinese_style' ? 'selected' : ''}>Chinese Style</option>
+                    <option value="standard" ${settings.translationPreferences?.nameStyle === 'standard' ? 'selected' : ''}>Standard</option>
+                    <option value="literal" ${settings.translationPreferences?.nameStyle === 'literal' ? 'selected' : ''}>Literal</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-rpg-gold mb-1">Item Style:</label>
+                  <select id="item-style" class="w-full p-2 bg-rpg-darker border border-rpg-gold text-white rounded">
+                    <option value="chinese_style" ${settings.translationPreferences?.itemStyle === 'chinese_style' ? 'selected' : ''}>Chinese Style</option>
+                    <option value="standard" ${settings.translationPreferences?.itemStyle === 'standard' ? 'selected' : ''}>Standard</option>
+                    <option value="literal" ${settings.translationPreferences?.itemStyle === 'literal' ? 'selected' : ''}>Literal</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-rpg-gold mb-1">Monster Style:</label>
+                  <select id="monster-style" class="w-full p-2 bg-rpg-darker border border-rpg-gold text-white rounded">
+                    <option value="chinese_style" ${settings.translationPreferences?.monsterStyle === 'chinese_style' ? 'selected' : ''}>Chinese Style</option>
+                    <option value="standard" ${settings.translationPreferences?.monsterStyle === 'standard' ? 'selected' : ''}>Standard</option>
+                    <option value="literal" ${settings.translationPreferences?.monsterStyle === 'literal' ? 'selected' : ''}>Literal</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-rpg-gold mb-1">Location Style:</label>
+                  <select id="location-style" class="w-full p-2 bg-rpg-darker border border-rpg-gold text-white rounded">
+                    <option value="chinese_style" ${settings.translationPreferences?.locationStyle === 'chinese_style' ? 'selected' : ''}>Chinese Style</option>
+                    <option value="standard" ${settings.translationPreferences?.locationStyle === 'standard' ? 'selected' : ''}>Standard</option>
+                    <option value="literal" ${settings.translationPreferences?.locationStyle === 'literal' ? 'selected' : ''}>Literal</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-rpg-gold mb-1">Skill Style:</label>
+                  <select id="skill-style" class="w-full p-2 bg-rpg-darker border border-rpg-gold text-white rounded">
+                    <option value="chinese_style" ${settings.translationPreferences?.skillStyle === 'chinese_style' ? 'selected' : ''}>Chinese Style</option>
+                    <option value="standard" ${settings.translationPreferences?.skillStyle === 'standard' ? 'selected' : ''}>Standard</option>
+                    <option value="literal" ${settings.translationPreferences?.skillStyle === 'literal' ? 'selected' : ''}>Literal</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-rpg-gold mb-1">Default Style:</label>
+                  <select id="default-style" class="w-full p-2 bg-rpg-darker border border-rpg-gold text-white rounded">
+                    <option value="standard" ${settings.translationPreferences?.defaultStyle === 'standard' ? 'selected' : ''}>Standard</option>
+                    <option value="chinese_style" ${settings.translationPreferences?.defaultStyle === 'chinese_style' ? 'selected' : ''}>Chinese Style</option>
+                    <option value="literal" ${settings.translationPreferences?.defaultStyle === 'literal' ? 'selected' : ''}>Literal</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex justify-end gap-3 mt-6">
+            <button onclick="closeContextSettings()" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded">
+              Cancel
+            </button>
+            <button onclick="saveContextSettings()" class="px-4 py-2 bg-rpg-gold hover:bg-rpg-gold/80 text-rpg-darker font-bold rounded">
+              Save Settings
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // Add modal to page
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
+  } catch (error) {
+    console.error('Error showing context settings:', error);
+    showNotification('Error loading context settings', 'error');
+  }
+};
+
+// Close context settings modal
+window.closeContextSettings = function() {
+  const modal = document.getElementById('context-settings-modal');
+  if (modal) {
+    modal.remove();
+  }
+};
+
+// Add requirement
+window.addRequirement = function() {
+  const requirementsList = document.getElementById('requirements-list');
+  const newRequirement = document.createElement('div');
+  newRequirement.className = 'flex items-center gap-2';
+  newRequirement.innerHTML = `
+    <input type="text" placeholder="Enter requirement..." class="flex-1 p-2 bg-rpg-darker border border-rpg-gold text-white rounded" onchange="updateRequirement(this)">
+    <button onclick="removeRequirement(this)" class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded">Remove</button>
+  `;
+  requirementsList.appendChild(newRequirement);
+};
+
+// Remove requirement
+window.removeRequirement = function(button) {
+  button.parentElement.remove();
+};
+
+// Update requirement
+window.updateRequirement = function(input) {
+  // This function is called when requirement text changes
+  // No additional action needed as we'll collect all values on save
+};
+
+// Save context settings
+window.saveContextSettings = async function() {
+  try {
+    // Collect form data
+    const generalContext = document.getElementById('general-context').value;
+    const requirements = Array.from(document.querySelectorAll('#requirements-list input')).map(input => input.value).filter(value => value.trim());
+    
+    const translationPreferences = {
+      nameStyle: document.getElementById('name-style').value,
+      itemStyle: document.getElementById('item-style').value,
+      monsterStyle: document.getElementById('monster-style').value,
+      locationStyle: document.getElementById('location-style').value,
+      skillStyle: document.getElementById('skill-style').value,
+      defaultStyle: document.getElementById('default-style').value
+    };
+    
+    const settings = {
+      generalContext,
+      additionalRequirements: requirements,
+      translationPreferences
+    };
+    
+    // Save settings
+    const result = await ipcRenderer.invoke('save-context-settings', settings);
+    
+    if (result.success) {
+      showNotification('Context settings saved successfully!', 'success');
+      closeContextSettings();
+    } else {
+      throw new Error(result.error || 'Save failed');
+    }
+    
+  } catch (error) {
+    console.error('Error saving context settings:', error);
+    showNotification(`Error saving settings: ${error.message}`, 'error');
+  }
+};
+
 // Get AI suggestion for grid item
 window.getAISuggestion = async function(translationId) {
   try {
     const translation = await ipcRenderer.invoke('get-translation-details', translationId);
     if (!translation) return;
     
-    const result = await ipcRenderer.invoke('get-ai-translation-suggestion', translation.originalText);
+    const result = await ipcRenderer.invoke('get-ai-translation-suggestion', translation.originalText, {
+      name: translation.name,
+      type: translation.type
+    });
     
-    if (result.success) {
-      // Show suggestion with service information
-      const serviceInfo = result.service ? `\n\nPowered by ${result.service} (${Math.round(result.confidence * 100)}% confidence)` : '';
-      const useSuggestion = confirm(`AI Suggestion:\n\n"${result.suggestion}"${serviceInfo}\n\nDo you want to use this suggestion?`);
-      if (useSuggestion) {
-        // Open the detail modal with the suggestion pre-filled
-        showTranslationDetails(translationId);
-        // Wait for modal to load, then set the suggestion
-        setTimeout(() => {
-          const editor = document.getElementById('translated-text-editor');
-          if (editor) {
-            editor.value = result.suggestion;
-          }
-        }, 100);
-      }
+    if (result.success && result.suggestions) {
+      // Show multiple suggestions in a selection dialog
+      showSuggestionSelection(result.suggestions, translationId);
     } else {
       alert('Failed to get AI suggestion: ' + result.error);
     }

@@ -59,5 +59,25 @@
       "monsterList": "",
       "hpThreshold": ""
     }
+  },
+  {
+    "id": "pi8et4w0g",
+    "username": "korvak",
+    "password": "09081508",
+    "config": {
+      "all": false,
+      "recipe": false,
+      "charm": true,
+      "pieceGear": true,
+      "jewel": true,
+      "rune": true,
+      "epicGear": true,
+      "magicScroll": true,
+      "monsterScroll": true,
+      "staminaPotion": true,
+      "ancientPotion": true,
+      "monsterList": "",
+      "hpThreshold": ""
+    }
   }
 ]

@@ -232,6 +232,37 @@
       background: rgba(0, 0, 0, 0.8) !important;
     }
     
+    /* Translation card status styling */
+    .encyclopedia-card-translated {
+      background: linear-gradient(145deg, #1a2f1a, #0f1f0f);
+      border-left: 4px solid #10b981;
+    }
+    
+    .encyclopedia-card-pending {
+      background: linear-gradient(145deg, #2f2a1a, #1f1a0f);
+      border-left: 4px solid #f59e0b;
+    }
+    
+    .encyclopedia-card-untranslated {
+      background: linear-gradient(145deg, #2f1a1a, #1f0f0f);
+      border-left: 4px solid #ef4444;
+    }
+    
+    .encyclopedia-card-translated:hover {
+      background: linear-gradient(145deg, #1f3f1f, #142f14);
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    }
+    
+    .encyclopedia-card-pending:hover {
+      background: linear-gradient(145deg, #3f2f1f, #242f14);
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+    }
+    
+    .encyclopedia-card-untranslated:hover {
+      background: linear-gradient(145deg, #3f1f1f, #241414);
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+    }
+    
     /* Scrollbar styling */
     ::-webkit-scrollbar {
       width: 8px;
