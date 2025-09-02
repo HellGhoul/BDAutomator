@@ -1,0 +1,24 @@
+{
+  "crawl_date": "2025-08-30T16:19:51.028Z",
+  "total_items": 1386,
+  "total_monsters": 1,
+  "total_translations": 5018,
+  "total_quests": 0,
+  "files": [
+    {
+      "filename": "items.json",
+      "count": 1386,
+      "size_bytes": 1071842
+    },
+    {
+      "filename": "monsters.json",
+      "count": 1,
+      "size_bytes": 359
+    },
+    {
+      "filename": "translations.json",
+      "count": 5018,
+      "size_bytes": 1774296
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "monster_1755949287345_kdothjwn5",
+    "name": "Swamp Monster",
+    "level": 0,
+    "hp": 0,
+    "attack": 0,
+    "defense": 0,
+    "location": "Dragon cliffs (III)",
+    "image_url": "https://blackdragon.mobi/img/1/units/swamp_monster.jpg",
+    "source": "encyclopedia_crawler",
+    "crawled_at": "2025-08-23T11:41:27.345Z"
+  }
+]

@@ -1,104 +1,61 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
+const BlackDragonHelpers = require('./blackdragon-helpers');
 
-let paused = false;
-let pausePromise = null;
-let pauseResolve = null;
-
-function checkPaused() {
-  if (!paused) return Promise.resolve();
-  if (!pausePromise) {
-    pausePromise = new Promise(resolve => { pauseResolve = resolve; });
-  }
-  return pausePromise;
-}
+let helpers = null; // Global variable to store helpers instance
 
 async function runUnscroll({ username, password, config }) {
-  //process.send && process.send('Received boss hunt config: ' + JSON.stringify(config));
   const browser = await puppeteer.launch({ headless: false, ignoreHTTPSErrors: true });
   const page = await browser.newPage();
-  //process.send && process.send('Browser launched for boss hunt');
+  helpers = new BlackDragonHelpers(page); // Assign to global variable
 
-
-  // Helper functions
-  async function navigateTo(url) {
-    await checkPaused();
-    await page.goto(url, { waitUntil: 'networkidle2' });
-    //process.send && process.send('Navigated to ' + url);
-    await new Promise(resolve => setTimeout(resolve, 20));
-  }
-
-  async function waitForElement(selector, timeout = 20) {
-    await checkPaused();
-    await page.waitForSelector(selector, { timeout });
-  }
-
-  async function clickElement(selector, { waitForNav = false } = {}) {
-    await checkPaused();
-    if (waitForNav) {
-      await Promise.all([
-        page.waitForNavigation({ waitUntil: 'networkidle2' }),
-        page.click(selector)
-      ]);
-    } else {
-      await page.click(selector);
-      await new Promise(resolve => setTimeout(resolve, 20));
-    }
-  }
-
-  async function getTextContent(selector) {
-    const el = await page.$(selector);
-    if (!el) return '';
-    const text = await page.evaluate(el => el.textContent, el);
-    //process.send && process.send('getTextContent: ' + selector + ' => ' + text);
-    return text;
-  }
+  // Helper functions specific to unscroll
   async function getBossList(){
-  // Navigate to boss page
-  await navigateTo('https://blackdragon.mobi/quests/index');
+    // Navigate to boss page
+    await helpers.navigateTo('https://blackdragon.mobi/quests/index');
 
-  const monsters = await page.evaluate(() => {
-    const monsterElements = Array.from(document.querySelectorAll('div.list'));
-    const result = [];
-  
-    for (const el of monsterElements.reverse()) {
-      const img = el.querySelector('img.round');
-      const name = el.querySelector('strong')?.innerText?.trim();
-      const url = el.querySelector('a')?.href?.trim();
-  
-      // Extract location after <small>@</small>
-      let location = null;
-      const smallTags = Array.from(el.querySelectorAll('small'));
-      for (let i = 0; i < smallTags.length; i++) {
-        if (smallTags[i].textContent.trim() === '@') {
-          const node = smallTags[i].nextSibling;
-          if (node && node.nodeType === Node.TEXT_NODE) {
-            location = node.textContent.trim();
+    const monsters = await page.evaluate(() => {
+      const monsterElements = Array.from(document.querySelectorAll('div.list'));
+      const result = [];
+    
+      for (const el of monsterElements.reverse()) {
+        const img = el.querySelector('img.round');
+        const name = el.querySelector('strong')?.innerText?.trim();
+        const url = el.querySelector('a')?.href?.trim();
+    
+        // Extract location after <small>@</small>
+        let location = null;
+        const smallTags = Array.from(el.querySelectorAll('small'));
+        for (let i = 0; i < smallTags.length; i++) {
+          if (smallTags[i].textContent.trim() === '@') {
+            const node = smallTags[i].nextSibling;
+            if (node && node.nodeType === Node.TEXT_NODE) {
+              location = node.textContent.trim();
+            }
+            break;
           }
+        }
+    
+        if (img && name && location 
+        && img.src.split('/').pop() != "diamond_dragon.jpg" 
+        && img.src.split('/').pop() != "blood_dragon.jpg"  
+        && img.src.split('/').pop() != "supreme_archangel.jpg"
+        && img.src.split('/').pop() != "hell_baron.jpg") {
+          result.push({
+            name,
+            location,
+            fileName: "/"+ img.src.split('/').pop(),
+            url
+          });
           break;
         }
       }
-  
-      if (img && name && location 
-      && img.src.split('/').pop() != "diamond_dragon.jpg" 
-      && img.src.split('/').pop() != "blood_dragon.jpg"  
-      && img.src.split('/').pop() != "supreme_archangel.jpg"
-      && img.src.split('/').pop() != "hell_baron.jpg") {
-        result.push({
-          name,
-          location,
-          fileName: "/"+ img.src.split('/').pop(),
-          url
-        });
-        break;
-      }
-    }
 
-    return result;
-  });
-  // ✅ Sort by location (ascending)
-   monsters.sort((a, b) => a.location.localeCompare(b.location));
-  return monsters;
+      return result;
+    });
+    // ✅ Sort by location (ascending)
+     monsters.sort((a, b) => a.location.localeCompare(b.location));
+    return monsters;
   }
 
   async function autoBossHunt() {
@@ -111,7 +68,7 @@ async function runUnscroll({ username, password, config }) {
         await teleportMap(monster.location,monster.url);
       }else{
         
-        await navigateTo('https://blackdragon.mobi/maps/view');
+        await helpers.navigateTo('https://blackdragon.mobi/maps/view');
       }
       previousMap = monster.location;
       
@@ -120,165 +77,50 @@ async function runUnscroll({ username, password, config }) {
     }
     await autoBossHunt();
   }
-  async function teleportMap(mapName,url){
-  
-    await navigateTo(url);
 
-    //await waitForElement("body > div.main > div.list.center > form > input");
+  async function teleportMap(mapName,url){
+    await helpers.navigateTo(url);
+
     try{
-      await clickElement("body > div.main > div.list.center > form > input", { waitForNav: true });
+      await helpers.clickElement("body > div.main > div.list.center > form > input", { waitForNav: true });
     }catch{
 
     }
   
-    //await page.evaluate((mapName) => {
-    //  const select = document.querySelector('select[name="map"]');
-    //  if (!select) return;
-  
-    //  for (const option of select.options) {
-    //    if (option.textContent.trim().startsWith(mapName)) {
-    //      select.value = option.value;
-    //      const event = new Event('change', { bubbles: true });
-    //      select.dispatchEvent(event);
-    //      break;
-    //    }
-    //  }
-    //}, mapName); // 👈 Pass mapName into the browser context
-    //await waitForElement("body > div.main > div.block > form > p > input");
-    await clickElement("body > div.main > div.block > form > p > input", { waitForNav: true });
+    await helpers.clickElement("body > div.main > div.block > form > p > input", { waitForNav: true });
   }
+
   async function selectBoss(bossName) {
     if(config.hpThreshold > 0){
       try{
-        await checkHealRecovery();
+        await helpers.checkHealRecovery(config.hpThreshold);
       }catch{
         
       }
     }
 
     try{
-      //await waitForElement('a img[src*="'+bossName+'"]');
-      await clickElement('a img[src*="'+bossName+'"]', { waitForNav: false });
+      await helpers.clickElement('a img[src*="'+bossName+'"]', { waitForNav: false });
       await firstAttack();
     }catch{
       return;
     }
   }
 
-  async function checkHealRecovery() {
-    const xpath = '/html/body/div[2]/a/div';
-    const [element] = await page.$$('xpath//' + xpath); 
-    // Get text content
-    const str = await page.evaluate(el => el.textContent, element);
-
-    const slashIndex = str.indexOf('/');
-
-      const beforeSlash = str.substring(0, slashIndex); // "1,920,000"
-      const num = Number(beforeSlash.replace(/,/g, "")); // 1920000
-    
-    if (num > 1500000){
-      return;
-    }
-    // Inventory
-    await navigateTo('https://blackdragon.mobi/items/index/c=71012');    
-    try{
-      await waitForElement('body > div.main > div:nth-child(1) > a:nth-child(3)',20);
-      await clickElement("body > div.main > div:nth-child(1) > a:nth-child(3)", { waitForNav: false });
-    }catch{}
-
-    await navigateTo('https://blackdragon.mobi/credits/use/id=health/c=93047');    
-    
-    await clickElement("body > div.main > div.list.center > form > input", { waitForNav: true });
-
-    await clickElement("body > div.main > div:nth-child(3) > form > p > input.button", { waitForNav: true });
-
-    await clickElement("body > div.main > div.list > form > input.button", { waitForNav: true });
-
-    //Go to inventory
-    await navigateTo('https://blackdragon.mobi/items/index/c=71012');   
-    
-    await waitForElement('body > div.main > div:nth-child(1) > a:nth-child(5)',20);
-    await clickElement("body > div.main > div:nth-child(1) > a:nth-child(5)", { waitForNav: false }); 
-
-
-    await navigateTo('https://blackdragon.mobi/maps/view');
-
-
-  }
-
-
   async function nextAttack() {
-    //process.send && process.send('⚔️ Processing battle result...');
     try {
-      await waitForElement('body > div.main > strong',20);
-      const text = await getTextContent('body > div.main > strong');
-      if ((text && text.includes('Congratulations! You won the battle!')) || (text && text.includes('You lost the battle.'))) {
-        //process.send && process.send('🔄 Battle ended, continuing...');
-        //await waitForElement('body > div.main > form > input',20);
-        await clickElement('body > div.main > form > input', { waitForNav: true });
+      const result = await helpers.processBattleResult(config);
+      
+      if (result === 'continue') {
         await nextAttack();
-      } else if (text && text.includes('Congratulations! You KILLED')) {
-        //process.send && process.send('💀 Monster killed!');
-        let nameFull = '';
-        let quality = '';
-        // Try to get item name
-        try {
-          await waitForElement('body > div.main > a', 20);
-          nameFull = await getTextContent('body > div.main > a');
-          //process.send && process.send(nameFull);
-        } catch (error) {
-          //process.send && process.send('No loot link found');
-        }
-        // Try to get item quality
-        if(config.epicGear){try {
-          await waitForElement('body > div.main > span:nth-child(16)', 20);
-          quality = await getTextContent('body > div.main > span:nth-child(16)');
-        } catch (error) {
-          try {
-            await waitForElement('body > div.main > span:nth-child(18)', 20);
-            quality = await getTextContent('body > div.main > span:nth-child(18)');
-          } catch {
-          // Do nothing
-          }
-        }}
-
-        if (config.all
-          || nameFull.toLocaleLowerCase().includes("gold bar")
-          || nameFull.toLocaleLowerCase().includes("revival")
-          || (config.pieceGear && nameFull.toLocaleLowerCase().includes("a piece of"))
-          || (config.recipe && nameFull.toLocaleLowerCase().includes("recipe"))
-          || (config.charm && nameFull.toLocaleLowerCase().includes("charm"))
-          || (config.jewel && (nameFull.toLocaleLowerCase().includes("jewel")||nameFull.toLocaleLowerCase().includes("elixir")))
-          || (config.rune && (nameFull.toLocaleLowerCase().includes("rune ")))//||nameFull.toLocaleLowerCase().includes("level ")))
-          || (config.epicGear && (nameFull.toLocaleLowerCase().includes("(vi)")||nameFull.toLocaleLowerCase().includes("(v)")||quality.toLocaleLowerCase().includes("epic")||quality.toLocaleLowerCase().includes("mythic")||quality.toLocaleLowerCase().includes("heroic")))
-          || (config.magicScroll && nameFull.toLocaleLowerCase().includes("magic scroll"))
-          || (config.monsterScroll && nameFull.toLocaleLowerCase().includes("s magic scroll"))
-          || (config.staminaPotion && nameFull.toLocaleLowerCase().includes("stamina potion"))
-          || (config.ancientPotion && nameFull.toLocaleLowerCase().includes("ancient potion"))
-        ) {
-            process.send && process.send('💎 Found:' + nameFull);
-            //await waitForElement('body > div.main > form:nth-child(3) > input',20);            
-            //await waitForElement('body > div.main > form:nth-child(3) > input',20);
-            await clickElement("body > div.main > form:nth-child(3) > input", { waitForNav: true });
-            return;
-        } else {
-          try {
-            const xpath = '/html/body/div[4]/form[2]/input';
-            await page.waitForSelector('xpath//' + xpath, { timeout: 20 });
-            const [element] = await page.$$('xpath//' + xpath);
-            if (!element) throw new Error('Element not found');
-            await Promise.all([
-              page.waitForNavigation({ waitUntil: 'networkidle2' }),
-              element.click()
-            ]);
-
-            return;
-
-          } catch (e) {
-            //process.send && process.send('Error with XPath! ' + e);
-            // Optionally handle the case where the XPath is not found
-          }
-        }
+      } else if (result === 'looted') {
+        process.send && process.send('💎 Found valuable loot!');
+        return;
+      } else if (result === 'continued') {
+        await nextAttack();
+      } else if (result === 'error') {
+        await helpers.goToMaps();
+        return;
       }
     } catch (error) {
       return;
@@ -286,36 +128,26 @@ async function runUnscroll({ username, password, config }) {
   }
 
   async function firstAttack() {
-    //process.send && process.send('⚔️ Starting first attack...');
     try {
-      //await waitForElement('body > div.main > form > input', 20);
-      await clickElement('body > div.main > form > input', { waitForNav: true });
-      await nextAttack();
-    } catch {
-      try {
-        //await waitForElement('body > div.main > div.list.small > form > input', 20);
-        await clickElement('body > div.main > div.list.small > form > input', { waitForNav: true });
-        await firstAttack();
-      } catch {
+      const success = await helpers.firstAttack();
+      if (success) {
+        await nextAttack();
+      } else {
         try {
           await nextAttack();
         } catch (error) {
-          await navigateTo('https://blackdragon.mobi/maps/view');
-          //process.send && process.send('✅ Arrived at maps page, starting target selection...');
+          await helpers.goToMaps();
           return;
         }
       }
+    } catch (error) {
+      await helpers.goToMaps();
+      return;
     }
   }
-  // Login
-  await navigateTo('https://blackdragon.mobi/');
-  await waitForElement('input[name=username]',1000);
-  await page.type('input[name=username]', username);
-  await waitForElement('input[name=password]');
-  await page.type('input[name=password]', password);
-  await waitForElement('.button');
-  await clickElement('.button', { waitForNav: true });
-  //process.send && process.send('Logged in for unscroll');
+
+  // Login using shared helper
+  await helpers.login(username, password);
 
   await autoBossHunt();
 
@@ -323,7 +155,6 @@ async function runUnscroll({ username, password, config }) {
   
   // Clean up on stop
   process.on('SIGTERM', async () => {
-    //process.send && process.send('🛑 Boss Hunt stopped by user');
     await browser.close();
     process.exit(0);
   });
@@ -332,14 +163,15 @@ async function runUnscroll({ username, password, config }) {
 // Listen for pause/resume messages
 process.on('message', (msg) => {
   if (msg && msg.type === 'pause') {
-    paused = true;
-    //process.send && process.send('⏸️ Boss Hunt paused by user');
+    if (helpers) {
+      helpers.setPaused(true);
+      console.log('⏸️ Unscroll paused');
+    }
   } else if (msg && msg.type === 'resume') {
-    paused = false;
-    if (pauseResolve) pauseResolve();
-    pausePromise = null;
-    pauseResolve = null;
-    //process.send && process.send('▶️ Boss Hunt resumed by user');
+    if (helpers) {
+      helpers.setPaused(false);
+      console.log('▶️ Unscroll resumed');
+    }
   }
 });
 
@@ -350,7 +182,6 @@ process.on('message', async (data) => {
       await runUnscroll(data);
       process.exit(0);
     } catch (err) {
-      //  process.send && process.send('Error: ' + err.message);
       process.exit(1);
     }
   }

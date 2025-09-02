@@ -1,433 +1,742 @@
 const puppeteer = require('puppeteer');
-const { v4: uuidv4 } = require('uuid');
-const EncyclopediaService = require('./encyclopedia-service');
+const BlackDragonHelpers = require('./blackdragon-helpers');
+const fs = require('fs');
+const path = require('path');
+const { logger } = require('./logger');
 
-class EncyclopediaCrawler {
-  constructor(account, sessionId, crawlOptions) {
-    this.account = account;
-    this.sessionId = sessionId;
-    this.crawlOptions = crawlOptions || {
-      items: true,
-      monsters: true,
-      skills: true,
-      quests: true
-    };
-    this.encyclopedia = new EncyclopediaService();
-    this.browser = null;
-    this.page = null;
-    this.isRunning = false;
-    this.isPaused = false;
-    this.stats = {
-      items: 0,
-      monsters: 0,
-      skills: 0,
-      quests: 0
-    };
-  }
+class ItemAttributes {
+  constructor(statsArray) {
+    this.raw = statsArray;
+    this.map = {};
 
-  async start() {
-    try {
-      this.isRunning = true;
-      this.isPaused = false;
-      
-      // Launch browser
-      this.browser = await puppeteer.launch({
-        headless: false,
-        defaultViewport: null,
-        args: ['--start-maximized']
-      });
-
-      this.page = await this.browser.newPage();
-      
-      // Set user agent to avoid detection
-      await this.page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
-      
-      // Navigate to game login
-      await this.page.goto('https://www.browserdefender.com/login', { waitUntil: 'networkidle2' });
-      
-      // Login to the game
-      await this.login();
-      
-      // Start crawling different sections based on options
-      await this.crawlLibrary();
-      
-      // Update session as completed
-      await this.encyclopedia.updateCrawlSession(this.sessionId, {
-        status: 'completed',
-        end_time: new Date().toISOString(),
-        items_found: this.stats.items,
-        monsters_found: this.stats.monsters,
-        skills_found: this.stats.skills,
-        quests_found: this.stats.quests
-      });
-      
-      this.sendMessage('Crawling completed successfully!');
-      
-    } catch (error) {
-      console.error('Crawling error:', error);
-      await this.encyclopedia.updateCrawlSession(this.sessionId, {
-        status: 'error',
-        end_time: new Date().toISOString(),
-        errors: error.message
-      });
-      this.sendMessage(`Error during crawling: ${error.message}`);
-    } finally {
-      await this.cleanup();
-    }
-  }
-
-  async login() {
-    try {
-      this.sendMessage('Logging in to the game...');
-      
-      // Wait for login form
-      await this.page.waitForSelector('#username', { timeout: 10000 });
-      
-      // Fill login form
-      await this.page.type('#username', this.account.username);
-      await this.page.type('#password', this.account.password);
-      
-      // Submit form
-      await this.page.click('button[type="submit"]');
-      
-      // Wait for login to complete
-      await this.page.waitForNavigation({ waitUntil: 'networkidle2' });
-      
-      this.sendMessage('Login successful!');
-      
-    } catch (error) {
-      throw new Error(`Login failed: ${error.message}`);
-    }
-  }
-
-  async crawlLibrary() {
-    try {
-      this.sendMessage('Starting to crawl game library...');
-      
-      // Navigate to library section
-      await this.page.goto('https://www.browserdefender.com/library', { waitUntil: 'networkidle2' });
-      
-      // Crawl different categories based on options
-      if (this.crawlOptions.items) {
-        await this.crawlItems();
+    statsArray.forEach(line => {
+      const [key, value] = line.split(":").map(s => s.trim());
+      if (key && value !== undefined) {
+        this.map[key] = value;
       }
-      if (this.crawlOptions.monsters) {
-        await this.crawlMonsters();
+    });
+  }
+
+  get(key) {
+    return this.map[key] || null;
+  }
+
+  // Convenience getters
+  get Damage() { return this.map["Damage"]; }
+  get Armor() { return this.map["Armor"]; }
+  get Health() { return this.map["Health"]; }
+  get Mana() { return this.map["Mana"]; }
+  get Dexterity() { return this.map["Dexterity"]; }
+  get Wisdom() { return this.map["Wisdom"]; }
+  get LifeLeech() { return this.map["Life leech"]; }
+}
+
+class ItemRequirements {
+  constructor(reqsArray) {
+    this.raw = reqsArray;
+    this.map = {};
+
+    reqsArray.forEach(line => {
+      if (line.includes(":")) {
+        const [key, value] = line.split(":").map(s => s.trim());
+        if (key && value) {
+          this.map[key] = value;
+        }
       }
-      if (this.crawlOptions.skills) {
-        await this.crawlSkills();
-      }
-      if (this.crawlOptions.quests) {
-        await this.crawlQuests();
-      }
-      
-    } catch (error) {
-      throw new Error(`Library crawling failed: ${error.message}`);
-    }
+    });
   }
 
-  async crawlItems() {
-    try {
-      this.sendMessage('Crawling items...');
-      
-      // Navigate to items section
-      await this.page.goto('https://www.browserdefender.com/library/items', { waitUntil: 'networkidle2' });
-      
-      // Wait for items to load
-      await this.page.waitForSelector('.item-card, .item-list, [data-item]', { timeout: 10000 });
-      
-      // Extract item data
-      const items = await this.page.evaluate(() => {
-        const itemElements = document.querySelectorAll('.item-card, .item-list, [data-item]');
-        return Array.from(itemElements).map(element => {
-          // Extract item information based on common selectors
-          const name = element.querySelector('.item-name, .name, h3, h4')?.textContent?.trim() || 'Unknown Item';
-          const type = element.querySelector('.item-type, .type, .category')?.textContent?.trim() || 'Unknown';
-          const rarity = element.querySelector('.rarity, .item-rarity')?.textContent?.trim() || 'Common';
-          const level = parseInt(element.querySelector('.level, .item-level')?.textContent?.match(/\d+/)?.[0]) || 1;
-          const description = element.querySelector('.description, .desc, .item-desc')?.textContent?.trim() || '';
-          const imageUrl = element.querySelector('img')?.src || '';
-          
-          // Extract stats if available
-          const stats = {};
-          const statElements = element.querySelectorAll('.stat, .item-stat');
-          statElements.forEach(statEl => {
-            const statText = statEl.textContent.trim();
-            const match = statText.match(/(\w+):\s*([+-]?\d+)/);
-            if (match) {
-              stats[match[1]] = parseInt(match[2]);
-            }
-          });
-          
-          return {
-            id: uuidv4(),
-            name,
-            type,
-            rarity,
-            level,
-            stats,
-            description,
-            image_url: imageUrl,
-            source: 'library'
-          };
-        });
-      });
-      
-      // Save items to database
-      for (const item of items) {
-        await this.encyclopedia.upsertItem(item);
-        this.stats.items++;
-      }
-      
-      this.sendMessage(`Found and saved ${items.length} items`);
-      
-    } catch (error) {
-      this.sendMessage(`Error crawling items: ${error.message}`);
-    }
+  get(key) {
+    return this.map[key] || null;
   }
 
-  async crawlMonsters() {
-    try {
-      this.sendMessage('Crawling monsters...');
-      
-      // Navigate to monsters section
-      await this.page.goto('https://www.browserdefender.com/library/monsters', { waitUntil: 'networkidle2' });
-      
-      // Wait for monsters to load
-      await this.page.waitForSelector('.monster-card, .monster-list, [data-monster]', { timeout: 10000 });
-      
-      // Extract monster data
-      const monsters = await this.page.evaluate(() => {
-        const monsterElements = document.querySelectorAll('.monster-card, .monster-list, [data-monster]');
-        return Array.from(monsterElements).map(element => {
-          const name = element.querySelector('.monster-name, .name, h3, h4')?.textContent?.trim() || 'Unknown Monster';
-          const level = parseInt(element.querySelector('.level, .monster-level')?.textContent?.match(/\d+/)?.[0]) || 1;
-          const hp = parseInt(element.querySelector('.hp, .health')?.textContent?.match(/\d+/)?.[0]) || 100;
-          const attack = parseInt(element.querySelector('.attack, .atk')?.textContent?.match(/\d+/)?.[0]) || 10;
-          const defense = parseInt(element.querySelector('.defense, .def')?.textContent?.match(/\d+/)?.[0]) || 5;
-          const location = element.querySelector('.location, .spawn')?.textContent?.trim() || 'Unknown';
-          const imageUrl = element.querySelector('img')?.src || '';
-          
-          // Extract skills
-          const skills = [];
-          const skillElements = element.querySelectorAll('.skill, .monster-skill');
-          skillElements.forEach(skillEl => {
-            skills.push(skillEl.textContent.trim());
-          });
-          
-          // Extract drops
-          const drops = [];
-          const dropElements = element.querySelectorAll('.drop, .loot, .reward');
-          dropElements.forEach(dropEl => {
-            drops.push(dropEl.textContent.trim());
-          });
-          
-          return {
-            id: uuidv4(),
-            name,
-            level,
-            hp,
-            attack,
-            defense,
-            skills,
-            drops,
-            location,
-            image_url: imageUrl
-          };
-        });
-      });
-      
-      // Save monsters to database
-      for (const monster of monsters) {
-        await this.encyclopedia.upsertMonster(monster);
-        this.stats.monsters++;
-      }
-      
-      this.sendMessage(`Found and saved ${monsters.length} monsters`);
-      
-    } catch (error) {
-      this.sendMessage(`Error crawling monsters: ${error.message}`);
-    }
-  }
+  // Convenience getters
+  get Class() { return this.map["Class"]; }
+  get Level() { return parseInt(this.map["Level"], 10) || null; }
+}
 
-  async crawlSkills() {
-    try {
-      this.sendMessage('Crawling skills...');
-      
-      // Navigate to skills section
-      await this.page.goto('https://www.browserdefender.com/library/skills', { waitUntil: 'networkidle2' });
-      
-      // Wait for skills to load
-      await this.page.waitForSelector('.skill-card, .skill-list, [data-skill]', { timeout: 10000 });
-      
-      // Extract skill data
-      const skills = await this.page.evaluate(() => {
-        const skillElements = document.querySelectorAll('.skill-card, .skill-list, [data-skill]');
-        return Array.from(skillElements).map(element => {
-          const name = element.querySelector('.skill-name, .name, h3, h4')?.textContent?.trim() || 'Unknown Skill';
-          const type = element.querySelector('.skill-type, .type, .category')?.textContent?.trim() || 'Unknown';
-          const level = parseInt(element.querySelector('.level, .skill-level')?.textContent?.match(/\d+/)?.[0]) || 1;
-          const cooldown = parseInt(element.querySelector('.cooldown, .cd')?.textContent?.match(/\d+/)?.[0]) || 0;
-          const description = element.querySelector('.description, .desc, .skill-desc')?.textContent?.trim() || '';
-          const imageUrl = element.querySelector('img')?.src || '';
-          
-          // Extract effects
-          const effects = [];
-          const effectElements = element.querySelectorAll('.effect, .skill-effect');
-          effectElements.forEach(effectEl => {
-            effects.push(effectEl.textContent.trim());
-          });
-          
-          // Extract requirements
-          const requirements = [];
-          const reqElements = element.querySelectorAll('.requirement, .req');
-          reqElements.forEach(reqEl => {
-            requirements.push(reqEl.textContent.trim());
-          });
-          
-          return {
-            id: uuidv4(),
-            name,
-            type,
-            level,
-            cooldown,
-            description,
-            effects,
-            requirements,
-            image_url: imageUrl
-          };
-        });
-      });
-      
-      // Save skills to database
-      for (const skill of skills) {
-        await this.encyclopedia.upsertSkill(skill);
-        this.stats.skills++;
-      }
-      
-      this.sendMessage(`Found and saved ${skills.length} skills`);
-      
-    } catch (error) {
-      this.sendMessage(`Error crawling skills: ${error.message}`);
-    }
-  }
-
-  async crawlQuests() {
-    try {
-      this.sendMessage('Crawling quests...');
-      
-      // Navigate to quests section
-      await this.page.goto('https://www.browserdefender.com/library/quests', { waitUntil: 'networkidle2' });
-      
-      // Wait for quests to load
-      await this.page.waitForSelector('.quest-card, .quest-list, [data-quest]', { timeout: 10000 });
-      
-      // Extract quest data
-      const quests = await this.page.evaluate(() => {
-        const questElements = document.querySelectorAll('.quest-card, .quest-list, [data-quest]');
-        return Array.from(questElements).map(element => {
-          const name = element.querySelector('.quest-name, .name, h3, h4')?.textContent?.trim() || 'Unknown Quest';
-          const type = element.querySelector('.quest-type, .type, .category')?.textContent?.trim() || 'Unknown';
-          const levelReq = parseInt(element.querySelector('.level-requirement, .level-req, .req-level')?.textContent?.match(/\d+/)?.[0]) || 1;
-          const description = element.querySelector('.description, .desc, .quest-desc')?.textContent?.trim() || '';
-          const npc = element.querySelector('.npc, .quest-giver')?.textContent?.trim() || 'Unknown';
-          const location = element.querySelector('.location, .quest-location')?.textContent?.trim() || 'Unknown';
-          
-          // Extract objectives
-          const objectives = [];
-          const objElements = element.querySelectorAll('.objective, .quest-objective');
-          objElements.forEach(objEl => {
-            objectives.push(objEl.textContent.trim());
-          });
-          
-          // Extract rewards
-          const rewards = [];
-          const rewardElements = element.querySelectorAll('.reward, .quest-reward');
-          rewardElements.forEach(rewardEl => {
-            rewards.push(rewardEl.textContent.trim());
-          });
-          
-          return {
-            id: uuidv4(),
-            name,
-            type,
-            level_requirement: levelReq,
-            description,
-            objectives,
-            rewards,
-            npc,
-            location
-          };
-        });
-      });
-      
-      // Save quests to database
-      for (const quest of quests) {
-        await this.encyclopedia.upsertQuest(quest);
-        this.stats.quests++;
-      }
-      
-      this.sendMessage(`Found and saved ${quests.length} quests`);
-      
-    } catch (error) {
-      this.sendMessage(`Error crawling quests: ${error.message}`);
-    }
-  }
-
-  pause() {
-    this.isPaused = true;
-    this.sendMessage('Crawling paused');
-  }
-
-  resume() {
-    this.isPaused = false;
-    this.sendMessage('Crawling resumed');
-  }
-
-  stop() {
-    this.isRunning = false;
-    this.sendMessage('Crawling stopped');
-  }
-
-  sendMessage(message) {
-    // Send message to parent process
-    if (process.send) {
-      process.send({
-        type: 'encyclopedia-log',
-        sessionId: this.sessionId,
-        message: message,
-        stats: this.stats
-      });
-    }
-    console.log(`[Encyclopedia] ${message}`);
-  }
-
-  async cleanup() {
-    if (this.page) {
-      await this.page.close();
-    }
-    if (this.browser) {
-      await this.browser.close();
-    }
-    if (this.encyclopedia) {
-      this.encyclopedia.close();
-    }
+class Item {
+  constructor(json) {
+    Object.assign(this, json);
+    this.attributes = new ItemAttributes(json.stats || []);
+    this.requirementsParsed = new ItemRequirements(json.requirements || []);
   }
 }
 
-// Handle process messages
+  class EncyclopediaCrawler {
+    constructor() {
+      this.dataDir = './encyclopedia-data';
+      this.helpers = null;
+      this.ensureDataDirectory();
+    }
+
+  ensureDataDirectory() {
+    if (!fs.existsSync(this.dataDir)) {
+      fs.mkdirSync(this.dataDir, { recursive: true });
+    }
+  }
+
+  
+  async startCrawling({ username, password, config = {} }) {
+    const browser = await puppeteer.launch({ 
+      headless: config.headless || false, 
+      ignoreHTTPSErrors: true 
+    });
+    
+    const page = await browser.newPage();
+    this.helpers = new BlackDragonHelpers(page);
+    
+    try {
+      console.log('Starting encyclopedia crawling...');
+
+      // Login using shared helper
+      await this.helpers.login(username, password);
+      console.log('Successfully logged in to blackdragon.mobi');
+
+      // Crawl different sections
+      if(config.items){
+        await this.crawlItems(this.helpers);
+      }
+      //await this.crawlMonsters(this.helpers);
+      if(config.translations){
+      await this.crawlTranslations(this.helpers);
+    }
+      if(config.titles){
+        await this.crawlTitles(this.helpers);
+      }
+      // Create summary
+      this.createSummary();
+
+      console.log('Encyclopedia crawling completed successfully');
+      
+    } catch (error) {
+      console.error('Error during crawling:', error);
+      throw error;
+    } finally {
+      await browser.close();
+    }
+  }
+
+  // Handle pause/resume messages
+  handlePauseResume(paused) {
+    if (this.helpers) {
+      this.helpers.setPaused(paused);
+    }
+  }
+
+  async crawlItems(helpers) {
+    console.log('Starting to crawl items...');
+    
+    try {
+      // Navigate to items page
+      await helpers.navigateTo('https://blackdragon.mobi/library/items');
+      
+      // Get all item categories
+      const categories = await helpers.page.evaluate(() => {
+        const categoryLinks = Array.from(document.querySelectorAll('a[href*="https://blackdragon.mobi/library/items/type="]'));
+        return categoryLinks.map(link => ({
+
+          url: link.href,
+          name: link.textContent.substring(2).trim()
+        }));
+      });
+
+      let itemsFound = 0;
+      const allItems = [];
+      
+      for (const category of categories) {
+        try {
+          await helpers.navigateTo(category.url);
+          // Get pages
+          await helpers.waitForElement('body > div.main > div:nth-child(3) > span', 20);
+          const text = await helpers.getTextContent('body > div.main > div:nth-child(3) > span');
+          const slashIndex = text.indexOf('/');
+          
+          if (slashIndex === -1) return;
+          
+          const afterslash = text.substring(slashIndex + 1);
+          const maxPageNum = Number(afterslash.replace(/,/g, ""));
+          for (let libPage = 1; libPage <= maxPageNum; libPage++) {
+
+            await helpers.navigateTo(category.url + '/page=' + libPage);
+
+            // Get all items in the current page
+            const items = await helpers.page.evaluate(() => {
+              const itemLinks = Array.from(document.querySelectorAll('a[href*="https://blackdragon.mobi/library/viewItem/name="]'));
+              console.log(itemLinks);
+              return itemLinks.map(link => ({
+
+                url: link.href,
+                name: link.textContent.substring(2).trim()
+              }));
+
+            });
+
+            for (const item of items) {
+            
+            // Go into each item
+            await helpers.navigateTo(item.url); 
+                      // Extract item details from this item page
+          const itemDetails = await helpers.page.evaluate((catName, itemName) => {
+            // Look for the main item container - be more specific to avoid duplicates
+            const itemContainer = document.querySelector('.main');
+            if (!itemContainer) return null;
+            
+            const imgEl = itemContainer.querySelector('img[src*="https://blackdragon.mobi/img/1"]');
+            const descEl = itemContainer.querySelector('.description, small, .desc');
+            const statsEl = itemContainer.querySelector('.list');
+            const reqsEl = itemContainer.querySelector('.block');
+            const legendaryEl = itemContainer.querySelector('u');
+            const craftableEl = itemContainer.querySelector('body > div.main > div:nth-child(1)');
+            const statsRaw = statsEl ? statsEl.textContent.trim().split('  ') : [];
+            const reqsRaw = reqsEl ? reqsEl.textContent.trim().split('  ') : [];
+
+
+            function parseKeyValueArray(arr) {
+              const result = {};
+            
+              arr.forEach(line => {
+                if (!line.includes(":")) return;
+            
+                let [key, value] = line.split(":").map(s => s.trim());
+                if (!key || !value) return;
+            
+                // Handle "Class" → keep as string
+                if (key.toLowerCase() === "class") {
+                  result[key] = value;
+                  return;
+                }
+            
+                // Handle "Damage"
+                if (key.toLowerCase() === "damage") {
+                  const [minStr, maxStr] = value.split("-").map(s => s.trim());
+                  const min = parseInt(minStr.replace(/\D/g, ""), 10);
+                  const max = maxStr ? parseInt(maxStr.replace(/\D/g, ""), 10) : min;
+                  result["DamageMin"] = min;
+                  result["DamageMax"] = max;
+                  return;
+                }
+            
+                // Handle numeric with % (convert to fraction)
+                if (value.endsWith("%")) {
+                  const num = parseFloat(value.replace("%", "").trim());
+                  result[key] = num / 100;
+                  return;
+                }
+            
+                // Handle numeric with + or plain number
+                const numeric = parseFloat(value.replace("+", "").trim());
+                if (!isNaN(numeric)) {
+                  result[key] = numeric;
+                  return;
+                }
+            
+                // Default fallback → keep string
+                result[key] = value;
+              });
+            
+              return result;
+            }
+          
+          return {
+              id: `item_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+              name: itemName,
+              type: catName,
+              isLegendary: legendaryEl?.textContent == 'Legendary item',
+              isDrop: craftableEl ? craftableEl.textContent.includes('Drop') : false,
+              isCraftable: craftableEl ? craftableEl.textContent.includes('Craftable') : false,
+              description: descEl ? descEl.textContent.trim() : '',
+              plainAttributes: statsRaw,                        // keep raw
+              plainReq: reqsRaw,                  // keep raw
+              attributes: parseKeyValueArray(statsRaw),   // parsed version
+              requirements: parseKeyValueArray(reqsRaw), // parsed version
+              ingredients: catName == 'Recipe'? statsRaw : [],
+              image_url: imgEl ? imgEl.src : '',
+              source: 'encyclopedia_crawler',
+              crawled_at: new Date().toISOString()
+            };
+          }, category.name, item.name);
+
+
+          // Add item to collection (only if we found details)
+          if (itemDetails) {
+            allItems.push(itemDetails);
+            itemsFound += 1;
+            console.log(`Found ${item.name} in category: ${category.name}`);
+          }
+
+            }
+          }
+
+
+          
+        } catch (error) {
+          console.error(`Error crawling category ${category.name}:`, error);
+        }
+      }
+
+      // Save all items to JSON file
+      const itemsFile = path.join(this.dataDir, 'items.json');
+      fs.writeFileSync(itemsFile, JSON.stringify(allItems, null, 2));
+      console.log(`Total items found: ${itemsFound}`);
+      console.log(`Items saved to: ${itemsFile}`);
+      
+    } catch (error) {
+      console.error('Error crawling items:', error);
+    }
+  }
+
+  async crawlMonsters(helpers) {
+    console.log('Starting to crawl monsters...');
+    
+    try {
+      // Navigate to monsters/quests page
+      await helpers.navigateTo('https://blackdragon.mobi/quests/index');
+      
+      const monsters = await helpers.page.evaluate(() => {
+        const monsterElements = Array.from(document.querySelectorAll('div.list'));
+        return monsterElements.map(el => {
+          const img = el.querySelector('img.round');
+          const name = el.querySelector('strong')?.innerText?.trim();
+          
+          // Extract location after <small>@</small>
+          let location = null;
+          const smallTags = Array.from(el.querySelectorAll('small'));
+          for (let i = 0; i < smallTags.length; i++) {
+            if (smallTags[i].textContent.trim() === '@') {
+              const node = smallTags[i].nextSibling;
+              if (node && node.nodeType === Node.TEXT_NODE) {
+                location = node.textContent.trim();
+              }
+              break;
+            }
+          }
+          
+          return {
+            name,
+            location,
+            image_url: img ? img.src : '',
+            url: el.querySelector('a')?.href || ''
+          };
+        }).filter(monster => monster.name && monster.location);
+      });
+
+      let monstersFound = 0;
+      const allMonsters = [];
+      
+      for (const monster of monsters) {
+        try {
+          // Navigate to monster detail page
+          if (monster.url) {
+            await helpers.navigateTo(monster.url);
+            
+            // Extract monster stats
+            const monsterData = await helpers.page.evaluate(() => {
+              const stats = {};
+              const statElements = document.querySelectorAll('strong');
+              
+              statElements.forEach(el => {
+                const text = el.textContent.trim();
+                if (text.includes('Level:')) {
+                  stats.level = parseInt(text.replace('Level:', '').trim()) || 0;
+                } else if (text.includes('HP:')) {
+                  stats.hp = parseInt(text.replace('HP:', '').replace(/,/g, '').trim()) || 0;
+                } else if (text.includes('Attack:')) {
+                  stats.attack = parseInt(text.replace('Attack:', '').replace(/,/g, '').trim()) || 0;
+                } else if (text.includes('Defense:')) {
+                  stats.defense = parseInt(text.replace('Defense:', '').replace(/,/g, '').trim()) || 0;
+                }
+              });
+
+              return stats;
+            });
+
+            // Add monster to collection
+            allMonsters.push({
+              id: `monster_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+              name: monster.name,
+              level: monsterData.level || 0,
+              hp: monsterData.hp || 0,
+              attack: monsterData.attack || 0,
+              defense: monsterData.defense || 0,
+              location: monster.location,
+              image_url: monster.image_url,
+              source: 'encyclopedia_crawler',
+              crawled_at: new Date().toISOString()
+            });
+            
+            monstersFound++;
+          }
+        } catch (error) {
+          console.error(`Error crawling monster ${monster.name}:`, error);
+        }
+      }
+
+      // Save all monsters to JSON file
+      const monstersFile = path.join(this.dataDir, 'monsters.json');
+      fs.writeFileSync(monstersFile, JSON.stringify(allMonsters, null, 2));
+      console.log(`Total monsters found: ${monstersFound}`);
+      console.log(`Monsters saved to: ${monstersFile}`);
+      
+    } catch (error) {
+      console.error('Error crawling monsters:', error);
+    }
+  }
+
+  async crawlTranslations(helpers) {
+    console.log('Starting to crawl translations...');
+    
+    try {
+      let maxPage = 251;
+      let translationsFound = 0;
+      let translationsError = 0;
+      const allTranslations = [];
+          // Get pages
+          for (let libPage = 1; libPage <= maxPage; libPage++) {
+
+          await helpers.navigateTo('https://blackdragon.mobi/translator/view/type=0/page=' + libPage);
+
+            // Get all title in the current page
+          const translations = await helpers.page.evaluate(() => {
+          const translationLinks = Array.from(document.querySelectorAll('a[href*="https://blackdragon.mobi/translator/edit/id="]'));
+          return translationLinks.map(link => ({
+
+                url: link.href,
+                name: link.textContent.trim()
+              }));
+
+            });
+
+            for (const translation of translations) {
+              try{
+                                
+                // Go into each translation
+                await helpers.navigateTo(translation.url); 
+                // Extract title details from this title page
+                const translationDetails = await helpers.page.evaluate((translationName,url) => {
+                // Look for the main translation container - be more specific to avoid duplicates
+                const translationContainer = document.querySelector('.main');
+                if (!translationContainer) return null;
+                
+                  const originalText = translationContainer.querySelector('body > div.main > div.list');
+                  const translatedText = translationContainer.querySelector('textarea');
+                  const id = (url.match(/id=(\d+)/) || [])[1];
+
+              return {
+                  id: `translation_${id}`,
+                  name: translationName,
+                  type: 'Translation',
+                  originalText: originalText ? originalText.textContent.trim() : '',
+                  translatedText: translatedText ? translatedText.value.trim() : '',
+                  id: id,
+                  url: url,
+                  source: 'encyclopedia_crawler',
+                  crawled_at: new Date().toISOString()
+                };
+              }, translation.name, translation.url);
+
+              // Add title to collection (only if we found details)
+              if (translationDetails) {
+                allTranslations.push(translationDetails);
+                translationsFound += 1;
+                console.log(`Found ${translation.name}`);
+                }
+              }
+              catch(error){
+                logger.exception('Error loading Translation: ' + translation.name + " URL: " + translation.url, error);
+                continue;
+              }
+
+            }
+          }
+
+      // Save all titles to JSON file
+      const translationsFile = path.join(this.dataDir, 'translations.json');
+      fs.writeFileSync(translationsFile, JSON.stringify(allTranslations, null, 2));
+      console.log(`Total translation found: ${translationsFound}`);
+      console.log(`Translation saved to: ${translationsFile}`);
+      
+    } catch (error) {
+      console.error('Error crawling translations:', error);
+    }
+  }
+
+
+  async crawlTitles(helpers) {
+    console.log('Starting to crawl titles...');
+    
+    try {
+      // Navigate to titles page
+      await helpers.navigateTo('https://blackdragon.mobi/library/titles');
+
+      let titlesFound = 0;
+      const allTitles = [];
+          // Get pages
+          await helpers.waitForElement('body > div.main > div:nth-child(1) > span', 20);
+          const text = await helpers.getTextContent('body > div.main > div:nth-child(1) > span');
+          const slashIndex = text.indexOf('/');
+          
+          if (slashIndex === -1) return;
+          
+          const afterslash = text.substring(slashIndex + 1);
+          const maxPageNum = Number(afterslash.replace(/,/g, ""));
+          for (let libPage = 1; libPage <= maxPageNum; libPage++) {
+
+          await helpers.navigateTo('https://blackdragon.mobi/library/titles/page=' + libPage);
+
+            // Get all title in the current page
+          const titles = await helpers.page.evaluate(() => {
+          const titleLinks = Array.from(document.querySelectorAll('a[href*="https://blackdragon.mobi/library/viewTitle/name="]'));
+              //console.log(titleLinks);
+          return titleLinks.map(link => ({
+
+                url: link.href,
+                name: link.textContent.substring(2).trim()
+              }));
+
+            });
+
+            for (const title of titles) {
+            
+            // Go into each title
+            await helpers.navigateTo(title.url); 
+            // Extract title details from this title page
+          const titleDetails = await helpers.page.evaluate((titleName) => {
+            // Look for the main title container - be more specific to avoid duplicates
+            const titleContainer = document.querySelector('.main');
+            if (!titleContainer) return null;
+            
+            const statsEl = titleContainer.querySelector('.block');
+            const reqsEl = titleContainer.querySelectorAll('.block')[1];
+            const availableEl = titleContainer.querySelector('.list.small');
+            const avaialbleText = availableEl? availableEl.textContent:'';
+            const statsRaw = statsEl ? statsEl.textContent.trim().split('  ') : [];
+            const reqsRaw = reqsEl ? reqsEl.textContent.trim().split('  ') : [];
+            
+
+            function parseKeyValueArray(arr) {
+              const result = {};
+            
+              arr.forEach(line => {
+                if (!line.includes(":")) return;
+            
+                let [key, value] = line.split(":").map(s => s.trim());
+                if (!key || !value) return;
+            
+                // Handle "Class" → keep as string
+                if (key.toLowerCase() === "class") {
+                  result[key] = value;
+                  return;
+                }
+            
+                // Handle "Damage"
+                if (key.toLowerCase() === "damage") {
+                  const [minStr, maxStr] = value.split("-").map(s => s.trim());
+                  const min = parseInt(minStr.replace(/\D/g, ""), 10);
+                  const max = maxStr ? parseInt(maxStr.replace(/\D/g, ""), 10) : min;
+                  result["DamageMin"] = min;
+                  result["DamageMax"] = max;
+                  return;
+                }
+            
+                // Handle numeric with % (convert to fraction)
+                if (value.endsWith("%")) {
+                  const num = parseFloat(value.replace("%", "").trim());
+                  result[key] = num / 100;
+                  return;
+                }
+            
+                // Handle numeric with + or plain number
+                const numeric = parseFloat(value.replace("+", "").trim());
+                if (!isNaN(numeric)) {
+                  result[key] = numeric;
+                  return;
+                }
+            
+                // Default fallback → keep string
+                result[key] = value;
+              });
+            
+              return result;
+            }
+          
+          return {
+              id: `title_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+              name: titleName,
+              type: 'Title',
+              plainAttributes: statsRaw,                        // keep raw
+              plainReq: reqsRaw,                  // keep raw
+              available: avaialbleText,                  // keep raw
+              slots: {
+                Weapon: avaialbleText.includes('Weapon'),
+                Shield: avaialbleText.includes('Shield'),
+                Helm: avaialbleText.includes('Helm'),
+                BodyArmor: avaialbleText.includes('Body Armor'),
+                Boots: avaialbleText.includes('Boots'),
+                Amulet: avaialbleText.includes('Amulet'),
+                Ring: avaialbleText.includes('Ring'),
+              },
+              attributes: parseKeyValueArray(statsRaw),   // parsed version
+              requirements: parseKeyValueArray(reqsRaw), // parsed version
+              prefix:titleName.substring(0,titleName.indexOf('...')-1).trim(),
+              suffix: titleName.substring(titleName.indexOf('...')+3).trim(),
+              source: 'encyclopedia_crawler',
+              crawled_at: new Date().toISOString()
+            };
+          }, title.name);
+
+          // Add title to collection (only if we found details)
+          if (titleDetails) {
+            allTitles.push(titleDetails);
+            titlesFound += 1;
+            console.log(`Found ${title.name}`);
+          }
+
+            }
+          }
+
+      // Save all titles to JSON file
+      const titlesFile = path.join(this.dataDir, 'titles.json');
+      fs.writeFileSync(titlesFile, JSON.stringify(allTitles, null, 2));
+      console.log(`Total title found: ${titlesFound}`);
+      console.log(`Title saved to: ${titlesFile}`);
+      
+    } catch (error) {
+      console.error('Error crawling titles:', error);
+    }
+  }
+
+  // Create a summary file with crawl statistics
+  createSummary() {
+    try {
+      const summary = {
+        crawl_date: new Date().toISOString(),
+        total_items: 0,
+        total_monsters: 0,
+        total_translations: 0,
+        total_quests: 0,
+        files: []
+      };
+
+      // Count items in each file
+      const files = ['items.json', 'monsters.json', 'translations.json', 'quests.json'];
+      files.forEach(filename => {
+        const filepath = path.join(this.dataDir, filename);
+        if (fs.existsSync(filepath)) {
+          try {
+            const data = JSON.parse(fs.readFileSync(filepath, 'utf8'));
+            const count = Array.isArray(data) ? data.length : 0;
+            
+            switch (filename) {
+              case 'items.json':
+                summary.total_items = count;
+                break;
+              case 'monsters.json':
+                summary.total_monsters = count;
+                break;
+              case 'translations.json':
+                summary.total_translations = count;
+                break;
+              case 'quests.json':
+                summary.total_quests = count;
+                break;
+            }
+            
+            summary.files.push({
+              filename,
+              count,
+              size_bytes: fs.statSync(filepath).size
+            });
+          } catch (error) {
+            console.error(`Error reading ${filename}:`, error.message);
+          }
+        }
+      });
+
+      // Save summary
+      const summaryFile = path.join(this.dataDir, 'summary.json');
+      fs.writeFileSync(summaryFile, JSON.stringify(summary, null, 2));
+      console.log(`Summary saved to: ${summaryFile}`);
+      console.log(`Total data: ${summary.total_items + summary.total_monsters + summary.total_translations + summary.total_quests} entries`);
+
+    } catch (error) {
+      console.error('Error creating summary:', error);
+    }
+  }
+
+  // Read crawled data from JSON files
+  readData(type) {
+    try {
+      const filepath = path.join(this.dataDir, `${type}.json`);
+      if (fs.existsSync(filepath)) {
+        const data = JSON.parse(fs.readFileSync(filepath, 'utf8'));
+        return data;
+      }
+      return [];
+    } catch (error) {
+      console.error(`Error reading ${type} data:`, error);
+      return [];
+    }
+  }
+
+  // Search across all data types
+  searchData(query) {
+    const results = {
+      items: [],
+      monsters: [],
+      translations: [],
+      quests: []
+    };
+
+    const types = ['items', 'monsters', 'translations', 'quests'];
+    types.forEach(type => {
+      const data = this.readData(type);
+      if (Array.isArray(data)) {
+        results[type] = data.filter(item => 
+          item.name && item.name.toLowerCase().includes(query.toLowerCase()) ||
+          (item.description && item.description.toLowerCase().includes(query.toLowerCase()))
+        );
+      }
+    });
+
+    return results;
+  }
+}
+
+// Export the class
+module.exports = EncyclopediaCrawler;
+
+// Always set up message listener for when running as child process
+let crawlerInstance = null;
+
 process.on('message', async (data) => {
-  if (data.type === 'start') {
-    const crawler = new EncyclopediaCrawler(data.account, data.sessionId, data.crawlOptions);
-    await crawler.start();
-  } else if (data.type === 'pause') {
-    // Handle pause if crawler is running
-  } else if (data.type === 'resume') {
-    // Handle resume if crawler is running
-  } else if (data.type === 'stop') {
-    // Handle stop if crawler is running
+  console.log('📨 Received message:', JSON.stringify(data, null, 2));
+  
+  if (data && data.username && data.password) {
+    console.log('✅ Starting encyclopedia crawl with credentials');
+    try {
+      crawlerInstance = new EncyclopediaCrawler();
+      await crawlerInstance.startCrawling(data);
     process.exit(0);
+    } catch (error) {
+      console.error('❌ Crawling failed:', error);
+      process.exit(1);
+    }
+  } else if (data && data.type === 'pause') {
+    console.log('⏸️ Pause message received');
+    if (crawlerInstance) {
+      crawlerInstance.handlePauseResume(true);
+    }
+  } else if (data && data.type === 'resume') {
+    console.log('▶️ Resume message received');
+    if (crawlerInstance) {
+      crawlerInstance.handlePauseResume(false);
+    }
+  } else {
+    console.log('❌ Invalid message format - missing username/password or unknown type');
+    console.log('Expected: { username: "...", password: "..." }');
+    console.log('Received:', data);
   }
 });
 
-module.exports = EncyclopediaCrawler;
+// Command line usage removed - only runs as child process from main.js
