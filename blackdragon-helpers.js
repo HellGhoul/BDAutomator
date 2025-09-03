@@ -75,7 +75,7 @@ class BlackDragonHelpers {
   }
 
   // Health recovery function
-  async checkHealRecovery(threshold = 1500000) {
+  async checkHealRecovery(threshold) {
     const xpath = '/html/body/div[2]/a/div';
     const [element] = await this.page.$$('xpath//' + xpath); 
     
@@ -109,8 +109,8 @@ class BlackDragonHelpers {
     // Go to inventory
     await this.navigateTo('https://blackdragon.mobi/items/index/c=71012');   
     
-    await this.waitForElement('body > div.main > div:nth-child(1) > a:nth-child(5)', 20);
-    await this.clickElement("body > div.main > div:nth-child(1) > a:nth-child(5)", { waitForNav: false }); 
+    await this.waitForElement('body > div.main > div:nth-child(1) > a:nth-child(1)', 20);
+    await this.clickElement("body > div.main > div:nth-child(1) > a:nth-child(1)", { waitForNav: false }); 
 
     await this.navigateTo('https://blackdragon.mobi/maps/view');
   }

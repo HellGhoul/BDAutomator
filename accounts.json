@@ -36,8 +36,8 @@
       "monsterScroll": true,
       "staminaPotion": true,
       "ancientPotion": true,
-      "monsterList": "",
-      "hpThreshold": ""
+      "monsterList": "naga,master_genie,genie",
+      "hpThreshold": "500000"
     }
   },
   {
@@ -48,26 +48,6 @@
       "all": false,
       "recipe": true,
       "charm": true,
-      "pieceGear": true,
-      "jewel": true,
-      "rune": true,
-      "epicGear": false,
-      "magicScroll": false,
-      "monsterScroll": true,
-      "staminaPotion": true,
-      "ancientPotion": true,
-      "monsterList": "",
-      "hpThreshold": ""
-    }
-  },
-  {
-    "id": "6okipvlwy",
-    "username": "altharion",
-    "password": "09081508",
-    "config": {
-      "all": false,
-      "recipe": true,
-      "charm": false,
       "pieceGear": true,
       "jewel": true,
       "rune": true,
@@ -123,6 +103,26 @@
   {
     "id": "cfvlsdzkf",
     "username": "SYLRA",
+    "password": "09081508",
+    "config": {
+      "all": false,
+      "recipe": true,
+      "charm": true,
+      "pieceGear": true,
+      "jewel": true,
+      "rune": true,
+      "epicGear": false,
+      "magicScroll": false,
+      "monsterScroll": true,
+      "staminaPotion": true,
+      "ancientPotion": true,
+      "monsterList": "",
+      "hpThreshold": ""
+    }
+  },
+  {
+    "id": "t3klh5w0r",
+    "username": "altharion",
     "password": "09081508",
     "config": {
       "all": false,
