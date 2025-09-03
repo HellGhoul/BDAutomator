@@ -21,26 +21,6 @@
     }
   },
   {
-    "id": "1r4z70avl",
-    "username": "korvak",
-    "password": "09081508",
-    "config": {
-      "all": false,
-      "recipe": false,
-      "charm": true,
-      "pieceGear": true,
-      "jewel": true,
-      "rune": true,
-      "epicGear": false,
-      "magicScroll": false,
-      "monsterScroll": true,
-      "staminaPotion": true,
-      "ancientPotion": true,
-      "monsterList": "naga,master_genie,genie",
-      "hpThreshold": "500000"
-    }
-  },
-  {
     "id": "xz350u2t0",
     "username": "thandis",
     "password": "09081508",
@@ -56,7 +36,7 @@
       "monsterScroll": true,
       "staminaPotion": true,
       "ancientPotion": true,
-      "monsterList": "",
+      "monsterList": "wolf_raider,wolf_rider",
       "hpThreshold": ""
     }
   },
@@ -77,7 +57,7 @@
       "staminaPotion": true,
       "ancientPotion": true,
       "monsterList": "",
-      "hpThreshold": ""
+      "hpThreshold": "300000"
     }
   },
   {
@@ -138,6 +118,26 @@
       "ancientPotion": true,
       "monsterList": "",
       "hpThreshold": ""
+    }
+  },
+  {
+    "id": "7jyzv208d",
+    "username": "korvak",
+    "password": "09081508",
+    "config": {
+      "all": false,
+      "recipe": true,
+      "charm": true,
+      "pieceGear": false,
+      "jewel": true,
+      "rune": true,
+      "epicGear": false,
+      "magicScroll": false,
+      "monsterScroll": true,
+      "staminaPotion": false,
+      "ancientPotion": true,
+      "monsterList": "cavalier,champion",
+      "hpThreshold": "500000"
     }
   }
 ]
