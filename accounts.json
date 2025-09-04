@@ -48,7 +48,7 @@
       "all": false,
       "recipe": true,
       "charm": true,
-      "pieceGear": true,
+      "pieceGear": false,
       "jewel": true,
       "rune": true,
       "epicGear": false,
@@ -57,7 +57,7 @@
       "staminaPotion": true,
       "ancientPotion": true,
       "monsterList": "",
-      "hpThreshold": "300000"
+      "hpThreshold": "900000"
     }
   },
   {
@@ -114,9 +114,9 @@
       "epicGear": false,
       "magicScroll": false,
       "monsterScroll": true,
-      "staminaPotion": true,
+      "staminaPotion": false,
       "ancientPotion": true,
-      "monsterList": "",
+      "monsterList": "gold_golem,diamond_golem",
       "hpThreshold": ""
     }
   },
@@ -129,14 +129,14 @@
       "recipe": true,
       "charm": true,
       "pieceGear": false,
-      "jewel": true,
+      "jewel": false,
       "rune": true,
       "epicGear": false,
       "magicScroll": false,
       "monsterScroll": true,
       "staminaPotion": false,
       "ancientPotion": true,
-      "monsterList": "",
+      "monsterList": "archangel,angel",
       "hpThreshold": "500000"
     }
   }
