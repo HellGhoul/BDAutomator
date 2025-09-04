@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
 const fs = require('fs');
 const BlackDragonHelpers = require('./blackdragon-helpers');
 
@@ -6,7 +6,10 @@ let helpers = null; // Global variable to store helpers instance
 
 async function runAutomation({ username, password, config }) {
   process.send && process.send('Received config: ' + JSON.stringify(config));
-  const browser = await puppeteer.launch({ headless: false, ignoreHTTPSErrors: true });
+  // Connect to the existing Chrome instance
+  const browser = await puppeteer.connect({
+    browserURL: 'http://localhost:9222', // Connects to Chrome running on the remote debugging port
+  });
   const page = await browser.newPage();
   helpers = new BlackDragonHelpers(page); // Assign to global variable
   process.send && process.send('Browser launched');

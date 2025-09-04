@@ -5,6 +5,7 @@
     "express": "^5.1.0",
     "ini": "^5.0.0",
     "puppeteer": "^24.12.1",
+    "puppeteer-core": "^24.18.0",
     "sqlite3": "^5.1.6",
     "uuid": "^9.0.0"
   },

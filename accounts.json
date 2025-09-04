@@ -136,7 +136,7 @@
       "monsterScroll": true,
       "staminaPotion": false,
       "ancientPotion": true,
-      "monsterList": "cavalier,champion",
+      "monsterList": "",
       "hpThreshold": "500000"
     }
   }
