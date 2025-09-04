@@ -1,18 +1,138 @@
 const puppeteer = require('puppeteer-core');
 const fs = require('fs');
+const { exec } = require('child_process');
+const os = require('os');
+const path = require('path');
 const BlackDragonHelpers = require('./blackdragon-helpers');
 
 let helpers = null; // Global variable to store helpers instance
+let runningChromeInstances = new Map(); // Store running Chrome instances
+
+// Function to get port for account (same logic as MultiAccountChromeDebug)
+function getPortForAccount(accountName) {
+  const basePort = 9222;
+  const hash = simpleHash(accountName);
+  return basePort + (hash % 1000) + 1; // Ports 9223-10221
+}
+
+function simpleHash(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  return Math.abs(hash);
+}
+
+function getChromePath() {
+  const platform = os.platform();
+  if (platform === 'darwin') { // macOS
+    return '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+  } else if (platform === 'win32') { // Windows
+    return 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
+  } else { // Linux
+    return '/usr/bin/google-chrome';
+  }
+}
+
+function getUserDataDir(accountName) {
+  const baseDir = path.join(process.cwd(), 'chrome-profiles');
+  const accountDir = path.join(baseDir, accountName.replace(/[^a-zA-Z0-9]/g, '_'));
+  
+  // Ensure directory exists
+  if (!fs.existsSync(baseDir)) {
+    fs.mkdirSync(baseDir, { recursive: true });
+  }
+  if (!fs.existsSync(accountDir)) {
+    fs.mkdirSync(accountDir, { recursive: true });
+  }
+  
+  return accountDir;
+}
+
+async function startChromeForAccount(accountName) {
+  const port = getPortForAccount(accountName);
+  const userDataDir = getUserDataDir(accountName);
+  const chromePath = getChromePath();
+  
+  console.log(`🚀 Auto-starting Chrome for account: ${accountName}`);
+  console.log(`   Port: ${port}`);
+  console.log(`   Profile: ${userDataDir}`);
+  
+  const command = `"${chromePath}" --remote-debugging-port=${port} --user-data-dir="${userDataDir}"`;
+  
+  return new Promise((resolve, reject) => {
+    const child = exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`❌ Error starting Chrome for ${accountName}:`, error.message);
+        reject(error);
+      }
+    });
+    
+    // Store the process for later cleanup
+    runningChromeInstances.set(accountName, {
+      process: child,
+      port: port,
+      userDataDir: userDataDir
+    });
+    
+    // Give Chrome time to start
+    setTimeout(async () => {
+      console.log(`✅ Chrome auto-started for ${accountName} on port ${port}`);
+      console.log(`🌐 Chrome window opened - complete Cloudflare challenges if needed`);
+      resolve({ port, userDataDir, process: child });
+    }, 3000);
+  });
+}
 
 async function runAutomation({ username, password, config }) {
   process.send && process.send('Received config: ' + JSON.stringify(config));
-  // Connect to the existing Chrome instance
-  const browser = await puppeteer.connect({
-    browserURL: 'http://localhost:9222', // Connects to Chrome running on the remote debugging port
-  });
-  const page = await browser.newPage();
+  
+  let browser;
+  const port = getPortForAccount(username);
+  
+  try {
+    console.log(`🔗 Connecting to Chrome instance for account: ${username}`);
+    console.log(`   Debug port: ${port}`);
+    
+    // Try to connect to existing Chrome instance
+    browser = await puppeteer.connect({
+      browserURL: `http://localhost:${port}`,
+      defaultViewport: null
+    });
+    
+    console.log(`✅ Connected to existing Chrome instance for ${username}`);
+    
+  } catch (error) {
+    console.log(`❌ No existing Chrome instance found for ${username}`);
+    console.log(`🚀 Auto-starting Chrome for account: ${username}`);
+    
+    // Auto-start Chrome for this account
+    await startChromeForAccount(username);
+    
+    // Wait a bit more for Chrome to fully initialize
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Now try to connect again
+    try {
+      browser = await puppeteer.connect({
+        browserURL: `http://localhost:${port}`,
+        defaultViewport: null
+      });
+      console.log(`✅ Connected to auto-started Chrome instance for ${username}`);
+    } catch (connectError) {
+      console.log(`❌ Failed to connect to auto-started Chrome for ${username}:`, connectError.message);
+      throw new Error(`Failed to start or connect to Chrome for account ${username}`);
+    }
+  }
+  
+  // Get the first available page or create a new one
+  const pages = await browser.pages();
+  const page = pages.length > 0 ? pages[0] : await browser.newPage();
+  
   helpers = new BlackDragonHelpers(page); // Assign to global variable
-  process.send && process.send('Browser launched');
+  process.send && process.send('Connected to Chrome instance');
 
   // Load collectibles (if needed)
   let collectibles = [];
@@ -136,7 +256,15 @@ async function runAutomation({ username, password, config }) {
   }
 
   // Login using shared helper
-  await helpers.login(username, password);
+  try {
+    console.log(`🔐 Starting login for account: ${username}`);
+    await helpers.login(username, password);
+    console.log(`✅ Login completed for account: ${username}`);
+  } catch (error) {
+    console.log(`❌ Login failed for account: ${username}:`, error.message);
+    console.log('💡 Make sure you have completed Cloudflare challenges in the Chrome window');
+    throw error;
+  }
 
   // Start automation
   process.send && process.send('🚀 Starting automation...');
@@ -156,7 +284,14 @@ async function runAutomation({ username, password, config }) {
   // Clean up on stop
   process.on('SIGTERM', async () => {
     process.send && process.send('🛑 Automation stopped by user');
-    await browser.close();
+    
+    // Stop Chrome instances that were auto-started
+    for (const [accountName, instance] of runningChromeInstances) {
+      console.log(`🛑 Stopping auto-started Chrome for ${accountName}`);
+      instance.process.kill();
+    }
+    runningChromeInstances.clear();
+    
     process.exit(0);
   });
 }
