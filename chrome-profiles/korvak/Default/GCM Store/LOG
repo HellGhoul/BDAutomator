@@ -1,3 +1,2 @@
-2025/09/04-19:15:03.934 499982 Reusing MANIFEST /Users/macbookpro/Sources/BDAutomator/chrome-profiles/korvak/Default/GCM Store/MANIFEST-000001
-2025/09/04-19:15:03.935 499982 Recovering log #3
-2025/09/04-19:15:03.935 499982 Reusing old log /Users/macbookpro/Sources/BDAutomator/chrome-profiles/korvak/Default/GCM Store/000003.log 
+2025/09/04-20:27:34.612 37f0 Creating DB C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\korvak\Default\GCM Store since it was missing.
+2025/09/04-20:27:34.618 37f0 Reusing MANIFEST C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\korvak\Default\GCM Store/MANIFEST-000001

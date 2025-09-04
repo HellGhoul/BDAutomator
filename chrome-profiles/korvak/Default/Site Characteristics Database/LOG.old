@@ -1,2 +1,5 @@
-2025/09/04-19:10:32.725 497c0b Creating DB /Users/macbookpro/Sources/BDAutomator/chrome-profiles/korvak/Default/Site Characteristics Database since it was missing.
-2025/09/04-19:10:32.775 497c0b Reusing MANIFEST /Users/macbookpro/Sources/BDAutomator/chrome-profiles/korvak/Default/Site Characteristics Database/MANIFEST-000001
+2025/09/04-20:27:32.144 52c8 Log #3: 3 ops saved to Table #4 OK
+2025/09/04-20:27:32.148 52c8 Archiving C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\korvak\Default\Site Characteristics Database/000003.log: OK
+2025/09/04-20:27:32.148 52c8 Table #4: 3 entries OK
+2025/09/04-20:27:32.150 52c8 Archiving C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\korvak\Default\Site Characteristics Database/MANIFEST-000001: OK
+2025/09/04-20:27:32.155 52c8 **** Repaired leveldb C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\korvak\Default\Site Characteristics Database; recovered 1 files; 219 bytes. Some data may have been lost. ****

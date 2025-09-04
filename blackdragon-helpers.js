@@ -184,6 +184,8 @@ class BlackDragonHelpers {
         if (isValuable) {
           await this.waitForElement('body > div.main > form:nth-child(3) > input', 20);
           await this.clickElement("body > div.main > form:nth-child(3) > input", { waitForNav: true });
+          
+        process.send && process.send('💎 Valuable loot found! ' + nameFull);
           return 'looted';
         } else {
           try {
@@ -231,7 +233,6 @@ class BlackDragonHelpers {
   // Check if loot is valuable based on config
   isValuableLoot(nameFull, quality, config) {
     if (!nameFull) return false;
-    
     const name = nameFull.toLowerCase();
     
     return config.all
@@ -242,7 +243,7 @@ class BlackDragonHelpers {
       || (config.recipe && name.includes("recipe"))
       || (config.charm && name.includes("charm"))
       || (config.jewel && (name.includes("jewel") || name.includes("elixir")))
-      || (config.rune && name.includes("rune "))
+      || (config.rune && (name.includes("rune ") || name.includes("level")))
       || (config.epicGear && (name.includes("(v)") || name.includes("(v)")  || name.includes("(vi)")|| 
           quality.toLowerCase().includes("mythic") || 
           quality.toLowerCase().includes("mythic") || 

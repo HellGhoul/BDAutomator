@@ -117,7 +117,7 @@
       "staminaPotion": false,
       "ancientPotion": true,
       "monsterList": "gold_golem,diamond_golem",
-      "hpThreshold": ""
+      "hpThreshold": "800000"
     }
   },
   {

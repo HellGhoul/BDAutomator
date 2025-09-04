@@ -1,3 +1,5 @@
-2025/09/04-19:56:23.229 4a1e7f Reusing MANIFEST /Users/macbookpro/Sources/BDAutomator/chrome-profiles/eryndor/Default/Site Characteristics Database/MANIFEST-000001
-2025/09/04-19:56:23.231 4a1e7f Recovering log #3
-2025/09/04-19:56:23.231 4a1e7f Reusing old log /Users/macbookpro/Sources/BDAutomator/chrome-profiles/eryndor/Default/Site Characteristics Database/000003.log 
+2025/09/04-21:29:48.339 6cf0 Log #3: 4 ops saved to Table #4 OK
+2025/09/04-21:29:48.344 6cf0 Archiving C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\eryndor\Default\Site Characteristics Database/000003.log: OK
+2025/09/04-21:29:48.345 6cf0 Table #4: 4 entries OK
+2025/09/04-21:29:48.346 6cf0 Archiving C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\eryndor\Default\Site Characteristics Database/MANIFEST-000001: OK
+2025/09/04-21:29:48.352 6cf0 **** Repaired leveldb C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\eryndor\Default\Site Characteristics Database; recovered 1 files; 257 bytes. Some data may have been lost. ****

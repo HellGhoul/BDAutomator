@@ -1,3 +1,5 @@
-2025/09/04-20:03:37.831 49dff3 Reusing MANIFEST /Users/macbookpro/Sources/BDAutomator/chrome-profiles/hell_fire/Default/Session Storage/MANIFEST-000001
-2025/09/04-20:03:37.834 49dff3 Recovering log #3
-2025/09/04-20:03:37.835 49dff3 Reusing old log /Users/macbookpro/Sources/BDAutomator/chrome-profiles/hell_fire/Default/Session Storage/000003.log 
+2025/09/04-22:34:52.290 7388 Creating DB C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\hell_fire\Default\Session Storage since it was missing.
+2025/09/04-22:34:52.309 7388 Reusing MANIFEST C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\hell_fire\Default\Session Storage/MANIFEST-000001
+2025/09/04-22:34:58.616 2ac Level-0 table #5: started
+2025/09/04-22:34:58.623 2ac Level-0 table #5: 308417 bytes OK
+2025/09/04-22:34:58.626 2ac Delete type=0 #3

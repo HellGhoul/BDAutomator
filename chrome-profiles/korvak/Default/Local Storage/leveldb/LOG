@@ -1,3 +1,2 @@
-2025/09/04-19:14:59.981 4998db Reusing MANIFEST /Users/macbookpro/Sources/BDAutomator/chrome-profiles/korvak/Default/Local Storage/leveldb/MANIFEST-000001
-2025/09/04-19:14:59.991 4998db Recovering log #3
-2025/09/04-19:14:59.991 4998db Reusing old log /Users/macbookpro/Sources/BDAutomator/chrome-profiles/korvak/Default/Local Storage/leveldb/000003.log 
+2025/09/04-20:27:32.173 1bc0 Creating DB C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\korvak\Default\Local Storage\leveldb since it was missing.
+2025/09/04-20:27:32.186 1bc0 Reusing MANIFEST C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\korvak\Default\Local Storage\leveldb/MANIFEST-000001
