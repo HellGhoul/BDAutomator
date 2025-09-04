@@ -65,13 +65,39 @@ class BlackDragonHelpers {
 
   // Login function
   async login(username, password) {
-    await this.navigateTo('https://blackdragon.mobi/');
+    // First, try to go to login page to check if already logged in
+    await this.navigateTo('https://blackdragon.mobi/users/login');
+    
+    // Check if we got redirected to index page (already logged in)
+    const currentUrl = this.page.url();
+    if (currentUrl.includes('/index/index/')) {
+      console.log(`✅ Already logged in for account: ${username}`);
+      return; // Already logged in, no need to login again
+    }
+    
+    // If we're on login page, proceed with login
     await this.waitForElement('input[name=username]', 1000);
+    
+    // Clear username input first
+    await this.page.click('input[name=username]', { clickCount: 3 }); // Select all text
+    await this.page.keyboard.press('Delete'); // Clear the field
+    
+    // Type username
     await this.page.type('input[name=username]', username);
+    
+    // Clear password input first
     await this.waitForElement('input[name=password]');
+    await this.page.click('input[name=password]', { clickCount: 3 }); // Select all text
+    await this.page.keyboard.press('Delete'); // Clear the field
+    
+    // Type password
     await this.page.type('input[name=password]', password);
+    
+    // Click login button
     await this.waitForElement('.button');
     await this.clickElement('.button', { waitForNav: true });
+    
+    console.log(`✅ Login completed for account: ${username}`);
   }
 
   // Health recovery function

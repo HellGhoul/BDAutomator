@@ -8,6 +8,7 @@ let webviews = {};
 let activeTab = null;
 let automationState = {}; // { [id]: 'running' | 'paused' | undefined }
 let unscrollState = {}; // { [id]: 'running' | 'paused' | undefined }
+  let browserState = {}; // { [id]: 'started' | undefined } - Track if browser is started
 let encyclopediaData = {
   items: [],
   monsters: [],
@@ -279,8 +280,9 @@ function renderAccounts() {
     const isActive = state === 'running';
     const isUnscrollRunning = unscrollStateValue === 'running';
     const isUnscrollPaused = unscrollStateValue === 'paused';
-    const toggleLabel = isActive ? 'Pause' : (isPaused ? 'Resume' : 'Pause');
-    const toggleIcon = isActive ? '⏸️' : (isPaused ? '▶️' : '⏸️');
+    const isBrowserStarted = browserState[acc.id] === 'started';
+    const toggleLabel = isActive ? 'Pause' : (isPaused ? 'Resume' : 'Start Auto');
+    const toggleIcon = isActive ? '⏸️' : (isPaused ? '▶️' : '🤖');
     const unscrollToggleLabel = isUnscrollRunning ? 'Pause' : (isUnscrollPaused ? 'Resume' : 'Auto Hunt');
     const unscrollToggleIcon = isUnscrollRunning ? '⏸️' : (isUnscrollPaused ? '▶️' : '📜');
     const div = document.createElement('div');
@@ -292,21 +294,27 @@ function renderAccounts() {
           <div>
             <h3 class="text-xl font-bold text-rpg-gold">${acc.username}</h3>
             <p class="text-sm text-gray-400">Level: ${acc.options ? JSON.stringify(acc.options) : '{}'} </p>
-            ${isActive ? '<p class="text-sm text-green-400">🤖 Auto: ON</p>' : isPaused ? '<p class="text-sm text-yellow-400">⏸️ Paused</p>' : ''}
+            ${isBrowserStarted ? '<p class="text-sm text-purple-400">🌐 Browser: ON</p>' : '<p class="text-sm text-gray-400">🌐 Browser: OFF</p>'}
+            ${isActive ? '<p class="text-sm text-green-400">🤖 Auto: ON</p>' : isPaused ? '<p class="text-sm text-yellow-400">⏸️ Auto Paused</p>' : ''}
             ${isUnscrollRunning ? '<p class="text-sm text-blue-400">📜 Unscroll: ON</p>' : isUnscrollPaused ? '<p class="text-sm text-yellow-400">⏸️ Unscroll Paused</p>' : ''}
           </div>
         </div>
-        <div class="flex space-x-2">
+        <div class="flex flex-wrap gap-2">
           <button onclick="editAccount('${acc.id}')" 
                   class="rpg-button px-3 py-1 rounded text-sm">✏️ Edit</button>
           <button onclick="deleteAccount('${acc.id}')" 
                   class="rpg-button px-3 py-1 rounded text-sm bg-red-900/50 border-red-500 text-red-300 hover:bg-red-700">🗑️ Delete</button>
-          <button onclick="runAccount('${acc.id}')" ${isRunning ? 'disabled' : ''} 
-                  class="rpg-button px-3 py-1 rounded text-sm ${isRunning ? 'opacity-50 cursor-not-allowed' : ''}">⚡ Run</button>
-          <button onclick="toggleAutomation('${acc.id}')" ${(isRunning && !isPaused) || isPaused ? '' : 'disabled'} 
-                  class="rpg-button px-3 py-1 rounded text-sm ${(isActive || isPaused) ? 'bg-green-900/50 border-green-500 text-green-300' : ''}">${toggleIcon} ${toggleLabel}</button>
-          <button onclick="toggleUnscroll('${acc.id}')" 
-                  class="rpg-button px-3 py-1 rounded text-sm ${(isUnscrollRunning || isUnscrollPaused) ? 'bg-blue-900/50 border-blue-500 text-blue-300' : ''}">${unscrollToggleIcon} ${unscrollToggleLabel}</button>
+          
+          <!-- New Button System -->
+          <button onclick="startBrowser('${acc.id}')" ${isRunning ? 'disabled' : ''} 
+                  class="rpg-button px-3 py-1 rounded text-sm ${isRunning ? 'opacity-50 cursor-not-allowed' : 'bg-purple-900/50 border-purple-500 text-purple-300'}">🌐 Start Browser</button>
+          
+          <button onclick="toggleAutomation('${acc.id}')" ${!isBrowserStarted && !isActive && !isPaused ? 'disabled' : ''} 
+                  class="rpg-button px-3 py-1 rounded text-sm ${!isBrowserStarted && !isActive && !isPaused ? 'opacity-50 cursor-not-allowed' : ''} ${(isActive || isPaused) ? 'bg-green-900/50 border-green-500 text-green-300' : ''}">${toggleIcon} ${toggleLabel}</button>
+          
+          <button onclick="toggleUnscroll('${acc.id}')" ${!isBrowserStarted && !isUnscrollRunning && !isUnscrollPaused ? 'disabled' : ''} 
+                  class="rpg-button px-3 py-1 rounded text-sm ${!isBrowserStarted && !isUnscrollRunning && !isUnscrollPaused ? 'opacity-50 cursor-not-allowed' : ''} ${(isUnscrollRunning || isUnscrollPaused) ? 'bg-blue-900/50 border-blue-500 text-blue-300' : ''}">${unscrollToggleIcon} ${unscrollToggleLabel}</button>
+          
           <button onclick="stopAccount('${acc.id}')" ${isRunning ? '' : 'disabled'} 
                   class="rpg-button px-3 py-1 rounded text-sm ${isRunning ? '' : 'opacity-50 cursor-not-allowed'} bg-red-900/50 border-red-500 text-red-300 hover:bg-red-700">⏹️ Stop</button>
         </div>
@@ -338,7 +346,7 @@ function renderTabs() {
 
   // Render tab content
   if (activeTab === 'output') {
-    renderOutputTab();
+  renderOutputTab();
   } else if (activeTab === 'logs') {
     renderLogsTab();
   }
@@ -483,6 +491,7 @@ async function loadAccounts() {
   outputs = {};
   automationState = {};
   unscrollState = {};
+  browserState = {}; // Reset browser state
   renderAccounts();
   for (const acc of accounts) {
     running[acc.id] = await ipcRenderer.invoke('is-running', acc.id);
@@ -721,8 +730,8 @@ window.searchEncyclopedia = async function() {
       }
     } else {
       // Fallback to server-side search if no local data
-      const results = await ipcRenderer.invoke('search-encyclopedia', query);
-      displayEncyclopediaResults(results, `Search results for: "${query}"`);
+    const results = await ipcRenderer.invoke('search-encyclopedia', query);
+    displayEncyclopediaResults(results, `Search results for: "${query}"`);
     }
   } catch (error) {
     console.error('Search error:', error);
@@ -2317,7 +2326,7 @@ function renderItemsGrid(items) {
             
             <div class="flex justify-center mb-3">
               <img src="${item.image_url}" alt="${item.name}" class="max-w-20 max-h-20 object-contain">
-            </div>
+              </div>
             
             <div class="text-sm space-y-2">
               <div class="flex justify-between">
@@ -3013,17 +3022,24 @@ window.deleteAccount = async function(id) {
   loadAccounts();
 };
 
-window.runAccount = async function(id) {
+// New function: Start Browser (with login)
+window.startBrowser = async function(id) {
   const acc = accounts.find(a => a.id === id);
   if (!acc) return;
   outputs[acc.id] = '';
+  browserState[acc.id] = 'started';
   renderAccounts();
   running[acc.id] = true;
   automationState[acc.id] = 'running';
   renderAccounts();
   renderTabs();
-  appendOutput(id, '⚔️ Warrior summoned to battle! (Window opened)\n');
+  appendOutput(id, '🌐 Starting browser with login for warrior...\n');
   await ipcRenderer.invoke('start-automation', acc);
+};
+
+// Legacy function: Run Account (now calls startBrowser)
+window.runAccount = async function(id) {
+  await startBrowser(id);
 };
 
 window.toggleAutomation = async function(id) {
@@ -3036,6 +3052,12 @@ window.toggleAutomation = async function(id) {
     await ipcRenderer.send('resume-automation', { accountId: id });
     automationState[id] = 'running';
     appendOutput(id, '▶️ Automation resumed - Warrior is auto-fighting!\n');
+  } else {
+    // Start automation without login (skip login step)
+    const acc = accounts.find(a => a.id === id);
+    if (!acc) return;
+    appendOutput(id, '🤖 Starting automation script (skipping login)...\n');
+    await ipcRenderer.invoke('start-automation-skip-login', acc);
   }
   renderAccounts();
   renderTabs();
@@ -3052,8 +3074,11 @@ window.toggleUnscroll = async function(id) {
     unscrollState[id] = 'running';
     appendOutput(id, '▶️ Unscroll resumed - Warrior is unscrolling!\n');
   } else {
-    // Start unscroll
-    await ipcRenderer.invoke('start-unscroll', accounts.find(a => a.id === id));
+    // Start unscroll without login (skip login step)
+    const acc = accounts.find(a => a.id === id);
+    if (!acc) return;
+    appendOutput(id, '📜 Starting unscroll script (skipping login)...\n');
+    await ipcRenderer.invoke('start-unscroll-skip-login', acc);
     unscrollState[id] = 'running';
     appendOutput(id, '📜 Unscroll started - Warrior is unscrolling!\n');
   }
@@ -3070,10 +3095,16 @@ window.stopAccount = async function(id) {
     await ipcRenderer.invoke('stop-unscroll', id);
     unscrollState[id] = undefined;
   }
+  
+  // Stop the specific browser for this account
+  await ipcRenderer.invoke('stop-browser', id);
+  
+  // Reset all states
   running[id] = false;
+  browserState[id] = undefined;
   renderAccounts();
   renderTabs();
-  appendOutput(id, '⏹️ Warrior returned to barracks.\n');
+  appendOutput(id, '⏹️ Warrior returned to barracks and browser closed.\n');
 };
 
 document.getElementById('account-form').onsubmit = async function(e) {

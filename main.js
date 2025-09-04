@@ -66,6 +66,52 @@ ipcMain.handle('start-automation', async (event, account) => {
   return true;
 });
 
+// New handler: Start automation with login (same as start-automation)
+ipcMain.handle('start-automation-with-login', async (event, account) => {
+  if (puppeteerProcesses[account.id]) return false; // Already running
+
+  const child = fork(path.join(__dirname, 'puppeteer-automation.js'));
+  puppeteerProcesses[account.id] = child;
+
+  // Send credentials and config to child
+  child.send({ username: account.username, password: account.password, config: account.config });
+
+  // Listen for logs or status from child
+  child.on('message', (msg) => {
+    win.webContents.send('automation-log', { accountId: account.id, log: msg });
+  });
+
+  child.on('exit', () => {
+    delete puppeteerProcesses[account.id];
+    win.webContents.send('automation-exit', { accountId: account.id });
+  });
+
+  return true;
+});
+
+// New handler: Start automation without login (skip login step)
+ipcMain.handle('start-automation-skip-login', async (event, account) => {
+  if (puppeteerProcesses[account.id]) return false; // Already running
+
+  const child = fork(path.join(__dirname, 'puppeteer-automation-skip-login.js'));
+  puppeteerProcesses[account.id] = child;
+
+  // Send credentials and config to child
+  child.send({ username: account.username, password: account.password, config: account.config });
+
+  // Listen for logs or status from child
+  child.on('message', (msg) => {
+    win.webContents.send('automation-log', { accountId: account.id, log: msg });
+  });
+
+  child.on('exit', () => {
+    delete puppeteerProcesses[account.id];
+    win.webContents.send('automation-exit', { accountId: account.id });
+  });
+
+  return true;
+});
+
 ipcMain.on('start-auto-script', (event, { accountId }) => {
   const autoWin = automationWindows[accountId];
   if (autoWin) {
@@ -95,6 +141,43 @@ ipcMain.handle('stop-automation', (event, accountId) => {
   return false;
 });
 
+// New handler: Stop browser for specific account
+ipcMain.handle('stop-browser', async (event, accountId) => {
+  const account = accounts.find(acc => acc.id === accountId);
+  if (!account) return false;
+  
+  // Kill the Chrome process for this specific account
+  const { exec } = require('child_process');
+  const os = require('os');
+  const path = require('path');
+  
+  const platform = os.platform();
+  let chromePath;
+  
+  if (platform === 'darwin') { // macOS
+    chromePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+  } else if (platform === 'win32') { // Windows
+    chromePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
+  } else { // Linux
+    chromePath = '/usr/bin/google-chrome';
+  }
+  
+  const accountDir = path.join(process.cwd(), 'chrome-profiles', account.username.replace(/[^a-zA-Z0-9]/g, '_'));
+  
+  // Kill Chrome processes for this specific profile
+  if (platform === 'win32') {
+    exec(`taskkill /f /im chrome.exe /fi "WINDOWTITLE eq *${accountDir}*"`, (error) => {
+      if (error) console.log('Chrome process not found or already closed');
+    });
+  } else {
+    exec(`pkill -f "chrome-profiles/${account.username.replace(/[^a-zA-Z0-9]/g, '_')}"`, (error) => {
+      if (error) console.log('Chrome process not found or already closed');
+    });
+  }
+  
+  return true;
+});
+
 ipcMain.handle('is-automation-running', (event, accountId) => {
   return !!automationWindows[accountId];
 });
@@ -117,6 +200,29 @@ ipcMain.handle('start-unscroll', async (event, account) => {
   if (unscrollProcesses[account.id]) return false; // Already running
 
   const child = fork(path.join(__dirname, 'unscroll-script.js'));
+  unscrollProcesses[account.id] = child;
+
+  // Send credentials and config to child
+  child.send({ username: account.username, password: account.password, config: account.config });
+
+  // Listen for logs or status from child
+  child.on('message', (msg) => {
+    win.webContents.send('unscroll-log', { accountId: account.id, log: msg });
+  });
+
+  child.on('exit', () => {
+    delete unscrollProcesses[account.id];
+    win.webContents.send('unscroll-exit', { accountId: account.id });
+  });
+
+  return true;
+});
+
+// New handler: Start unscroll without login (skip login step)
+ipcMain.handle('start-unscroll-skip-login', async (event, account) => {
+  if (unscrollProcesses[account.id]) return false; // Already running
+
+  const child = fork(path.join(__dirname, 'unscroll-script-skip-login.js'));
   unscrollProcesses[account.id] = child;
 
   // Send credentials and config to child
