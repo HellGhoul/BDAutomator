@@ -153,7 +153,7 @@ async function runAutomation({ username, password, config }) {
         process.send && process.send('🔄 Battle ended, continuing...');
         await nextAttack();
       } else if (result === 'looted') {
-        process.send && process.send('💎 Valuable loot found!');
+        //process.send && process.send('💎 Valuable loot found!');
         await choosing();
       } else if (result === 'continued') {
         await choosing();

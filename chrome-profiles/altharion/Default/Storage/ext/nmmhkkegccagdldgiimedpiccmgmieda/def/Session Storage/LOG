@@ -1,2 +1,3 @@
-2025/09/05-00:49:57.499 4ac0 Creating DB C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\altharion\Default\Storage\ext\nmmhkkegccagdldgiimedpiccmgmieda\def\Session Storage since it was missing.
-2025/09/05-00:49:57.508 4ac0 Reusing MANIFEST C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\altharion\Default\Storage\ext\nmmhkkegccagdldgiimedpiccmgmieda\def\Session Storage/MANIFEST-000001
+2025/09/05-00:54:08.300 4af545 Reusing MANIFEST /Users/macbookpro/Sources/BDAutomator/chrome-profiles/altharion/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Session Storage/MANIFEST-000001
+2025/09/05-00:54:08.302 4af545 Recovering log #3
+2025/09/05-00:54:08.302 4af545 Reusing old log /Users/macbookpro/Sources/BDAutomator/chrome-profiles/altharion/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Session Storage/000003.log 

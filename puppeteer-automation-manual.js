@@ -67,7 +67,7 @@ async function runAutomation({ username, password, config }) {
 
   // Main automation logic
   async function nextAttack() {
-    process.send && process.send('⚔️ Processing battle result...');
+    //process.send && process.send('⚔️ Processing battle result...');
     try {
       const result = await helpers.processBattleResult(config);
       
@@ -75,7 +75,7 @@ async function runAutomation({ username, password, config }) {
         process.send && process.send('🔄 Battle ended, continuing...');
         await nextAttack();
       } else if (result === 'looted') {
-        process.send && process.send('💎 Valuable loot found!');
+        //process.send && process.send('💎 Valuable loot found!');
         await choosing();
       } else if (result === 'continued') {
         await choosing();
@@ -96,7 +96,7 @@ async function runAutomation({ username, password, config }) {
   }
 
   async function firstAttack() {
-    process.send && process.send('⚔️ Starting first attack...');
+    //process.send && process.send('⚔️ Starting first attack...');
     try {
       const success = await helpers.firstAttack();
       if (success) {

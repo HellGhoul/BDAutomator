@@ -330,26 +330,54 @@ function renderTabs() {
   tabBar.innerHTML = '';
   tabContent.innerHTML = '';
 
-  // Terminal/Output tab
-  const outputTab = document.createElement('div');
-  outputTab.className = `tab px-4 py-2 rounded-t-lg ${activeTab === 'output' ? 'active' : ''}`;
-  outputTab.innerHTML = '📜 Terminal/Output';
-  outputTab.onclick = () => switchTab('output');
-  tabBar.appendChild(outputTab);
+  // Create tabs for each account
+  accounts.forEach(acc => {
+    const accountTab = document.createElement('div');
+    accountTab.className = `tab px-4 py-2 rounded-t-lg ${activeTab === acc.id ? 'active' : ''}`;
+    accountTab.innerHTML = `👤 ${acc.username}`;
+    accountTab.onclick = () => switchTab(acc.id);
+    tabBar.appendChild(accountTab);
+  });
 
-  // Logs tab
+  // Logs tab (system logs)
   const logsTab = document.createElement('div');
   logsTab.className = `tab px-4 py-2 rounded-t-lg ${activeTab === 'logs' ? 'active' : ''}`;
-  logsTab.innerHTML = '📋 Logs';
+  logsTab.innerHTML = '📋 System Logs';
   logsTab.onclick = () => switchTab('logs');
   tabBar.appendChild(logsTab);
 
   // Render tab content
-  if (activeTab === 'output') {
-  renderOutputTab();
-  } else if (activeTab === 'logs') {
+  if (activeTab === 'logs') {
     renderLogsTab();
+  } else {
+    // Render account-specific tab
+    const account = accounts.find(acc => acc.id === activeTab);
+    if (account) {
+      renderAccountTab(account);
+    }
   }
+}
+
+function renderAccountTab(account) {
+  const tabContent = document.getElementById('tab-content');
+  
+  // Account-specific log content (newest logs on top)
+  const outDiv = document.createElement('div');
+  outDiv.className = 'output p-4 h-[600px] overflow-y-auto';
+  outDiv.id = `output-${account.id}`;
+  
+  const output = outputs[account.id] || '';
+  const lines = output.split('\n').filter(line => line.trim());
+  
+  // Reverse to show newest first (top to bottom)
+  const reversedLines = lines.reverse();
+  
+  outDiv.innerHTML = `<div class="mb-4 p-2 border-l-4 border-rpg-gold bg-rpg-darker/50">
+    <span class="text-rpg-gold font-bold">[${account.username}]:</span>
+    <div class="text-green-400 mt-1 whitespace-pre-wrap">${reversedLines.join('\n')}</div>
+  </div>`;
+  
+  tabContent.appendChild(outDiv);
 }
 
 function renderOutputTab() {
@@ -482,7 +510,14 @@ function switchTab(tabId) {
 
 function appendOutput(id, text) {
   outputs[id] = (outputs[id] || '') + text;
-  renderTabs();
+  
+  // Only re-render if the current tab is for this account
+  if (activeTab === id) {
+    const account = accounts.find(acc => acc.id === id);
+    if (account) {
+      renderAccountTab(account);
+    }
+  }
 }
 
 async function loadAccounts() {
@@ -492,7 +527,8 @@ async function loadAccounts() {
   automationState = {};
   unscrollState = {};
   browserState = {}; // Reset browser state
-  renderAccounts();
+  
+  // Load running states for all accounts
   for (const acc of accounts) {
     running[acc.id] = await ipcRenderer.invoke('is-running', acc.id);
     automationState[acc.id] = running[acc.id] ? 'running' : undefined;
@@ -500,7 +536,15 @@ async function loadAccounts() {
     const isUnscrollRunning = await ipcRenderer.invoke('is-unscroll-running', acc.id);
     unscrollState[acc.id] = isUnscrollRunning ? 'running' : undefined;
   }
+  
+  // Render only once after loading all states
   renderAccounts();
+  
+  // Set default active tab to first account if none selected
+  if (!activeTab && accounts.length > 0) {
+    activeTab = accounts[0].id;
+  }
+  
   renderTabs();
   
   // Load initial encyclopedia data
@@ -3028,7 +3072,6 @@ window.startBrowser = async function(id) {
   if (!acc) return;
   outputs[acc.id] = '';
   browserState[acc.id] = 'started';
-  renderAccounts();
   running[acc.id] = true;
   automationState[acc.id] = 'running';
   renderAccounts();
@@ -3116,7 +3159,7 @@ document.getElementById('account-form').onsubmit = async function(e) {
   if (!username || !password) return;
 
   if (editingId) {
-    // Update
+    // Update existing account
     const idx = accounts.findIndex(a => a.id === editingId);
     if (idx !== -1) {
       accounts[idx].username = username;
@@ -3125,16 +3168,21 @@ document.getElementById('account-form').onsubmit = async function(e) {
     }
     editingId = null;
   } else {
-    // Add
+    // Add new account
     id = Math.random().toString(36).substr(2, 9);
     accounts.push({ id, username, password, config });
   }
+  
   await ipcRenderer.invoke('save-accounts', accounts);
+  
+  // Reset form
   document.getElementById('account-form').reset();
   document.getElementById('form-title').innerHTML = '➕ Add New Warrior';
   document.getElementById('save-btn').innerHTML = '➕ Add Warrior';
   document.getElementById('cancel-btn').style.display = 'none';
-  loadAccounts();
+  
+  // Only re-render accounts, don't reload everything
+  renderAccounts();
 };
 
 document.getElementById('cancel-btn').onclick = function() {

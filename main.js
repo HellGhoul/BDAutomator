@@ -143,13 +143,25 @@ ipcMain.handle('stop-automation', (event, accountId) => {
 
 // New handler: Stop browser for specific account
 ipcMain.handle('stop-browser', async (event, accountId) => {
+  // Load accounts from file
+  const fs = require('fs');
+  const path = require('path');
+  const accountsPath = path.join(__dirname, 'accounts.json');
+  let accounts = [];
+  try {
+    const data = fs.readFileSync(accountsPath, 'utf8');
+    accounts = JSON.parse(data);
+  } catch (error) {
+    console.error('Error loading accounts:', error);
+    return false;
+  }
+  
   const account = accounts.find(acc => acc.id === accountId);
   if (!account) return false;
   
   // Kill the Chrome process for this specific account
   const { exec } = require('child_process');
   const os = require('os');
-  const path = require('path');
   
   const platform = os.platform();
   let chromePath;

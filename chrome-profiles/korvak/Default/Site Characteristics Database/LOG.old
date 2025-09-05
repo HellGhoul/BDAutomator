@@ -1,5 +1,3 @@
-2025/09/04-20:27:32.144 52c8 Log #3: 3 ops saved to Table #4 OK
-2025/09/04-20:27:32.148 52c8 Archiving C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\korvak\Default\Site Characteristics Database/000003.log: OK
-2025/09/04-20:27:32.148 52c8 Table #4: 3 entries OK
-2025/09/04-20:27:32.150 52c8 Archiving C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\korvak\Default\Site Characteristics Database/MANIFEST-000001: OK
-2025/09/04-20:27:32.155 52c8 **** Repaired leveldb C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\korvak\Default\Site Characteristics Database; recovered 1 files; 219 bytes. Some data may have been lost. ****
+2025/09/05-15:09:52.771 526d59 Reusing MANIFEST /Users/macbookpro/Sources/BDAutomator/chrome-profiles/korvak/Default/Site Characteristics Database/MANIFEST-000001
+2025/09/05-15:09:52.772 526d59 Recovering log #6
+2025/09/05-15:09:52.772 526d59 Reusing old log /Users/macbookpro/Sources/BDAutomator/chrome-profiles/korvak/Default/Site Characteristics Database/000006.log 

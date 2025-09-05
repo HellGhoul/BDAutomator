@@ -87,7 +87,7 @@ async function startChromeForAccount(accountName) {
 }
 
 async function runAutomation({ username, password, config }) {
-  process.send && process.send('Received config: ' + JSON.stringify(config));
+  // process.send && process.send('Received config: ' + JSON.stringify(config));
   
   let browser;
   const port = getPortForAccount(username);
@@ -132,40 +132,40 @@ async function runAutomation({ username, password, config }) {
   const page = pages.length > 0 ? pages[0] : await browser.newPage();
   
   helpers = new BlackDragonHelpers(page); // Assign to global variable
-  process.send && process.send('Connected to Chrome instance');
+  // process.send && process.send('Connected to Chrome instance');
 
   // Load collectibles (if needed)
   let collectibles = [];
   try {
     const text = fs.readFileSync('./collectibles.txt', 'utf-8');
     collectibles = text.split('\n');
-    process.send && process.send('Collectibles loaded');
+    // process.send && process.send('Collectibles loaded');
   } catch (e) {
-    process.send && process.send('Could not load collectibles.txt');
+    // process.send && process.send('Could not load collectibles.txt');
   }
 
   // Main automation logic
   async function nextAttack() {
-    process.send && process.send('⚔️ Processing battle result...');
+    //process.send && process.send('⚔️ Processing battle result...');
     try {
       const result = await helpers.processBattleResult(config);
       
       if (result === 'continue') {
-        process.send && process.send('🔄 Battle ended, continuing...');
+        // process.send && process.send('🔄 Battle ended, continuing...');
         await nextAttack();
       } else if (result === 'looted') {
-        process.send && process.send('💎 Valuable loot found!');
+            process.send && process.send('💎 Valuable loot found!');
         await choosing();
       } else if (result === 'continued') {
-        await choosing();
+            await choosing();
       } else if (result === 'error') {
         await helpers.goToMaps();
-        process.send && process.send('✅ Arrived at maps page, starting target selection...');
-        await choosing();
+        // process.send && process.send('✅ Arrived at maps page, starting target selection...');
+            await choosing();
       }else{
         await helpers.goToMaps();
-        process.send && process.send('✅ Arrived at maps page, starting target selection...');
-        await choosing();
+        // process.send && process.send('✅ Arrived at maps page, starting target selection...');
+            await choosing();
       }
     } catch (error) {
       await helpers.goToMaps();
@@ -175,17 +175,17 @@ async function runAutomation({ username, password, config }) {
   }
 
   async function firstAttack() {
-    process.send && process.send('⚔️ Starting first attack...');
+    //process.send && process.send('⚔️ Starting first attack...');
     try {
       const success = await helpers.firstAttack();
       if (success) {
-        await nextAttack();
+      await nextAttack();
       } else {
         try {
           await nextAttack();
         } catch (error) {
           await helpers.goToMaps();
-          process.send && process.send('✅ Arrived at maps page, starting target selection...');
+          // process.send && process.send('✅ Arrived at maps page, starting target selection...');
           await choosing();
         }
       }
@@ -202,7 +202,7 @@ async function runAutomation({ username, password, config }) {
         await helpers.checkHealRecovery(config.hpThreshold);
       }
       catch{
-
+        
       }
     }
     
@@ -231,27 +231,27 @@ async function runAutomation({ username, password, config }) {
     }
     else
     {
-      try {
-        const elements = await page.$$('.unit.round');
-        await Promise.all([
-          page.waitForNavigation({ waitUntil: 'networkidle2' }),
-          elements[0].click()
-        ]);
-        await firstAttack();
-      } catch (error) {
+    try {
+      const elements = await page.$$('.unit.round');
+      await Promise.all([
+        page.waitForNavigation({ waitUntil: 'networkidle2' }),
+        elements[0].click()
+      ]);
+      await firstAttack();
+    } catch (error) {
         try{
           await helpers.advanceDungeon();
           await choosing();
         }
         catch{
 
-          process.send && process.send('❌ Error in choosing: ' + error.message);
-          process.send && process.send('🗺️ Navigating to maps page...');
+      process.send && process.send('❌ Error in choosing: ' + error.message);
+      // process.send && process.send('🗺️ Navigating to maps page...');
           await helpers.goToMaps();
-          process.send && process.send('✅ Arrived at maps page, starting target selection...');
-          await choosing();
-        }
-      }
+      process.send && process.send('✅ Arrived at maps page, starting target selection...');
+      await choosing();
+    }
+    }
     }
   }
 
@@ -267,23 +267,23 @@ async function runAutomation({ username, password, config }) {
   }
 
   // Start automation
-  process.send && process.send('🚀 Starting automation...');
-  process.send && process.send('🗺️ Navigating to maps page...');
+  // process.send && process.send('🚀 Starting automation...');
+  // process.send && process.send('🗺️ Navigating to maps page...');
   try{
     await helpers.goToMaps();
-    process.send && process.send('✅ Arrived at maps page, starting target selection...');
-    await choosing();
+  // process.send && process.send('✅ Arrived at maps page, starting target selection...');
+  await choosing();
   }
   catch{
     process.send && process.send('❌ Error in navigating to maps page');
-    process.send && process.send('🗺️ Navigating to maps page...');
+    // process.send && process.send('🗺️ Navigating to maps page...');
     await helpers.goToMaps();
     await choosing();
   }
 
   // Clean up on stop
   process.on('SIGTERM', async () => {
-    process.send && process.send('🛑 Automation stopped by user');
+    // process.send && process.send('🛑 Automation stopped by user');
     
     // Stop Chrome instances that were auto-started
     for (const [accountName, instance] of runningChromeInstances) {
@@ -300,12 +300,12 @@ process.on('message', (msg) => {
   if (msg && msg.type === 'pause') {
     if (helpers) {
       helpers.setPaused(true);
-      process.send && process.send('⏸️ Paused by user');
+          // process.send && process.send('⏸️ Paused by user');
     }
   } else if (msg && msg.type === 'resume') {
     if (helpers) {
       helpers.setPaused(false);
-      process.send && process.send('▶️ Resumed by user');
+    // process.send && process.send('▶️ Resumed by user');
     }
   }
 });

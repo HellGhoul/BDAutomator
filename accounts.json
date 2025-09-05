@@ -23,7 +23,7 @@
   {
     "id": "xz350u2t0",
     "username": "thandis",
-    "password": "09081508",
+    "password": "H123123uy",
     "config": {
       "all": false,
       "recipe": true,
@@ -36,7 +36,7 @@
       "monsterScroll": true,
       "staminaPotion": true,
       "ancientPotion": true,
-      "monsterList": "wolf_raider,wolf_rider",
+      "monsterList": "",
       "hpThreshold": ""
     }
   },
@@ -116,7 +116,7 @@
       "monsterScroll": true,
       "staminaPotion": false,
       "ancientPotion": true,
-      "monsterList": "gold_golem,diamond_golem",
+      "monsterList": "marksman,archer,swordsman",
       "hpThreshold": "800000"
     }
   },
@@ -128,7 +128,7 @@
       "all": false,
       "recipe": true,
       "charm": true,
-      "pieceGear": false,
+      "pieceGear": true,
       "jewel": false,
       "rune": true,
       "epicGear": false,
@@ -136,7 +136,7 @@
       "monsterScroll": true,
       "staminaPotion": false,
       "ancientPotion": true,
-      "monsterList": "archangel,angel",
+      "monsterList": "blood_dragon,ghost_dragon,dragolich,bone_dragon",
       "hpThreshold": "500000"
     }
   }

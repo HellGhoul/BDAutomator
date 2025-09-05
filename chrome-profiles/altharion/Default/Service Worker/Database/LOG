@@ -1,2 +1,3 @@
-2025/09/04-21:41:15.510 6b4c Creating DB C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\altharion\Default\Service Worker\Database since it was missing.
-2025/09/04-21:41:15.526 6b4c Reusing MANIFEST C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\altharion\Default\Service Worker\Database/MANIFEST-000001
+2025/09/05-13:43:03.853 5166a4 Reusing MANIFEST /Users/macbookpro/Sources/BDAutomator/chrome-profiles/altharion/Default/Service Worker/Database/MANIFEST-000001
+2025/09/05-13:43:03.853 5166a4 Recovering log #3
+2025/09/05-13:43:03.854 5166a4 Reusing old log /Users/macbookpro/Sources/BDAutomator/chrome-profiles/altharion/Default/Service Worker/Database/000003.log 

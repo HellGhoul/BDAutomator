@@ -1,2 +1,3 @@
-2025/09/04-22:34:52.194 7388 Creating DB C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\hell_fire\Default\Local Storage\leveldb since it was missing.
-2025/09/04-22:34:52.209 7388 Reusing MANIFEST C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\hell_fire\Default\Local Storage\leveldb/MANIFEST-000001
+2025/09/05-10:36:11.821 4f0cc1 Reusing MANIFEST /Users/macbookpro/Sources/BDAutomator/chrome-profiles/hell_fire/Default/Local Storage/leveldb/MANIFEST-000001
+2025/09/05-10:36:11.823 4f0cc1 Recovering log #3
+2025/09/05-10:36:11.824 4f0cc1 Reusing old log /Users/macbookpro/Sources/BDAutomator/chrome-profiles/hell_fire/Default/Local Storage/leveldb/000003.log 

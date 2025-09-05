@@ -1,2 +1,3 @@
-2025/09/04-19:11:42.829 497c49 Creating DB /Users/macbookpro/Sources/BDAutomator/chrome-profiles/korvak/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Session Storage since it was missing.
-2025/09/04-19:11:42.869 497c49 Reusing MANIFEST /Users/macbookpro/Sources/BDAutomator/chrome-profiles/korvak/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Session Storage/MANIFEST-000001
+2025/09/05-00:54:07.507 4af487 Reusing MANIFEST /Users/macbookpro/Sources/BDAutomator/chrome-profiles/korvak/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Session Storage/MANIFEST-000001
+2025/09/05-00:54:07.508 4af487 Recovering log #3
+2025/09/05-00:54:07.509 4af487 Reusing old log /Users/macbookpro/Sources/BDAutomator/chrome-profiles/korvak/Default/Storage/ext/nmmhkkegccagdldgiimedpiccmgmieda/def/Session Storage/000003.log 
