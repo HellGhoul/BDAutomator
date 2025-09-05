@@ -1,0 +1,25 @@
+{
+  "name": "bdautomator-console",
+  "version": "1.0.0",
+  "description": "Console-only version of BDAutomator for single account automation",
+  "main": "console-app.js",
+  "scripts": {
+    "start": "node console-app.js",
+    "simple": "node simple-automation.js",
+    "automation": "node puppeteer-automation.js"
+  },
+  "bin": {
+    "bdautomator": "./console-app.js"
+  },
+  "dependencies": {
+    "puppeteer-core": "^21.0.0"
+  },
+  "keywords": [
+    "automation",
+    "puppeteer",
+    "blackdragon",
+    "console"
+  ],
+  "author": "BDAutomator",
+  "license": "MIT"
+}

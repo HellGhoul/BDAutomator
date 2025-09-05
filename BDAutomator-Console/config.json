@@ -1,0 +1,10 @@
+{
+  "username": "thandis",
+  "password": "H123123uy",
+  "config": {
+    "minLevel": 1,
+    "maxLevel": 900,
+    "autoHunt": false,
+    "autoCollect": true
+  }
+}
