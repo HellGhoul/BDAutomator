@@ -86,7 +86,7 @@ async function startChromeForAccount(accountName) {
   });
 }
 
-async function runUnscroll({ username, password, config }) {
+async function runbosshunt({ username, password, config }) {
   let browser;
   const port = getPortForAccount(username);
   
@@ -118,9 +118,7 @@ async function runUnscroll({ username, password, config }) {
         browserURL: `http://localhost:${port}`,
         defaultViewport: null
       });
-      console.log(`✅ Connected to auto-started Chrome instance for ${username}`);
     } catch (connectError) {
-      console.log(`❌ Failed to connect to auto-started Chrome for ${username}:`, connectError.message);
       throw new Error(`Failed to start or connect to Chrome for account ${username}`);
     }
   }
@@ -130,9 +128,9 @@ async function runUnscroll({ username, password, config }) {
   const page = pages.length > 0 ? pages[0] : await browser.newPage();
   
   helpers = new BlackDragonHelpers(page); // Assign to global variable
-  process.send && process.send('Connected to Chrome instance for unscroll');
+  process.send && process.send('Connected to Chrome instance for bosshunt');
 
-  // Helper functions specific to unscroll
+  // Helper functions specific to bosshunt
   async function getBossList(){
     // Navigate to boss page
     await helpers.navigateTo('https://blackdragon.mobi/quests/index');
@@ -160,10 +158,11 @@ async function runUnscroll({ username, password, config }) {
         }
     
         if (img && name && location 
-        && img.src.split('/').pop() != "diamond_dragon.jpg" 
-        && img.src.split('/').pop() != "blood_dragon.jpg"  
-        && img.src.split('/').pop() != "supreme_archangel.jpg"
-        && img.src.split('/').pop() != "hell_baron.jpg") {
+       // && img.src.split('/').pop() != "diamond_dragon.jpg" 
+        //&& img.src.split('/').pop() != "blood_dragon.jpg"  
+       // && img.src.split('/').pop() != "supreme_archangel.jpg"
+       // && img.src.split('/').pop() != "hell_baron.jpg") 
+        ){
           result.push({
             name,
             location,
@@ -180,66 +179,107 @@ async function runUnscroll({ username, password, config }) {
     return monsters;
   }
 
-  async function unscrollBoss(boss) {
+  async function bosshuntBoss(boss) {
     try {
-      process.send && process.send(`🎯 Unscrolling boss: ${boss.name} at ${boss.location}`);
-      
       // Navigate to boss page
       await helpers.navigateTo(boss.url);
       
-      // Wait for page to load
-      await page.waitForTimeout(2000);
-      
-      // Look for unscroll button
-      const unscrollButton = await page.$('a[href*="unscroll"]');
-      if (unscrollButton) {
-        await unscrollButton.click();
-        process.send && process.send(`✅ Successfully unscrolled ${boss.name}`);
-        return true;
-      } else {
-        process.send && process.send(`❌ No unscroll button found for ${boss.name}`);
-        return false;
+      try{
+        await helpers.clickElement("body > div.main > div.list.center > form > input", { waitForNav: true });
+      }catch{
+  
       }
+    
+      await helpers.clickElement("body > div.main > div.block > form > p > input", { waitForNav: true });
+
+      await selectBoss(boss.fileName);
+      await selectBoss('/bog_creeper.jpg');
     } catch (error) {
-      process.send && process.send(`❌ Error unscrolling ${boss.name}: ${error.message}`);
+      process.send && process.send(`❌ Error bosshunting ${boss.name}: ${error.message}`);
       return false;
     }
   }
+  
+  async function selectBoss(bossName) {
+    console.log(bossName);
+    if(config.hpThreshold > 0){
+      try{
+        await helpers.checkHealRecovery(config.hpThreshold);
+      }catch{
+        
+      }
+    }
 
-  // SKIP LOGIN - Just start unscroll directly
-  console.log(`📜 Starting unscroll for account: ${username} (skipping login)`);
-  process.send && process.send('📜 Starting unscroll (login skipped)...');
+    try{
+      await helpers.clickElement('a img[src*="'+bossName+'"]', { waitForNav: false });
+      await firstAttack();
+    }catch{
+      return;
+    }
+  }
 
-  // Main unscroll loop
+  async function nextAttack() {
+    try {
+      const result = await helpers.processBattleResult(config);
+      
+      if (result === 'continue') {
+        await nextAttack();
+      } else if (result === 'looted') {
+        //process.send && process.send('💎 Found valuable loot!');
+        return;
+      } else if (result === 'continued') {
+        await nextAttack();
+      } else if (result === 'error') {
+        await helpers.goToMaps();
+        return;
+      }
+    } catch (error) {
+      return;
+    }
+  }
+
+  async function firstAttack() {
+    try {
+      const success = await helpers.firstAttack();
+      if (success) {
+        await nextAttack();
+      } else {
+        try {
+          await nextAttack();
+        } catch (error) {
+          await helpers.goToMaps();
+          return;
+        }
+      }
+    } catch (error) {
+      await helpers.goToMaps();
+      return;
+    }
+  }
+
+
+  // Main bosshunt loop
   try {
     while (true) {
-      process.send && process.send('🔍 Getting boss list...');
       const bosses = await getBossList();
       
       if (bosses.length === 0) {
-        process.send && process.send('❌ No bosses found to unscroll');
         break;
       }
       
       for (const boss of bosses) {
-        const success = await unscrollBoss(boss);
+        const success = await bosshuntBoss(boss);
         if (success) {
-          // Wait a bit before next unscroll
-          await page.waitForTimeout(3000);
         }
       }
-      
-      // Wait before next cycle
-      process.send && process.send('⏳ Waiting before next unscroll cycle...');
-      await page.waitForTimeout(10000);
     }
   } catch (error) {
-    process.send && process.send(`❌ Unscroll error: ${error.message}`);
+    process.send && process.send(`❌ bosshunt error: ${error.message}`);
   }
 
   // Clean up on stop
   process.on('SIGTERM', async () => {
-    process.send && process.send('🛑 Unscroll stopped by user');
+    process.send && process.send('🛑 bosshunt stopped by user');
     
     // Stop Chrome instances that were auto-started
     for (const [accountName, instance] of runningChromeInstances) {
@@ -256,21 +296,21 @@ process.on('message', (msg) => {
   if (msg && msg.type === 'pause') {
     if (helpers) {
       helpers.setPaused(true);
-      process.send && process.send('⏸️ Unscroll paused by user');
+      process.send && process.send('⏸️ bosshunt paused by user');
     }
   } else if (msg && msg.type === 'resume') {
     if (helpers) {
       helpers.setPaused(false);
-      process.send && process.send('▶️ Unscroll resumed by user');
+      process.send && process.send('▶️ bosshunt resumed by user');
     }
   }
 });
 
-// Only start unscroll if the message contains username and password (initial run)
+// Only start bosshunt if the message contains username and password (initial run)
 process.on('message', async (data) => {
   if (data && data.username && data.password) {
     try {
-      await runUnscroll(data);
+      await runbosshunt(data);
       process.exit(0);
     } catch (err) {
       process.send && process.send('Error: ' + err.message);

@@ -1,3 +1,8 @@
-2025/09/05-13:33:06.755 514868 Reusing MANIFEST /Users/macbookpro/Sources/BDAutomator/chrome-profiles/Malrik/Default/Session Storage/MANIFEST-000001
-2025/09/05-13:33:06.757 514868 Recovering log #3
-2025/09/05-13:33:06.758 514868 Reusing old log /Users/macbookpro/Sources/BDAutomator/chrome-profiles/Malrik/Default/Session Storage/000003.log 
+2025/09/07-23:57:32.923 7260 Reusing MANIFEST C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\Malrik\Default\Session Storage/MANIFEST-000001
+2025/09/07-23:57:32.924 7260 Recovering log #3
+2025/09/07-23:57:32.932 7260 Level-0 table #3: started
+2025/09/07-23:57:32.942 7260 Level-0 table #3: 308611 bytes OK
+2025/09/07-23:57:32.943 7260 Recovering log #4
+2025/09/07-23:57:32.945 7260 Reusing old log C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\Malrik\Default\Session Storage/000004.log 
+2025/09/07-23:57:32.948 7260 Delete type=0 #3
+2025/09/07-23:57:32.948 7260 Delete type=2 #5

@@ -1,3 +1,5 @@
-2025/09/05-08:54:31.211 4e812e Reusing MANIFEST /Users/macbookpro/Sources/BDAutomator/chrome-profiles/SYLRA/Default/Session Storage/MANIFEST-000001
-2025/09/05-08:54:31.213 4e812e Recovering log #3
-2025/09/05-08:54:31.214 4e812e Reusing old log /Users/macbookpro/Sources/BDAutomator/chrome-profiles/SYLRA/Default/Session Storage/000003.log 
+2025/09/07-16:33:48.277 1fbc Reusing MANIFEST C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\SYLRA\Default\Session Storage/MANIFEST-000001
+2025/09/07-16:33:48.278 1fbc Recovering log #3
+2025/09/07-16:33:48.280 1fbc Level-0 table #3: started
+2025/09/07-16:33:48.309 1fbc Level-0 table #3: 308771 bytes OK
+2025/09/07-16:33:48.320 1fbc Delete type=0 #3

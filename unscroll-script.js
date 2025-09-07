@@ -114,7 +114,7 @@ async function runUnscroll({ username, password, config }) {
       if (result === 'continue') {
         await nextAttack();
       } else if (result === 'looted') {
-        process.send && process.send('💎 Found valuable loot!');
+        //process.send && process.send('💎 Found valuable loot!');
         return;
       } else if (result === 'continued') {
         await nextAttack();

@@ -29,8 +29,8 @@
       "recipe": true,
       "charm": true,
       "pieceGear": true,
-      "jewel": true,
-      "rune": true,
+      "jewel": false,
+      "rune": false,
       "epicGear": false,
       "magicScroll": false,
       "monsterScroll": true,
@@ -46,17 +46,17 @@
     "password": "09081508",
     "config": {
       "all": false,
-      "recipe": true,
-      "charm": true,
-      "pieceGear": false,
+      "recipe": false,
+      "charm": false,
+      "pieceGear": true,
       "jewel": true,
       "rune": true,
       "epicGear": false,
       "magicScroll": false,
       "monsterScroll": true,
-      "staminaPotion": true,
+      "staminaPotion": false,
       "ancientPotion": true,
-      "monsterList": "",
+      "monsterList": "bog_creeper,efreet_sultan,efreet",
       "hpThreshold": "900000"
     }
   },
@@ -70,7 +70,7 @@
       "charm": true,
       "pieceGear": true,
       "jewel": true,
-      "rune": true,
+      "rune": false,
       "epicGear": false,
       "magicScroll": false,
       "monsterScroll": true,
@@ -101,26 +101,6 @@
     }
   },
   {
-    "id": "t3klh5w0r",
-    "username": "altharion",
-    "password": "09081508",
-    "config": {
-      "all": false,
-      "recipe": true,
-      "charm": true,
-      "pieceGear": true,
-      "jewel": true,
-      "rune": true,
-      "epicGear": false,
-      "magicScroll": false,
-      "monsterScroll": true,
-      "staminaPotion": false,
-      "ancientPotion": true,
-      "monsterList": "marksman,archer,swordsman",
-      "hpThreshold": "800000"
-    }
-  },
-  {
     "id": "7jyzv208d",
     "username": "korvak",
     "password": "09081508",
@@ -130,13 +110,33 @@
       "charm": true,
       "pieceGear": true,
       "jewel": false,
-      "rune": true,
+      "rune": false,
       "epicGear": false,
       "magicScroll": false,
       "monsterScroll": true,
-      "staminaPotion": false,
+      "staminaPotion": true,
       "ancientPotion": true,
-      "monsterList": "blood_dragon,ghost_dragon,dragolich,bone_dragon",
+      "monsterList": "bog_creeper,chaos_hydra,hydra",
+      "hpThreshold": "500000"
+    }
+  },
+  {
+    "id": "2ejer5vnk",
+    "username": "altharion",
+    "password": "09081508",
+    "config": {
+      "all": false,
+      "recipe": true,
+      "charm": false,
+      "pieceGear": true,
+      "jewel": false,
+      "rune": false,
+      "epicGear": false,
+      "magicScroll": false,
+      "monsterScroll": true,
+      "staminaPotion": true,
+      "ancientPotion": true,
+      "monsterList": "bog_creeper,power_lich,lich",
       "hpThreshold": "500000"
     }
   }

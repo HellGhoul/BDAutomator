@@ -237,6 +237,7 @@ class BlackDragonHelpers {
     
     return config.all
       || name.includes("gold bar")
+      || name.includes("antidote")
       || name.includes("undead crown")
       || name.includes("revival")
       || (config.pieceGear && name.includes("a piece of"))
