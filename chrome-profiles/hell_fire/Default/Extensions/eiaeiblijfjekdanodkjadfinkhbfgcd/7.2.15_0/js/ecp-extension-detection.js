@@ -1,0 +1,2 @@
+(()=>{"use strict";window.isExtensionListenerAdded||(window.addEventListener("message",e=>{var i;e.source&&e.origin===window.origin&&"NORDPASS/IS_INSTALLED"===(null===(i=e.data)||void 0===i?void 0:i.type)&&"ECP"===e.data.source&&e.source.postMessage({type:"NORDPASS/IS_INSTALLED"},e.origin)}),window.isExtensionListenerAdded=!0)})();
+//# sourceMappingURL=ecp-extension-detection.js.map

@@ -1,88 +1,67 @@
 [
   {
-    "id": "a3xn9md33",
-    "username": "hell_fire",
-    "password": "0908152508",
-    "options": {},
+    "id": "1v8grdrr7",
+    "username": "oathbreaker",
+    "password": "09081508",
     "config": {
       "all": false,
       "recipe": true,
       "charm": true,
-      "pieceGear": false,
+      "pieceGear": true,
       "jewel": false,
-      "rune": true,
+      "rune": false,
       "epicGear": false,
       "magicScroll": false,
       "monsterScroll": true,
-      "staminaPotion": false,
+      "staminaPotion": true,
+      "ancientPotion": true,
+      "monsterList": "",
+      "hpThreshold": "1000000"
+    }
+  },
+  {
+    "id": "bgn710d5b",
+    "username": "hell_fire",
+    "password": "0908152508",
+    "config": {
+      "all": false,
+      "recipe": false,
+      "charm": true,
+      "pieceGear": false,
+      "jewel": false,
+      "rune": false,
+      "epicGear": false,
+      "magicScroll": false,
+      "monsterScroll": true,
+      "staminaPotion": true,
       "ancientPotion": false,
       "monsterList": "",
       "hpThreshold": ""
     }
   },
   {
-    "id": "xz350u2t0",
-    "username": "thandis",
-    "password": "H123123uy",
+    "id": "nl578mcpq",
+    "username": "barladin",
+    "password": "09081508",
     "config": {
       "all": false,
       "recipe": true,
       "charm": true,
-      "pieceGear": true,
-      "jewel": false,
-      "rune": false,
-      "epicGear": false,
-      "magicScroll": false,
-      "monsterScroll": true,
-      "staminaPotion": true,
-      "ancientPotion": true,
-      "monsterList": "",
-      "hpThreshold": ""
-    }
-  },
-  {
-    "id": "x6m407y2h",
-    "username": "eryndor",
-    "password": "09081508",
-    "config": {
-      "all": false,
-      "recipe": false,
-      "charm": false,
       "pieceGear": true,
       "jewel": true,
       "rune": true,
       "epicGear": false,
       "magicScroll": false,
       "monsterScroll": true,
-      "staminaPotion": false,
-      "ancientPotion": true,
-      "monsterList": "bog_creeper,efreet_sultan,efreet",
-      "hpThreshold": "900000"
-    }
-  },
-  {
-    "id": "50y7djgx5",
-    "username": "Malrik",
-    "password": "09081508",
-    "config": {
-      "all": false,
-      "recipe": true,
-      "charm": true,
-      "pieceGear": true,
-      "jewel": true,
-      "rune": false,
-      "epicGear": false,
-      "magicScroll": false,
-      "monsterScroll": true,
       "staminaPotion": true,
       "ancientPotion": true,
-      "monsterList": "",
+      "monsterList": "horned_demon,demon",
       "hpThreshold": ""
     }
   },
   {
-    "id": "cfvlsdzkf",
-    "username": "SYLRA",
+    "id": "mfv1u9ck4",
+    "username": "radiantcrusader",
     "password": "09081508",
     "config": {
       "all": false,
@@ -101,43 +80,43 @@
     }
   },
   {
-    "id": "7jyzv208d",
-    "username": "korvak",
+    "id": "8vv8ty68b",
+    "username": "shieldhero",
     "password": "09081508",
     "config": {
       "all": false,
       "recipe": true,
       "charm": true,
       "pieceGear": true,
-      "jewel": false,
-      "rune": false,
+      "jewel": true,
+      "rune": true,
       "epicGear": false,
       "magicScroll": false,
       "monsterScroll": true,
       "staminaPotion": true,
       "ancientPotion": true,
-      "monsterList": "bog_creeper,chaos_hydra,hydra",
-      "hpThreshold": "500000"
+      "monsterList": "",
+      "hpThreshold": ""
     }
   },
   {
-    "id": "2ejer5vnk",
-    "username": "altharion",
+    "id": "7yf11gwx5",
+    "username": "lightorder",
     "password": "09081508",
     "config": {
       "all": false,
       "recipe": true,
-      "charm": false,
+      "charm": true,
       "pieceGear": true,
-      "jewel": false,
-      "rune": false,
+      "jewel": true,
+      "rune": true,
       "epicGear": false,
       "magicScroll": false,
       "monsterScroll": true,
       "staminaPotion": true,
       "ancientPotion": true,
-      "monsterList": "bog_creeper,power_lich,lich",
-      "hpThreshold": "500000"
+      "monsterList": "royal_griffin,griffin",
+      "hpThreshold": "100000"
     }
   }
 ]

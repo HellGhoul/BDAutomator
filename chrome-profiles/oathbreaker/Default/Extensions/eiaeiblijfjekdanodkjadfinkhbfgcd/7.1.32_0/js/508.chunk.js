@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunknordpass=self.webpackChunknordpass||[]).push([[508],{30508:(s,o,a)=>{a.d(o,{DownloadLogsButton:()=>e});var n=a(74848),l=a(2604),d=a(55910),c=a(91120);const e=({className:s,onClick:o})=>(0,n.jsx)(c.$nd,{className:(0,d.cx)("w-full",s),"data-testid":"download-logs-button",rank:"secondary",onClick:o||l.K,children:"Download logs"})}}]);
+//# sourceMappingURL=508.chunk.js.map

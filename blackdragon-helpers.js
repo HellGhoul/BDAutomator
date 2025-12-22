@@ -245,8 +245,7 @@ class BlackDragonHelpers {
       || (config.charm && name.includes("charm"))
       || (config.jewel && (name.includes("jewel") || name.includes("elixir")))
       || (config.rune && (name.includes("rune ") || name.includes("level ")))
-      || (config.epicGear && (name.includes("(v)") || name.includes("(v)")  || name.includes("(vi)")|| 
-          quality.toLowerCase().includes("mythic") || 
+      || (config.epicGear && (quality.toLowerCase().includes("epic") || name.includes("(iv)") || name.includes("(v)")  || name.includes("(vi)")|| 
           quality.toLowerCase().includes("mythic") || 
           quality.toLowerCase().includes("heroic") || 
           quality.toLowerCase().includes("devine")))

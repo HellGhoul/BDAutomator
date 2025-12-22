@@ -1,0 +1,2 @@
+(()=>{"use strict";Object.hasOwn(HTMLElement.prototype,"popover")&&(HTMLElement.prototype.togglePopover=new Proxy(HTMLElement.prototype.togglePopover,{apply(e,o,t){const p=e.apply(o,t);return p&&window.postMessage({type:"NORDPASS/HTML_POPOVER_SHOWN"},{targetOrigin:window.origin}),p}}),HTMLElement.prototype.showPopover=new Proxy(HTMLElement.prototype.showPopover,{apply(e,o,t){window.postMessage({type:"NORDPASS/HTML_POPOVER_SHOWN"},{targetOrigin:window.origin}),e.apply(o,t)}}))})();
+//# sourceMappingURL=nordpass-script.js.map

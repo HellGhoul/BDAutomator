@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunknordpass=self.webpackChunknordpass||[]).push([[651],{65651:(s,e,a)=>{a.r(e),a.d(e,{api:()=>r,sendMessage:()=>g});var n=a(96815),p=a.n(n),d=a(35062);const g=(s,e={})=>p().runtime.sendMessage(Object.assign({type:s},e)),r=(0,d.j)({sendMessage:g,logMessage:s=>{}})}}]);
+//# sourceMappingURL=651.chunk.js.map
