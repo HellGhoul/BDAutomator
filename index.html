@@ -324,6 +324,10 @@
                   class="rpg-button px-8 py-3 rounded-lg text-lg font-bold rpg-glow">
             📚 Open Encyclopedia
           </button>
+          <button id="database-btn" onclick="openDatabase()" 
+                  class="rpg-button px-8 py-3 rounded-lg text-lg font-bold rpg-glow">
+            🗄️ Open Database
+          </button>
           <span class="text-2xl">📚</span>
         </div>
         <div class="text-sm text-gray-400 mt-2">
@@ -621,6 +625,69 @@
             <!-- Content Display -->
             <div id="encyclopedia-content" class="min-h-[400px]">
               <div class="text-center text-gray-400 mt-8">Use search or filters to view encyclopedia data</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Database Modal -->
+  <div id="database-modal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50">
+    <div class="min-h-screen flex items-center justify-center p-4">
+      <div class="encyclopedia-header rounded-lg w-full max-w-7xl max-h-[90vh] overflow-hidden">
+        <div class="p-6 border-b border-rpg-gold">
+          <div class="flex items-center justify-between">
+            <h2 class="text-3xl font-bold text-rpg-gold">🗄️ AutomatorDatabase</h2>
+            <button onclick="closeDatabase()" class="rpg-button px-4 py-2 rounded text-xl">✕</button>
+          </div>
+          <p class="text-gray-400 mt-2">Inspect tables, view data, and run raw SQL</p>
+        </div>
+
+        <div class="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <div class="rpg-border rounded-lg p-4 bg-rpg-darker">
+              <h3 class="text-lg font-bold mb-3 text-rpg-gold">📋 Tables</h3>
+              <div id="database-tables" class="space-y-2 text-sm text-gray-300">
+                <div class="text-gray-400">No tables found</div>
+              </div>
+            </div>
+            <div class="lg:col-span-2 space-y-6">
+              <div class="rpg-border rounded-lg p-4 bg-rpg-darker">
+                <h3 class="text-lg font-bold mb-3 text-rpg-gold">🧱 Schema</h3>
+                <div id="database-schema" class="text-sm text-gray-300">
+                  Select a table to view its schema.
+                </div>
+              </div>
+              <div class="rpg-border rounded-lg p-4 bg-rpg-darker">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                  <h3 class="text-lg font-bold text-rpg-gold">📦 Table Data</h3>
+                  <div class="flex items-center gap-2">
+                    <input id="database-limit" type="number" value="100" min="1"
+                           class="w-20 p-2 bg-rpg-dark border border-rpg-gold text-rpg-gold rounded">
+                    <input id="database-offset" type="number" value="0" min="0"
+                           class="w-20 p-2 bg-rpg-dark border border-rpg-gold text-rpg-gold rounded">
+                    <button onclick="refreshDatabaseTable()" class="rpg-button px-4 py-2 rounded">🔄 Load</button>
+                  </div>
+                </div>
+                <div id="database-table-data" class="overflow-x-auto text-sm text-gray-300">
+                  Select a table to load rows.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rpg-border rounded-lg p-4 bg-rpg-darker">
+            <h3 class="text-lg font-bold mb-3 text-rpg-gold">🧪 Raw Query</h3>
+            <textarea id="database-query-input" rows="6"
+                      class="w-full p-3 bg-rpg-dark border border-rpg-gold text-rpg-gold rounded focus:outline-none focus:rpg-glow"
+                      placeholder="SELECT name FROM sqlite_master WHERE type='table';"></textarea>
+            <div class="flex items-center justify-between mt-3">
+              <button onclick="runDatabaseQuery()" class="rpg-button px-6 py-2 rounded">▶ Run Query</button>
+              <button onclick="refreshDatabaseSchema()" class="rpg-button px-4 py-2 rounded">🔄 Refresh Schema</button>
+            </div>
+            <div id="database-query-results" class="mt-4 text-sm text-gray-300">
+              Results will appear here.
             </div>
           </div>
         </div>

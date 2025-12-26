@@ -16,6 +16,8 @@ let encyclopediaData = {
   titles: [],
   stats: null
 };
+let databaseSchema = null;
+let activeDatabaseTable = null;
 let isCrawling = false;
 let crawlProgress = 0;
 
@@ -592,6 +594,215 @@ window.openEncyclopedia = function() {
 window.closeEncyclopedia = function() {
   document.getElementById('encyclopedia-modal').classList.add('hidden');
 };
+
+// ===== Database Modal Functions =====
+window.openDatabase = async function() {
+  document.getElementById('database-modal').classList.remove('hidden');
+  const tablesContainer = document.getElementById('database-tables');
+  if (tablesContainer) {
+    tablesContainer.innerHTML = '<div class="text-gray-400">Loading database schema...</div>';
+  }
+  await refreshDatabaseSchema();
+};
+
+window.closeDatabase = function() {
+  document.getElementById('database-modal').classList.add('hidden');
+};
+
+window.refreshDatabaseSchema = async function() {
+  try {
+    await ipcRenderer.invoke('init-db');
+    const data = await ipcRenderer.invoke('get-db-schema');
+    databaseSchema = data;
+    renderDatabaseTables();
+    if (activeDatabaseTable) {
+      renderDatabaseSchema(activeDatabaseTable);
+      await loadDatabaseTableData(activeDatabaseTable);
+    } else if (databaseSchema.tables.length > 0) {
+      selectDatabaseTable(databaseSchema.tables[0].name);
+    } else {
+      renderDatabaseSchema(null);
+      renderDatabaseTableData([]);
+    }
+  } catch (error) {
+    console.error('Error loading database schema:', error);
+    const tablesContainer = document.getElementById('database-tables');
+    if (tablesContainer) {
+      tablesContainer.innerHTML = '<div class="text-red-400">Failed to load schema</div>';
+    }
+  }
+};
+
+function renderDatabaseTables() {
+  const tablesContainer = document.getElementById('database-tables');
+  if (!tablesContainer) return;
+
+  const tables = databaseSchema?.tables || [];
+  if (tables.length === 0) {
+    tablesContainer.innerHTML = '<div class="text-gray-400">No tables found</div>';
+    return;
+  }
+
+  tablesContainer.innerHTML = tables.map(table => {
+    const isActive = table.name === activeDatabaseTable;
+    const activeClass = isActive ? 'bg-rpg-gold text-black' : 'bg-rpg-dark text-rpg-gold';
+    return `
+      <button onclick="selectDatabaseTable('${table.name.replace(/'/g, "\\'")}')" 
+              class="w-full text-left rpg-button px-3 py-2 rounded ${activeClass}">
+        ${table.name}
+      </button>
+    `;
+  }).join('');
+}
+
+window.selectDatabaseTable = async function(tableName) {
+  activeDatabaseTable = tableName;
+  renderDatabaseTables();
+  renderDatabaseSchema(tableName);
+  await loadDatabaseTableData(tableName);
+};
+
+function renderDatabaseSchema(tableName) {
+  const schemaContainer = document.getElementById('database-schema');
+  if (!schemaContainer) return;
+  if (!tableName) {
+    schemaContainer.innerHTML = 'Select a table to view its schema.';
+    return;
+  }
+  const table = databaseSchema?.tables?.find(t => t.name === tableName);
+  if (!table) {
+    schemaContainer.innerHTML = 'Table not found in schema.';
+    return;
+  }
+
+  const rows = table.columns.map(col => `
+    <tr class="border-b border-rpg-gold/20">
+      <td class="py-1 pr-4 font-bold text-rpg-gold">${col.name}</td>
+      <td class="py-1 pr-4 text-gray-300">${col.type || 'TEXT'}</td>
+      <td class="py-1 pr-4 text-gray-400">${col.notnull ? 'NOT NULL' : ''}</td>
+      <td class="py-1 pr-4 text-gray-400">${col.pk ? 'PK' : ''}</td>
+      <td class="py-1 text-gray-400">${col.defaultValue ?? ''}</td>
+    </tr>
+  `).join('');
+
+  schemaContainer.innerHTML = `
+    <div class="text-sm text-gray-400 mb-2">Table: <span class="text-rpg-gold">${table.name}</span></div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead>
+          <tr class="border-b border-rpg-gold/40 text-gray-300">
+            <th class="text-left py-1 pr-4">Column</th>
+            <th class="text-left py-1 pr-4">Type</th>
+            <th class="text-left py-1 pr-4">Constraints</th>
+            <th class="text-left py-1 pr-4">Key</th>
+            <th class="text-left py-1">Default</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+window.refreshDatabaseTable = async function() {
+  if (!activeDatabaseTable) return;
+  await loadDatabaseTableData(activeDatabaseTable);
+};
+
+async function loadDatabaseTableData(tableName) {
+  const limit = Number(document.getElementById('database-limit')?.value) || 100;
+  const offset = Number(document.getElementById('database-offset')?.value) || 0;
+  try {
+    const data = await ipcRenderer.invoke('get-db-table-data', { table: tableName, limit, offset });
+    renderDatabaseTableData(data.rows || []);
+  } catch (error) {
+    console.error('Error loading table data:', error);
+    const container = document.getElementById('database-table-data');
+    if (container) {
+      container.innerHTML = `<div class="text-red-400">Failed to load data: ${error.message}</div>`;
+    }
+  }
+}
+
+function renderDatabaseTableData(rows) {
+  const container = document.getElementById('database-table-data');
+  if (!container) return;
+  if (!rows || rows.length === 0) {
+    container.innerHTML = '<div class="text-gray-400">No rows found</div>';
+    return;
+  }
+
+  const columns = Object.keys(rows[0]);
+  const header = columns.map(col => `<th class="text-left py-1 px-2 text-gray-300">${col}</th>`).join('');
+  const body = rows.map(row => {
+    const cells = columns.map(col => {
+      const value = row[col];
+      const text = value === null || value === undefined ? '' : String(value);
+      return `<td class="py-1 px-2 text-gray-300">${escapeHtml(text)}</td>`;
+    }).join('');
+    return `<tr class="border-b border-rpg-gold/20">${cells}</tr>`;
+  }).join('');
+
+  container.innerHTML = `
+    <table class="min-w-full text-xs">
+      <thead class="border-b border-rpg-gold/40"><tr>${header}</tr></thead>
+      <tbody>${body}</tbody>
+    </table>
+  `;
+}
+
+window.runDatabaseQuery = async function() {
+  const input = document.getElementById('database-query-input');
+  const resultsContainer = document.getElementById('database-query-results');
+  if (!input || !resultsContainer) return;
+  const query = input.value.trim();
+  if (!query) {
+    resultsContainer.innerHTML = '<div class="text-yellow-400">Query is empty.</div>';
+    return;
+  }
+
+  resultsContainer.innerHTML = '<div class="text-gray-400">Running query...</div>';
+  try {
+    const result = await ipcRenderer.invoke('execute-db-query', { query });
+    if (result.type === 'rows') {
+      const rows = result.rows || [];
+      resultsContainer.innerHTML = `<div class="text-gray-400 mb-2">Rows: ${rows.length}</div>`;
+      if (rows.length > 0) {
+        resultsContainer.innerHTML += renderRowsTable(rows);
+      }
+    } else if (result.type === 'run') {
+      resultsContainer.innerHTML = `<div class="text-green-400">Query executed. Changes: ${result.changes}, Last ID: ${result.lastID}</div>`;
+      await refreshDatabaseSchema();
+    } else if (result.type === 'error') {
+      resultsContainer.innerHTML = `<div class="text-red-400">Error: ${result.error}</div>`;
+    }
+  } catch (error) {
+    console.error('Error executing query:', error);
+    resultsContainer.innerHTML = `<div class="text-red-400">Error: ${error.message}</div>`;
+  }
+};
+
+function renderRowsTable(rows) {
+  const columns = Object.keys(rows[0] || {});
+  const header = columns.map(col => `<th class="text-left py-1 px-2 text-gray-300">${col}</th>`).join('');
+  const body = rows.map(row => {
+    const cells = columns.map(col => {
+      const value = row[col];
+      const text = value === null || value === undefined ? '' : String(value);
+      return `<td class="py-1 px-2 text-gray-300">${escapeHtml(text)}</td>`;
+    }).join('');
+    return `<tr class="border-b border-rpg-gold/20">${cells}</tr>`;
+  }).join('');
+
+  return `
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-xs">
+        <thead class="border-b border-rpg-gold/40"><tr>${header}</tr></thead>
+        <tbody>${body}</tbody>
+      </table>
+    </div>
+  `;
+}
 
 function populateCrawlAccountDropdown() {
   const dropdown = document.getElementById('crawl-account');

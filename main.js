@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const { spawn } = require('child_process');
 const { fork } = require('child_process');
+const sqlite3 = require('sqlite3').verbose();
 const DependencyAnalyzer = require('./dependency-analyzer');
 const { logger } = require('./logger');
 
@@ -12,7 +13,189 @@ let automationWindows = {}; // { accountId: BrowserWindow }
 let puppeteerProcesses = {};
 let unscrollProcesses = {};
 let encyclopediaProcesses = {}; // { accountId: childProcess }
-const ACCOUNTS_FILE = path.join(__dirname, 'accounts.json');
+const DB_PATH = path.join(__dirname, 'AutomatorDatabase.sqlite');
+let dbInstance = null;
+
+function getDb() {
+  if (!dbInstance) {
+    dbInstance = new sqlite3.Database(DB_PATH);
+  }
+  return dbInstance;
+}
+
+function quoteIdentifier(name) {
+  return `"${String(name).replace(/"/g, '""')}"`;
+}
+
+function dbAll(db, sql, params = []) {
+  return new Promise((resolve, reject) => {
+    db.all(sql, params, (err, rows) => {
+      if (err) reject(err);
+      else resolve(rows);
+    });
+  });
+}
+
+function dbRun(db, sql, params = []) {
+  return new Promise((resolve, reject) => {
+    db.run(sql, params, function(err) {
+      if (err) reject(err);
+      else resolve({ changes: this.changes, lastID: this.lastID });
+    });
+  });
+}
+
+async function ensureAccountsTable(db) {
+  await dbRun(
+    db,
+    `CREATE TABLE IF NOT EXISTS users (
+      id TEXT PRIMARY KEY,
+      username TEXT NOT NULL,
+      password TEXT NOT NULL,
+      config TEXT NOT NULL
+    )`
+  );
+}
+
+async function ensureEncyclopediaTables(db) {
+  await dbRun(
+    db,
+    `CREATE TABLE IF NOT EXISTS encyclopedia_items (
+      id TEXT PRIMARY KEY,
+      name TEXT,
+      type TEXT,
+      isLegendary INTEGER,
+      isDrop INTEGER,
+      isCraftable INTEGER,
+      description TEXT,
+      plainAttributes TEXT,
+      plainReq TEXT,
+      attributes TEXT,
+      requirements TEXT,
+      ingredients TEXT,
+      image_url TEXT,
+      source TEXT,
+      crawled_at TEXT
+    )`
+  );
+  await dbRun(db, 'CREATE INDEX IF NOT EXISTS idx_encyclopedia_items_name ON encyclopedia_items(name)');
+  await dbRun(db, 'CREATE INDEX IF NOT EXISTS idx_encyclopedia_items_type ON encyclopedia_items(type)');
+
+  await dbRun(
+    db,
+    `CREATE TABLE IF NOT EXISTS encyclopedia_monsters (
+      id TEXT PRIMARY KEY,
+      name TEXT,
+      level INTEGER,
+      hp INTEGER,
+      attack INTEGER,
+      defense INTEGER,
+      location TEXT,
+      image_url TEXT,
+      source TEXT,
+      crawled_at TEXT
+    )`
+  );
+  await dbRun(db, 'CREATE INDEX IF NOT EXISTS idx_encyclopedia_monsters_name ON encyclopedia_monsters(name)');
+
+  await dbRun(
+    db,
+    `CREATE TABLE IF NOT EXISTS encyclopedia_translations (
+      id TEXT PRIMARY KEY,
+      name TEXT,
+      type TEXT,
+      originalText TEXT,
+      translatedText TEXT,
+      url TEXT,
+      source TEXT,
+      crawled_at TEXT
+    )`
+  );
+  await dbRun(db, 'CREATE INDEX IF NOT EXISTS idx_encyclopedia_translations_name ON encyclopedia_translations(name)');
+
+  await dbRun(
+    db,
+    `CREATE TABLE IF NOT EXISTS encyclopedia_titles (
+      id TEXT PRIMARY KEY,
+      name TEXT,
+      type TEXT,
+      plainAttributes TEXT,
+      plainReq TEXT,
+      available TEXT,
+      slots TEXT,
+      attributes TEXT,
+      requirements TEXT,
+      prefix TEXT,
+      suffix TEXT,
+      source TEXT,
+      crawled_at TEXT
+    )`
+  );
+  await dbRun(db, 'CREATE INDEX IF NOT EXISTS idx_encyclopedia_titles_name ON encyclopedia_titles(name)');
+
+  await dbRun(
+    db,
+    `CREATE TABLE IF NOT EXISTS encyclopedia_summary (
+      id INTEGER PRIMARY KEY CHECK (id = 1),
+      crawl_date TEXT,
+      total_items INTEGER,
+      total_monsters INTEGER,
+      total_translations INTEGER,
+      total_quests INTEGER,
+      files TEXT
+    )`
+  );
+
+  await dbRun(
+    db,
+    `CREATE TABLE IF NOT EXISTS encyclopedia_dependencies (
+      id TEXT PRIMARY KEY,
+      name TEXT,
+      type TEXT,
+      nodeType TEXT,
+      isLegendary INTEGER,
+      children TEXT,
+      complexity INTEGER
+    )`
+  );
+  await dbRun(db, 'CREATE INDEX IF NOT EXISTS idx_encyclopedia_dependencies_name ON encyclopedia_dependencies(name)');
+
+  await dbRun(
+    db,
+    `CREATE TABLE IF NOT EXISTS encyclopedia_dependencies_meta (
+      id INTEGER PRIMARY KEY CHECK (id = 1),
+      generated_at TEXT,
+      total_records INTEGER
+    )`
+  );
+}
+
+function parseJsonField(value, fallback) {
+  if (value === null || value === undefined) return fallback;
+  if (typeof value !== 'string') return value;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return fallback;
+  }
+}
+
+async function loadDependenciesMap(db) {
+  const rows = await dbAll(db, 'SELECT * FROM encyclopedia_dependencies');
+  const dependencies = {};
+  rows.forEach(row => {
+    dependencies[row.id] = {
+      id: row.id,
+      name: row.name,
+      type: row.type,
+      nodeType: row.nodeType,
+      isLegendary: !!row.isLegendary,
+      children: parseJsonField(row.children, []),
+      complexity: row.complexity
+    };
+  });
+  return dependencies;
+}
 
 function createWindow() {
   win = new BrowserWindow({
@@ -30,13 +213,105 @@ function createWindow() {
 
 app.whenReady().then(createWindow);
 
-ipcMain.handle('get-accounts', () => {
-  if (!fs.existsSync(ACCOUNTS_FILE)) return [];
-  return JSON.parse(fs.readFileSync(ACCOUNTS_FILE, 'utf-8'));
+ipcMain.handle('get-accounts', async () => {
+  const db = getDb();
+  await ensureAccountsTable(db);
+  const rows = await dbAll(db, 'SELECT id, username, password, config FROM users ORDER BY username');
+  return rows.map(row => ({
+    id: row.id,
+    username: row.username,
+    password: row.password,
+    config: row.config ? JSON.parse(row.config) : {}
+  }));
 });
 
-ipcMain.handle('save-accounts', (event, accounts) => {
-  fs.writeFileSync(ACCOUNTS_FILE, JSON.stringify(accounts, null, 2));
+// ===== DATABASE (SQLite) =====
+ipcMain.handle('init-db', async () => {
+  const db = getDb();
+  await ensureAccountsTable(db);
+  await ensureEncyclopediaTables(db);
+  return { path: DB_PATH };
+});
+
+ipcMain.handle('get-db-schema', async () => {
+  const db = getDb();
+  const tables = await dbAll(
+    db,
+    "SELECT name, sql FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name"
+  );
+
+  const schema = [];
+  for (const table of tables) {
+    const columns = await dbAll(db, `PRAGMA table_info(${quoteIdentifier(table.name)})`);
+    schema.push({
+      name: table.name,
+      sql: table.sql,
+      columns: columns.map(col => ({
+        name: col.name,
+        type: col.type,
+        notnull: !!col.notnull,
+        defaultValue: col.dflt_value,
+        pk: !!col.pk
+      }))
+    });
+  }
+
+  return { tables: schema };
+});
+
+ipcMain.handle('get-db-table-data', async (event, { table, limit = 100, offset = 0 }) => {
+  if (!table) return { rows: [] };
+  const db = getDb();
+  const tableRows = await dbAll(
+    db,
+    "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name = ?",
+    [table]
+  );
+  if (tableRows.length === 0) {
+    throw new Error(`Table not found: ${table}`);
+  }
+  const rows = await dbAll(
+    db,
+    `SELECT * FROM ${quoteIdentifier(table)} LIMIT ? OFFSET ?`,
+    [Number(limit) || 100, Number(offset) || 0]
+  );
+  return { rows };
+});
+
+ipcMain.handle('execute-db-query', async (event, { query }) => {
+  const db = getDb();
+  const sql = (query || '').trim();
+  if (!sql) {
+    return { type: 'error', error: 'Query is empty' };
+  }
+  const isSelect = /^(select|pragma|with)\b/i.test(sql);
+  if (isSelect) {
+    const rows = await dbAll(db, sql);
+    return { type: 'rows', rows };
+  }
+  const result = await dbRun(db, sql);
+  return { type: 'run', changes: result.changes, lastID: result.lastID };
+});
+
+ipcMain.handle('save-accounts', async (event, accounts) => {
+  const db = getDb();
+  await ensureAccountsTable(db);
+  await dbRun(db, 'BEGIN TRANSACTION');
+  try {
+    await dbRun(db, 'DELETE FROM users');
+    for (const acc of accounts || []) {
+      const configJson = JSON.stringify(acc.config || {});
+      await dbRun(
+        db,
+        'INSERT INTO users (id, username, password, config) VALUES (?, ?, ?, ?)',
+        [acc.id, acc.username, acc.password, configJson]
+      );
+    }
+    await dbRun(db, 'COMMIT');
+  } catch (error) {
+    await dbRun(db, 'ROLLBACK');
+    throw error;
+  }
   return true;
 });
 
@@ -143,20 +418,21 @@ ipcMain.handle('stop-automation', (event, accountId) => {
 
 // New handler: Stop browser for specific account
 ipcMain.handle('stop-browser', async (event, accountId) => {
-  // Load accounts from file
-  const fs = require('fs');
-  const path = require('path');
-  const accountsPath = path.join(__dirname, 'accounts.json');
-  let accounts = [];
+  let account = null;
   try {
-    const data = fs.readFileSync(accountsPath, 'utf8');
-    accounts = JSON.parse(data);
+    const db = getDb();
+    await ensureAccountsTable(db);
+    const rows = await dbAll(
+      db,
+      'SELECT id, username, password, config FROM users WHERE id = ? LIMIT 1',
+      [accountId]
+    );
+    account = rows[0] || null;
   } catch (error) {
     console.error('Error loading accounts:', error);
     return false;
   }
   
-  const account = accounts.find(acc => acc.id === accountId);
   if (!account) return false;
   
   // Kill the Chrome process for this specific account
@@ -345,16 +621,35 @@ ipcMain.on('resume-encyclopedia-crawl', (event, { accountId }) => {
 // Encyclopedia data retrieval handlers - now using JSON files
 ipcMain.handle('get-encyclopedia-stats', async () => {
   try {
-    const fs = require('fs');
-    const path = require('path');
-    const dataDir = './encyclopedia-data';
-    const summaryFile = path.join(dataDir, 'summary.json');
-    
-    if (fs.existsSync(summaryFile)) {
-      const summary = JSON.parse(fs.readFileSync(summaryFile, 'utf8'));
-      return summary;
+    const db = getDb();
+    await ensureEncyclopediaTables(db);
+
+    const summaryRows = await dbAll(
+      db,
+      'SELECT crawl_date, total_items, total_monsters, total_translations, total_quests, files FROM encyclopedia_summary WHERE id = 1'
+    );
+    if (summaryRows.length > 0) {
+      const summary = summaryRows[0];
+      return {
+        crawl_date: summary.crawl_date,
+        total_items: summary.total_items || 0,
+        total_monsters: summary.total_monsters || 0,
+        total_translations: summary.total_translations || 0,
+        total_quests: summary.total_quests || 0,
+        files: parseJsonField(summary.files, [])
+      };
     }
-    return { total_items: 0, total_monsters: 0, total_translations: 0, total_titles: 0 };
+
+    const [itemsCount] = await dbAll(db, 'SELECT COUNT(*) AS count FROM encyclopedia_items');
+    const [monstersCount] = await dbAll(db, 'SELECT COUNT(*) AS count FROM encyclopedia_monsters');
+    const [translationsCount] = await dbAll(db, 'SELECT COUNT(*) AS count FROM encyclopedia_translations');
+    const [titlesCount] = await dbAll(db, 'SELECT COUNT(*) AS count FROM encyclopedia_titles');
+    return {
+      total_items: itemsCount?.count || 0,
+      total_monsters: monstersCount?.count || 0,
+      total_translations: translationsCount?.count || 0,
+      total_titles: titlesCount?.count || 0
+    };
   } catch (error) {
     console.error('Error getting encyclopedia stats:', error);
     return { total_items: 0, total_monsters: 0, total_translations: 0, total_titles: 0 };
@@ -364,17 +659,26 @@ ipcMain.handle('get-encyclopedia-stats', async () => {
 ipcMain.handle('get-encyclopedia-items', async (event, filters = {}) => {
   try {
     console.log('🔍 get-encyclopedia-items called with filters:', filters);
-    const fs = require('fs');
-    const path = require('path');
-    const dataDir = './encyclopedia-data';
-    const itemsFile = path.join(dataDir, 'items.json');
-    
-    if (!fs.existsSync(itemsFile)) {
-      console.log('❌ Items file not found');
-      return [];
-    }
-    
-    let items = JSON.parse(fs.readFileSync(itemsFile, 'utf8'));
+    const db = getDb();
+    await ensureEncyclopediaTables(db);
+    const rows = await dbAll(db, 'SELECT * FROM encyclopedia_items');
+    let items = rows.map(row => ({
+      id: row.id,
+      name: row.name,
+      type: row.type,
+      isLegendary: !!row.isLegendary,
+      isDrop: !!row.isDrop,
+      isCraftable: !!row.isCraftable,
+      description: row.description || '',
+      plainAttributes: parseJsonField(row.plainAttributes, []),
+      plainReq: parseJsonField(row.plainReq, []),
+      attributes: parseJsonField(row.attributes, {}),
+      requirements: parseJsonField(row.requirements, {}),
+      ingredients: parseJsonField(row.ingredients, []),
+      image_url: row.image_url || '',
+      source: row.source || '',
+      crawled_at: row.crawled_at || ''
+    }));
     console.log('📊 Loaded items, total count:', items.length);
     
     // Apply filters
@@ -535,16 +839,21 @@ ipcMain.handle('get-encyclopedia-items', async (event, filters = {}) => {
 
 ipcMain.handle('get-encyclopedia-monsters', async (event, filters) => {
   try {
-    const fs = require('fs');
-    const path = require('path');
-    const dataDir = './encyclopedia-data';
-    const monstersFile = path.join(dataDir, 'monsters.json');
-    
-    if (fs.existsSync(monstersFile)) {
-      const monsters = JSON.parse(fs.readFileSync(monstersFile, 'utf8'));
-      return monsters;
-    }
-    return [];
+    const db = getDb();
+    await ensureEncyclopediaTables(db);
+    const rows = await dbAll(db, 'SELECT * FROM encyclopedia_monsters');
+    return rows.map(row => ({
+      id: row.id,
+      name: row.name,
+      level: row.level,
+      hp: row.hp,
+      attack: row.attack,
+      defense: row.defense,
+      location: row.location,
+      image_url: row.image_url,
+      source: row.source,
+      crawled_at: row.crawled_at
+    }));
   } catch (error) {
     console.error('Error getting monsters:', error);
     return [];
@@ -553,16 +862,19 @@ ipcMain.handle('get-encyclopedia-monsters', async (event, filters) => {
 
 ipcMain.handle('get-encyclopedia-translations', async (event, filters) => {
   try {
-    const fs = require('fs');
-    const path = require('path');
-    const dataDir = './encyclopedia-data';
-    const translationsFile = path.join(dataDir, 'translations.json');
-    
-    if (fs.existsSync(translationsFile)) {
-      const translations = JSON.parse(fs.readFileSync(translationsFile, 'utf8'));
-      return translations;
-    }
-    return [];
+    const db = getDb();
+    await ensureEncyclopediaTables(db);
+    const rows = await dbAll(db, 'SELECT * FROM encyclopedia_translations');
+    return rows.map(row => ({
+      id: row.id,
+      name: row.name,
+      type: row.type,
+      originalText: row.originalText,
+      translatedText: row.translatedText,
+      url: row.url,
+      source: row.source,
+      crawled_at: row.crawled_at
+    }));
   } catch (error) {
     console.error('Error getting translations:', error);
     return [];
@@ -571,16 +883,24 @@ ipcMain.handle('get-encyclopedia-translations', async (event, filters) => {
 
 ipcMain.handle('get-encyclopedia-titles', async (event, filters) => {
   try {
-    const fs = require('fs');
-    const path = require('path');
-    const dataDir = './encyclopedia-data';
-    const titlesFile = path.join(dataDir, 'titles.json');
-    
-    if (fs.existsSync(titlesFile)) {
-      const titles = JSON.parse(fs.readFileSync(titlesFile, 'utf8'));
-      return titles;
-    }
-    return [];
+    const db = getDb();
+    await ensureEncyclopediaTables(db);
+    const rows = await dbAll(db, 'SELECT * FROM encyclopedia_titles');
+    return rows.map(row => ({
+      id: row.id,
+      name: row.name,
+      type: row.type,
+      plainAttributes: parseJsonField(row.plainAttributes, []),
+      plainReq: parseJsonField(row.plainReq, []),
+      available: row.available,
+      slots: parseJsonField(row.slots, {}),
+      attributes: parseJsonField(row.attributes, {}),
+      requirements: parseJsonField(row.requirements, {}),
+      prefix: row.prefix,
+      suffix: row.suffix,
+      source: row.source,
+      crawled_at: row.crawled_at
+    }));
   } catch (error) {
     console.error('Error getting titles:', error);
     return [];
@@ -589,43 +909,88 @@ ipcMain.handle('get-encyclopedia-titles', async (event, filters) => {
 
 ipcMain.handle('search-encyclopedia', async (event, query) => {
   try {
-    const fs = require('fs');
-    const path = require('path');
-    const dataDir = './encyclopedia-data';
-    
+    const db = getDb();
+    await ensureEncyclopediaTables(db);
     const results = { items: [], monsters: [], translations: [], titles: [], total: 0 };
     
-    // Search in each file
-    const files = ['items.json', 'monsters.json', 'translations.json', 'titles.json'];
-    files.forEach(filename => {
-      const filepath = path.join(dataDir, filename);
-      if (fs.existsSync(filepath)) {
-        try {
-          const data = JSON.parse(fs.readFileSync(filepath, 'utf8'));
-          const filtered = data.filter(item => 
-            item.name && item.name.toLowerCase().includes(query.toLowerCase()) ||
-            (item.description && item.description.toLowerCase().includes(query.toLowerCase()))
-          );
-          
-          switch (filename) {
-            case 'items.json':
-              results.items = filtered;
-              break;
-            case 'monsters.json':
-              results.monsters = filtered;
-              break;
-            case 'translations.json':
-              results.translations = filtered;
-              break;
-            case 'titles.json':
-              results.titles = filtered;
-              break;
-          }
-        } catch (error) {
-          console.error(`Error reading ${filename}:`, error);
-        }
-      }
-    });
+    const like = `%${query}%`;
+    const items = await dbAll(
+      db,
+      'SELECT * FROM encyclopedia_items WHERE name LIKE ? OR description LIKE ?',
+      [like, like]
+    );
+    results.items = items.map(row => ({
+      id: row.id,
+      name: row.name,
+      type: row.type,
+      isLegendary: !!row.isLegendary,
+      isDrop: !!row.isDrop,
+      isCraftable: !!row.isCraftable,
+      description: row.description || '',
+      plainAttributes: parseJsonField(row.plainAttributes, []),
+      plainReq: parseJsonField(row.plainReq, []),
+      attributes: parseJsonField(row.attributes, {}),
+      requirements: parseJsonField(row.requirements, {}),
+      ingredients: parseJsonField(row.ingredients, []),
+      image_url: row.image_url || '',
+      source: row.source || '',
+      crawled_at: row.crawled_at || ''
+    }));
+
+    const monsters = await dbAll(
+      db,
+      'SELECT * FROM encyclopedia_monsters WHERE name LIKE ? OR location LIKE ?',
+      [like, like]
+    );
+    results.monsters = monsters.map(row => ({
+      id: row.id,
+      name: row.name,
+      level: row.level,
+      hp: row.hp,
+      attack: row.attack,
+      defense: row.defense,
+      location: row.location,
+      image_url: row.image_url,
+      source: row.source,
+      crawled_at: row.crawled_at
+    }));
+
+    const translations = await dbAll(
+      db,
+      'SELECT * FROM encyclopedia_translations WHERE name LIKE ? OR originalText LIKE ? OR translatedText LIKE ?',
+      [like, like, like]
+    );
+    results.translations = translations.map(row => ({
+      id: row.id,
+      name: row.name,
+      type: row.type,
+      originalText: row.originalText,
+      translatedText: row.translatedText,
+      url: row.url,
+      source: row.source,
+      crawled_at: row.crawled_at
+    }));
+
+    const titles = await dbAll(
+      db,
+      'SELECT * FROM encyclopedia_titles WHERE name LIKE ? OR prefix LIKE ? OR suffix LIKE ?',
+      [like, like, like]
+    );
+    results.titles = titles.map(row => ({
+      id: row.id,
+      name: row.name,
+      type: row.type,
+      plainAttributes: parseJsonField(row.plainAttributes, []),
+      plainReq: parseJsonField(row.plainReq, []),
+      available: row.available,
+      slots: parseJsonField(row.slots, {}),
+      attributes: parseJsonField(row.attributes, {}),
+      requirements: parseJsonField(row.requirements, {}),
+      prefix: row.prefix,
+      suffix: row.suffix,
+      source: row.source,
+      crawled_at: row.crawled_at
+    }));
     
     results.total = results.items.length + results.monsters.length + results.translations.length + results.titles.length;
     return results;
@@ -647,6 +1012,42 @@ ipcMain.handle('analyze-dependencies', async (event) => {
     
     const dependencies = analyzer.analyzeDependencies();
     const stats = analyzer.getDependencyStats();
+
+    const db = getDb();
+    await ensureEncyclopediaTables(db);
+    await dbRun(db, 'BEGIN TRANSACTION');
+    try {
+      await dbRun(db, 'DELETE FROM encyclopedia_dependencies');
+      const entries = Object.values(dependencies);
+      for (const record of entries) {
+        await dbRun(
+          db,
+          `INSERT INTO encyclopedia_dependencies
+            (id, name, type, nodeType, isLegendary, children, complexity)
+            VALUES (?, ?, ?, ?, ?, ?, ?)`,
+          [
+            record.id,
+            record.name,
+            record.type,
+            record.nodeType,
+            record.isLegendary ? 1 : 0,
+            JSON.stringify(record.children || []),
+            record.complexity
+          ]
+        );
+      }
+      await dbRun(
+        db,
+        `INSERT INTO encyclopedia_dependencies_meta (id, generated_at, total_records)
+         VALUES (1, ?, ?)
+         ON CONFLICT(id) DO UPDATE SET generated_at = excluded.generated_at, total_records = excluded.total_records`,
+        [new Date().toISOString(), entries.length]
+      );
+      await dbRun(db, 'COMMIT');
+    } catch (dbError) {
+      await dbRun(db, 'ROLLBACK');
+      throw dbError;
+    }
     
     console.log(`Hierarchical dependency analysis completed. Found ${stats.total_craftable_items} craftable items.`);
     
@@ -667,23 +1068,18 @@ ipcMain.handle('analyze-dependencies', async (event) => {
 ipcMain.handle('get-dependencies', async (event, itemName) => {
   try {
     console.log('🔍 get-dependencies called with itemName:', itemName);
-    
-    const dependenciesPath = path.join(__dirname, 'encyclopedia-data', 'dependencies.json');
-    
-    if (!fs.existsSync(dependenciesPath)) {
-      console.log('❌ Dependencies file not found');
-      return null;
-    }
-    
-    const data = JSON.parse(fs.readFileSync(dependenciesPath, 'utf8'));
-    console.log('📊 Loaded dependencies data, total records:', Object.keys(data.dependencies).length);
+
+    const db = getDb();
+    await ensureEncyclopediaTables(db);
+    const dependencies = await loadDependenciesMap(db);
+    console.log('📊 Loaded dependencies data, total records:', Object.keys(dependencies).length);
     
     if (itemName) {
       // Find the item by name by searching through all dependencies
       let item = null;
       console.log('🔍 Searching for item by name:', itemName);
       
-      for (const [itemId, itemData] of Object.entries(data.dependencies)) {
+      for (const [itemId, itemData] of Object.entries(dependencies)) {
         if (itemData.name === itemName) {
           item = itemData;
           console.log('✅ Found item:', itemData.name, 'with ID:', itemId);
@@ -696,14 +1092,14 @@ ipcMain.handle('get-dependencies', async (event, itemName) => {
         // Add recursive materials using the analyzer
         const analyzer = new DependencyAnalyzer();
         analyzer.loadData();
-        analyzer.flatDependencies = data.dependencies; // Load the flat structure
+        analyzer.flatDependencies = dependencies; // Load the flat structure
         item.recursiveMaterials = analyzer.getAllMaterialsRecursive(item);
         
         console.log('📊 Item processed successfully, returning data');
         // Also return the flat dependencies for the renderer to use
         return {
           item: item,
-          flatDependencies: data.dependencies
+          flatDependencies: dependencies
         };
       }
       
@@ -711,7 +1107,11 @@ ipcMain.handle('get-dependencies', async (event, itemName) => {
       return null;
     }
     
-    return data;
+    return {
+      generated_at: null,
+      total_records: Object.keys(dependencies).length,
+      dependencies
+    };
   } catch (error) {
     console.error('❌ Error getting dependencies:', error);
     return null;
@@ -720,16 +1120,15 @@ ipcMain.handle('get-dependencies', async (event, itemName) => {
 
 ipcMain.handle('get-dependency-stats', async (event) => {
   try {
-    const dependenciesPath = path.join(__dirname, 'encyclopedia-data', 'dependencies.json');
-    
-    if (!fs.existsSync(dependenciesPath)) {
+    const db = getDb();
+    await ensureEncyclopediaTables(db);
+    const dependencies = await loadDependenciesMap(db);
+    if (Object.keys(dependencies).length === 0) {
       return null;
     }
-    
-    const data = JSON.parse(fs.readFileSync(dependenciesPath, 'utf8'));
     const analyzer = new DependencyAnalyzer();
     analyzer.loadData();
-    
+    analyzer.flatDependencies = dependencies;
     return analyzer.getDependencyStats();
   } catch (error) {
     console.error('Error getting dependency stats:', error);
@@ -739,16 +1138,12 @@ ipcMain.handle('get-dependency-stats', async (event) => {
 
 ipcMain.handle('search-dependencies', async (event, query) => {
   try {
-    const dependenciesPath = path.join(__dirname, 'encyclopedia-data', 'dependencies.json');
-    
-    if (!fs.existsSync(dependenciesPath)) {
-      return [];
-    }
-    
-    const data = JSON.parse(fs.readFileSync(dependenciesPath, 'utf8'));
+    const db = getDb();
+    await ensureEncyclopediaTables(db);
+    const dependencies = await loadDependenciesMap(db);
     const analyzer = new DependencyAnalyzer();
     analyzer.loadData();
-    analyzer.dependencies = data.dependencies;
+    analyzer.flatDependencies = dependencies;
     
     return analyzer.searchDependencies(query);
   } catch (error) {

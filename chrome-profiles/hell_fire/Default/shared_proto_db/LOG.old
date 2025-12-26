@@ -1,3 +1,6 @@
-2025/12/19-20:47:15.132 5314 Reusing MANIFEST C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\hell_fire\Default\shared_proto_db/MANIFEST-000001
-2025/12/19-20:47:15.133 5314 Recovering log #3
-2025/12/19-20:47:15.135 5314 Reusing old log C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\hell_fire\Default\shared_proto_db/000003.log 
+2025/12/26-15:35:15.104 98c53 Reusing MANIFEST /Users/macbookpro/Sources/BDAutomator/chrome-profiles/hell_fire/Default/shared_proto_db/MANIFEST-000001
+2025/12/26-15:35:15.106 98c53 Recovering log #3
+2025/12/26-15:35:15.112 98c53 Reusing old log /Users/macbookpro/Sources/BDAutomator/chrome-profiles/hell_fire/Default/shared_proto_db/000003.log 
+2025/12/26-15:36:15.869 98c51 Level-0 table #5: started
+2025/12/26-15:36:15.886 98c51 Level-0 table #5: 117208 bytes OK
+2025/12/26-15:36:15.907 98c51 Delete type=0 #3

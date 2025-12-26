@@ -2,7 +2,109 @@ const puppeteer = require('puppeteer');
 const BlackDragonHelpers = require('./blackdragon-helpers');
 const fs = require('fs');
 const path = require('path');
+const sqlite3 = require('sqlite3').verbose();
 const { logger } = require('./logger');
+
+const DB_PATH = path.join(__dirname, 'AutomatorDatabase.sqlite');
+
+function dbRun(db, sql, params = []) {
+  return new Promise((resolve, reject) => {
+    db.run(sql, params, function(err) {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+}
+
+async function ensureEncyclopediaTables(db) {
+  await dbRun(
+    db,
+    `CREATE TABLE IF NOT EXISTS encyclopedia_items (
+      id TEXT PRIMARY KEY,
+      name TEXT,
+      type TEXT,
+      isLegendary INTEGER,
+      isDrop INTEGER,
+      isCraftable INTEGER,
+      description TEXT,
+      plainAttributes TEXT,
+      plainReq TEXT,
+      attributes TEXT,
+      requirements TEXT,
+      ingredients TEXT,
+      image_url TEXT,
+      source TEXT,
+      crawled_at TEXT
+    )`
+  );
+  await dbRun(db, 'CREATE INDEX IF NOT EXISTS idx_encyclopedia_items_name ON encyclopedia_items(name)');
+  await dbRun(db, 'CREATE INDEX IF NOT EXISTS idx_encyclopedia_items_type ON encyclopedia_items(type)');
+
+  await dbRun(
+    db,
+    `CREATE TABLE IF NOT EXISTS encyclopedia_monsters (
+      id TEXT PRIMARY KEY,
+      name TEXT,
+      level INTEGER,
+      hp INTEGER,
+      attack INTEGER,
+      defense INTEGER,
+      location TEXT,
+      image_url TEXT,
+      source TEXT,
+      crawled_at TEXT
+    )`
+  );
+  await dbRun(db, 'CREATE INDEX IF NOT EXISTS idx_encyclopedia_monsters_name ON encyclopedia_monsters(name)');
+
+  await dbRun(
+    db,
+    `CREATE TABLE IF NOT EXISTS encyclopedia_translations (
+      id TEXT PRIMARY KEY,
+      name TEXT,
+      type TEXT,
+      originalText TEXT,
+      translatedText TEXT,
+      url TEXT,
+      source TEXT,
+      crawled_at TEXT
+    )`
+  );
+  await dbRun(db, 'CREATE INDEX IF NOT EXISTS idx_encyclopedia_translations_name ON encyclopedia_translations(name)');
+
+  await dbRun(
+    db,
+    `CREATE TABLE IF NOT EXISTS encyclopedia_titles (
+      id TEXT PRIMARY KEY,
+      name TEXT,
+      type TEXT,
+      plainAttributes TEXT,
+      plainReq TEXT,
+      available TEXT,
+      slots TEXT,
+      attributes TEXT,
+      requirements TEXT,
+      prefix TEXT,
+      suffix TEXT,
+      source TEXT,
+      crawled_at TEXT
+    )`
+  );
+  await dbRun(db, 'CREATE INDEX IF NOT EXISTS idx_encyclopedia_titles_name ON encyclopedia_titles(name)');
+
+  await dbRun(
+    db,
+    `CREATE TABLE IF NOT EXISTS encyclopedia_summary (
+      id INTEGER PRIMARY KEY CHECK (id = 1),
+      crawl_date TEXT,
+      total_items INTEGER,
+      total_monsters INTEGER,
+      total_translations INTEGER,
+      total_quests INTEGER,
+      files TEXT
+    )`
+  );
+}
 
 class ItemAttributes {
   constructor(statsArray) {
@@ -106,6 +208,7 @@ class Item {
       }
       // Create summary
       this.createSummary();
+      await this.syncDatabase();
 
       console.log('Encyclopedia crawling completed successfully');
       
@@ -661,6 +764,167 @@ class Item {
 
     } catch (error) {
       console.error('Error creating summary:', error);
+    }
+  }
+
+  async syncDatabase() {
+    const db = new sqlite3.Database(DB_PATH);
+    try {
+      await ensureEncyclopediaTables(db);
+
+      const items = this.readData('items');
+      const monsters = this.readData('monsters');
+      const translations = this.readData('translations');
+      const titles = this.readData('titles');
+
+      const summaryPath = path.join(this.dataDir, 'summary.json');
+      const summary = fs.existsSync(summaryPath)
+        ? JSON.parse(fs.readFileSync(summaryPath, 'utf8'))
+        : null;
+
+      await dbRun(db, 'BEGIN TRANSACTION');
+      await dbRun(db, 'DELETE FROM encyclopedia_items');
+      await dbRun(db, 'DELETE FROM encyclopedia_monsters');
+      await dbRun(db, 'DELETE FROM encyclopedia_translations');
+      await dbRun(db, 'DELETE FROM encyclopedia_titles');
+      await dbRun(db, 'DELETE FROM encyclopedia_summary');
+
+      const itemStmt = db.prepare(
+        `INSERT INTO encyclopedia_items
+        (id, name, type, isLegendary, isDrop, isCraftable, description, plainAttributes, plainReq, attributes, requirements, ingredients, image_url, source, crawled_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      );
+      for (const item of items) {
+        await new Promise((resolve, reject) => {
+          itemStmt.run(
+            [
+              item.id,
+              item.name,
+              item.type,
+              item.isLegendary ? 1 : 0,
+              item.isDrop ? 1 : 0,
+              item.isCraftable ? 1 : 0,
+              item.description || '',
+              JSON.stringify(item.plainAttributes || []),
+              JSON.stringify(item.plainReq || []),
+              JSON.stringify(item.attributes || {}),
+              JSON.stringify(item.requirements || {}),
+              JSON.stringify(item.ingredients || []),
+              item.image_url || '',
+              item.source || '',
+              item.crawled_at || ''
+            ],
+            err => (err ? reject(err) : resolve())
+          );
+        });
+      }
+      itemStmt.finalize();
+
+      const monsterStmt = db.prepare(
+        `INSERT INTO encyclopedia_monsters
+        (id, name, level, hp, attack, defense, location, image_url, source, crawled_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      );
+      for (const monster of monsters) {
+        await new Promise((resolve, reject) => {
+          monsterStmt.run(
+            [
+              monster.id,
+              monster.name,
+              monster.level || 0,
+              monster.hp || 0,
+              monster.attack || 0,
+              monster.defense || 0,
+              monster.location || '',
+              monster.image_url || '',
+              monster.source || '',
+              monster.crawled_at || ''
+            ],
+            err => (err ? reject(err) : resolve())
+          );
+        });
+      }
+      monsterStmt.finalize();
+
+      const translationStmt = db.prepare(
+        `INSERT INTO encyclopedia_translations
+        (id, name, type, originalText, translatedText, url, source, crawled_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      );
+      for (const translation of translations) {
+        await new Promise((resolve, reject) => {
+          translationStmt.run(
+            [
+              translation.id,
+              translation.name,
+              translation.type,
+              translation.originalText || '',
+              translation.translatedText || '',
+              translation.url || '',
+              translation.source || '',
+              translation.crawled_at || ''
+            ],
+            err => (err ? reject(err) : resolve())
+          );
+        });
+      }
+      translationStmt.finalize();
+
+      const titleStmt = db.prepare(
+        `INSERT INTO encyclopedia_titles
+        (id, name, type, plainAttributes, plainReq, available, slots, attributes, requirements, prefix, suffix, source, crawled_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      );
+      for (const title of titles) {
+        await new Promise((resolve, reject) => {
+          titleStmt.run(
+            [
+              title.id,
+              title.name,
+              title.type,
+              JSON.stringify(title.plainAttributes || []),
+              JSON.stringify(title.plainReq || []),
+              title.available || '',
+              JSON.stringify(title.slots || {}),
+              JSON.stringify(title.attributes || {}),
+              JSON.stringify(title.requirements || {}),
+              title.prefix || '',
+              title.suffix || '',
+              title.source || '',
+              title.crawled_at || ''
+            ],
+            err => (err ? reject(err) : resolve())
+          );
+        });
+      }
+      titleStmt.finalize();
+
+      if (summary) {
+        await dbRun(
+          db,
+          `INSERT INTO encyclopedia_summary
+          (id, crawl_date, total_items, total_monsters, total_translations, total_quests, files)
+          VALUES (1, ?, ?, ?, ?, ?, ?)`,
+          [
+            summary.crawl_date || null,
+            summary.total_items || 0,
+            summary.total_monsters || 0,
+            summary.total_translations || 0,
+            summary.total_quests || 0,
+            JSON.stringify(summary.files || [])
+          ]
+        );
+      }
+
+      await dbRun(db, 'COMMIT');
+      console.log('✅ Encyclopedia data synced to AutomatorDatabase.sqlite');
+    } catch (error) {
+      console.error('Error syncing encyclopedia data to database:', error);
+      try {
+        await dbRun(db, 'ROLLBACK');
+      } catch {}
+    } finally {
+      db.close();
     }
   }
 
