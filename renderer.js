@@ -8,6 +8,7 @@ let webviews = {};
 let activeTab = null;
 let automationState = {}; // { [id]: 'running' | 'paused' | undefined }
 let unscrollState = {}; // { [id]: 'running' | 'paused' | undefined }
+let listItemsState = {}; // { [id]: 'running' | undefined }
   let browserState = {}; // { [id]: 'started' | undefined } - Track if browser is started
 let encyclopediaData = {
   items: [],
@@ -18,6 +19,8 @@ let encyclopediaData = {
 };
 let databaseSchema = null;
 let activeDatabaseTable = null;
+let formVisible = false;
+let keeperFiltersLoaded = false;
 let isCrawling = false;
 let crawlProgress = 0;
 
@@ -276,49 +279,20 @@ function renderAccounts() {
   list.innerHTML = '';
   accounts.forEach(acc => {
     const state = automationState[acc.id];
-    const unscrollStateValue = unscrollState[acc.id];
     const isRunning = running[acc.id];
     const isPaused = state === 'paused';
     const isActive = state === 'running';
-    const isUnscrollRunning = unscrollStateValue === 'running';
-    const isUnscrollPaused = unscrollStateValue === 'paused';
-    const isBrowserStarted = browserState[acc.id] === 'started';
-    const toggleLabel = isActive ? 'Pause' : (isPaused ? 'Resume' : 'Start Auto');
-    const toggleIcon = isActive ? '⏸️' : (isPaused ? '▶️' : '🤖');
-    const unscrollToggleLabel = isUnscrollRunning ? 'Pause' : (isUnscrollPaused ? 'Resume' : 'Auto Hunt');
-    const unscrollToggleIcon = isUnscrollRunning ? '⏸️' : (isUnscrollPaused ? '▶️' : '📜');
     const div = document.createElement('div');
-    div.className = `rpg-border rounded-lg p-4 ${isRunning ? 'bg-green-900/20' : 'bg-rpg-darker'} transition-all duration-300`;
+    div.className = `rpg-border rounded-lg p-4 ${isRunning ? 'bg-green-900/20' : 'bg-rpg-darker'} transition-all duration-300 cursor-pointer`;
+    div.onclick = () => selectAccount(acc.id);
     div.innerHTML = `
-      <div class="flex items-center justify-between mb-3">
+      <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
           <span class="text-2xl">${isRunning ? '⚔️' : '🛡️'}</span>
           <div>
             <h3 class="text-xl font-bold text-rpg-gold">${acc.username}</h3>
-            <p class="text-sm text-gray-400">Level: ${acc.options ? JSON.stringify(acc.options) : '{}'} </p>
-            ${isBrowserStarted ? '<p class="text-sm text-purple-400">🌐 Browser: ON</p>' : '<p class="text-sm text-gray-400">🌐 Browser: OFF</p>'}
-            ${isActive ? '<p class="text-sm text-green-400">🤖 Auto: ON</p>' : isPaused ? '<p class="text-sm text-yellow-400">⏸️ Auto Paused</p>' : ''}
-            ${isUnscrollRunning ? '<p class="text-sm text-blue-400">📜 Unscroll: ON</p>' : isUnscrollPaused ? '<p class="text-sm text-yellow-400">⏸️ Unscroll Paused</p>' : ''}
+            ${isActive ? '<p class="text-sm text-green-400">🤖 Auto: ON</p>' : isPaused ? '<p class="text-sm text-yellow-400">⏸️ Auto Paused</p>' : '<p class="text-sm text-gray-400">🤖 Auto: OFF</p>'}
           </div>
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <button onclick="editAccount('${acc.id}')" 
-                  class="rpg-button px-3 py-1 rounded text-sm">✏️ Edit</button>
-          <button onclick="deleteAccount('${acc.id}')" 
-                  class="rpg-button px-3 py-1 rounded text-sm bg-red-900/50 border-red-500 text-red-300 hover:bg-red-700">🗑️ Delete</button>
-          
-          <!-- New Button System -->
-          <button onclick="startBrowser('${acc.id}')" ${isRunning ? 'disabled' : ''} 
-                  class="rpg-button px-3 py-1 rounded text-sm ${isRunning ? 'opacity-50 cursor-not-allowed' : 'bg-purple-900/50 border-purple-500 text-purple-300'}">🌐 Start Browser</button>
-          
-          <button onclick="toggleAutomation('${acc.id}')" ${!isBrowserStarted && !isActive && !isPaused ? 'disabled' : ''} 
-                  class="rpg-button px-3 py-1 rounded text-sm ${!isBrowserStarted && !isActive && !isPaused ? 'opacity-50 cursor-not-allowed' : ''} ${(isActive || isPaused) ? 'bg-green-900/50 border-green-500 text-green-300' : ''}">${toggleIcon} ${toggleLabel}</button>
-          
-          <button onclick="toggleUnscroll('${acc.id}')" ${!isBrowserStarted && !isUnscrollRunning && !isUnscrollPaused ? 'disabled' : ''} 
-                  class="rpg-button px-3 py-1 rounded text-sm ${!isBrowserStarted && !isUnscrollRunning && !isUnscrollPaused ? 'opacity-50 cursor-not-allowed' : ''} ${(isUnscrollRunning || isUnscrollPaused) ? 'bg-blue-900/50 border-blue-500 text-blue-300' : ''}">${unscrollToggleIcon} ${unscrollToggleLabel}</button>
-          
-          <button onclick="stopAccount('${acc.id}')" ${isRunning ? '' : 'disabled'} 
-                  class="rpg-button px-3 py-1 rounded text-sm ${isRunning ? '' : 'opacity-50 cursor-not-allowed'} bg-red-900/50 border-red-500 text-red-300 hover:bg-red-700">⏹️ Stop</button>
         </div>
       </div>
     `;
@@ -332,14 +306,20 @@ function renderTabs() {
   tabBar.innerHTML = '';
   tabContent.innerHTML = '';
 
-  // Create tabs for each account
-  accounts.forEach(acc => {
-    const accountTab = document.createElement('div');
-    accountTab.className = `tab px-4 py-2 rounded-t-lg ${activeTab === acc.id ? 'active' : ''}`;
-    accountTab.innerHTML = `👤 ${acc.username}`;
-    accountTab.onclick = () => switchTab(acc.id);
-    tabBar.appendChild(accountTab);
-  });
+  if (!activeTab && accounts.length > 0) {
+    activeTab = accounts[0].id;
+  }
+
+  if (activeTab && activeTab !== 'logs') {
+    const account = accounts.find(acc => acc.id === activeTab);
+    if (account) {
+      const accountTab = document.createElement('div');
+      accountTab.className = `tab px-4 py-2 rounded-t-lg active`;
+      accountTab.innerHTML = `👤 ${account.username} Details`;
+      accountTab.onclick = () => switchTab(account.id);
+      tabBar.appendChild(accountTab);
+    }
+  }
 
   // Logs tab (system logs)
   const logsTab = document.createElement('div');
@@ -356,13 +336,62 @@ function renderTabs() {
     const account = accounts.find(acc => acc.id === activeTab);
     if (account) {
       renderAccountTab(account);
+    } else {
+      tabContent.innerHTML = '<div class="p-6 text-gray-400">Select an account to view details.</div>';
     }
   }
 }
 
 function renderAccountTab(account) {
   const tabContent = document.getElementById('tab-content');
+  const state = automationState[account.id];
+  const unscrollStateValue = unscrollState[account.id];
+  const isRunning = running[account.id];
+  const isPaused = state === 'paused';
+  const isActive = state === 'running';
+  const isUnscrollRunning = unscrollStateValue === 'running';
+  const isUnscrollPaused = unscrollStateValue === 'paused';
+  const isBrowserStarted = browserState[account.id] === 'started';
+  const toggleLabel = isActive ? 'Pause' : (isPaused ? 'Resume' : 'Start Auto');
+  const toggleIcon = isActive ? '⏸️' : (isPaused ? '▶️' : '🤖');
+  const unscrollToggleLabel = isUnscrollRunning ? 'Pause' : (isUnscrollPaused ? 'Resume' : 'Auto Hunt');
+  const unscrollToggleIcon = isUnscrollRunning ? '⏸️' : (isUnscrollPaused ? '▶️' : '📜');
   
+  const header = document.createElement('div');
+  header.className = 'p-4 border-b border-rpg-gold/30';
+  header.id = 'detail-actions-panel';
+  header.innerHTML = `
+    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h3 class="text-2xl font-bold text-rpg-gold">Detail Actions Panel</h3>
+        <p class="text-lg text-rpg-gold/90">${account.username}</p>
+        ${isBrowserStarted ? '<p class="text-sm text-purple-400">🌐 Browser: ON</p>' : '<p class="text-sm text-gray-400">🌐 Browser: OFF</p>'}
+        ${isActive ? '<p class="text-sm text-green-400">🤖 Auto: ON</p>' : isPaused ? '<p class="text-sm text-yellow-400">⏸️ Auto Paused</p>' : '<p class="text-sm text-gray-400">🤖 Auto: OFF</p>'}
+        ${isUnscrollRunning ? '<p class="text-sm text-blue-400">📜 Unscroll: ON</p>' : isUnscrollPaused ? '<p class="text-sm text-yellow-400">⏸️ Unscroll Paused</p>' : ''}
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="editAccount('${account.id}')" 
+                class="rpg-button px-3 py-1 rounded text-sm">✏️ Edit</button>
+        <button onclick="deleteAccount('${account.id}')" 
+                class="rpg-button px-3 py-1 rounded text-sm bg-red-900/50 border-red-500 text-red-300 hover:bg-red-700">🗑️ Delete</button>
+        <button onclick="startBrowser('${account.id}')" ${isRunning ? 'disabled' : ''} 
+                class="rpg-button px-3 py-1 rounded text-sm ${isRunning ? 'opacity-50 cursor-not-allowed' : 'bg-purple-900/50 border-purple-500 text-purple-300'}">🌐 Start Browser</button>
+        <button onclick="toggleAutomation('${account.id}')" ${!isBrowserStarted && !isActive && !isPaused ? 'disabled' : ''} 
+                class="rpg-button px-3 py-1 rounded text-sm ${!isBrowserStarted && !isActive && !isPaused ? 'opacity-50 cursor-not-allowed' : ''} ${(isActive || isPaused) ? 'bg-green-900/50 border-green-500 text-green-300' : ''}">${toggleIcon} ${toggleLabel}</button>
+        <button onclick="toggleUnscroll('${account.id}')" ${!isBrowserStarted && !isUnscrollRunning && !isUnscrollPaused ? 'disabled' : ''} 
+                class="rpg-button px-3 py-1 rounded text-sm ${!isBrowserStarted && !isUnscrollRunning && !isUnscrollPaused ? 'opacity-50 cursor-not-allowed' : ''} ${(isUnscrollRunning || isUnscrollPaused) ? 'bg-blue-900/50 border-blue-500 text-blue-300' : ''}">${unscrollToggleIcon} ${unscrollToggleLabel}</button>
+        <button onclick="listOutItems('${account.id}')" 
+                class="rpg-button px-3 py-1 rounded text-sm ${listItemsState[account.id] === 'running' ? 'bg-amber-700 border-amber-500 text-amber-100' : 'bg-amber-900/50 border-amber-500 text-amber-200 hover:bg-amber-700'}">
+          ${listItemsState[account.id] === 'running' ? '⏹️ Stop List Items' : '📦 List Out Items'}
+        </button>
+        <button onclick="openUserItems()" 
+                class="rpg-button px-3 py-1 rounded text-sm bg-indigo-900/50 border-indigo-500 text-indigo-200 hover:bg-indigo-700">📂 View User Items</button>
+        <button onclick="stopAccount('${account.id}')" ${isRunning ? '' : 'disabled'} 
+                class="rpg-button px-3 py-1 rounded text-sm ${isRunning ? '' : 'opacity-50 cursor-not-allowed'} bg-red-900/50 border-red-500 text-red-300 hover:bg-red-700">⏹️ Stop</button>
+      </div>
+    </div>
+  `;
+
   // Account-specific log content (newest logs on top)
   const outDiv = document.createElement('div');
   outDiv.className = 'output p-4 h-[600px] overflow-y-auto';
@@ -379,6 +408,7 @@ function renderAccountTab(account) {
     <div class="text-green-400 mt-1 whitespace-pre-wrap">${reversedLines.join('\n')}</div>
   </div>`;
   
+  tabContent.appendChild(header);
   tabContent.appendChild(outDiv);
 }
 
@@ -3262,6 +3292,7 @@ window.editAccount = function(id) {
   const acc = accounts.find(a => a.id === id);
   if (!acc) return;
   editingId = id;
+  showAccountForm();
   document.getElementById('form-title').innerHTML = '✏️ Edit Warrior';
   document.getElementById('username').value = acc.username;
   document.getElementById('password').value = acc.password;
@@ -3276,6 +3307,27 @@ window.deleteAccount = async function(id) {
   await ipcRenderer.invoke('save-accounts', accounts);
   loadAccounts();
 };
+
+window.showAddAccountForm = function() {
+  editingId = null;
+  showAccountForm();
+  document.getElementById('account-form').reset();
+  document.getElementById('form-title').innerHTML = '➕ Add New Warrior';
+  document.getElementById('save-btn').innerHTML = '➕ Add Warrior';
+  document.getElementById('cancel-btn').style.display = 'none';
+};
+
+function showAccountForm() {
+  const panel = document.getElementById('account-form-panel');
+  if (panel) panel.classList.remove('hidden');
+  formVisible = true;
+}
+
+function hideAccountForm() {
+  const panel = document.getElementById('account-form-panel');
+  if (panel) panel.classList.add('hidden');
+  formVisible = false;
+}
 
 // New function: Start Browser (with login)
 window.startBrowser = async function(id) {
@@ -3361,6 +3413,127 @@ window.stopAccount = async function(id) {
   appendOutput(id, '⏹️ Warrior returned to barracks and browser closed.\n');
 };
 
+window.selectAccount = function(id) {
+  activeTab = id;
+  renderTabs();
+  setTimeout(() => {
+    document.getElementById('detail-actions-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 0);
+};
+
+window.listOutItems = async function(id) {
+  const acc = accounts.find(a => a.id === id);
+  if (!acc) return;
+  if (listItemsState[id] === 'running') {
+    await ipcRenderer.invoke('stop-list-items', id);
+    listItemsState[id] = undefined;
+    appendOutput(id, '⏹️ Item listing stopped.\n');
+  } else {
+    listItemsState[id] = 'running';
+    appendOutput(id, '📦 Starting item listing (skip login)...\n');
+    await ipcRenderer.invoke('start-list-items', acc);
+  }
+  renderTabs();
+};
+
+// ===== User Items Modal =====
+window.openUserItems = async function() {
+  document.getElementById('user-items-modal').classList.remove('hidden');
+  if (!keeperFiltersLoaded) {
+    await loadUserItemsFilters();
+  }
+  await loadUserItems();
+};
+
+window.closeUserItems = function() {
+  document.getElementById('user-items-modal').classList.add('hidden');
+};
+
+async function loadUserItemsFilters() {
+  try {
+    const data = await ipcRenderer.invoke('get-keeper-items-filters');
+    const userSelect = document.getElementById('user-items-username');
+    const locationSelect = document.getElementById('user-items-location');
+    if (userSelect) {
+      userSelect.innerHTML = '<option value="">All Users</option>' +
+        data.usernames.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('');
+    }
+    if (locationSelect) {
+      locationSelect.innerHTML = '<option value="">All Locations</option>' +
+        data.locations.map(loc => `<option value="${escapeHtml(loc)}">${escapeHtml(loc)}</option>`).join('');
+    }
+    keeperFiltersLoaded = true;
+  } catch (error) {
+    console.error('Error loading keeper item filters:', error);
+  }
+}
+
+window.resetUserItemsFilters = function() {
+  const userSelect = document.getElementById('user-items-username');
+  const locationSelect = document.getElementById('user-items-location');
+  const searchInput = document.getElementById('user-items-search');
+  if (userSelect) userSelect.value = '';
+  if (locationSelect) locationSelect.value = '';
+  if (searchInput) searchInput.value = '';
+  loadUserItems();
+};
+
+window.loadUserItems = async function() {
+  const userSelect = document.getElementById('user-items-username');
+  const locationSelect = document.getElementById('user-items-location');
+  const searchInput = document.getElementById('user-items-search');
+  const results = document.getElementById('user-items-results');
+  if (!results) return;
+  results.innerHTML = '<div class="text-center text-gray-400 mt-8">Loading items...</div>';
+
+  try {
+    const data = await ipcRenderer.invoke('get-keeper-items', {
+      username: userSelect?.value || '',
+      location: locationSelect?.value || '',
+      search: searchInput?.value?.trim() || ''
+    });
+
+    if (!data || data.length === 0) {
+      results.innerHTML = '<div class="text-center text-gray-400 mt-8">No items found</div>';
+      return;
+    }
+
+    const rows = data.map(item => `
+      <tr class="border-b border-rpg-gold/20">
+        <td class="py-1 px-2 text-gray-300">${escapeHtml(item.username)}</td>
+        <td class="py-1 px-2 text-gray-300">${escapeHtml(item.location)}</td>
+        <td class="py-1 px-2 text-gray-300">${escapeHtml(item.keeper)}</td>
+        <td class="py-1 px-2 text-gray-300">${item.page_number}</td>
+        <td class="py-1 px-2 text-gray-300">${escapeHtml(item.item_name)}</td>
+        <td class="py-1 px-2 text-gray-400">${escapeHtml(item.itemid)}</td>
+        <td class="py-1 px-2 text-gray-300 text-center">${item.quantity}</td>
+      </tr>
+    `).join('');
+
+    results.innerHTML = `
+      <div class="overflow-x-auto">
+        <table class="min-w-full text-xs">
+          <thead class="border-b border-rpg-gold/40 text-gray-300">
+            <tr>
+              <th class="text-left py-1 px-2">User</th>
+              <th class="text-left py-1 px-2">Location</th>
+              <th class="text-left py-1 px-2">Keeper</th>
+              <th class="text-left py-1 px-2">Page</th>
+              <th class="text-left py-1 px-2">Item</th>
+              <th class="text-left py-1 px-2">Item ID</th>
+              <th class="text-center py-1 px-2">Qty</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    `;
+  } catch (error) {
+    console.error('Error loading user items:', error);
+    results.innerHTML = '<div class="text-center text-red-400 mt-8">Failed to load items</div>';
+  }
+};
+
 document.getElementById('account-form').onsubmit = async function(e) {
   e.preventDefault();
   const username = document.getElementById('username').value.trim();
@@ -3394,6 +3567,7 @@ document.getElementById('account-form').onsubmit = async function(e) {
   
   // Only re-render accounts, don't reload everything
   renderAccounts();
+  hideAccountForm();
 };
 
 document.getElementById('cancel-btn').onclick = function() {
@@ -3402,6 +3576,7 @@ document.getElementById('cancel-btn').onclick = function() {
   document.getElementById('form-title').innerHTML = '➕ Add New Warrior';
   document.getElementById('save-btn').innerHTML = '➕ Add Warrior';
   document.getElementById('cancel-btn').style.display = 'none';
+  hideAccountForm();
 };
 
 // Listen for automation output
@@ -3416,6 +3591,9 @@ ipcRenderer.on('automation-log', (event, { accountId, log }) => {
 ipcRenderer.on('automation-exit', (event, { accountId }) => {
   automationState[accountId] = undefined;
   running[accountId] = false;
+  if (listItemsState[accountId] === 'running') {
+    listItemsState[accountId] = undefined;
+  }
   renderAccounts();
   renderTabs();
   appendOutput(accountId, '[Puppeteer] Automation process ended.\n');

@@ -12,6 +12,7 @@ let automationProcesses = {}; // { accountId: childProcess }
 let automationWindows = {}; // { accountId: BrowserWindow }
 let puppeteerProcesses = {};
 let unscrollProcesses = {};
+let listItemsProcesses = {};
 let encyclopediaProcesses = {}; // { accountId: childProcess }
 const DB_PATH = path.join(__dirname, 'AutomatorDatabase.sqlite');
 let dbInstance = null;
@@ -293,6 +294,47 @@ ipcMain.handle('execute-db-query', async (event, { query }) => {
   return { type: 'run', changes: result.changes, lastID: result.lastID };
 });
 
+// ===== Keeper Items (User Items) =====
+ipcMain.handle('get-keeper-items-filters', async () => {
+  const db = getDb();
+  const users = await dbAll(db, 'SELECT DISTINCT username FROM keeper_items ORDER BY username');
+  const locations = await dbAll(db, 'SELECT DISTINCT location FROM keeper_items ORDER BY location');
+  return {
+    usernames: users.map(row => row.username),
+    locations: locations.map(row => row.location)
+  };
+});
+
+ipcMain.handle('get-keeper-items', async (event, { username, location, search } = {}) => {
+  const db = getDb();
+  const filters = [];
+  const params = [];
+
+  if (username) {
+    filters.push('username = ?');
+    params.push(username);
+  }
+  if (location) {
+    filters.push('location = ?');
+    params.push(location);
+  }
+  if (search) {
+    filters.push('item_name LIKE ?');
+    params.push(`%${search}%`);
+  }
+
+  const whereClause = filters.length ? `WHERE ${filters.join(' AND ')}` : '';
+  const rows = await dbAll(
+    db,
+    `SELECT username, location, keeper, page_number, item_name, itemid, quantity
+     FROM keeper_items
+     ${whereClause}
+     ORDER BY username, location, page_number, item_name`,
+    params
+  );
+  return rows;
+});
+
 ipcMain.handle('save-accounts', async (event, accounts) => {
   const db = getDb();
   await ensureAccountsTable(db);
@@ -385,6 +427,37 @@ ipcMain.handle('start-automation-skip-login', async (event, account) => {
   });
 
   return true;
+});
+
+// New handler: List items without login (placeholder flow)
+ipcMain.handle('start-list-items', async (event, account) => {
+  if (listItemsProcesses[account.id]) return false; // Already running
+
+  const child = fork(path.join(__dirname, 'list-items-skip-login.js'));
+  listItemsProcesses[account.id] = child;
+
+  child.send({ username: account.username, config: account.config || {} });
+
+  child.on('message', (msg) => {
+    win.webContents.send('automation-log', { accountId: account.id, log: msg });
+  });
+
+  child.on('exit', () => {
+    delete listItemsProcesses[account.id];
+  });
+
+  return true;
+});
+
+ipcMain.handle('stop-list-items', async (event, accountId) => {
+  const child = listItemsProcesses[accountId];
+  if (child) {
+    child.send({ type: 'stop' });
+    child.kill();
+    delete listItemsProcesses[accountId];
+    return true;
+  }
+  return false;
 });
 
 ipcMain.on('start-auto-script', (event, { accountId }) => {

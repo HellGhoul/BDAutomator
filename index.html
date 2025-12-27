@@ -319,7 +319,6 @@
       <!-- Encyclopedia Button -->
       <div class="encyclopedia-header rounded-lg p-4 mb-6">
         <div class="flex items-center justify-center space-x-4">
-          <span class="text-2xl">📚</span>
           <button id="encyclopedia-btn" onclick="openEncyclopedia()" 
                   class="rpg-button px-8 py-3 rounded-lg text-lg font-bold rpg-glow">
             📚 Open Encyclopedia
@@ -328,7 +327,6 @@
                   class="rpg-button px-8 py-3 rounded-lg text-lg font-bold rpg-glow">
             🗄️ Open Database
           </button>
-          <span class="text-2xl">📚</span>
         </div>
         <div class="text-sm text-gray-400 mt-2">
           Crawl game data • Search items • Filter by categories • Build your knowledge base
@@ -341,13 +339,16 @@
       <!-- Account List -->
       <div class="lg:col-span-2">
         <div class="rpg-border rounded-lg p-6 bg-rpg-dark">
-          <h2 class="text-2xl font-bold mb-4 text-rpg-gold">🏰 Account Legion</h2>
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-2xl font-bold text-rpg-gold">🏰 Account Legion</h2>
+            <button onclick="showAddAccountForm()" class="rpg-button px-4 py-2 rounded">➕ Add New User</button>
+          </div>
           <div id="account-list" class="space-y-4"></div>
         </div>
       </div>
 
       <!-- Add Account Form -->
-      <div class="rpg-border rounded-lg p-6 bg-rpg-dark">
+      <div id="account-form-panel" class="rpg-border rounded-lg p-6 bg-rpg-dark hidden">
         <h2 id="form-title" class="text-2xl font-bold mb-4 text-rpg-gold">➕ Add New Warrior</h2>
         <form id="account-form" class="space-y-4">
           <input type="hidden" id="account-id">
@@ -689,6 +690,51 @@
             <div id="database-query-results" class="mt-4 text-sm text-gray-300">
               Results will appear here.
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Items Modal -->
+  <div id="user-items-modal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50">
+    <div class="min-h-screen flex items-center justify-center p-4">
+      <div class="encyclopedia-header rounded-lg w-full max-w-7xl max-h-[90vh] overflow-hidden">
+        <div class="p-6 border-b border-rpg-gold">
+          <div class="flex items-center justify-between">
+            <h2 class="text-3xl font-bold text-rpg-gold">📦 User Items</h2>
+            <button onclick="closeUserItems()" class="rpg-button px-4 py-2 rounded text-xl">✕</button>
+          </div>
+          <p class="text-gray-400 mt-2">Search and filter keeper items by user and location</p>
+        </div>
+
+        <div class="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Username</label>
+              <select id="user-items-username" class="w-full bg-rpg-darker border border-rpg-gold text-white rounded px-3 py-2">
+                <option value="">All Users</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Location</label>
+              <select id="user-items-location" class="w-full bg-rpg-darker border border-rpg-gold text-white rounded px-3 py-2">
+                <option value="">All Locations</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Search Item</label>
+              <input type="text" id="user-items-search" placeholder="Search item name..."
+                     class="w-full bg-rpg-darker border border-rpg-gold text-white rounded px-3 py-2">
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2 mb-6">
+            <button onclick="loadUserItems()" class="rpg-button px-6 py-2 rounded">🔍 Search</button>
+            <button onclick="resetUserItemsFilters()" class="rpg-button px-6 py-2 rounded">♻️ Reset</button>
+          </div>
+
+          <div id="user-items-results" class="min-h-[300px]">
+            <div class="text-center text-gray-400 mt-8">Use filters to view items</div>
           </div>
         </div>
       </div>
