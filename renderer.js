@@ -384,8 +384,10 @@ function renderAccountTab(account) {
                 class="rpg-button px-3 py-1 rounded text-sm ${listItemsState[account.id] === 'running' ? 'bg-amber-700 border-amber-500 text-amber-100' : 'bg-amber-900/50 border-amber-500 text-amber-200 hover:bg-amber-700'}">
           ${listItemsState[account.id] === 'running' ? '⏹️ Stop List Items' : '📦 List Out Items'}
         </button>
-        <button onclick="openUserItems()" 
+        <button onclick="openUserItems('${account.id}')" 
                 class="rpg-button px-3 py-1 rounded text-sm bg-indigo-900/50 border-indigo-500 text-indigo-200 hover:bg-indigo-700">📂 View User Items</button>
+        <button onclick="testNotification()" 
+                class="rpg-button px-3 py-1 rounded text-sm bg-slate-900/50 border-slate-500 text-slate-200 hover:bg-slate-700">🔔 Test Notification</button>
         <button onclick="stopAccount('${account.id}')" ${isRunning ? '' : 'disabled'} 
                 class="rpg-button px-3 py-1 rounded text-sm ${isRunning ? '' : 'opacity-50 cursor-not-allowed'} bg-red-900/50 border-red-500 text-red-300 hover:bg-red-700">⏹️ Stop</button>
       </div>
@@ -3437,10 +3439,17 @@ window.listOutItems = async function(id) {
 };
 
 // ===== User Items Modal =====
-window.openUserItems = async function() {
+window.openUserItems = async function(accountId) {
   document.getElementById('user-items-modal').classList.remove('hidden');
   if (!keeperFiltersLoaded) {
     await loadUserItemsFilters();
+  }
+  if (accountId) {
+    const account = accounts.find(acc => acc.id === accountId);
+    const userSelect = document.getElementById('user-items-username');
+    if (account && userSelect) {
+      userSelect.value = account.username;
+    }
   }
   await loadUserItems();
 };
@@ -3534,6 +3543,18 @@ window.loadUserItems = async function() {
   }
 };
 
+window.testNotification = async function() {
+  try {
+    const result = await ipcRenderer.invoke('test-notification');
+    if (!result?.shown) {
+      alert('Notification API not supported or blocked by OS.');
+    }
+  } catch (error) {
+    console.error('Error sending test notification:', error);
+    alert('Failed to send test notification.');
+  }
+};
+
 document.getElementById('account-form').onsubmit = async function(e) {
   e.preventDefault();
   const username = document.getElementById('username').value.trim();
@@ -3597,6 +3618,32 @@ ipcRenderer.on('automation-exit', (event, { accountId }) => {
   renderAccounts();
   renderTabs();
   appendOutput(accountId, '[Puppeteer] Automation process ended.\n');
+});
+
+ipcRenderer.on('list-items-complete', (event, { accountId }) => {
+  listItemsState[accountId] = undefined;
+  try {
+    const account = accounts.find(acc => acc.id === accountId);
+    const name = account ? account.username : 'account';
+    new Notification('BDAutomator', { body: `Item listing completed for ${name}.` });
+  } catch (error) {
+    console.error('Desktop notification failed:', error);
+  }
+  renderTabs();
+});
+
+ipcRenderer.on('list-items-exit', (event, { accountId }) => {
+  listItemsState[accountId] = undefined;
+  renderTabs();
+});
+
+ipcRenderer.on('notify-desktop', (event, { title, body }) => {
+  try {
+    // Renderer-side fallback if main process notifications are blocked.
+    new Notification(title || 'BDAutomator', { body: body || '' });
+  } catch (error) {
+    console.error('Desktop notification failed:', error);
+  }
 });
 
 // Listen for unscroll output

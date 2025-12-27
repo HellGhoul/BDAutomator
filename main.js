@@ -6,6 +6,7 @@ const { fork } = require('child_process');
 const sqlite3 = require('sqlite3').verbose();
 const DependencyAnalyzer = require('./dependency-analyzer');
 const { logger } = require('./logger');
+const { notifyListItemsComplete } = require('./notifications');
 
 let win;
 let automationProcesses = {}; // { accountId: childProcess }
@@ -212,7 +213,12 @@ function createWindow() {
   win.loadFile('index.html');
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  if (process.platform === 'win32') {
+    app.setAppUserModelId('com.bd.automator');
+  }
+  createWindow();
+});
 
 ipcMain.handle('get-accounts', async () => {
   const db = getDb();
@@ -294,6 +300,12 @@ ipcMain.handle('execute-db-query', async (event, { query }) => {
   return { type: 'run', changes: result.changes, lastID: result.lastID };
 });
 
+// ===== Notifications =====
+ipcMain.handle('test-notification', async () => {
+  const shown = notifyListItemsComplete('Test User');
+  return { shown };
+});
+
 // ===== Keeper Items (User Items) =====
 ipcMain.handle('get-keeper-items-filters', async () => {
   const db = getDb();
@@ -372,7 +384,25 @@ ipcMain.handle('start-automation', async (event, account) => {
 
   // Listen for logs or status from child
   child.on('message', (msg) => {
-    win.webContents.send('automation-log', { accountId: account.id, log: msg });
+    if (msg && typeof msg === 'object' && msg.type === 'list-items-complete') {
+      const body = `Item listing completed for ${msg.username || account.username}.`;
+      const shown = notifyListItemsComplete(msg.username || account.username);
+      win.webContents.send('automation-log', {
+        accountId: account.id,
+        log: body
+      });
+      win.webContents.send('list-items-complete', { accountId: account.id });
+      if (!shown) {
+        win.webContents.send('notify-desktop', {
+          title: 'BDAutomator',
+          body
+        });
+      }
+      return;
+    }
+    const logText = typeof msg === 'string' ? msg : (msg && msg.log) ? String(msg.log) : '';
+    if (!logText) return;
+    win.webContents.send('automation-log', { accountId: account.id, log: logText });
   });
 
   child.on('exit', () => {
@@ -444,6 +474,7 @@ ipcMain.handle('start-list-items', async (event, account) => {
 
   child.on('exit', () => {
     delete listItemsProcesses[account.id];
+    win.webContents.send('list-items-exit', { accountId: account.id });
   });
 
   return true;

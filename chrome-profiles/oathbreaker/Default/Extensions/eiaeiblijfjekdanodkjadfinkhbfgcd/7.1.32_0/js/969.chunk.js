@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunknordpass=self.webpackChunknordpass||[]).push([[969],{27969:(s,o,n)=>{n.d(o,{DownloadLogsSection:()=>l});var t=n(74848),e=n(6442),a=n(73267),d=n(22246),c=n(2604);const l=()=>{const{formatMessage:s}=(0,e.A)();return(0,t.jsx)(d.g,{title:s({id:"downloadLogs"}),"data-testid":"settings_download-logs",onClick:c.K,children:(0,t.jsx)(a.c,{})})}}}]);
-//# sourceMappingURL=969.chunk.js.map
