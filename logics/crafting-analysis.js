@@ -188,6 +188,16 @@ function collectWishlistRequirements(nodeId, nodes, requirements) {
   const children = parseJsonValue(node.children, []);
 
   if (nodeType === 'recipe') {
+    const key = normalizeKey(node.name);
+    if (key) {
+      const reqKey = `recipe|${key}`;
+      requirements.set(reqKey, {
+        key,
+        name: node.name,
+        type: 'recipe',
+        quantity: (requirements.get(reqKey)?.quantity || 0) + 1
+      });
+    }
     (children || []).forEach(childId => collectWishlistRequirements(childId, nodes, requirements));
     return;
   }

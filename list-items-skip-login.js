@@ -150,7 +150,12 @@ async function runListItems({ username }) {
       const selector = `a[href*="${row.key}"]`;
       try {
         // Step 2.1: Wait for teleport entries matching the keeper key.
-        await helpers.waitForElement(selector, 5000);
+        try {
+          await helpers.waitForElement(selector, 5000);
+        } catch (error) {
+          //process.send && process.send(`⚠️ Teleport entry not found for ${row.key}`);
+          continue;
+        }
         let index = 0;
         while (true) {
           if (shouldStop) break;
@@ -249,10 +254,14 @@ async function runListItems({ username }) {
           }
           await finalizeStmt(stmt);
 
-          // Step 6: Wait 3 seconds before continuing.
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          // Step 6: Wait 0.1 seconds before continuing.
+          await new Promise(resolve => setTimeout(resolve, 100));
 
           // Step 7: Return to map change page before the next entry.
+          
+          await helpers.navigateTo('/maps/view');
+          
+          await helpers.clickElement(`a img[src*="empty.png"]`, { waitForNav: true });
           await helpers.navigateTo('/maps/change');
           index += 1;
         }
