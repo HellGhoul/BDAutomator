@@ -2,6 +2,16 @@ function normalizeKey(value) {
   return (value || '').trim().toLowerCase();
 }
 
+function normalizeNodeType(value) {
+  return (value || '').trim().toLowerCase();
+}
+
+function isRecipeNode(row) {
+  const typeKey = normalizeKey(row?.type);
+  const nameKey = normalizeKey(row?.name);
+  return normalizeNodeType(row?.nodeType) === 'recipe' || typeKey === 'recipe' || nameKey.startsWith('recipe of ');
+}
+
 function normalizeTitleKey(value) {
   const raw = (value || '').toLowerCase();
   return raw
@@ -103,25 +113,33 @@ function analyzeCrafting(items, depRows) {
   const craftable = [];
 
   depRows.forEach(row => {
-    if (row.nodeType !== 'item') return;
+    if (isRecipeNode(row)) return;
+    const nodeType = normalizeNodeType(row.nodeType);
+    if (nodeType !== 'item' && nodeType !== 'base_item') return;
     const children = parseJsonValue(row.children, []);
     if (!children || children.length === 0) return;
 
     const requirements = new Map();
-    collectRequirements(row.id, nodes, requirements);
+    if (nodeType === 'base_item') {
+      (children || []).forEach(childId => collectWishlistRequirements(childId, nodes, requirements));
+    } else {
+      collectWishlistRequirements(row.id, nodes, requirements);
+    }
 
     const reqList = Array.from(requirements.values());
+    if (reqList.length === 0) return;
     const unmet = reqList.filter(req => !isRequirementSatisfied(req, itemCounts, titleCounts));
 
-    if (unmet.length === 0) {
-      const craftableCount = computeCraftableCount(reqList, itemCounts, titleCounts);
-      craftable.push({
-        name: row.name,
-        complexity: row.complexity || 0,
-        requirements: reqList,
-        craftableCount
-      });
-    }
+      if (unmet.length === 0) {
+        const craftableCount = computeCraftableCount(reqList, itemCounts, titleCounts);
+        craftable.push({
+          name: row.name,
+          complexity: row.complexity || 0,
+          requirements: reqList,
+          craftableCount,
+          isLegendary: !!row.isLegendary
+        });
+      }
   });
 
   return craftable;
@@ -130,7 +148,9 @@ function analyzeCrafting(items, depRows) {
 function findItemNodeByName(depRows, name) {
   const target = normalizeKey(name);
   if (!target) return null;
-  const matches = depRows.filter(row => row.nodeType === 'item' && normalizeKey(row.name) === target);
+  const matches = depRows.filter(row =>
+    normalizeNodeType(row.nodeType) === 'item' && normalizeKey(row.name) === target
+  );
   if (matches.length === 0) return null;
   return matches.find(row => !!row.isLegendary) || matches[0];
 }
@@ -138,9 +158,67 @@ function findItemNodeByName(depRows, name) {
 function findItemNodeByPartialName(depRows, name) {
   const target = normalizeKey(name);
   if (!target) return null;
-  const matches = depRows.filter(row => row.nodeType === 'item' && normalizeKey(row.name).includes(target));
+  const matches = depRows.filter(row =>
+    normalizeNodeType(row.nodeType) === 'item' && normalizeKey(row.name).includes(target)
+  );
   if (matches.length === 0) return null;
   return matches.find(row => !!row.isLegendary) || matches[0];
+}
+
+function findNodeByName(depRows, name) {
+  const target = normalizeKey(name);
+  if (!target) return null;
+  const matches = depRows.filter(row => normalizeKey(row.name) === target);
+  if (matches.length === 0) return null;
+  return matches.find(row => normalizeNodeType(row.nodeType) === 'item') || matches[0];
+}
+
+function findNodeByPartialName(depRows, name) {
+  const target = normalizeKey(name);
+  if (!target) return null;
+  const matches = depRows.filter(row => normalizeKey(row.name).includes(target));
+  if (matches.length === 0) return null;
+  return matches.find(row => normalizeNodeType(row.nodeType) === 'item') || matches[0];
+}
+
+function collectWishlistRequirements(nodeId, nodes, requirements) {
+  const node = nodes.get(nodeId);
+  if (!node) return;
+  const nodeType = normalizeNodeType(node.nodeType);
+  const children = parseJsonValue(node.children, []);
+
+  if (nodeType === 'recipe') {
+    (children || []).forEach(childId => collectWishlistRequirements(childId, nodes, requirements));
+    return;
+  }
+
+  if (nodeType === 'base_item' || nodeType === 'title') {
+    const key = nodeType === 'title'
+      ? normalizeTitleKey(node.name)
+      : normalizeKey(node.name);
+    if (key) {
+      const reqKey = `${nodeType}|${key}`;
+      requirements.set(reqKey, {
+        key,
+        name: node.name,
+        type: nodeType,
+        quantity: (requirements.get(reqKey)?.quantity || 0) + 1
+      });
+    }
+  } else if (nodeType === 'item' && (!children || children.length === 0)) {
+    const key = normalizeKey(node.name);
+    if (key) {
+      const reqKey = `item|${key}`;
+      requirements.set(reqKey, {
+        key,
+        name: node.name,
+        type: 'item',
+        quantity: (requirements.get(reqKey)?.quantity || 0) + 1
+      });
+    }
+  }
+
+  (children || []).forEach(childId => collectWishlistRequirements(childId, nodes, requirements));
 }
 
 function buildRequirementStatus(requirements, itemCounts, titleCounts) {
@@ -175,7 +253,10 @@ function computeCraftableCount(requirements, itemCounts, titleCounts) {
 }
 
 function analyzeWishlist(items, depRows, itemName) {
-  const target = findItemNodeByName(depRows, itemName) || findItemNodeByPartialName(depRows, itemName);
+  let target = findItemNodeByName(depRows, itemName) || findItemNodeByPartialName(depRows, itemName);
+  if (!target) {
+    target = findNodeByName(depRows, itemName) || findNodeByPartialName(depRows, itemName);
+  }
   if (!target) {
     return { item: null, requirements: [], status: [] };
   }
@@ -183,7 +264,12 @@ function analyzeWishlist(items, depRows, itemName) {
   const nodes = new Map();
   depRows.forEach(row => nodes.set(row.id, row));
   const requirements = new Map();
-  collectRequirements(target.id, nodes, requirements);
+  if (normalizeNodeType(target.nodeType) === 'item') {
+    collectWishlistRequirements(target.id, nodes, requirements);
+  } else {
+    const children = parseJsonValue(target.children, []);
+    (children || []).forEach(childId => collectWishlistRequirements(childId, nodes, requirements));
+  }
 
   const reqList = Array.from(requirements.values());
   const { itemCounts, titleCounts } = buildInventoryCounts(items);

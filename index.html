@@ -739,6 +739,29 @@
             <button onclick="resetUserItemsFilters()" class="rpg-button px-6 py-2 rounded">♻️ Reset</button>
             <button onclick="analyzeCraftableItems()" class="rpg-button px-6 py-2 rounded">🧩 Analyze Crafting</button>
           </div>
+          <div id="user-items-craft-controls" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 hidden">
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Legendary Filter</label>
+              <select id="craft-filter-legendary" class="w-full bg-rpg-darker border border-rpg-gold text-white rounded px-3 py-2">
+                <option value="all">All Craftable</option>
+                <option value="legendary">Legendary Only</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Order By</label>
+              <select id="craft-sort-by" class="w-full bg-rpg-darker border border-rpg-gold text-white rounded px-3 py-2">
+                <option value="name">Name</option>
+                <option value="level">Legendary Level</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-300 mb-2">Order</label>
+              <select id="craft-sort-order" class="w-full bg-rpg-darker border border-rpg-gold text-white rounded px-3 py-2">
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+              </select>
+            </div>
+          </div>
 
           <div id="user-items-results" class="min-h-[300px]">
             <div class="text-center text-gray-400 mt-8">Use filters to view items</div>

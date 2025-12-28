@@ -211,6 +211,16 @@ function normalizeTitleKey(value) {
     .trim();
 }
 
+function parseJsonValue(value, fallback) {
+  if (value === null || value === undefined) return fallback;
+  if (typeof value !== 'string') return value;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return fallback;
+  }
+}
+
 function isTitleScrollMatch(itemName, titleName) {
   const itemKey = normalizeTitleKey(itemName);
   const titleKey = normalizeTitleKey(titleName);
@@ -3642,6 +3652,7 @@ window.setUserItemsTab = function(tab) {
   const wishPanel = document.getElementById('user-items-wishlist');
   const filters = document.getElementById('user-items-filters');
   const actions = document.getElementById('user-items-actions');
+  const craftControls = document.getElementById('user-items-craft-controls');
 
   if (viewBtn) viewBtn.classList.toggle('active', userItemsTab === 'view');
   if (craftBtn) craftBtn.classList.toggle('active', userItemsTab === 'craft');
@@ -3651,6 +3662,7 @@ window.setUserItemsTab = function(tab) {
   if (wishPanel) wishPanel.classList.toggle('hidden', userItemsTab !== 'wishlist');
   if (filters) filters.classList.toggle('hidden', userItemsTab === 'wishlist');
   if (actions) actions.classList.toggle('hidden', userItemsTab === 'wishlist');
+  if (craftControls) craftControls.classList.toggle('hidden', userItemsTab !== 'craft');
 
   if (userItemsTab === 'wishlist') {
     syncWishlistUser();
@@ -3674,17 +3686,16 @@ window.analyzeCraftableItems = async function() {
 
   try {
     const userSelect = document.getElementById('user-items-username');
-    const locationSelect = document.getElementById('user-items-location');
-    const searchInput = document.getElementById('user-items-search');
+    const username = userSelect?.value || '';
 
     const items = await ipcRenderer.invoke('get-keeper-items', {
-      username: userSelect?.value || '',
-      location: locationSelect?.value || '',
-      search: searchInput?.value?.trim() || ''
+      username,
+      location: '',
+      search: ''
     });
 
     if (!items || items.length === 0) {
-      results.innerHTML = '<div class="text-center text-gray-400 mt-8">No items found for the current filters.</div>';
+      results.innerHTML = '<div class="text-center text-gray-400 mt-8">No items found for this user.</div>';
       return;
     }
 
@@ -3698,12 +3709,56 @@ window.analyzeCraftableItems = async function() {
       return;
     }
 
-    const craftable = analyzeCrafting(items, depRows);
+    let craftable = analyzeCrafting(items, depRows);
+
+    const legendaryFilter = document.getElementById('craft-filter-legendary')?.value || 'all';
+    if (legendaryFilter === 'legendary') {
+      craftable = craftable.filter(item => item.isLegendary);
+    }
 
     if (craftable.length === 0) {
       results.innerHTML = '<div class="text-center text-gray-400 mt-8">No craftable items found for the current filters.</div>';
       return;
     }
+
+    const sortBy = document.getElementById('craft-sort-by')?.value || 'name';
+    const sortOrder = document.getElementById('craft-sort-order')?.value || 'asc';
+    let levelMap = new Map();
+
+    if (sortBy === 'level') {
+      const quotedNames = craftable
+        .map(item => `'${String(item.name || '').replace(/'/g, "''")}'`)
+        .filter(name => name !== "''");
+      if (quotedNames.length) {
+        const levelResult = await ipcRenderer.invoke('execute-db-query', {
+          query: `
+            SELECT name, requirements
+            FROM encyclopedia_items
+            WHERE name IN (${quotedNames.join(',')})
+          `
+        });
+        (levelResult?.rows || []).forEach(row => {
+          const requirements = parseJsonValue(row.requirements, {});
+          const levelValue = Number(requirements?.Level || requirements?.level || 0) || 0;
+          levelMap.set((row.name || '').trim().toLowerCase(), levelValue);
+        });
+      }
+    }
+
+    craftable.sort((a, b) => {
+      let comparison = 0;
+      if (sortBy === 'level') {
+        const levelA = levelMap.get((a.name || '').trim().toLowerCase()) || 0;
+        const levelB = levelMap.get((b.name || '').trim().toLowerCase()) || 0;
+        comparison = levelA - levelB;
+        if (comparison === 0) {
+          comparison = (a.name || '').localeCompare(b.name || '');
+        }
+      } else {
+        comparison = (a.name || '').localeCompare(b.name || '');
+      }
+      return sortOrder === 'desc' ? -comparison : comparison;
+    });
 
     const inventoryByName = new Map();
     items.forEach(inv => {
@@ -3715,6 +3770,8 @@ window.analyzeCraftableItems = async function() {
 
     const craftHtml = craftable.map((item, index) => {
       const detailId = `craft-detail-${index}`;
+      const levelValue = levelMap.get((item.name || '').trim().toLowerCase()) || 0;
+      const levelLabel = levelValue ? ` • Level: ${levelValue}` : '';
       const requirementDetails = item.requirements.map(req => {
         let matches = [];
         if (req.type === 'title') {
@@ -3749,7 +3806,7 @@ window.analyzeCraftableItems = async function() {
         <div class="rpg-border rounded-lg p-4 bg-rpg-darker mb-3">
           <div class="flex items-center justify-between mb-2">
             <div class="font-bold text-rpg-gold">${escapeHtml(item.name)}</div>
-            <div class="text-xs text-gray-400">Complexity: ${item.complexity || 0} • Craftable: ${item.craftableCount || 0}</div>
+            <div class="text-xs text-gray-400">Complexity: ${item.complexity || 0}${levelLabel} • Craftable: ${item.craftableCount || 0}</div>
           </div>
           <div class="flex items-center justify-between">
             <div class="text-xs text-gray-400">Requirements: ${item.requirements.length}</div>
