@@ -1,3 +1,8 @@
-2025/12/27-00:44:02.657 9ebaa Reusing MANIFEST /Users/macbookpro/Sources/BDAutomator/chrome-profiles/hell_fire/Default/Local Storage/leveldb/MANIFEST-000001
-2025/12/27-00:44:02.662 9ebaa Recovering log #3
-2025/12/27-00:44:02.663 9ebaa Reusing old log /Users/macbookpro/Sources/BDAutomator/chrome-profiles/hell_fire/Default/Local Storage/leveldb/000003.log 
+2025/12/28-13:30:36.469 8b90 Reusing MANIFEST C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\hell_fire\Default\Local Storage\leveldb/MANIFEST-000001
+2025/12/28-13:30:36.473 8b90 Recovering log #3
+2025/12/28-13:30:36.473 8b90 Level-0 table #3: started
+2025/12/28-13:30:36.479 8b90 Level-0 table #3: 738 bytes OK
+2025/12/28-13:30:36.479 8b90 Recovering log #4
+2025/12/28-13:30:36.481 8b90 Reusing old log C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\hell_fire\Default\Local Storage\leveldb/000004.log 
+2025/12/28-13:30:36.485 8b90 Delete type=0 #3
+2025/12/28-13:30:36.485 8b90 Delete type=2 #5

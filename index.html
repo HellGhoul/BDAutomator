@@ -709,7 +709,13 @@
         </div>
 
         <div class="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div class="flex flex-wrap gap-2 mb-6">
+            <button id="user-items-tab-view" onclick="setUserItemsTab('view')" class="rpg-button px-6 py-2 rounded">📂 View</button>
+            <button id="user-items-tab-craft" onclick="setUserItemsTab('craft')" class="rpg-button px-6 py-2 rounded">🛠️ Craft</button>
+            <button id="user-items-tab-wishlist" onclick="setUserItemsTab('wishlist')" class="rpg-button px-6 py-2 rounded">🧿 Wishlist</button>
+          </div>
+
+          <div id="user-items-filters" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">Username</label>
               <select id="user-items-username" class="w-full bg-rpg-darker border border-rpg-gold text-white rounded px-3 py-2">
@@ -728,13 +734,47 @@
                      class="w-full bg-rpg-darker border border-rpg-gold text-white rounded px-3 py-2">
             </div>
           </div>
-          <div class="flex flex-wrap gap-2 mb-6">
+          <div id="user-items-actions" class="flex flex-wrap gap-2 mb-6">
             <button onclick="loadUserItems()" class="rpg-button px-6 py-2 rounded">🔍 Search</button>
             <button onclick="resetUserItemsFilters()" class="rpg-button px-6 py-2 rounded">♻️ Reset</button>
+            <button onclick="analyzeCraftableItems()" class="rpg-button px-6 py-2 rounded">🧩 Analyze Crafting</button>
           </div>
 
           <div id="user-items-results" class="min-h-[300px]">
             <div class="text-center text-gray-400 mt-8">Use filters to view items</div>
+          </div>
+          <div id="user-items-craft-results" class="min-h-[300px] hidden">
+            <div class="text-center text-gray-400 mt-8">Use filters then analyze crafting</div>
+          </div>
+          <div id="user-items-wishlist" class="min-h-[300px] hidden">
+            <div class="rpg-border rounded-lg p-4 bg-rpg-darker">
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="text-xl font-bold text-rpg-gold">🧿 Wishlist Forge</h4>
+                <span class="text-xs text-gray-400">Check ingredients for a legendary item</span>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Username</label>
+                  <select id="wishlist-username" class="w-full bg-rpg-darker border border-rpg-gold text-white rounded px-3 py-2">
+                    <option value="">Select user...</option>
+                  </select>
+                </div>
+                <div class="md:col-span-2">
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Legendary Item Name</label>
+                  <input type="text" id="wishlist-item-name" list="wishlist-legendary-list"
+                         placeholder="Search legendary item..."
+                         class="w-full bg-rpg-darker border border-rpg-gold text-white rounded px-3 py-2">
+                  <datalist id="wishlist-legendary-list"></datalist>
+                </div>
+              </div>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <button id="wishlist-analyze-btn" onclick="analyzeWishlist()" class="rpg-button px-6 py-2 rounded">🛠️ Analyze Wishlist</button>
+                <button id="wishlist-clear-btn" onclick="clearWishlist()" class="rpg-button-secondary px-6 py-2 rounded">♻️ Clear</button>
+              </div>
+              <div id="wishlist-results" class="min-h-[120px]">
+                <div class="text-center text-gray-400 mt-4">Select a user and item to analyze</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

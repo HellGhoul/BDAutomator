@@ -29,6 +29,15 @@ function dbRun(db, sql, params = []) {
   });
 }
 
+function finalizeStmt(stmt) {
+  return new Promise((resolve, reject) => {
+    stmt.finalize(err => {
+      if (err) reject(err);
+      else resolve();
+    });
+  });
+}
+
 function getPortForAccount(accountName) {
   const basePort = 9222;
   const hash = simpleHash(accountName);
@@ -177,7 +186,7 @@ async function runListItems({ username }) {
           });
 
           // Step 5.1: Loop all pages and visit each page URL.
-          const baseUrl = page.url();
+          const baseUrl = page.url().replace(/\?[^?]*$/, '');
           const collectedItems = [];
           for (let currentPage = 1; currentPage <= maxPage; currentPage += 1) {
             await helpers.navigateTo(`${baseUrl}/page=${currentPage}`);
@@ -238,10 +247,10 @@ async function runListItems({ username }) {
               item.quantity
             ]);
           }
-          stmt.finalize();
+          await finalizeStmt(stmt);
 
           // Step 6: Wait 3 seconds before continuing.
-          await new Promise(resolve => setTimeout(resolve, 3000));
+          await new Promise(resolve => setTimeout(resolve, 1000));
 
           // Step 7: Return to map change page before the next entry.
           await helpers.navigateTo('/maps/change');
@@ -251,8 +260,109 @@ async function runListItems({ username }) {
         process.send && process.send(`⚠️ Teleport failed for ${row.key}: ${error.message}`);
       }
     }
+    
+    // Step 8: After finishing all keeper maps, collect inventory items.
+    await helpers.navigateTo('https://blackdragon.mobi/items/index');
+    process.send && process.send('🎒 Opened inventory page.');
+
+    let inventoryItems = [];
+    try {
+      await helpers.waitForElement('.block', 5000);
+      inventoryItems = await page.evaluate(() => {
+        const blocks = Array.from(document.querySelectorAll('.block'));
+        const items = [];
+
+        blocks.forEach(block => {
+          let currentQty = 1;
+          let hasQty = false;
+
+          block.childNodes.forEach(node => {
+            if (node.nodeType !== 1) return;
+            const tag = node.tagName;
+
+            if (tag === 'STRONG') {
+              const text = (node.textContent || '').trim();
+              const parsed = Number(text.replace(/,/g, ''));
+              if (!Number.isNaN(parsed) && parsed > 0) {
+                currentQty = parsed;
+                hasQty = true;
+              }
+              return;
+            }
+
+            if (tag === 'A') {
+              const href = node.getAttribute('href') || '';
+              if (!href.includes('/items/view/')) return;
+
+              const name = (node.textContent || '').trim();
+              const match = href.match(/id=([\\d]+)/);
+              const itemid = match ? match[1] : '';
+              const quantity = hasQty ? currentQty : 1;
+
+              if (name || itemid) {
+                items.push({
+                  item_name: name,
+                  itemid,
+                  quantity
+                });
+              }
+
+              hasQty = false;
+              currentQty = 1;
+              return;
+            }
+
+            if (tag === 'BR') {
+              hasQty = false;
+              currentQty = 1;
+            }
+          });
+        });
+
+        return items;
+      });
+    } catch (error) {
+      process.send && process.send(`⚠️ Inventory parse failed: ${error.message}`);
+      inventoryItems = [];
+    }
+    process.send && process.send(`📦 Inventory items found: ${inventoryItems.length}`);
+
+    await dbRun(
+      db,
+      'DELETE FROM keeper_items WHERE username = ? AND location = ?',
+      [username, 'inventory']
+    );
+
+    const inventoryStmt = db.prepare(
+      `INSERT INTO keeper_items
+       (username, location, keeper, page_number, item_name, itemid, quantity)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`
+    );
+
+    inventoryItems.forEach(item => {
+      inventoryStmt.run([
+        username,
+        'inventory',
+        'inventory',
+        1,
+        item.item_name || '',
+        item.itemid || '',
+        item.quantity || 1
+      ]);
+    });
+    await finalizeStmt(inventoryStmt);
+
+    process.send && process.send({ type: 'list-items-complete', username });
   } finally {
     db.close();
+  }
+
+  try {
+    if (browser) {
+      await browser.disconnect();
+    }
+  } catch {
+    // Ignore disconnect errors; process can exit anyway.
   }
 
   process.on('SIGTERM', async () => {

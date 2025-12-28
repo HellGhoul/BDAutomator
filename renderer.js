@@ -1,4 +1,5 @@
 const { ipcRenderer } = require('electron');
+const { analyzeCrafting, analyzeWishlist } = require('./logics/crafting-analysis');
 
 let accounts = [];
 let running = {};
@@ -23,6 +24,8 @@ let formVisible = false;
 let keeperFiltersLoaded = false;
 let isCrawling = false;
 let crawlProgress = 0;
+let userItemsTab = 'view';
+let wishlistLegendaryNames = null;
 
 // ===== LOG VIEWER FUNCTIONALITY =====
 
@@ -196,6 +199,29 @@ function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
+}
+
+function normalizeTitleKey(value) {
+  const raw = (value || '').toLowerCase();
+  return raw
+    .replace(/\([^)]*\)/g, '')
+    .replace(/[`'’"]/g, '')
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function isTitleScrollMatch(itemName, titleName) {
+  const itemKey = normalizeTitleKey(itemName);
+  const titleKey = normalizeTitleKey(titleName);
+  if (!itemKey || !titleKey) return false;
+  if (!itemKey.includes('magic scroll')) return false;
+
+  if (itemKey.startsWith(titleKey)) return true;
+  if (titleKey.startsWith('of ') && itemKey.includes(`magic scroll ${titleKey}`)) return true;
+  if (!titleKey.startsWith('of ') && itemKey.includes(`magic scroll of ${titleKey}`)) return true;
+
+  return false;
 }
 
 function updateLogStatsDisplay(stats) {
@@ -384,7 +410,7 @@ function renderAccountTab(account) {
                 class="rpg-button px-3 py-1 rounded text-sm ${listItemsState[account.id] === 'running' ? 'bg-amber-700 border-amber-500 text-amber-100' : 'bg-amber-900/50 border-amber-500 text-amber-200 hover:bg-amber-700'}">
           ${listItemsState[account.id] === 'running' ? '⏹️ Stop List Items' : '📦 List Out Items'}
         </button>
-        <button onclick="openUserItems()" 
+        <button onclick="openUserItems('${account.id}')" 
                 class="rpg-button px-3 py-1 rounded text-sm bg-indigo-900/50 border-indigo-500 text-indigo-200 hover:bg-indigo-700">📂 View User Items</button>
         <button onclick="stopAccount('${account.id}')" ${isRunning ? '' : 'disabled'} 
                 class="rpg-button px-3 py-1 rounded text-sm ${isRunning ? '' : 'opacity-50 cursor-not-allowed'} bg-red-900/50 border-red-500 text-red-300 hover:bg-red-700">⏹️ Stop</button>
@@ -3437,11 +3463,23 @@ window.listOutItems = async function(id) {
 };
 
 // ===== User Items Modal =====
-window.openUserItems = async function() {
+window.openUserItems = async function(accountId) {
   document.getElementById('user-items-modal').classList.remove('hidden');
   if (!keeperFiltersLoaded) {
     await loadUserItemsFilters();
   }
+  if (accountId) {
+    const account = accounts.find(acc => acc.id === accountId);
+    const userSelect = document.getElementById('user-items-username');
+    if (account && userSelect) {
+      userSelect.value = account.username;
+    }
+  }
+  await populateWishlistUsers();
+  wishlistLegendaryNames = null;
+  await populateWishlistLegendaryNames();
+  syncWishlistUser();
+  setUserItemsTab('view');
   await loadUserItems();
 };
 
@@ -3479,6 +3517,9 @@ window.resetUserItemsFilters = function() {
 };
 
 window.loadUserItems = async function() {
+  if (userItemsTab !== 'view') {
+    return;
+  }
   const userSelect = document.getElementById('user-items-username');
   const locationSelect = document.getElementById('user-items-location');
   const searchInput = document.getElementById('user-items-search');
@@ -3533,6 +3574,331 @@ window.loadUserItems = async function() {
     results.innerHTML = '<div class="text-center text-red-400 mt-8">Failed to load items</div>';
   }
 };
+
+async function populateWishlistUsers() {
+  const select = document.getElementById('wishlist-username');
+  if (!select) return;
+  try {
+    const data = await ipcRenderer.invoke('get-keeper-items-filters');
+    select.innerHTML = '<option value="">Select user...</option>' +
+      (data.usernames || []).map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('');
+    syncWishlistUser();
+  } catch (error) {
+    console.error('Error loading wishlist users:', error);
+  }
+}
+
+function syncWishlistUser() {
+  const wishlistUser = document.getElementById('wishlist-username');
+  const userSelect = document.getElementById('user-items-username');
+  if (wishlistUser && userSelect && !wishlistUser.value && userSelect.value) {
+    wishlistUser.value = userSelect.value;
+  }
+}
+
+async function populateWishlistLegendaryNames() {
+  const datalist = document.getElementById('wishlist-legendary-list');
+  if (!datalist) return;
+  if (wishlistLegendaryNames) {
+    datalist.innerHTML = wishlistLegendaryNames.map(name => `<option value="${escapeHtml(name)}"></option>`).join('');
+    return;
+  }
+  try {
+    const result = await ipcRenderer.invoke('execute-db-query', {
+      query: `
+        SELECT DISTINCT name FROM encyclopedia_dependencies
+        WHERE nodeType = 'item' AND isLegendary = 1
+        UNION
+        SELECT DISTINCT name FROM encyclopedia_items
+        WHERE isLegendary = 1 AND isCraftable = 1
+        ORDER BY name
+      `
+    });
+    wishlistLegendaryNames = (result?.rows || []).map(row => row.name).filter(Boolean);
+    datalist.innerHTML = wishlistLegendaryNames.map(name => `<option value="${escapeHtml(name)}"></option>`).join('');
+  } catch (error) {
+    console.error('Error loading wishlist legendary names:', error);
+  }
+}
+
+window.clearWishlist = function() {
+  const userSelect = document.getElementById('wishlist-username');
+  const input = document.getElementById('wishlist-item-name');
+  const results = document.getElementById('wishlist-results');
+  if (userSelect) userSelect.value = '';
+  if (input) input.value = '';
+  if (results) {
+    results.innerHTML = '<div class="text-center text-gray-400 mt-4">Select a user and item to analyze</div>';
+  }
+};
+
+window.setUserItemsTab = function(tab) {
+  userItemsTab = tab === 'craft' ? 'craft' : tab === 'wishlist' ? 'wishlist' : 'view';
+  const viewBtn = document.getElementById('user-items-tab-view');
+  const craftBtn = document.getElementById('user-items-tab-craft');
+  const wishBtn = document.getElementById('user-items-tab-wishlist');
+  const viewPanel = document.getElementById('user-items-results');
+  const craftPanel = document.getElementById('user-items-craft-results');
+  const wishPanel = document.getElementById('user-items-wishlist');
+  const filters = document.getElementById('user-items-filters');
+  const actions = document.getElementById('user-items-actions');
+
+  if (viewBtn) viewBtn.classList.toggle('active', userItemsTab === 'view');
+  if (craftBtn) craftBtn.classList.toggle('active', userItemsTab === 'craft');
+  if (wishBtn) wishBtn.classList.toggle('active', userItemsTab === 'wishlist');
+  if (viewPanel) viewPanel.classList.toggle('hidden', userItemsTab !== 'view');
+  if (craftPanel) craftPanel.classList.toggle('hidden', userItemsTab !== 'craft');
+  if (wishPanel) wishPanel.classList.toggle('hidden', userItemsTab !== 'wishlist');
+  if (filters) filters.classList.toggle('hidden', userItemsTab === 'wishlist');
+  if (actions) actions.classList.toggle('hidden', userItemsTab === 'wishlist');
+
+  if (userItemsTab === 'wishlist') {
+    syncWishlistUser();
+  }
+};
+
+window.toggleCraftDetails = function(detailId) {
+  const panel = document.getElementById(detailId);
+  if (panel) {
+    panel.classList.toggle('hidden');
+  }
+};
+
+window.analyzeCraftableItems = async function() {
+  if (userItemsTab !== 'craft') {
+    setUserItemsTab('craft');
+  }
+  const results = document.getElementById('user-items-craft-results');
+  if (!results) return;
+  results.innerHTML = '<div class="text-center text-gray-400 mt-8">Analyzing craftable items...</div>';
+
+  try {
+    const userSelect = document.getElementById('user-items-username');
+    const locationSelect = document.getElementById('user-items-location');
+    const searchInput = document.getElementById('user-items-search');
+
+    const items = await ipcRenderer.invoke('get-keeper-items', {
+      username: userSelect?.value || '',
+      location: locationSelect?.value || '',
+      search: searchInput?.value?.trim() || ''
+    });
+
+    if (!items || items.length === 0) {
+      results.innerHTML = '<div class="text-center text-gray-400 mt-8">No items found for the current filters.</div>';
+      return;
+    }
+
+    const depRowsResult = await ipcRenderer.invoke('execute-db-query', {
+      query: 'SELECT id, name, type, nodeType, isLegendary, children, complexity FROM encyclopedia_dependencies'
+    });
+    const depRows = depRowsResult?.rows || [];
+
+    if (!depRows.length) {
+      results.innerHTML = '<div class="text-center text-gray-400 mt-8">No dependency data found. Generate dependencies first.</div>';
+      return;
+    }
+
+    const craftable = analyzeCrafting(items, depRows);
+
+    if (craftable.length === 0) {
+      results.innerHTML = '<div class="text-center text-gray-400 mt-8">No craftable items found for the current filters.</div>';
+      return;
+    }
+
+    const inventoryByName = new Map();
+    items.forEach(inv => {
+      const key = (inv.item_name || '').trim().toLowerCase();
+      if (!key) return;
+      if (!inventoryByName.has(key)) inventoryByName.set(key, []);
+      inventoryByName.get(key).push(inv);
+    });
+
+    const craftHtml = craftable.map((item, index) => {
+      const detailId = `craft-detail-${index}`;
+      const requirementDetails = item.requirements.map(req => {
+        let matches = [];
+        if (req.type === 'title') {
+          const titleKey = (req.name || '').trim().toLowerCase();
+          inventoryByName.forEach((entries, nameKey) => {
+            if (isTitleScrollMatch(nameKey, titleKey)) {
+              matches = matches.concat(entries);
+            }
+          });
+        } else {
+          const exact = inventoryByName.get((req.name || '').trim().toLowerCase()) || [];
+          matches = matches.concat(exact);
+        }
+
+        const matchHtml = matches.length
+          ? matches.map(inv => `
+              <div class="text-xs text-gray-300">
+                ${escapeHtml(inv.item_name)} • id ${escapeHtml(inv.itemid)} • ${escapeHtml(inv.location)} • qty ${inv.quantity}
+              </div>
+            `).join('')
+          : `<div class="text-xs text-red-400">Missing in inventory</div>`;
+
+        return `
+          <div class="border border-rpg-gold/20 rounded p-2 bg-rpg-dark/40 mb-2">
+            <div class="text-sm text-rpg-gold">${escapeHtml(req.name)} <span class="text-gray-400">(${req.type})</span> x${req.quantity}</div>
+            ${matchHtml}
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div class="rpg-border rounded-lg p-4 bg-rpg-darker mb-3">
+          <div class="flex items-center justify-between mb-2">
+            <div class="font-bold text-rpg-gold">${escapeHtml(item.name)}</div>
+            <div class="text-xs text-gray-400">Complexity: ${item.complexity || 0} • Craftable: ${item.craftableCount || 0}</div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="text-xs text-gray-400">Requirements: ${item.requirements.length}</div>
+            <button onclick="toggleCraftDetails('${detailId}')" class="rpg-button px-3 py-1 rounded text-xs">Details</button>
+          </div>
+          <div id="${detailId}" class="hidden mt-3">
+            ${requirementDetails}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    results.innerHTML = `
+      <div class="text-sm text-gray-400 mb-3">Craftable items: ${craftable.length}</div>
+      ${craftHtml}
+    `;
+  } catch (error) {
+    console.error('Error analyzing craftable items:', error);
+    results.innerHTML = '<div class="text-center text-red-400 mt-8">Failed to analyze craftable items.</div>';
+  }
+};
+
+window.analyzeWishlist = async function() {
+  setUserItemsTab('wishlist');
+  const results = document.getElementById('wishlist-results');
+  const userSelect = document.getElementById('wishlist-username');
+  const input = document.getElementById('wishlist-item-name');
+
+  if (!results) return;
+  const fallbackUser = document.getElementById('user-items-username')?.value || '';
+  if (userSelect && !userSelect.value && fallbackUser) {
+    userSelect.value = fallbackUser;
+  }
+  const username = userSelect?.value || '';
+  const itemName = input?.value?.trim() || '';
+
+  if (!username || !itemName) {
+    results.innerHTML = '<div class="text-center text-gray-400 mt-4">Select a user and enter a legendary item name.</div>';
+    return;
+  }
+
+  results.innerHTML = `
+    <div class="text-center text-gray-400 mt-4">
+      Analyzing wishlist...<br/>
+      <span class="text-xs text-gray-500">user: ${escapeHtml(username)} • item: ${escapeHtml(itemName)}</span>
+    </div>
+  `;
+
+  try {
+    const items = await ipcRenderer.invoke('get-keeper-items', {
+      username,
+      location: '',
+      search: ''
+    });
+
+    const depRowsResult = await ipcRenderer.invoke('execute-db-query', {
+      query: 'SELECT id, name, type, nodeType, isLegendary, children, complexity FROM encyclopedia_dependencies'
+    });
+    const depRows = depRowsResult?.rows || [];
+
+    if (!depRows.length) {
+      results.innerHTML = '<div class="text-center text-gray-400 mt-4">No dependency data found. Generate dependencies first.</div>';
+      return;
+    }
+
+    const analysis = analyzeWishlist(items || [], depRows, itemName);
+    if (!analysis.item) {
+      results.innerHTML = '<div class="text-center text-gray-400 mt-4">Legendary item not found in dependencies.</div>';
+      return;
+    }
+
+    const inventoryByName = new Map();
+    (items || []).forEach(inv => {
+      const key = (inv.item_name || '').trim().toLowerCase();
+      if (!key) return;
+      if (!inventoryByName.has(key)) inventoryByName.set(key, []);
+      inventoryByName.get(key).push(inv);
+    });
+
+    const status = analysis.status || [];
+    const missingCount = status.filter(req => !req.satisfied).length;
+    const craftableCount = analysis.craftableCount || 0;
+
+    const requirementCards = status.map(req => {
+      let matches = [];
+      if (req.type === 'title') {
+        const titleKey = (req.name || '').trim().toLowerCase();
+        inventoryByName.forEach((entries, nameKey) => {
+          if (isTitleScrollMatch(nameKey, titleKey)) {
+            matches = matches.concat(entries);
+          }
+        });
+      } else {
+        matches = inventoryByName.get((req.name || '').trim().toLowerCase()) || [];
+      }
+
+      const matchHtml = matches.length
+        ? matches.map(inv => `
+            <div class="text-xs text-gray-300">
+              ${escapeHtml(inv.item_name)} • id ${escapeHtml(inv.itemid)} • ${escapeHtml(inv.location)} • qty ${inv.quantity}
+            </div>
+          `).join('')
+        : `<div class="text-xs text-red-400">Missing in inventory</div>`;
+
+      const badgeClass = req.satisfied ? 'text-green-400' : 'text-red-400';
+      const cardClass = req.satisfied
+        ? 'border-green-500/40 bg-green-900/20'
+        : 'border-red-500/40 bg-red-900/20';
+      return `
+        <div class="border ${cardClass} rounded p-3 mb-3">
+          <div class="flex items-center justify-between">
+            <div class="text-sm text-rpg-gold">${escapeHtml(req.name)} <span class="text-gray-400">(${req.type})</span></div>
+            <div class="text-xs ${badgeClass}">Have ${req.have} / Need ${req.quantity}</div>
+          </div>
+          <div class="mt-2">${matchHtml}</div>
+        </div>
+      `;
+    }).join('');
+
+    const legendaryNote = analysis.item.isLegendary ? '' : '<div class="text-xs text-yellow-400 mt-1">Note: item is not marked legendary in dependencies.</div>';
+    results.innerHTML = `
+      <div class="rpg-border rounded-lg p-4 bg-rpg-darker mb-4 rpg-glow">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-lg font-bold text-rpg-gold">${escapeHtml(analysis.item.name)}</div>
+            <div class="text-xs text-gray-400">ID: ${escapeHtml(analysis.item.id || '')} • Complexity: ${analysis.item.complexity || 0} • Craftable: ${craftableCount}</div>
+            ${legendaryNote}
+          </div>
+          <div class="text-sm ${missingCount === 0 ? 'text-green-400' : 'text-red-400'}">
+            ${missingCount === 0 ? 'All ingredients available' : `${missingCount} missing`}
+          </div>
+        </div>
+      </div>
+      ${requirementCards || '<div class="text-center text-gray-400 mt-4">No requirements found.</div>'}
+    `;
+  } catch (error) {
+    console.error('Wishlist analysis failed:', error);
+    results.innerHTML = '<div class="text-center text-red-400 mt-4">Failed to analyze wishlist.</div>';
+  }
+};
+
+const wishlistAnalyzeBtn = document.getElementById('wishlist-analyze-btn');
+if (wishlistAnalyzeBtn) {
+  wishlistAnalyzeBtn.addEventListener('click', () => {
+    if (typeof window.analyzeWishlist === 'function') {
+      window.analyzeWishlist();
+    }
+  });
+}
 
 document.getElementById('account-form').onsubmit = async function(e) {
   e.preventDefault();
