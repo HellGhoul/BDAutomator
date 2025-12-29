@@ -23,6 +23,7 @@ let activeDatabaseTable = null;
 let formVisible = false;
 let keeperFiltersLoaded = false;
 let taskQueues = {}; // { [accountId]: { paused, currentTaskId, tasks } }
+const expandedTaskIds = new Set();
 let isCrawling = false;
 let crawlProgress = 0;
 let userItemsTab = 'view';
@@ -3640,11 +3641,46 @@ function formatTaskRuntime(task) {
   return `${seconds}s`;
 }
 
+function formatSubtaskRuntime(subtask) {
+  if (!subtask.started_at) return '';
+  const end = subtask.ended_at || Date.now();
+  const seconds = Math.max(0, Math.round((end - subtask.started_at) / 1000));
+  return `${seconds}s`;
+}
+
+function formatTime(value) {
+  if (!value) return '-';
+  try {
+    return new Date(value).toLocaleTimeString();
+  } catch {
+    return '-';
+  }
+}
+
 function renderTaskQueue(accountId) {
   const queue = taskQueues[accountId] || { paused: true, currentTaskId: null, tasks: [] };
   const tasks = queue.tasks || [];
 
   const rows = tasks.map(task => {
+    const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
+    const hasSubtasks = subtasks.length > 0;
+    const isExpanded = expandedTaskIds.has(task.id);
+    const hasSubtaskError = hasSubtasks && subtasks.some(subtask => subtask.status === 'error');
+    const hasSubtaskRunning = hasSubtasks && subtasks.some(subtask => subtask.status === 'running');
+    const allSubtasksDone = hasSubtasks && subtasks.every(subtask => subtask.status === 'done');
+    const derivedStatus = hasSubtasks
+      ? (hasSubtaskError ? 'error' : (hasSubtaskRunning ? 'running' : (allSubtasksDone ? 'done' : task.status)))
+      : task.status;
+    const rowClass = derivedStatus === 'error'
+      ? 'bg-red-950/40 text-red-300 font-bold'
+      : derivedStatus === 'done'
+        ? 'bg-emerald-950/40 text-emerald-300'
+        : derivedStatus === 'running'
+          ? 'bg-yellow-900/40 text-yellow-200'
+          : '';
+    const toggleButton = hasSubtasks
+      ? `<button onclick="toggleTaskSubtasks('${accountId}','${task.id}')" class="text-xs text-rpg-gold hover:text-white">${isExpanded ? '▼' : '▶'} ${subtasks.length}</button>`
+      : '';
     const canReset = ['done', 'error', 'canceled'].includes(task.status);
     const canDelete = task.status !== 'running';
     const action = `
@@ -3653,16 +3689,51 @@ function renderTaskQueue(accountId) {
       <button onclick="deleteTask('${accountId}','${task.id}')" ${canDelete ? '' : 'disabled'}
               class="rpg-button px-2 py-1 rounded text-xs ${canDelete ? 'bg-red-900/50 border-red-500 text-red-300 hover:bg-red-700' : 'opacity-50 cursor-not-allowed'}">🗑 Delete</button>
     `;
+    const subtaskRows = hasSubtasks && isExpanded
+      ? `
+        <tr class="border-b border-rpg-gold/20 bg-rpg-dark/40">
+          <td class="py-2 px-2 text-gray-300" colspan="7">
+            <div class="grid gap-1">
+              ${subtasks.map(subtask => {
+                const subtaskStatus = subtask.status || 'queued';
+                const subtaskClass = subtaskStatus === 'error'
+                  ? 'text-red-300 font-bold'
+                  : subtaskStatus === 'done'
+                    ? 'text-emerald-300'
+                    : subtaskStatus === 'running'
+                      ? 'text-yellow-200'
+                      : 'text-gray-300';
+                return `
+                <div class="text-xs ${subtaskClass}">
+                  • ${escapeHtml(subtask.title || '')}
+                  <span class="text-gray-400">(${escapeHtml(subtaskStatus)})</span>
+                  <span class="text-gray-500">start ${formatTime(subtask.started_at)}</span>
+                  <span class="text-gray-500">runtime ${formatSubtaskRuntime(subtask)}</span>
+                  ${subtask.error ? `<span class="text-red-400"> ${escapeHtml(subtask.error)}</span>` : ''}
+                </div>
+                `;
+              }).join('')}
+            </div>
+          </td>
+        </tr>
+      `
+      : '';
     return `
-    <tr class="border-b border-rpg-gold/20">
-      <td class="py-1 px-2 text-gray-300">${escapeHtml(task.type.replace(/_/g, ' '))}</td>
+    <tr class="border-b border-rpg-gold/20 ${rowClass}">
+      <td class="py-1 px-2 text-gray-300">
+        <div class="flex items-center gap-2">
+          ${toggleButton}
+          <span>${escapeHtml(task.type.replace(/_/g, ' '))}</span>
+        </div>
+      </td>
       <td class="py-1 px-2 text-gray-400">${escapeHtml(task.detail || '')}</td>
-      <td class="py-1 px-2 text-gray-300">${escapeHtml(task.status || 'queued')}</td>
+      <td class="py-1 px-2 text-gray-300">${escapeHtml(derivedStatus || 'queued')}</td>
       <td class="py-1 px-2 text-gray-400">${task.started_at ? new Date(task.started_at).toLocaleTimeString() : '-'}</td>
       <td class="py-1 px-2 text-gray-400">${formatTaskRuntime(task)}</td>
       <td class="py-1 px-2 text-gray-400">${task.error ? escapeHtml(task.error) : ''}</td>
       <td class="py-1 px-2 text-center">${action}</td>
     </tr>
+    ${subtaskRows}
   `;
   }).join('');
 
@@ -3699,6 +3770,17 @@ function renderTaskQueue(accountId) {
     </div>
   `;
 }
+
+window.toggleTaskSubtasks = function(accountId, taskId) {
+  if (expandedTaskIds.has(taskId)) {
+    expandedTaskIds.delete(taskId);
+  } else {
+    expandedTaskIds.add(taskId);
+  }
+  if (activeTab === accountId) {
+    renderTabs();
+  }
+};
 
 async function enqueueTask(accountId, type, params) {
   const taskId = await ipcRenderer.invoke('task-queue-enqueue', { accountId, type, params });
@@ -3920,17 +4002,26 @@ window.analyzeCraftableItems = async function() {
     });
 
     const inventoryByName = new Map();
+    const keeperByName = new Map();
     items.forEach(inv => {
-      const key = (inv.item_name || '').trim().toLowerCase();
-      if (!key) return;
-      if (!inventoryByName.has(key)) inventoryByName.set(key, []);
-      inventoryByName.get(key).push(inv);
+      const nameKey = (inv.item_name || '').trim().toLowerCase();
+      if (!nameKey) return;
+      const locationKey = (inv.location || '').trim().toLowerCase();
+      if (locationKey === 'inventory') {
+        if (!inventoryByName.has(nameKey)) inventoryByName.set(nameKey, []);
+        inventoryByName.get(nameKey).push(inv);
+      } else {
+        if (!keeperByName.has(nameKey)) keeperByName.set(nameKey, []);
+        keeperByName.get(nameKey).push(inv);
+      }
     });
 
     const craftHtml = craftable.map((item, index) => {
       const detailId = `craft-detail-${index}`;
       const levelValue = levelMap.get((item.name || '').trim().toLowerCase()) || 0;
       const levelLabel = levelValue ? ` • Level: ${levelValue}` : '';
+      const missingSubtasks = [];
+      const usedItemIds = new Set();
       const requirementDetails = item.requirements.map(req => {
         let matches = [];
         if (req.type === 'title') {
@@ -3945,13 +4036,71 @@ window.analyzeCraftableItems = async function() {
           matches = matches.concat(exact);
         }
 
-        const matchHtml = matches.length
+        const missingCount = Math.max(0, (req.quantity || 0) - matches.length);
+        if (missingCount > 0) {
+          let candidates = [];
+          if (req.type === 'title') {
+            const titleKey = (req.name || '').trim().toLowerCase();
+            keeperByName.forEach((entries, nameKey) => {
+              if (isTitleScrollMatch(nameKey, titleKey)) {
+                candidates = candidates.concat(entries);
+              }
+            });
+          } else {
+            candidates = keeperByName.get((req.name || '').trim().toLowerCase()) || [];
+          }
+          const available = candidates.filter(entry => entry.itemid && !usedItemIds.has(entry.itemid));
+          available.slice(0, missingCount).forEach(entry => {
+            usedItemIds.add(entry.itemid);
+            missingSubtasks.push({
+              id: `subtask_${index}_${missingSubtasks.length}_${entry.itemid}`,
+              title: `Get ${entry.item_name} (${entry.itemid})`,
+              status: 'queued',
+              params: {
+                username,
+                location: entry.location,
+                keeper: entry.keeper,
+                itemid: entry.itemid,
+                itemName: entry.item_name
+              }
+            });
+          });
+        }
+
+        const inventoryHtml = matches.length
           ? matches.map(inv => `
               <div class="text-xs text-gray-300">
                 ${escapeHtml(inv.item_name)} • id ${escapeHtml(inv.itemid)} • ${escapeHtml(inv.location)} • qty ${inv.quantity}
               </div>
             `).join('')
-          : `<div class="text-xs text-red-400">Missing in inventory</div>`;
+          : '';
+
+        let keeperCandidates = [];
+        if (req.type === 'title') {
+          const titleKey = (req.name || '').trim().toLowerCase();
+          keeperByName.forEach((entries, nameKey) => {
+            if (isTitleScrollMatch(nameKey, titleKey)) {
+              keeperCandidates = keeperCandidates.concat(entries);
+            }
+          });
+        } else {
+          keeperCandidates = keeperByName.get((req.name || '').trim().toLowerCase()) || [];
+        }
+
+        const keeperHtml = keeperCandidates.length
+          ? keeperCandidates.map(inv => `
+              <div class="text-xs text-gray-300">
+                ${escapeHtml(inv.item_name)} • id ${escapeHtml(inv.itemid)} • ${escapeHtml(inv.location)} • qty ${inv.quantity}
+              </div>
+            `).join('')
+          : '';
+
+        const matchHtml = inventoryHtml
+          ? inventoryHtml
+          : `
+              <div class="text-xs text-red-400 font-bold">Not in inventory</div>
+              ${keeperHtml || ''}
+            `;
 
         return `
           <div class="border border-rpg-gold/20 rounded p-2 bg-rpg-dark/40 mb-2">
@@ -3960,6 +4109,8 @@ window.analyzeCraftableItems = async function() {
           </div>
         `;
       }).join('');
+      const subtasksPayload = encodeURIComponent(JSON.stringify(missingSubtasks));
+      const craftButton = `<button data-item-name="${escapeAttribute(item.name || '')}" data-subtasks="${escapeAttribute(subtasksPayload)}" onclick="queueCraftTaskFromButton(this)" class="rpg-button px-3 py-1 rounded text-xs">Craft</button>`;
 
       return `
         <div class="rpg-border rounded-lg p-4 bg-rpg-darker mb-3">
@@ -3969,7 +4120,10 @@ window.analyzeCraftableItems = async function() {
           </div>
           <div class="flex items-center justify-between">
             <div class="text-xs text-gray-400">Requirements: ${item.requirements.length}</div>
-            <button onclick="toggleCraftDetails('${detailId}')" class="rpg-button px-3 py-1 rounded text-xs">Details</button>
+            <div class="flex items-center gap-2">
+              ${craftButton}
+              <button onclick="toggleCraftDetails('${detailId}')" class="rpg-button px-3 py-1 rounded text-xs">Details</button>
+            </div>
           </div>
           <div id="${detailId}" class="hidden mt-3">
             ${requirementDetails}
@@ -3986,6 +4140,43 @@ window.analyzeCraftableItems = async function() {
     console.error('Error analyzing craftable items:', error);
     results.innerHTML = '<div class="text-center text-red-400 mt-8">Failed to analyze craftable items.</div>';
   }
+};
+
+window.queueCraftTask = async function(itemName, subtasks) {
+  const username = document.getElementById('user-items-username')?.value || '';
+  if (!username) {
+    alert('Select a user before queuing a craft task.');
+    return;
+  }
+  const account = accounts.find(acc => acc.username === username);
+  if (!account) {
+    alert(`No account found for username: ${username}`);
+    return;
+  }
+  const safeSubtasks = Array.isArray(subtasks) ? subtasks : [];
+  await enqueueTask(account.id, 'craft', {
+    username,
+    itemName,
+    subtasks: safeSubtasks,
+    detail: itemName
+  });
+  appendOutput(account.id, `🧵 Queued craft ${itemName}.\n`);
+  await loadTaskQueue(account.id);
+};
+
+window.queueCraftTaskFromButton = function(button) {
+  if (!button) return;
+  const itemName = button.dataset.itemName || '';
+  let subtasks = [];
+  try {
+    const raw = button.dataset.subtasks || '';
+    if (raw) {
+      subtasks = JSON.parse(decodeURIComponent(raw));
+    }
+  } catch (error) {
+    console.warn('Failed to parse craft subtasks:', error);
+  }
+  queueCraftTask(itemName, subtasks);
 };
 
 window.analyzeWishlist = async function() {

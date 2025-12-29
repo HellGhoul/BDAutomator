@@ -273,6 +273,71 @@ function startTaskProcess(task) {
   return null;
 }
 
+function runAutoGetItemSubtask(queue, params) {
+  return new Promise((resolve) => {
+    const child = fork(path.join(__dirname, 'logic', 'auto-get-item.js'));
+    queue.child = child;
+    let errorMessage = null;
+
+    child.send({
+      username: params.username,
+      location: params.location,
+      keeper: params.keeper,
+      itemid: params.itemid
+    });
+
+    child.on('message', msg => {
+      if (typeof msg === 'string' && msg.startsWith('Error:')) {
+        errorMessage = msg;
+      }
+    });
+
+    child.on('exit', code => {
+      queue.child = null;
+      resolve({ code, errorMessage });
+    });
+  });
+}
+
+async function runCraftTask(accountId, task) {
+  const queue = getTaskQueue(accountId);
+  const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
+  let hadError = false;
+
+  for (const subtask of subtasks) {
+    if (task.status === 'canceled' || queue.currentTaskId !== task.id) break;
+    const params = subtask.params || {};
+    if (!params.username || !params.location || !params.keeper || !params.itemid) {
+      subtask.status = 'error';
+      task.error = 'Missing subtask parameters';
+      hadError = true;
+      notifyTaskQueue(accountId);
+      continue;
+    }
+
+    subtask.status = 'running';
+    subtask.started_at = Date.now();
+    notifyTaskQueue(accountId);
+
+    const result = await runAutoGetItemSubtask(queue, params);
+    if (result.code === 0) {
+      subtask.status = 'done';
+    } else {
+      subtask.status = 'error';
+      task.error = result.errorMessage || `Subtask exited with code ${result.code}`;
+      subtask.error = task.error;
+      hadError = true;
+    }
+    subtask.ended_at = Date.now();
+    subtask.runtime_ms = subtask.started_at ? subtask.ended_at - subtask.started_at : null;
+    notifyTaskQueue(accountId);
+  }
+
+  if (task.status !== 'canceled') {
+    task.status = hadError ? 'error' : 'done';
+  }
+}
+
 function runNextTask(accountId) {
   const queue = getTaskQueue(accountId);
   if (queue.paused || queue.currentTaskId) return;
@@ -286,6 +351,22 @@ function runNextTask(accountId) {
   task.started_at = Date.now();
   queue.currentTaskId = task.id;
   notifyTaskQueue(accountId);
+
+  if (task.type === 'craft') {
+    runCraftTask(accountId, task)
+      .catch(err => {
+        task.status = 'error';
+        task.error = err && err.message ? err.message : String(err || 'Craft task failed');
+      })
+      .finally(() => {
+        task.ended_at = Date.now();
+        task.runtime_ms = task.started_at ? task.ended_at - task.started_at : null;
+        queue.currentTaskId = null;
+        notifyTaskQueue(accountId);
+        runNextTask(accountId);
+      });
+    return;
+  }
 
   const child = startTaskProcess(task);
   if (!child) {
@@ -332,11 +413,24 @@ app.whenReady().then(() => {
 ipcMain.handle('task-queue-enqueue', async (event, { accountId, type, params }) => {
   if (!accountId || !type) return null;
   const queue = getTaskQueue(accountId);
+  const subtasks = Array.isArray(params?.subtasks)
+    ? params.subtasks.map((subtask, index) => ({
+        id: subtask?.id ? String(subtask.id) : `${buildTaskId()}_${index}`,
+        title: subtask?.title ? String(subtask.title) : '',
+        status: subtask?.status ? String(subtask.status) : 'queued',
+        params: subtask?.params ? { ...subtask.params } : {},
+        started_at: null,
+        ended_at: null,
+        runtime_ms: null,
+        error: null
+      }))
+    : [];
   const task = {
     id: buildTaskId(),
     type,
     params: params || {},
     detail: (params && params.detail) ? String(params.detail) : '',
+    subtasks,
     status: 'queued',
     created_at: Date.now(),
     started_at: null,
@@ -372,6 +466,12 @@ ipcMain.handle('task-queue-terminate', async (event, accountId) => {
     if (task) {
       task.status = 'canceled';
       task.ended_at = Date.now();
+      if (task.type === 'craft' && Array.isArray(task.subtasks)) {
+        task.subtasks = task.subtasks.map(subtask => ({
+          ...subtask,
+          status: ['done', 'error'].includes(subtask.status) ? subtask.status : 'canceled'
+        }));
+      }
     }
     queue.child.kill();
     queue.child = null;
@@ -405,6 +505,16 @@ ipcMain.handle('task-queue-reset', async (event, { accountId, taskId }) => {
   task.ended_at = null;
   task.runtime_ms = null;
   task.error = null;
+  if (Array.isArray(task.subtasks)) {
+    task.subtasks = task.subtasks.map(subtask => ({
+      ...subtask,
+      status: 'queued',
+      started_at: null,
+      ended_at: null,
+      runtime_ms: null,
+      error: null
+    }));
+  }
   queue.queue.push(task.id);
   notifyTaskQueue(accountId);
   return true;
