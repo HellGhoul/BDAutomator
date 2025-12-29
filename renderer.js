@@ -22,6 +22,7 @@ let databaseSchema = null;
 let activeDatabaseTable = null;
 let formVisible = false;
 let keeperFiltersLoaded = false;
+let taskQueues = {}; // { [accountId]: { paused, currentTaskId, tasks } }
 let isCrawling = false;
 let crawlProgress = 0;
 let userItemsTab = 'view';
@@ -425,9 +426,7 @@ function renderAccountTab(account) {
         <button onclick="toggleUnscroll('${account.id}')" ${!isBrowserStarted && !isUnscrollRunning && !isUnscrollPaused ? 'disabled' : ''} 
                 class="rpg-button px-3 py-1 rounded text-sm ${!isBrowserStarted && !isUnscrollRunning && !isUnscrollPaused ? 'opacity-50 cursor-not-allowed' : ''} ${(isUnscrollRunning || isUnscrollPaused) ? 'bg-blue-900/50 border-blue-500 text-blue-300' : ''}">${unscrollToggleIcon} ${unscrollToggleLabel}</button>
         <button onclick="listOutItems('${account.id}')" 
-                class="rpg-button px-3 py-1 rounded text-sm ${listItemsState[account.id] === 'running' ? 'bg-amber-700 border-amber-500 text-amber-100' : 'bg-amber-900/50 border-amber-500 text-amber-200 hover:bg-amber-700'}">
-          ${listItemsState[account.id] === 'running' ? '⏹️ Stop List Items' : '📦 List Out Items'}
-        </button>
+                class="rpg-button px-3 py-1 rounded text-sm bg-amber-900/50 border-amber-500 text-amber-200 hover:bg-amber-700">📦 Queue List Items</button>
         <button onclick="fetchUserStats('${account.id}')"
                 class="rpg-button px-3 py-1 rounded text-sm bg-cyan-900/50 border-cyan-500 text-cyan-200 hover:bg-cyan-700">📊 Fetch User Stats</button>
         <button onclick="openUserItems('${account.id}')" 
@@ -437,6 +436,10 @@ function renderAccountTab(account) {
       </div>
     </div>
   `;
+
+  const taskPanel = document.createElement('div');
+  taskPanel.className = 'p-4 border-b border-rpg-gold/30';
+  taskPanel.innerHTML = renderTaskQueue(account.id);
 
   // Account-specific log content (newest logs on top)
   const outDiv = document.createElement('div');
@@ -455,6 +458,7 @@ function renderAccountTab(account) {
   </div>`;
   
   tabContent.appendChild(header);
+  tabContent.appendChild(taskPanel);
   tabContent.appendChild(outDiv);
 }
 
@@ -3465,28 +3469,23 @@ window.selectAccount = function(id) {
   setTimeout(() => {
     document.getElementById('detail-actions-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 0);
+  loadTaskQueue(id);
 };
 
 window.listOutItems = async function(id) {
   const acc = accounts.find(a => a.id === id);
   if (!acc) return;
-  if (listItemsState[id] === 'running') {
-    await ipcRenderer.invoke('stop-list-items', id);
-    listItemsState[id] = undefined;
-    appendOutput(id, '⏹️ Item listing stopped.\n');
-  } else {
-    listItemsState[id] = 'running';
-    appendOutput(id, '📦 Starting item listing (skip login)...\n');
-    await ipcRenderer.invoke('start-list-items', acc);
-  }
+  await enqueueTask(id, 'list_items', { username: acc.username });
+  appendOutput(id, '📦 Queued list items task.\n');
   renderTabs();
 };
 
 window.fetchUserStats = async function(id) {
   const acc = accounts.find(a => a.id === id);
   if (!acc) return;
-  appendOutput(id, '📊 Starting user stats fetch...\n');
-  await ipcRenderer.invoke('start-fetch-user-stats', acc);
+  await enqueueTask(id, 'fetch_user_stats', { username: acc.username });
+  appendOutput(id, '📊 Queued fetch user stats task.\n');
+  renderTabs();
 };
 
 // ===== User Items Modal =====
@@ -3571,8 +3570,8 @@ window.loadUserItems = async function() {
       const capacity = Number(item.inventory_capacity || 0);
       const canFetch = capacity > 0 && count < capacity;
       const isInventory = String(item.location || '').toLowerCase() === 'inventory';
-      const action = canFetch && !isInventory
-        ? `<button onclick="autoGetItem('${escapeAttribute(item.username)}','${escapeAttribute(item.location)}','${escapeAttribute(item.keeper)}','${escapeAttribute(item.itemid)}')"
+    const action = canFetch && !isInventory
+        ? `<button onclick="autoGetItem('${escapeAttribute(item.username)}','${escapeAttribute(item.location)}','${escapeAttribute(item.keeper)}','${escapeAttribute(item.itemid)}','${escapeAttribute(item.item_name)}')"
                  class="rpg-button px-2 py-1 rounded text-xs bg-emerald-900/50 border-emerald-500 text-emerald-200 hover:bg-emerald-700">Get</button>`
         : '';
       return `
@@ -3581,6 +3580,7 @@ window.loadUserItems = async function() {
         <td class="py-1 px-2 text-gray-300">${escapeHtml(item.location)}</td>
         <td class="py-1 px-2 text-gray-300">${escapeHtml(item.keeper)}</td>
         <td class="py-1 px-2 text-gray-300">${item.page_number}</td>
+        <td class="py-1 px-2 text-gray-400">${item.order_index ?? ''}</td>
         <td class="py-1 px-2 text-gray-300">${escapeHtml(item.item_name)}</td>
         <td class="py-1 px-2 text-gray-400">${escapeHtml(item.itemid)}</td>
         <td class="py-1 px-2 text-gray-300 text-center">${item.quantity}</td>
@@ -3598,6 +3598,7 @@ window.loadUserItems = async function() {
               <th class="text-left py-1 px-2">Location</th>
               <th class="text-left py-1 px-2">Keeper</th>
               <th class="text-left py-1 px-2">Page</th>
+              <th class="text-left py-1 px-2">Order</th>
               <th class="text-left py-1 px-2">Item</th>
               <th class="text-left py-1 px-2">Item ID</th>
               <th class="text-center py-1 px-2">Qty</th>
@@ -3614,16 +3615,133 @@ window.loadUserItems = async function() {
   }
 };
 
-window.autoGetItem = async function(username, location, keeper, itemid) {
+window.autoGetItem = async function(username, location, keeper, itemid, itemName) {
   if (!username || !location || !keeper || !itemid) return;
-  appendOutput(username, `📥 Auto getting item ${itemid}...\n`);
-  await ipcRenderer.invoke('start-auto-get-item', {
+  const account = accounts.find(acc => acc.username === username);
+  if (!account) {
+    alert(`No account found for username: ${username}`);
+    return;
+  }
+  await enqueueTask(account.id, 'auto_get_item', {
     username,
     location,
     keeper,
-    itemid
+    itemid,
+    detail: itemName ? `${itemName} (${itemid})` : `item ${itemid}`
   });
+  appendOutput(account.id, `📥 Queued auto get item ${itemid}.\n`);
   await loadUserItems();
+};
+
+function formatTaskRuntime(task) {
+  if (!task.started_at) return '';
+  const end = task.ended_at || Date.now();
+  const seconds = Math.max(0, Math.round((end - task.started_at) / 1000));
+  return `${seconds}s`;
+}
+
+function renderTaskQueue(accountId) {
+  const queue = taskQueues[accountId] || { paused: true, currentTaskId: null, tasks: [] };
+  const tasks = queue.tasks || [];
+
+  const rows = tasks.map(task => {
+    const canReset = ['done', 'error', 'canceled'].includes(task.status);
+    const canDelete = task.status !== 'running';
+    const action = `
+      <button onclick="resetTask('${accountId}','${task.id}')" ${canReset ? '' : 'disabled'}
+              class="rpg-button px-2 py-1 rounded text-xs ${canReset ? 'bg-emerald-900/50 border-emerald-500 text-emerald-200 hover:bg-emerald-700' : 'opacity-50 cursor-not-allowed'}">↺ Requeue</button>
+      <button onclick="deleteTask('${accountId}','${task.id}')" ${canDelete ? '' : 'disabled'}
+              class="rpg-button px-2 py-1 rounded text-xs ${canDelete ? 'bg-red-900/50 border-red-500 text-red-300 hover:bg-red-700' : 'opacity-50 cursor-not-allowed'}">🗑 Delete</button>
+    `;
+    return `
+    <tr class="border-b border-rpg-gold/20">
+      <td class="py-1 px-2 text-gray-300">${escapeHtml(task.type.replace(/_/g, ' '))}</td>
+      <td class="py-1 px-2 text-gray-400">${escapeHtml(task.detail || '')}</td>
+      <td class="py-1 px-2 text-gray-300">${escapeHtml(task.status || 'queued')}</td>
+      <td class="py-1 px-2 text-gray-400">${task.started_at ? new Date(task.started_at).toLocaleTimeString() : '-'}</td>
+      <td class="py-1 px-2 text-gray-400">${formatTaskRuntime(task)}</td>
+      <td class="py-1 px-2 text-gray-400">${task.error ? escapeHtml(task.error) : ''}</td>
+      <td class="py-1 px-2 text-center">${action}</td>
+    </tr>
+  `;
+  }).join('');
+
+  return `
+    <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-3">
+      <div>
+        <h4 class="text-lg font-bold text-rpg-gold">Task List</h4>
+        <p class="text-sm text-gray-400">Queue status: ${queue.paused ? 'paused' : 'running'}</p>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button onclick="startTaskQueue('${accountId}')" class="rpg-button px-3 py-1 rounded text-sm">▶ Start</button>
+        <button onclick="pauseTaskQueue('${accountId}')" class="rpg-button px-3 py-1 rounded text-sm">⏸ Pause</button>
+        <button onclick="terminateTaskQueue('${accountId}')" class="rpg-button px-3 py-1 rounded text-sm bg-red-900/50 border-red-500 text-red-300 hover:bg-red-700">⏹ Terminate</button>
+        <button onclick="clearTaskQueue('${accountId}')" class="rpg-button px-3 py-1 rounded text-sm">🗑 Clear</button>
+      </div>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-xs">
+        <thead class="border-b border-rpg-gold/40 text-gray-300">
+          <tr>
+            <th class="text-left py-1 px-2">Task</th>
+            <th class="text-left py-1 px-2">Detail</th>
+            <th class="text-left py-1 px-2">Status</th>
+            <th class="text-left py-1 px-2">Started</th>
+            <th class="text-left py-1 px-2">Runtime</th>
+            <th class="text-left py-1 px-2">Error</th>
+            <th class="text-center py-1 px-2">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows || '<tr><td class="py-2 px-2 text-gray-400" colspan="7">No tasks queued.</td></tr>'}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+async function enqueueTask(accountId, type, params) {
+  const taskId = await ipcRenderer.invoke('task-queue-enqueue', { accountId, type, params });
+  await loadTaskQueue(accountId);
+  return taskId;
+}
+
+async function loadTaskQueue(accountId) {
+  const data = await ipcRenderer.invoke('task-queue-get', accountId);
+  taskQueues[accountId] = data;
+  if (activeTab === accountId) {
+    renderTabs();
+  }
+}
+
+window.startTaskQueue = async function(accountId) {
+  await ipcRenderer.invoke('task-queue-start', accountId);
+  await loadTaskQueue(accountId);
+};
+
+window.pauseTaskQueue = async function(accountId) {
+  await ipcRenderer.invoke('task-queue-pause', accountId);
+  await loadTaskQueue(accountId);
+};
+
+window.terminateTaskQueue = async function(accountId) {
+  await ipcRenderer.invoke('task-queue-terminate', accountId);
+  await loadTaskQueue(accountId);
+};
+
+window.clearTaskQueue = async function(accountId) {
+  await ipcRenderer.invoke('task-queue-clear', accountId);
+  await loadTaskQueue(accountId);
+};
+
+window.resetTask = async function(accountId, taskId) {
+  await ipcRenderer.invoke('task-queue-reset', { accountId, taskId });
+  await loadTaskQueue(accountId);
+};
+
+window.deleteTask = async function(accountId, taskId) {
+  await ipcRenderer.invoke('task-queue-delete', { accountId, taskId });
+  await loadTaskQueue(accountId);
 };
 
 async function populateWishlistUsers() {
@@ -4096,6 +4214,14 @@ ipcRenderer.on('encyclopedia-exit', (event, { accountId }) => {
   isCrawling = false;
   updateCrawlUI();
   appendOutput(accountId, '[Encyclopedia] Encyclopedia crawling process ended.\n');
+});
+
+ipcRenderer.on('task-queue-updated', (event, payload) => {
+  if (!payload || !payload.accountId) return;
+  taskQueues[payload.accountId] = payload;
+  if (activeTab === payload.accountId) {
+    renderTabs();
+  }
 });
 
 // Listen for webview execution commands

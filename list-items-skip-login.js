@@ -134,11 +134,15 @@ async function runListItems({ username }) {
         location TEXT NOT NULL,
         keeper TEXT NOT NULL,
         page_number INTEGER NOT NULL,
+        order_index INTEGER NOT NULL,
         item_name TEXT NOT NULL,
         itemid TEXT NOT NULL,
         quantity INTEGER NOT NULL
       )`
     );
+    try {
+      await dbRun(db, 'ALTER TABLE keeper_items ADD COLUMN order_index INTEGER');
+    } catch {}
     const rows = await dbAll(
       db,
       'SELECT key, value FROM key_pair WHERE type = ? ORDER BY id',
@@ -197,12 +201,12 @@ async function runListItems({ username }) {
             await helpers.navigateTo(`${baseUrl}/page=${currentPage}`);
 
             // Step 5.3: Collect items from the second ".list" container on the page.
-            const pageItems = await page.evaluate(() => {
+            const pageItems = await page.evaluate((currentPage, pageSize) => {
               const lists = document.querySelectorAll('.list');
               if (lists.length < 2) return [];
               const container = lists[1];
               const anchors = Array.from(container.querySelectorAll('a'));
-              return anchors.map(anchor => {
+              return anchors.map((anchor, index) => {
                 const name = (anchor.textContent || '').trim();
                 const href = anchor.getAttribute('href') || '';
                 let itemid = '';
@@ -210,17 +214,19 @@ async function runListItems({ username }) {
                   itemid = match ? match[1] : '';
                 return {
                   item_name: name,
-                  itemid
+                  itemid,
+                  order_index: ((currentPage - 1) * pageSize) + index + 1
                 };
               }).filter(item => item.item_name || item.itemid);
-            });
+            }, currentPage, 25);
 
             pageItems.forEach(item => {
               collectedItems.push({
                 page_number: currentPage,
                 item_name: item.item_name,
                 itemid: item.itemid,
-                quantity: 1
+                quantity: 1,
+                order_index: item.order_index
               });
             });
           }
@@ -233,8 +239,8 @@ async function runListItems({ username }) {
           );
           const stmt = db.prepare(
             `INSERT INTO keeper_items
-             (username, location, keeper, page_number, item_name, itemid, quantity)
-             VALUES (?, ?, ?, ?, ?, ?, ?)`
+             (username, location, keeper, page_number, order_index, item_name, itemid, quantity)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
           );
           for (const item of collectedItems) {
             stmt.run([
@@ -242,6 +248,7 @@ async function runListItems({ username }) {
               row.key,
               row.value,
               item.page_number,
+              item.order_index,
               item.item_name || '',
               item.itemid || '',
               item.quantity

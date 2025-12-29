@@ -18,6 +18,15 @@ function dbRun(db, sql, params = []) {
   });
 }
 
+function dbGet(db, sql, params = []) {
+  return new Promise((resolve, reject) => {
+    db.get(sql, params, (err, row) => {
+      if (err) reject(err);
+      else resolve(row);
+    });
+  });
+}
+
 function getPortForAccount(accountName) {
   const basePort = 9222;
   const hash = simpleHash(accountName);
@@ -100,10 +109,17 @@ async function runAutoGetItem({ username, location, keeper, itemid }) {
   const helpers = new BlackDragonHelpers(page);
 
   // Step 1: Go to map change page.
+  await helpers.navigateTo('/maps/view');
+          
+  await helpers.clickElement(`a img[src*="empty.png"]`, { waitForNav: true });
   await helpers.navigateTo('/maps/change');
 
   // Step 2: Click the teleport entry for this location.
-  await helpers.clickElement(`a[href*="${location}"]`, { waitForNav: true });
+  try {
+    await helpers.clickElement(`a[href*="${location}"]`, { waitForNav: true });
+  } catch (error) {
+    await helpers.navigateTo('/maps/view');
+  }
 
   // Step 3: Click the keeper image to open storage.
   await helpers.clickElement(`a img[src*="${keeper}"]`, { waitForNav: true });
@@ -144,12 +160,25 @@ async function runAutoGetItem({ username, location, keeper, itemid }) {
     return;
   }
 
-  // Step 6: Update DB to move item to inventory and increment inventory count.
+  // Step 6: Update DB to move item to inventory and shift keeper order.
   const db = new sqlite3.Database(DB_PATH);
   try {
+    const row = await dbGet(
+      db,
+      'SELECT order_index FROM keeper_items WHERE username = ? AND location = ? AND keeper = ? AND itemid = ?',
+      [username, location, keeper, itemid]
+    );
+    const orderIndex = row ? Number(row.order_index) : null;
+    if (orderIndex) {
+      await dbRun(
+        db,
+        'UPDATE keeper_items SET order_index = order_index - 1 WHERE username = ? AND location = ? AND keeper = ? AND order_index > ?',
+        [username, location, keeper, orderIndex]
+      );
+    }
     await dbRun(
       db,
-      'UPDATE keeper_items SET location = ?, keeper = ? WHERE username = ? AND location = ? AND keeper = ? AND itemid = ?',
+      'UPDATE keeper_items SET location = ?, keeper = ?, order_index = NULL WHERE username = ? AND location = ? AND keeper = ? AND itemid = ?',
       ['inventory', 'inventory', username, location, keeper, itemid]
     );
     await dbRun(

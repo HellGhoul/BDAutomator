@@ -17,6 +17,7 @@ let listItemsProcesses = {};
 let userStatsProcesses = {};
 let autoGetItemProcesses = {};
 let encyclopediaProcesses = {}; // { accountId: childProcess }
+const taskQueues = new Map();
 const DB_PATH = path.join(__dirname, 'AutomatorDatabase.sqlite');
 let dbInstance = null;
 
@@ -215,11 +216,209 @@ function createWindow() {
   win.loadFile('index.html');
 }
 
+// ===== Task Queue =====
+function getTaskQueue(accountId) {
+  if (!taskQueues.has(accountId)) {
+    taskQueues.set(accountId, {
+      tasks: [],
+      queue: [],
+      currentTaskId: null,
+      paused: true,
+      child: null
+    });
+  }
+  return taskQueues.get(accountId);
+}
+
+function getTaskSnapshot(accountId) {
+  const queue = getTaskQueue(accountId);
+  return {
+    accountId,
+    paused: queue.paused,
+    currentTaskId: queue.currentTaskId,
+    tasks: queue.tasks
+  };
+}
+
+function notifyTaskQueue(accountId) {
+  if (!win || win.isDestroyed()) return;
+  win.webContents.send('task-queue-updated', getTaskSnapshot(accountId));
+}
+
+function buildTaskId() {
+  return `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function startTaskProcess(task) {
+  if (task.type === 'list_items') {
+    const child = fork(path.join(__dirname, 'list-items-skip-login.js'));
+    child.send({ username: task.params.username });
+    return child;
+  }
+  if (task.type === 'fetch_user_stats') {
+    const child = fork(path.join(__dirname, 'logic', 'fetch-user-stats.js'));
+    child.send({ username: task.params.username });
+    return child;
+  }
+  if (task.type === 'auto_get_item') {
+    const child = fork(path.join(__dirname, 'logic', 'auto-get-item.js'));
+    child.send({
+      username: task.params.username,
+      location: task.params.location,
+      keeper: task.params.keeper,
+      itemid: task.params.itemid
+    });
+    return child;
+  }
+  return null;
+}
+
+function runNextTask(accountId) {
+  const queue = getTaskQueue(accountId);
+  if (queue.paused || queue.currentTaskId) return;
+  const nextId = queue.queue.shift();
+  if (!nextId) return;
+
+  const task = queue.tasks.find(t => t.id === nextId);
+  if (!task) return;
+
+  task.status = 'running';
+  task.started_at = Date.now();
+  queue.currentTaskId = task.id;
+  notifyTaskQueue(accountId);
+
+  const child = startTaskProcess(task);
+  if (!child) {
+    task.status = 'error';
+    task.error = 'Unknown task type';
+    task.ended_at = Date.now();
+    queue.currentTaskId = null;
+    notifyTaskQueue(accountId);
+    runNextTask(accountId);
+    return;
+  }
+
+  queue.child = child;
+
+  child.on('message', msg => {
+    if (typeof msg === 'string' && msg.startsWith('Error:')) {
+      task.error = msg;
+    }
+  });
+
+  child.on('exit', code => {
+    task.ended_at = Date.now();
+    task.runtime_ms = task.started_at ? task.ended_at - task.started_at : null;
+    if (task.status !== 'canceled') {
+      task.status = code === 0 ? 'done' : 'error';
+      if (code !== 0 && !task.error) {
+        task.error = `Exited with code ${code}`;
+      }
+    }
+    queue.currentTaskId = null;
+    queue.child = null;
+    notifyTaskQueue(accountId);
+    runNextTask(accountId);
+  });
+}
+
 app.whenReady().then(() => {
   if (process.platform === 'win32') {
     app.setAppUserModelId('com.bd.automator');
   }
   createWindow();
+});
+
+ipcMain.handle('task-queue-enqueue', async (event, { accountId, type, params }) => {
+  if (!accountId || !type) return null;
+  const queue = getTaskQueue(accountId);
+  const task = {
+    id: buildTaskId(),
+    type,
+    params: params || {},
+    detail: (params && params.detail) ? String(params.detail) : '',
+    status: 'queued',
+    created_at: Date.now(),
+    started_at: null,
+    ended_at: null,
+    runtime_ms: null,
+    error: null
+  };
+  queue.tasks.push(task);
+  queue.queue.push(task.id);
+  notifyTaskQueue(accountId);
+  return task.id;
+});
+
+ipcMain.handle('task-queue-start', async (event, accountId) => {
+  const queue = getTaskQueue(accountId);
+  queue.paused = false;
+  notifyTaskQueue(accountId);
+  runNextTask(accountId);
+  return true;
+});
+
+ipcMain.handle('task-queue-pause', async (event, accountId) => {
+  const queue = getTaskQueue(accountId);
+  queue.paused = true;
+  notifyTaskQueue(accountId);
+  return true;
+});
+
+ipcMain.handle('task-queue-terminate', async (event, accountId) => {
+  const queue = getTaskQueue(accountId);
+  if (queue.child && queue.currentTaskId) {
+    const task = queue.tasks.find(t => t.id === queue.currentTaskId);
+    if (task) {
+      task.status = 'canceled';
+      task.ended_at = Date.now();
+    }
+    queue.child.kill();
+    queue.child = null;
+    queue.currentTaskId = null;
+    notifyTaskQueue(accountId);
+    runNextTask(accountId);
+    return true;
+  }
+  return false;
+});
+
+ipcMain.handle('task-queue-clear', async (event, accountId) => {
+  const queue = getTaskQueue(accountId);
+  queue.queue = [];
+  queue.tasks = queue.tasks.filter(task => task.status === 'running');
+  notifyTaskQueue(accountId);
+  return true;
+});
+
+ipcMain.handle('task-queue-get', async (event, accountId) => {
+  return getTaskSnapshot(accountId);
+});
+
+ipcMain.handle('task-queue-reset', async (event, { accountId, taskId }) => {
+  const queue = getTaskQueue(accountId);
+  const task = queue.tasks.find(t => t.id === taskId);
+  if (!task) return false;
+  if (!['done', 'error', 'canceled'].includes(task.status)) return false;
+  task.status = 'queued';
+  task.started_at = null;
+  task.ended_at = null;
+  task.runtime_ms = null;
+  task.error = null;
+  queue.queue.push(task.id);
+  notifyTaskQueue(accountId);
+  return true;
+});
+
+ipcMain.handle('task-queue-delete', async (event, { accountId, taskId }) => {
+  const queue = getTaskQueue(accountId);
+  if (queue.currentTaskId === taskId) {
+    return false;
+  }
+  queue.queue = queue.queue.filter(id => id !== taskId);
+  queue.tasks = queue.tasks.filter(task => task.id !== taskId);
+  notifyTaskQueue(accountId);
+  return true;
 });
 
 ipcMain.handle('get-accounts', async () => {
@@ -343,7 +542,11 @@ ipcMain.handle('get-keeper-items', async (event, { username, location, search } 
     `SELECT keeper_items.username,
             keeper_items.location,
             keeper_items.keeper,
-            keeper_items.page_number,
+            CASE
+              WHEN keeper_items.order_index IS NULL THEN keeper_items.page_number
+              ELSE CAST((keeper_items.order_index + 24) / 25 AS INT)
+            END AS page_number,
+            keeper_items.order_index,
             keeper_items.item_name,
             keeper_items.itemid,
             keeper_items.quantity,
@@ -352,7 +555,13 @@ ipcMain.handle('get-keeper-items', async (event, { username, location, search } 
      FROM keeper_items
      LEFT JOIN users ON users.username = keeper_items.username
      ${whereClause}
-     ORDER BY keeper_items.username, keeper_items.location, keeper_items.page_number, keeper_items.item_name`,
+     ORDER BY keeper_items.username,
+              keeper_items.location,
+              CASE
+                WHEN keeper_items.order_index IS NULL THEN keeper_items.page_number
+                ELSE CAST((keeper_items.order_index + 24) / 25 AS INT)
+              END,
+              keeper_items.item_name`,
     params
   );
   return rows;
