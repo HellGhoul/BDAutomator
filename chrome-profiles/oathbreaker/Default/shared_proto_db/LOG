@@ -1,3 +1,6 @@
-2025/12/28-20:49:45.882 8900 Reusing MANIFEST C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\oathbreaker\Default\shared_proto_db/MANIFEST-000001
-2025/12/28-20:49:45.883 8900 Recovering log #3
-2025/12/28-20:49:45.884 8900 Reusing old log C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\oathbreaker\Default\shared_proto_db/000003.log 
+2025/12/29-10:41:10.268 1356fb Reusing MANIFEST /Users/macbookpro/Sources/BDAutomator/chrome-profiles/oathbreaker/Default/shared_proto_db/MANIFEST-000001
+2025/12/29-10:41:10.269 1356fb Recovering log #3
+2025/12/29-10:41:10.274 1356fb Reusing old log /Users/macbookpro/Sources/BDAutomator/chrome-profiles/oathbreaker/Default/shared_proto_db/000003.log 
+2025/12/29-10:41:10.485 1356dc Level-0 table #5: started
+2025/12/29-10:41:10.510 1356dc Level-0 table #5: 122525 bytes OK
+2025/12/29-10:41:10.543 1356dc Delete type=0 #3

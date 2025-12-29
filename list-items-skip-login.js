@@ -206,13 +206,8 @@ async function runListItems({ username }) {
                 const name = (anchor.textContent || '').trim();
                 const href = anchor.getAttribute('href') || '';
                 let itemid = '';
-                try {
-                  const url = new URL(href, window.location.origin);
-                  itemid = url.searchParams.get('id') || '';
-                } catch {
-                  const match = href.match(/id=([^&]+)/);
+                  const match = href.match(/id=([\d]+)/);
                   itemid = match ? match[1] : '';
-                }
                 return {
                   item_name: name,
                   itemid
@@ -304,7 +299,7 @@ async function runListItems({ username }) {
               if (!href.includes('/items/view/')) return;
 
               const name = (node.textContent || '').trim();
-              const match = href.match(/id=([\\d]+)/);
+              const match = href.match(/id=([\d]+)/);
               const itemid = match ? match[1] : '';
               const quantity = hasQty ? currentQty : 1;
 

@@ -14,6 +14,8 @@ let automationWindows = {}; // { accountId: BrowserWindow }
 let puppeteerProcesses = {};
 let unscrollProcesses = {};
 let listItemsProcesses = {};
+let userStatsProcesses = {};
+let autoGetItemProcesses = {};
 let encyclopediaProcesses = {}; // { accountId: childProcess }
 const DB_PATH = path.join(__dirname, 'AutomatorDatabase.sqlite');
 let dbInstance = null;
@@ -323,25 +325,34 @@ ipcMain.handle('get-keeper-items', async (event, { username, location, search } 
   const params = [];
 
   if (username) {
-    filters.push('username = ?');
+    filters.push('keeper_items.username = ?');
     params.push(username);
   }
   if (location) {
-    filters.push('location = ?');
+    filters.push('keeper_items.location = ?');
     params.push(location);
   }
   if (search) {
-    filters.push('item_name LIKE ?');
+    filters.push('keeper_items.item_name LIKE ?');
     params.push(`%${search}%`);
   }
 
   const whereClause = filters.length ? `WHERE ${filters.join(' AND ')}` : '';
   const rows = await dbAll(
     db,
-    `SELECT username, location, keeper, page_number, item_name, itemid, quantity
+    `SELECT keeper_items.username,
+            keeper_items.location,
+            keeper_items.keeper,
+            keeper_items.page_number,
+            keeper_items.item_name,
+            keeper_items.itemid,
+            keeper_items.quantity,
+            users.inventory_count,
+            users.inventory_capacity
      FROM keeper_items
+     LEFT JOIN users ON users.username = keeper_items.username
      ${whereClause}
-     ORDER BY username, location, page_number, item_name`,
+     ORDER BY keeper_items.username, keeper_items.location, keeper_items.page_number, keeper_items.item_name`,
     params
   );
   return rows;
@@ -489,6 +500,48 @@ ipcMain.handle('stop-list-items', async (event, accountId) => {
     return true;
   }
   return false;
+});
+
+ipcMain.handle('start-fetch-user-stats', async (event, account) => {
+  if (userStatsProcesses[account.id]) return false;
+
+  const child = fork(path.join(__dirname, 'logic', 'fetch-user-stats.js'));
+  userStatsProcesses[account.id] = child;
+
+  child.send({ username: account.username, config: account.config || {} });
+
+  child.on('message', (msg) => {
+    win.webContents.send('automation-log', { accountId: account.id, log: msg });
+  });
+
+  child.on('exit', () => {
+    delete userStatsProcesses[account.id];
+  });
+
+  return true;
+});
+
+ipcMain.handle('start-auto-get-item', async (event, payload) => {
+  const { username, location, keeper, itemid } = payload || {};
+  if (!username || !location || !keeper || !itemid) return false;
+
+  const key = `${username}:${itemid}`;
+  if (autoGetItemProcesses[key]) return false;
+
+  const child = fork(path.join(__dirname, 'logic', 'auto-get-item.js'));
+  autoGetItemProcesses[key] = child;
+
+  child.send({ username, location, keeper, itemid });
+
+  child.on('message', (msg) => {
+    win.webContents.send('automation-log', { accountId: username, log: msg });
+  });
+
+  child.on('exit', () => {
+    delete autoGetItemProcesses[key];
+  });
+
+  return true;
 });
 
 ipcMain.on('start-auto-script', (event, { accountId }) => {

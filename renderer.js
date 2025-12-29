@@ -201,6 +201,14 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
+function escapeAttribute(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 function normalizeTitleKey(value) {
   const raw = (value || '').toLowerCase();
   return raw
@@ -420,6 +428,8 @@ function renderAccountTab(account) {
                 class="rpg-button px-3 py-1 rounded text-sm ${listItemsState[account.id] === 'running' ? 'bg-amber-700 border-amber-500 text-amber-100' : 'bg-amber-900/50 border-amber-500 text-amber-200 hover:bg-amber-700'}">
           ${listItemsState[account.id] === 'running' ? '⏹️ Stop List Items' : '📦 List Out Items'}
         </button>
+        <button onclick="fetchUserStats('${account.id}')"
+                class="rpg-button px-3 py-1 rounded text-sm bg-cyan-900/50 border-cyan-500 text-cyan-200 hover:bg-cyan-700">📊 Fetch User Stats</button>
         <button onclick="openUserItems('${account.id}')" 
                 class="rpg-button px-3 py-1 rounded text-sm bg-indigo-900/50 border-indigo-500 text-indigo-200 hover:bg-indigo-700">📂 View User Items</button>
         <button onclick="stopAccount('${account.id}')" ${isRunning ? '' : 'disabled'} 
@@ -3472,6 +3482,13 @@ window.listOutItems = async function(id) {
   renderTabs();
 };
 
+window.fetchUserStats = async function(id) {
+  const acc = accounts.find(a => a.id === id);
+  if (!acc) return;
+  appendOutput(id, '📊 Starting user stats fetch...\n');
+  await ipcRenderer.invoke('start-fetch-user-stats', acc);
+};
+
 // ===== User Items Modal =====
 window.openUserItems = async function(accountId) {
   document.getElementById('user-items-modal').classList.remove('hidden');
@@ -3549,7 +3566,16 @@ window.loadUserItems = async function() {
       return;
     }
 
-    const rows = data.map(item => `
+    const rows = data.map(item => {
+      const count = Number(item.inventory_count || 0);
+      const capacity = Number(item.inventory_capacity || 0);
+      const canFetch = capacity > 0 && count < capacity;
+      const isInventory = String(item.location || '').toLowerCase() === 'inventory';
+      const action = canFetch && !isInventory
+        ? `<button onclick="autoGetItem('${escapeAttribute(item.username)}','${escapeAttribute(item.location)}','${escapeAttribute(item.keeper)}','${escapeAttribute(item.itemid)}')"
+                 class="rpg-button px-2 py-1 rounded text-xs bg-emerald-900/50 border-emerald-500 text-emerald-200 hover:bg-emerald-700">Get</button>`
+        : '';
+      return `
       <tr class="border-b border-rpg-gold/20">
         <td class="py-1 px-2 text-gray-300">${escapeHtml(item.username)}</td>
         <td class="py-1 px-2 text-gray-300">${escapeHtml(item.location)}</td>
@@ -3558,8 +3584,10 @@ window.loadUserItems = async function() {
         <td class="py-1 px-2 text-gray-300">${escapeHtml(item.item_name)}</td>
         <td class="py-1 px-2 text-gray-400">${escapeHtml(item.itemid)}</td>
         <td class="py-1 px-2 text-gray-300 text-center">${item.quantity}</td>
+        <td class="py-1 px-2 text-center">${action}</td>
       </tr>
-    `).join('');
+    `;
+    }).join('');
 
     results.innerHTML = `
       <div class="overflow-x-auto">
@@ -3573,6 +3601,7 @@ window.loadUserItems = async function() {
               <th class="text-left py-1 px-2">Item</th>
               <th class="text-left py-1 px-2">Item ID</th>
               <th class="text-center py-1 px-2">Qty</th>
+              <th class="text-center py-1 px-2">Action</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
@@ -3583,6 +3612,18 @@ window.loadUserItems = async function() {
     console.error('Error loading user items:', error);
     results.innerHTML = '<div class="text-center text-red-400 mt-8">Failed to load items</div>';
   }
+};
+
+window.autoGetItem = async function(username, location, keeper, itemid) {
+  if (!username || !location || !keeper || !itemid) return;
+  appendOutput(username, `📥 Auto getting item ${itemid}...\n`);
+  await ipcRenderer.invoke('start-auto-get-item', {
+    username,
+    location,
+    keeper,
+    itemid
+  });
+  await loadUserItems();
 };
 
 async function populateWishlistUsers() {
