@@ -255,13 +255,18 @@ function startTaskProcess(task) {
     child.send({ username: task.params.username });
     return child;
   }
+  if (task.type === 'list_inventory') {
+    const child = fork(path.join(__dirname, 'logics', 'list-inventory-items.js'));
+    child.send({ username: task.params.username });
+    return child;
+  }
   if (task.type === 'fetch_user_stats') {
-    const child = fork(path.join(__dirname, 'logic', 'fetch-user-stats.js'));
+    const child = fork(path.join(__dirname, 'logics', 'fetch-user-stats.js'));
     child.send({ username: task.params.username });
     return child;
   }
   if (task.type === 'auto_get_item') {
-    const child = fork(path.join(__dirname, 'logic', 'auto-get-item.js'));
+    const child = fork(path.join(__dirname, 'logics', 'auto-get-item.js'));
     child.send({
       username: task.params.username,
       location: task.params.location,
@@ -273,18 +278,29 @@ function startTaskProcess(task) {
   return null;
 }
 
-function runAutoGetItemSubtask(queue, params) {
+function runSubtaskProcess(queue, params) {
   return new Promise((resolve) => {
-    const child = fork(path.join(__dirname, 'logic', 'auto-get-item.js'));
+    const action = params?.action || 'auto_get_item';
+    const scriptPath = action === 'craft'
+      ? path.join(__dirname, 'logics', 'craft-item.js')
+      : path.join(__dirname, 'logics', 'auto-get-item.js');
+    const child = fork(scriptPath);
     queue.child = child;
     let errorMessage = null;
 
-    child.send({
-      username: params.username,
-      location: params.location,
-      keeper: params.keeper,
-      itemid: params.itemid
-    });
+    if (action === 'craft') {
+      child.send({
+        username: params.username,
+        itemIds: params.itemIds || []
+      });
+    } else {
+      child.send({
+        username: params.username,
+        location: params.location,
+        keeper: params.keeper,
+        itemid: params.itemid
+      });
+    }
 
     child.on('message', msg => {
       if (typeof msg === 'string' && msg.startsWith('Error:')) {
@@ -307,7 +323,11 @@ async function runCraftTask(accountId, task) {
   for (const subtask of subtasks) {
     if (task.status === 'canceled' || queue.currentTaskId !== task.id) break;
     const params = subtask.params || {};
-    if (!params.username || !params.location || !params.keeper || !params.itemid) {
+    const action = params.action || 'auto_get_item';
+    const hasCraftParams = action === 'craft'
+      ? params.username && Array.isArray(params.itemIds) && params.itemIds.length >= 2
+      : params.username && params.location && params.keeper && params.itemid;
+    if (!hasCraftParams) {
       subtask.status = 'error';
       task.error = 'Missing subtask parameters';
       hadError = true;
@@ -319,7 +339,7 @@ async function runCraftTask(accountId, task) {
     subtask.started_at = Date.now();
     notifyTaskQueue(accountId);
 
-    const result = await runAutoGetItemSubtask(queue, params);
+    const result = await runSubtaskProcess(queue, params);
     if (result.code === 0) {
       subtask.status = 'done';
     } else {
@@ -824,7 +844,7 @@ ipcMain.handle('stop-list-items', async (event, accountId) => {
 ipcMain.handle('start-fetch-user-stats', async (event, account) => {
   if (userStatsProcesses[account.id]) return false;
 
-  const child = fork(path.join(__dirname, 'logic', 'fetch-user-stats.js'));
+  const child = fork(path.join(__dirname, 'logics', 'fetch-user-stats.js'));
   userStatsProcesses[account.id] = child;
 
   child.send({ username: account.username, config: account.config || {} });
@@ -847,7 +867,7 @@ ipcMain.handle('start-auto-get-item', async (event, payload) => {
   const key = `${username}:${itemid}`;
   if (autoGetItemProcesses[key]) return false;
 
-  const child = fork(path.join(__dirname, 'logic', 'auto-get-item.js'));
+  const child = fork(path.join(__dirname, 'logics', 'auto-get-item.js'));
   autoGetItemProcesses[key] = child;
 
   child.send({ username, location, keeper, itemid });

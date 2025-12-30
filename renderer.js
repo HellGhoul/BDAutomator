@@ -427,7 +427,9 @@ function renderAccountTab(account) {
         <button onclick="toggleUnscroll('${account.id}')" ${!isBrowserStarted && !isUnscrollRunning && !isUnscrollPaused ? 'disabled' : ''} 
                 class="rpg-button px-3 py-1 rounded text-sm ${!isBrowserStarted && !isUnscrollRunning && !isUnscrollPaused ? 'opacity-50 cursor-not-allowed' : ''} ${(isUnscrollRunning || isUnscrollPaused) ? 'bg-blue-900/50 border-blue-500 text-blue-300' : ''}">${unscrollToggleIcon} ${unscrollToggleLabel}</button>
         <button onclick="listOutItems('${account.id}')" 
-                class="rpg-button px-3 py-1 rounded text-sm bg-amber-900/50 border-amber-500 text-amber-200 hover:bg-amber-700">📦 Queue List Items</button>
+                class="rpg-button px-3 py-1 rounded text-sm bg-amber-900/50 border-amber-500 text-amber-200 hover:bg-amber-700">🧺 Queue List Keeper Items</button>
+        <button onclick="listInventoryItems('${account.id}')" 
+                class="rpg-button px-3 py-1 rounded text-sm bg-orange-900/50 border-orange-500 text-orange-200 hover:bg-orange-700">🎒 Queue List Inventory</button>
         <button onclick="fetchUserStats('${account.id}')"
                 class="rpg-button px-3 py-1 rounded text-sm bg-cyan-900/50 border-cyan-500 text-cyan-200 hover:bg-cyan-700">📊 Fetch User Stats</button>
         <button onclick="openUserItems('${account.id}')" 
@@ -3477,7 +3479,15 @@ window.listOutItems = async function(id) {
   const acc = accounts.find(a => a.id === id);
   if (!acc) return;
   await enqueueTask(id, 'list_items', { username: acc.username });
-  appendOutput(id, '📦 Queued list items task.\n');
+  appendOutput(id, '🧺 Queued keeper items task.\n');
+  renderTabs();
+};
+
+window.listInventoryItems = async function(id) {
+  const acc = accounts.find(a => a.id === id);
+  if (!acc) return;
+  await enqueueTask(id, 'list_inventory', { username: acc.username });
+  appendOutput(id, '🎒 Queued inventory items task.\n');
   renderTabs();
 };
 
@@ -3952,6 +3962,117 @@ window.analyzeCraftableItems = async function() {
 
     let craftable = analyzeCrafting(items, depRows);
 
+    const nodeMap = new Map();
+    depRows.forEach(row => nodeMap.set(row.id, row));
+    const normalizeKey = value => (value || '').trim().toLowerCase();
+    const normalizeNodeType = value => (value || '').trim().toLowerCase();
+
+    const findCraftNodeByName = (name) => {
+      const target = normalizeKey(name);
+      if (!target) return null;
+      const matches = depRows.filter(row => {
+        const type = normalizeNodeType(row.nodeType);
+        return (type === 'item' || type === 'base_item') && normalizeKey(row.name) === target;
+      });
+      if (!matches.length) return null;
+      return matches.find(row => row.isLegendary) || matches[0];
+    };
+
+    const collectCraftingInfo = (nodeId, info, visited) => {
+      if (!nodeId || visited.has(nodeId)) return;
+      visited.add(nodeId);
+      const node = nodeMap.get(nodeId);
+      if (!node) return;
+      const nodeType = normalizeNodeType(node.nodeType);
+      if (nodeType === 'title') {
+        info.titles.add(node.name);
+      }
+      if (nodeType === 'recipe') {
+        info.recipes.add(node.name);
+      }
+      const children = parseJsonValue(node.children, []);
+      (children || []).forEach(childId => collectCraftingInfo(childId, info, visited));
+    };
+
+    const findItemEntryByName = (name, usedIds) => {
+      const target = normalizeKey(name);
+      if (!target) return null;
+      const entries = inventoryByName.get(target) || [];
+      return entries.find(entry => entry.itemid && !usedIds.has(String(entry.itemid))) || null;
+    };
+
+    const findScrollEntryByTitle = (titleName, usedIds) => {
+      if (!titleName) return null;
+      const matches = (items || []).filter(entry => {
+        if ((entry.location || '').toLowerCase() !== 'inventory') return false;
+        return isTitleScrollMatch(entry.item_name || '', titleName);
+      });
+      return matches.find(entry => entry.itemid && !usedIds.has(String(entry.itemid))) || null;
+    };
+
+    const formatTitledItemName = (titleName, baseName) => {
+      const cleanTitle = (titleName || '').replace(/\.+$/g, '').trim();
+      const cleanBase = (baseName || '').trim();
+      if (!cleanTitle) return cleanBase;
+      return `${cleanTitle} ${cleanBase}`.replace(/\s+/g, ' ').trim();
+    };
+
+    const buildCraftStepsForItem = (itemName, usedIds) => {
+      const targetNode = findCraftNodeByName(itemName);
+      if (!targetNode) return [];
+      const steps = [];
+
+      const recipeChildIds = parseJsonValue(targetNode.children, []);
+      const recipeNode = (recipeChildIds || [])
+        .map(id => nodeMap.get(id))
+        .find(node => normalizeNodeType(node?.nodeType) === 'recipe');
+
+      if (recipeNode) {
+        const recipeChildren = parseJsonValue(recipeNode.children, []);
+        const pairs = [];
+        let pendingTitle = null;
+
+        (recipeChildren || []).forEach(childId => {
+          const child = nodeMap.get(childId);
+          if (!child) return;
+          const childType = normalizeNodeType(child.nodeType);
+          if (childType === 'title') {
+            pendingTitle = child;
+            return;
+          }
+          if (pendingTitle && (childType === 'item' || childType === 'base_item')) {
+            pairs.push({ title: pendingTitle, base: child });
+            pendingTitle = null;
+          }
+        });
+
+        pairs.forEach(pair => {
+          const baseEntry = findItemEntryByName(pair.base.name || '', usedIds);
+          const scrollEntry = findScrollEntryByTitle(pair.title.name || '', usedIds);
+          const baseId = baseEntry?.itemid ? String(baseEntry.itemid) : '';
+          const scrollId = scrollEntry?.itemid ? String(scrollEntry.itemid) : '';
+          if (baseId) usedIds.add(baseId);
+          if (scrollId) usedIds.add(scrollId);
+          const titledName = formatTitledItemName(pair.title.name || '', pair.base.name || '');
+
+          steps.push({
+            id: `subtask_${normalizeKey(itemName)}_${normalizeKey(titledName)}_${steps.length}`,
+            title: `Craft ${titledName} using ${pair.base.name} ${baseId ? `(id ${baseId})` : '(id n/a)'} + ${pair.title.name} magic scroll ${scrollId ? `(id ${scrollId})` : '(id n/a)'}`,
+            status: 'queued',
+            resultName: titledName,
+            resultId: baseId || 'n/a',
+            params: {
+              action: 'craft',
+              username,
+              itemIds: [baseId, scrollId].filter(Boolean)
+            }
+          });
+        });
+      }
+
+      return steps;
+    };
+
     const legendaryFilter = document.getElementById('craft-filter-legendary')?.value || 'all';
     if (legendaryFilter === 'legendary') {
       craftable = craftable.filter(item => item.isLegendary);
@@ -4102,14 +4223,75 @@ window.analyzeCraftableItems = async function() {
               ${keeperHtml || ''}
             `;
 
+        let craftingInfoHtml = '';
+        if (req.type === 'item' || req.type === 'base_item') {
+          const craftNode = findCraftNodeByName(req.name);
+          if (craftNode) {
+            const info = { titles: new Set(), recipes: new Set() };
+            collectCraftingInfo(craftNode.id, info, new Set());
+            const titles = Array.from(info.titles).filter(Boolean);
+            const recipes = Array.from(info.recipes).filter(Boolean);
+            const titleHtml = titles.length
+              ? `<div class="text-xs text-blue-300">Magic scroll: ${titles.map(title => escapeHtml(title)).join(', ')}</div>`
+              : '';
+            const recipeHtml = recipes.length
+              ? `<div class="text-xs text-purple-300">Recipe: ${recipes.map(recipe => escapeHtml(recipe)).join(', ')}</div>`
+              : '';
+            craftingInfoHtml = `${titleHtml}${recipeHtml}`;
+          }
+        }
+
         return `
           <div class="border border-rpg-gold/20 rounded p-2 bg-rpg-dark/40 mb-2">
             <div class="text-sm text-rpg-gold">${escapeHtml(req.name)} <span class="text-gray-400">(${req.type})</span> x${req.quantity}</div>
             ${matchHtml}
+            ${craftingInfoHtml}
           </div>
         `;
       }).join('');
-      const subtasksPayload = encodeURIComponent(JSON.stringify(missingSubtasks));
+      const usedCraftIds = new Set();
+      const craftSteps = buildCraftStepsForItem(item.name || '', usedCraftIds);
+      const craftedItemNames = craftSteps.map(step => {
+        const match = step.title.match(/^Craft\s+(.*?)\s+using/i);
+        return match ? match[1] : '';
+      }).filter(Boolean);
+      const craftedItemIds = craftSteps.map(step => ({
+        name: step.resultName,
+        id: step.resultId
+      })).filter(entry => entry.name);
+      const targetNode = findCraftNodeByName(item.name || '');
+      const targetInfo = { titles: new Set(), recipes: new Set() };
+      if (targetNode) {
+        collectCraftingInfo(targetNode.id, targetInfo, new Set());
+      }
+      const recipeName = Array.from(targetInfo.recipes).find(Boolean) || '';
+      const recipeEntry = recipeName ? findItemEntryByName(recipeName, usedCraftIds) : null;
+      const recipeId = recipeEntry?.itemid ? String(recipeEntry.itemid) : 'n/a';
+      if (recipeEntry?.itemid) usedCraftIds.add(String(recipeEntry.itemid));
+      const craftedItemsLabel = craftedItemIds.length
+        ? craftedItemIds.map(entry => {
+            const idLabel = entry.id ? ` (id ${entry.id})` : '';
+            return `${entry.name}${idLabel}`;
+          }).join(' + ')
+        : 'crafted items';
+      const finalTitle = recipeName
+        ? `Craft ${item.name || ''} using ${craftedItemsLabel} + ${recipeName} (id ${recipeId})`
+        : `Craft ${item.name || ''} using ${craftedItemsLabel} + recipe`;
+      const craftPlan = [
+        ...missingSubtasks,
+        ...craftSteps,
+        {
+          id: `subtask_${index}_craft_final`,
+          title: finalTitle,
+          status: 'queued',
+          params: {
+            action: 'craft',
+            username,
+            itemIds: craftedItemIds.map(entry => entry.id).filter(Boolean).concat(recipeId ? [recipeId] : [])
+          }
+        }
+      ];
+      const subtasksPayload = encodeURIComponent(JSON.stringify(craftPlan));
       const craftButton = `<button data-item-name="${escapeAttribute(item.name || '')}" data-subtasks="${escapeAttribute(subtasksPayload)}" onclick="queueCraftTaskFromButton(this)" class="rpg-button px-3 py-1 rounded text-xs">Craft</button>`;
 
       return `
