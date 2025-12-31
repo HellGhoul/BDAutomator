@@ -3994,17 +3994,26 @@ window.analyzeCraftableItems = async function() {
       (children || []).forEach(childId => collectCraftingInfo(childId, info, visited));
     };
 
-    const findItemEntryByName = (name, usedIds) => {
+    const findInventoryEntryByName = (name, usedIds) => {
       const target = normalizeKey(name);
       if (!target) return null;
       const entries = inventoryByName.get(target) || [];
       return entries.find(entry => entry.itemid && !usedIds.has(String(entry.itemid))) || null;
     };
 
-    const findScrollEntryByTitle = (titleName, usedIds) => {
+    const findKeeperEntryByName = (name, usedIds) => {
+      const target = normalizeKey(name);
+      if (!target) return null;
+      const entries = keeperByName.get(target) || [];
+      return entries.find(entry => entry.itemid && !usedIds.has(String(entry.itemid))) || null;
+    };
+
+    const findScrollEntryByTitle = (titleName, usedIds, location) => {
       if (!titleName) return null;
       const matches = (items || []).filter(entry => {
-        if ((entry.location || '').toLowerCase() !== 'inventory') return false;
+        const entryLocation = (entry.location || '').toLowerCase();
+        if (location === 'inventory' && entryLocation !== 'inventory') return false;
+        if (location === 'keeper' && entryLocation === 'inventory') return false;
         return isTitleScrollMatch(entry.item_name || '', titleName);
       });
       return matches.find(entry => entry.itemid && !usedIds.has(String(entry.itemid))) || null;
@@ -4021,6 +4030,7 @@ window.analyzeCraftableItems = async function() {
       const targetNode = findCraftNodeByName(itemName);
       if (!targetNode) return [];
       const steps = [];
+      const titledItems = [];
 
       const recipeChildIds = parseJsonValue(targetNode.children, []);
       const recipeNode = (recipeChildIds || [])
@@ -4047,13 +4057,81 @@ window.analyzeCraftableItems = async function() {
         });
 
         pairs.forEach(pair => {
-          const baseEntry = findItemEntryByName(pair.base.name || '', usedIds);
-          const scrollEntry = findScrollEntryByTitle(pair.title.name || '', usedIds);
+          const titledName = formatTitledItemName(pair.title.name || '', pair.base.name || '');
+          const inventoryTitled = findInventoryEntryByName(titledName, usedIds);
+          if (inventoryTitled) {
+            const titledId = String(inventoryTitled.itemid);
+            usedIds.add(titledId);
+            titledItems.push({ name: titledName, id: titledId });
+            return;
+          }
+
+          const keeperTitled = findKeeperEntryByName(titledName, usedIds);
+          if (keeperTitled) {
+            const titledId = String(keeperTitled.itemid);
+            usedIds.add(titledId);
+            steps.push({
+              id: `subtask_${normalizeKey(itemName)}_${normalizeKey(titledName)}_get_${steps.length}`,
+              title: `Get ${titledName} (${titledId}) from keeper`,
+              status: 'queued',
+              params: {
+                action: 'auto_get_item',
+                username,
+                location: keeperTitled.location,
+                keeper: keeperTitled.keeper,
+                itemid: titledId
+              }
+            });
+            titledItems.push({ name: titledName, id: titledId });
+            return;
+          }
+
+          let baseEntry = findInventoryEntryByName(pair.base.name || '', usedIds);
+          if (!baseEntry) {
+            const keeperBase = findKeeperEntryByName(pair.base.name || '', usedIds);
+            if (keeperBase) {
+              const baseId = String(keeperBase.itemid);
+              steps.push({
+                id: `subtask_${normalizeKey(itemName)}_${normalizeKey(pair.base.name)}_get_${steps.length}`,
+                title: `Get ${pair.base.name} (${baseId}) from keeper`,
+                status: 'queued',
+                params: {
+                  action: 'auto_get_item',
+                  username,
+                  location: keeperBase.location,
+                  keeper: keeperBase.keeper,
+                  itemid: baseId
+                }
+              });
+              baseEntry = keeperBase;
+            }
+          }
+
+          let scrollEntry = findScrollEntryByTitle(pair.title.name || '', usedIds, 'inventory');
+          if (!scrollEntry) {
+            const keeperScroll = findScrollEntryByTitle(pair.title.name || '', usedIds, 'keeper');
+            if (keeperScroll) {
+              const scrollId = String(keeperScroll.itemid);
+              steps.push({
+                id: `subtask_${normalizeKey(itemName)}_${normalizeKey(pair.title.name)}_get_scroll_${steps.length}`,
+                title: `Get ${pair.title.name} magic scroll (${scrollId}) from keeper`,
+                status: 'queued',
+                params: {
+                  action: 'auto_get_item',
+                  username,
+                  location: keeperScroll.location,
+                  keeper: keeperScroll.keeper,
+                  itemid: scrollId
+                }
+              });
+              scrollEntry = keeperScroll;
+            }
+          }
+
           const baseId = baseEntry?.itemid ? String(baseEntry.itemid) : '';
           const scrollId = scrollEntry?.itemid ? String(scrollEntry.itemid) : '';
           if (baseId) usedIds.add(baseId);
           if (scrollId) usedIds.add(scrollId);
-          const titledName = formatTitledItemName(pair.title.name || '', pair.base.name || '');
 
           steps.push({
             id: `subtask_${normalizeKey(itemName)}_${normalizeKey(titledName)}_${steps.length}`,
@@ -4067,10 +4145,14 @@ window.analyzeCraftableItems = async function() {
               itemIds: [baseId, scrollId].filter(Boolean)
             }
           });
+
+          if (baseId) {
+            titledItems.push({ name: titledName, id: baseId });
+          }
         });
       }
 
-      return steps;
+      return { steps, titledItems };
     };
 
     const legendaryFilter = document.getElementById('craft-filter-legendary')?.value || 'all';
@@ -4250,22 +4332,35 @@ window.analyzeCraftableItems = async function() {
         `;
       }).join('');
       const usedCraftIds = new Set();
-      const craftSteps = buildCraftStepsForItem(item.name || '', usedCraftIds);
-      const craftedItemNames = craftSteps.map(step => {
-        const match = step.title.match(/^Craft\s+(.*?)\s+using/i);
-        return match ? match[1] : '';
-      }).filter(Boolean);
-      const craftedItemIds = craftSteps.map(step => ({
-        name: step.resultName,
-        id: step.resultId
-      })).filter(entry => entry.name);
+      const craftResult = buildCraftStepsForItem(item.name || '', usedCraftIds);
+      const craftSteps = craftResult.steps || [];
+      const craftedItemIds = craftResult.titledItems || [];
       const targetNode = findCraftNodeByName(item.name || '');
       const targetInfo = { titles: new Set(), recipes: new Set() };
       if (targetNode) {
         collectCraftingInfo(targetNode.id, targetInfo, new Set());
       }
       const recipeName = Array.from(targetInfo.recipes).find(Boolean) || '';
-      const recipeEntry = recipeName ? findItemEntryByName(recipeName, usedCraftIds) : null;
+      let recipeEntry = recipeName ? findInventoryEntryByName(recipeName, usedCraftIds) : null;
+      if (!recipeEntry && recipeName) {
+        const keeperRecipe = findKeeperEntryByName(recipeName, usedCraftIds);
+        if (keeperRecipe) {
+          const recipeId = String(keeperRecipe.itemid);
+          craftSteps.push({
+            id: `subtask_${index}_get_recipe_${recipeId}`,
+            title: `Get ${recipeName} (${recipeId}) from keeper`,
+            status: 'queued',
+            params: {
+              action: 'auto_get_item',
+              username,
+              location: keeperRecipe.location,
+              keeper: keeperRecipe.keeper,
+              itemid: recipeId
+            }
+          });
+          recipeEntry = keeperRecipe;
+        }
+      }
       const recipeId = recipeEntry?.itemid ? String(recipeEntry.itemid) : 'n/a';
       if (recipeEntry?.itemid) usedCraftIds.add(String(recipeEntry.itemid));
       const craftedItemsLabel = craftedItemIds.length
@@ -4278,7 +4373,6 @@ window.analyzeCraftableItems = async function() {
         ? `Craft ${item.name || ''} using ${craftedItemsLabel} + ${recipeName} (id ${recipeId})`
         : `Craft ${item.name || ''} using ${craftedItemsLabel} + recipe`;
       const craftPlan = [
-        ...missingSubtasks,
         ...craftSteps,
         {
           id: `subtask_${index}_craft_final`,
