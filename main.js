@@ -640,7 +640,16 @@ ipcMain.handle('test-notification', async () => {
 // ===== Keeper Items (User Items) =====
 ipcMain.handle('get-keeper-items-filters', async () => {
   const db = getDb();
-  const users = await dbAll(db, 'SELECT DISTINCT username FROM keeper_items ORDER BY username');
+  const users = await dbAll(
+    db,
+    `SELECT username FROM (
+       SELECT DISTINCT username FROM keeper_items
+       UNION
+       SELECT DISTINCT username FROM users
+     )
+     WHERE username IS NOT NULL AND username != ''
+     ORDER BY username`
+  );
   const locations = await dbAll(db, 'SELECT DISTINCT location FROM keeper_items ORDER BY location');
   return {
     usernames: users.map(row => row.username),

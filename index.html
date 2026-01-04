@@ -380,6 +380,11 @@
             <textarea id="config-monsterList" rows="2" class="w-full p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded focus:outline-none focus:rpg-glow"></textarea>
           </div>
           <div>
+            <label class="block text-rpg-gold mb-2">📝 Loot Item List (comma separated):</label>
+            <input id="config-lootItemList" type="text" placeholder="e.g. stamina potion, charm, recipe"
+                   class="w-full p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded focus:outline-none focus:rpg-glow">
+          </div>
+          <div>
             <label class="block text-rpg-gold mb-2">📝 HP Threshold to auto heal:</label>
             <input id="config-hpThreshold" type="number" class="w-full p-2 bg-rpg-darker border border-rpg-gold text-rpg-gold rounded focus:outline-none focus:rpg-glow"></input>
           </div>
@@ -713,6 +718,7 @@
             <button id="user-items-tab-view" onclick="setUserItemsTab('view')" class="rpg-button px-6 py-2 rounded">📂 View</button>
             <button id="user-items-tab-craft" onclick="setUserItemsTab('craft')" class="rpg-button px-6 py-2 rounded">🛠️ Craft</button>
             <button id="user-items-tab-wishlist" onclick="setUserItemsTab('wishlist')" class="rpg-button px-6 py-2 rounded">🧿 Wishlist</button>
+            <button id="user-items-tab-legendary-set" onclick="setUserItemsTab('legendary-set')" class="rpg-button px-6 py-2 rounded">🧱 Legendary Set</button>
           </div>
 
           <div id="user-items-filters" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -784,18 +790,57 @@
                 </div>
                 <div class="md:col-span-2">
                   <label class="block text-sm font-medium text-gray-300 mb-2">Legendary Item Name</label>
-                  <input type="text" id="wishlist-item-name" list="wishlist-legendary-list"
-                         placeholder="Search legendary item..."
-                         class="w-full bg-rpg-darker border border-rpg-gold text-white rounded px-3 py-2">
+                  <div class="flex flex-wrap gap-2">
+                    <input type="text" id="wishlist-item-name" list="wishlist-legendary-list"
+                           placeholder="Search legendary item..."
+                           class="flex-1 bg-rpg-darker border border-rpg-gold text-white rounded px-3 py-2">
+                    <input type="number" id="wishlist-item-qty" min="1" value="1"
+                           class="w-24 bg-rpg-darker border border-rpg-gold text-white rounded px-3 py-2">
+                    <button id="wishlist-add-btn" onclick="addWishlistItem()" class="rpg-button px-4 py-2 rounded">➕ Add</button>
+                  </div>
                   <datalist id="wishlist-legendary-list"></datalist>
                 </div>
               </div>
               <div class="flex flex-wrap gap-2 mb-4">
                 <button id="wishlist-analyze-btn" onclick="analyzeWishlist()" class="rpg-button px-6 py-2 rounded">🛠️ Analyze Wishlist</button>
+                <button id="wishlist-refresh-btn" onclick="refreshWishlist()" class="rpg-button px-6 py-2 rounded">🔄 Refresh</button>
                 <button id="wishlist-clear-btn" onclick="clearWishlist()" class="rpg-button-secondary px-6 py-2 rounded">♻️ Clear</button>
+              </div>
+              <div id="wishlist-items" class="mb-4">
+                <div class="text-center text-gray-400 mt-2">Add up to 8 legendary items.</div>
               </div>
               <div id="wishlist-results" class="min-h-[120px]">
                 <div class="text-center text-gray-400 mt-4">Select a user and item to analyze</div>
+              </div>
+            </div>
+          </div>
+          <div id="user-items-legendary-set" class="min-h-[300px] hidden">
+            <div class="rpg-border rounded-lg p-4 bg-rpg-darker">
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="text-xl font-bold text-rpg-gold">🧱 Legendary Set Planner</h4>
+                <span class="text-xs text-gray-400">Pick up to 8 legendary items and sum ingredients</span>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Username</label>
+                  <select id="legendary-set-username" class="w-full bg-rpg-darker border border-rpg-gold text-white rounded px-3 py-2">
+                    <option value="">Select user...</option>
+                  </select>
+                </div>
+                <div class="md:col-span-2">
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Legendary Items</label>
+                  <div id="legendary-set-list" class="space-y-2 max-h-[220px] overflow-y-auto border border-rpg-gold/20 rounded p-2 bg-rpg-dark/20">
+                    <div class="text-center text-gray-400 mt-2">Select a user to load legendary items.</div>
+                  </div>
+                  <div id="legendary-set-summary" class="text-xs text-gray-400 mt-2">Selected: 0</div>
+                </div>
+              </div>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <button onclick="analyzeLegendarySet()" class="rpg-button px-6 py-2 rounded">🧩 Analyze Set</button>
+                <button onclick="clearLegendarySet()" class="rpg-button-secondary px-6 py-2 rounded">♻️ Clear</button>
+              </div>
+              <div id="legendary-set-results" class="min-h-[120px]">
+                <div class="text-center text-gray-400 mt-4">Select up to 8 items and analyze to see ingredients.</div>
               </div>
             </div>
           </div>

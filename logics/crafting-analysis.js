@@ -245,6 +245,39 @@ function buildRequirementStatus(requirements, itemCounts, titleCounts) {
   });
 }
 
+function collectRequirementsForTarget(target, nodes) {
+  const requirements = new Map();
+  const nodeType = normalizeNodeType(target.nodeType);
+  if (nodeType === 'item') {
+    collectWishlistRequirements(target.id, nodes, requirements);
+    return requirements;
+  }
+  const children = parseJsonValue(target.children, []);
+  (children || []).forEach(childId => collectWishlistRequirements(childId, nodes, requirements));
+  return requirements;
+}
+
+function getRequirementsForItemName(depRows, itemName) {
+  let target = findItemNodeByName(depRows, itemName) || findItemNodeByPartialName(depRows, itemName);
+  if (!target) {
+    target = findNodeByName(depRows, itemName) || findNodeByPartialName(depRows, itemName);
+  }
+  if (!target) {
+    return { item: null, requirements: [] };
+  }
+  const nodes = new Map();
+  depRows.forEach(row => nodes.set(row.id, row));
+  const requirements = collectRequirementsForTarget(target, nodes);
+  return { item: target, requirements: Array.from(requirements.values()) };
+}
+
+function summarizeRequirements(items, requirements) {
+  const { itemCounts, titleCounts } = buildInventoryCounts(items);
+  const status = buildRequirementStatus(requirements, itemCounts, titleCounts);
+  const craftableCount = computeCraftableCount(requirements, itemCounts, titleCounts);
+  return { status, craftableCount };
+}
+
 function computeCraftableCount(requirements, itemCounts, titleCounts) {
   if (!requirements.length) return 0;
   let maxCraftable = Infinity;
@@ -296,5 +329,7 @@ function analyzeWishlist(items, depRows, itemName) {
 
 module.exports = {
   analyzeCrafting,
-  analyzeWishlist
+  analyzeWishlist,
+  getRequirementsForItemName,
+  summarizeRequirements
 };

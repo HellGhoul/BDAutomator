@@ -1,5 +1,10 @@
 const { ipcRenderer } = require('electron');
-const { analyzeCrafting, analyzeWishlist } = require('./logics/crafting-analysis');
+const {
+  analyzeCrafting,
+  analyzeWishlist,
+  getRequirementsForItemName,
+  summarizeRequirements
+} = require('./logics/crafting-analysis');
 
 let accounts = [];
 let running = {};
@@ -28,6 +33,8 @@ let isCrawling = false;
 let crawlProgress = 0;
 let userItemsTab = 'view';
 let wishlistLegendaryNames = null;
+let legendarySetItems = [];
+let wishlistItems = [];
 
 // ===== LOG VIEWER FUNCTIONALITY =====
 
@@ -201,6 +208,10 @@ function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
+}
+
+function escapeSqlValue(value) {
+  return String(value || '').replace(/'/g, "''");
 }
 
 function escapeAttribute(value) {
@@ -3320,6 +3331,7 @@ function getConfigFromForm() {
     staminaPotion: document.getElementById('config-staminaPotion').checked,
     ancientPotion: document.getElementById('config-ancientPotion').checked,
     monsterList: document.getElementById('config-monsterList').value.trim(),
+    lootItemList: document.getElementById('config-lootItemList').value.trim(),
     hpThreshold: document.getElementById('config-hpThreshold').value
   };
 }
@@ -3338,6 +3350,7 @@ function setConfigToForm(config) {
   document.getElementById('config-staminaPotion').checked = !!config.staminaPotion;
   document.getElementById('config-ancientPotion').checked = !!config.ancientPotion;
   document.getElementById('config-monsterList').value = config.monsterList || '';
+  document.getElementById('config-lootItemList').value = config.lootItemList || '';
   document.getElementById('config-hpThreshold').value = config.hpThreshold || '';
 }
 
@@ -3516,6 +3529,8 @@ window.openUserItems = async function(accountId) {
   wishlistLegendaryNames = null;
   await populateWishlistLegendaryNames();
   syncWishlistUser();
+  await populateLegendarySetUsers();
+  syncLegendarySetUser();
   setUserItemsTab('view');
   await loadUserItems();
 };
@@ -3855,6 +3870,191 @@ function syncWishlistUser() {
   if (wishlistUser && userSelect && !wishlistUser.value && userSelect.value) {
     wishlistUser.value = userSelect.value;
   }
+  loadWishlistForUser(wishlistUser?.value || '');
+}
+
+function wishlistStorageKey(username) {
+  const safe = (username || '').trim();
+  return safe ? `wishlist:${safe}` : '';
+}
+
+function loadWishlistForUser(username) {
+  const key = wishlistStorageKey(username);
+  if (!key) {
+    wishlistItems = [];
+    renderWishlistItems();
+    return;
+  }
+  try {
+    const raw = localStorage.getItem(key);
+    const parsed = raw ? JSON.parse(raw) : [];
+    wishlistItems = Array.isArray(parsed)
+      ? parsed.map(item => ({ name: item.name, qty: Math.max(Number(item.qty) || 1, 1) }))
+      : [];
+  } catch {
+    wishlistItems = [];
+  }
+  renderWishlistItems();
+}
+
+function saveWishlistForUser(username) {
+  const key = wishlistStorageKey(username);
+  if (!key) return;
+  try {
+    localStorage.setItem(key, JSON.stringify(wishlistItems));
+  } catch {
+    // ignore storage errors
+  }
+}
+
+function renderWishlistItems() {
+  const container = document.getElementById('wishlist-items');
+  if (!container) return;
+  if (!wishlistItems.length) {
+    container.innerHTML = '<div class="text-center text-gray-400 mt-2">Add up to 8 legendary items.</div>';
+    return;
+  }
+  container.innerHTML = wishlistItems.map((item, index) => `
+    <div class="flex items-center gap-3 border border-rpg-gold/20 rounded p-2 bg-rpg-dark/30">
+      <div class="flex-1 text-sm text-gray-200">${escapeHtml(item.name)}</div>
+      <input type="number" class="wishlist-qty w-16 p-1 text-xs rounded" min="1" value="${item.qty}" data-index="${index}">
+      <button class="rpg-button-secondary px-3 py-1 rounded text-xs" onclick="removeWishlistItem(${index})">Remove</button>
+    </div>
+  `).join('');
+  container.querySelectorAll('.wishlist-qty').forEach(input => {
+    input.addEventListener('input', () => {
+      const idx = Number(input.dataset.index);
+      const nextQty = Math.max(Number(input.value) || 1, 1);
+      if (!Number.isNaN(idx) && wishlistItems[idx]) {
+        wishlistItems[idx].qty = nextQty;
+        saveWishlistForUser(document.getElementById('wishlist-username')?.value || '');
+      }
+    });
+  });
+}
+
+window.addWishlistItem = function() {
+  const input = document.getElementById('wishlist-item-name');
+  const qtyInput = document.getElementById('wishlist-item-qty');
+  const userSelect = document.getElementById('wishlist-username');
+  const name = input?.value?.trim() || '';
+  const qty = Math.max(Number(qtyInput?.value) || 1, 1);
+  const username = userSelect?.value || '';
+  if (!username) {
+    alert('Select a user first.');
+    return;
+  }
+  if (!name) return;
+  if (wishlistItems.length >= 8) {
+    alert('Wishlist supports up to 8 items.');
+    return;
+  }
+  const existing = wishlistItems.find(item => item.name.toLowerCase() === name.toLowerCase());
+  if (existing) {
+    existing.qty += qty;
+  } else {
+    wishlistItems.push({ name, qty });
+  }
+  if (input) input.value = '';
+  if (qtyInput) qtyInput.value = 1;
+  saveWishlistForUser(username);
+  renderWishlistItems();
+};
+
+window.removeWishlistItem = function(index) {
+  if (index < 0 || index >= wishlistItems.length) return;
+  wishlistItems.splice(index, 1);
+  saveWishlistForUser(document.getElementById('wishlist-username')?.value || '');
+  renderWishlistItems();
+};
+
+async function populateLegendarySetUsers() {
+  const select = document.getElementById('legendary-set-username');
+  if (!select) return;
+  try {
+    const data = await ipcRenderer.invoke('get-keeper-items-filters');
+    select.innerHTML = '<option value="">Select user...</option>' +
+      (data.usernames || []).map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('');
+    syncLegendarySetUser();
+  } catch (error) {
+    console.error('Error loading legendary set users:', error);
+  }
+}
+
+function syncLegendarySetUser() {
+  const setUser = document.getElementById('legendary-set-username');
+  const userSelect = document.getElementById('user-items-username');
+  if (setUser && userSelect && !setUser.value && userSelect.value) {
+    setUser.value = userSelect.value;
+  }
+}
+
+async function loadLegendarySetItems() {
+  const userSelect = document.getElementById('legendary-set-username');
+  const list = document.getElementById('legendary-set-list');
+  const summary = document.getElementById('legendary-set-summary');
+  const username = userSelect?.value || '';
+
+  if (!list || !summary) return;
+  if (!username) {
+    list.innerHTML = '<div class="text-center text-gray-400 mt-4">Select a user to load legendary items.</div>';
+    summary.textContent = 'Selected: 0';
+    return;
+  }
+
+  try {
+    const escapedUser = escapeSqlValue(username);
+    const result = await ipcRenderer.invoke('execute-db-query', {
+      query: `
+        SELECT k.item_name AS name, SUM(k.quantity) AS qty
+        FROM keeper_items k
+        JOIN encyclopedia_items e ON e.name = k.item_name
+        WHERE k.username = '${escapedUser}' AND e.isLegendary = 1
+        GROUP BY k.item_name
+        ORDER BY k.item_name
+      `
+    });
+    legendarySetItems = (result?.rows || []).map(row => ({
+      name: row.name,
+      qty: Number(row.qty) || 0
+    })).filter(item => item.qty > 0);
+
+    if (legendarySetItems.length === 0) {
+      list.innerHTML = '<div class="text-center text-gray-400 mt-4">No legendary items found for this user.</div>';
+      summary.textContent = 'Selected: 0';
+      return;
+    }
+
+    list.innerHTML = legendarySetItems.map((item, index) => `
+      <div class="flex items-center gap-3 border border-rpg-gold/20 rounded p-2 bg-rpg-dark/30">
+        <input type="checkbox" class="legendary-set-checkbox" id="legendary-set-${index}"
+               data-name="${escapeHtml(item.name)}">
+        <label for="legendary-set-${index}" class="flex-1 text-sm text-gray-200">${escapeHtml(item.name)}</label>
+        <span class="text-xs text-gray-400">Have: ${item.qty}</span>
+        <input type="number" class="legendary-set-qty w-16 p-1 text-xs rounded"
+               min="1" max="${item.qty}" value="1" data-name="${escapeHtml(item.name)}">
+      </div>
+    `).join('');
+
+    list.querySelectorAll('.legendary-set-checkbox').forEach(el => {
+      el.addEventListener('change', updateLegendarySetSummary);
+    });
+    list.querySelectorAll('.legendary-set-qty').forEach(el => {
+      el.addEventListener('input', updateLegendarySetSummary);
+    });
+    updateLegendarySetSummary();
+  } catch (error) {
+    console.error('Error loading legendary set items:', error);
+    list.innerHTML = '<div class="text-center text-red-400 mt-4">Failed to load legendary items.</div>';
+    summary.textContent = 'Selected: 0';
+  }
+}
+
+function updateLegendarySetSummary() {
+  const summary = document.getElementById('legendary-set-summary');
+  if (!summary) return;
+  const selected = document.querySelectorAll('.legendary-set-checkbox:checked');
+  summary.textContent = `Selected: ${selected.length} / 8`;
 }
 
 async function populateWishlistLegendaryNames() {
@@ -3882,25 +4082,53 @@ async function populateWishlistLegendaryNames() {
   }
 }
 
+const legendarySetUserSelect = document.getElementById('legendary-set-username');
+if (legendarySetUserSelect) {
+  legendarySetUserSelect.addEventListener('change', () => {
+    loadLegendarySetItems();
+  });
+}
+
+const wishlistUserSelect = document.getElementById('wishlist-username');
+if (wishlistUserSelect) {
+  wishlistUserSelect.addEventListener('change', () => {
+    loadWishlistForUser(wishlistUserSelect.value || '');
+  });
+}
+
 window.clearWishlist = function() {
   const userSelect = document.getElementById('wishlist-username');
   const input = document.getElementById('wishlist-item-name');
+  const qtyInput = document.getElementById('wishlist-item-qty');
   const results = document.getElementById('wishlist-results');
+  const username = userSelect?.value || '';
   if (userSelect) userSelect.value = '';
   if (input) input.value = '';
+  if (qtyInput) qtyInput.value = 1;
+  wishlistItems = [];
+  renderWishlistItems();
+  if (username) {
+    try {
+      localStorage.removeItem(wishlistStorageKey(username));
+    } catch {
+      // ignore storage errors
+    }
+  }
   if (results) {
     results.innerHTML = '<div class="text-center text-gray-400 mt-4">Select a user and item to analyze</div>';
   }
 };
 
 window.setUserItemsTab = function(tab) {
-  userItemsTab = tab === 'craft' ? 'craft' : tab === 'wishlist' ? 'wishlist' : 'view';
+  userItemsTab = tab === 'craft' ? 'craft' : tab === 'wishlist' ? 'wishlist' : tab === 'legendary-set' ? 'legendary-set' : 'view';
   const viewBtn = document.getElementById('user-items-tab-view');
   const craftBtn = document.getElementById('user-items-tab-craft');
   const wishBtn = document.getElementById('user-items-tab-wishlist');
+  const setBtn = document.getElementById('user-items-tab-legendary-set');
   const viewPanel = document.getElementById('user-items-results');
   const craftPanel = document.getElementById('user-items-craft-results');
   const wishPanel = document.getElementById('user-items-wishlist');
+  const setPanel = document.getElementById('user-items-legendary-set');
   const filters = document.getElementById('user-items-filters');
   const actions = document.getElementById('user-items-actions');
   const craftControls = document.getElementById('user-items-craft-controls');
@@ -3908,15 +4136,22 @@ window.setUserItemsTab = function(tab) {
   if (viewBtn) viewBtn.classList.toggle('active', userItemsTab === 'view');
   if (craftBtn) craftBtn.classList.toggle('active', userItemsTab === 'craft');
   if (wishBtn) wishBtn.classList.toggle('active', userItemsTab === 'wishlist');
+  if (setBtn) setBtn.classList.toggle('active', userItemsTab === 'legendary-set');
   if (viewPanel) viewPanel.classList.toggle('hidden', userItemsTab !== 'view');
   if (craftPanel) craftPanel.classList.toggle('hidden', userItemsTab !== 'craft');
   if (wishPanel) wishPanel.classList.toggle('hidden', userItemsTab !== 'wishlist');
-  if (filters) filters.classList.toggle('hidden', userItemsTab === 'wishlist');
-  if (actions) actions.classList.toggle('hidden', userItemsTab === 'wishlist');
+  if (setPanel) setPanel.classList.toggle('hidden', userItemsTab !== 'legendary-set');
+  if (filters) filters.classList.toggle('hidden', userItemsTab === 'wishlist' || userItemsTab === 'legendary-set');
+  if (actions) actions.classList.toggle('hidden', userItemsTab === 'wishlist' || userItemsTab === 'legendary-set');
   if (craftControls) craftControls.classList.toggle('hidden', userItemsTab !== 'craft');
 
   if (userItemsTab === 'wishlist') {
     syncWishlistUser();
+    renderWishlistItems();
+  }
+  if (userItemsTab === 'legendary-set') {
+    syncLegendarySetUser();
+    loadLegendarySetItems();
   }
 };
 
@@ -4469,15 +4704,15 @@ window.analyzeWishlist = async function() {
   const username = userSelect?.value || '';
   const itemName = input?.value?.trim() || '';
 
-  if (!username || !itemName) {
-    results.innerHTML = '<div class="text-center text-gray-400 mt-4">Select a user and enter a legendary item name.</div>';
+  if (!username || (!itemName && wishlistItems.length === 0)) {
+    results.innerHTML = '<div class="text-center text-gray-400 mt-4">Select a user and add at least one legendary item.</div>';
     return;
   }
 
   results.innerHTML = `
     <div class="text-center text-gray-400 mt-4">
       Analyzing wishlist...<br/>
-      <span class="text-xs text-gray-500">user: ${escapeHtml(username)} • item: ${escapeHtml(itemName)}</span>
+      <span class="text-xs text-gray-500">user: ${escapeHtml(username)}</span>
     </div>
   `;
 
@@ -4498,12 +4733,6 @@ window.analyzeWishlist = async function() {
       return;
     }
 
-    const analysis = analyzeWishlist(items || [], depRows, itemName);
-    if (!analysis.item) {
-      results.innerHTML = '<div class="text-center text-gray-400 mt-4">Legendary item not found in dependencies.</div>';
-      return;
-    }
-
     const inventoryByName = new Map();
     (items || []).forEach(inv => {
       const key = (inv.item_name || '').trim().toLowerCase();
@@ -4512,9 +4741,39 @@ window.analyzeWishlist = async function() {
       inventoryByName.get(key).push(inv);
     });
 
-    const status = analysis.status || [];
+    let selectedItems = [];
+    if (wishlistItems.length) {
+      selectedItems = wishlistItems.slice();
+    } else if (itemName) {
+      selectedItems = [{ name: itemName, qty: 1 }];
+    }
+
+    const aggregated = new Map();
+    const missingTargets = [];
+    selectedItems.forEach(entry => {
+      const reqResult = getRequirementsForItemName(depRows, entry.name);
+      if (!reqResult.item) {
+        missingTargets.push(entry.name);
+        return;
+      }
+      (reqResult.requirements || []).forEach(req => {
+        const reqKey = `${req.type}|${req.key}`;
+        const current = aggregated.get(reqKey) || { ...req, quantity: 0 };
+        current.quantity += (req.quantity || 1) * entry.qty;
+        aggregated.set(reqKey, current);
+      });
+    });
+
+    const aggregatedList = Array.from(aggregated.values());
+    if (!aggregatedList.length) {
+      results.innerHTML = '<div class="text-center text-gray-400 mt-4">No ingredients found for the selected items.</div>';
+      return;
+    }
+
+    const summary = summarizeRequirements(items || [], aggregatedList);
+    const status = summary.status || [];
     const missingCount = status.filter(req => !req.satisfied).length;
-    const craftableCount = analysis.craftableCount || 0;
+    const craftableCount = summary.craftableCount || 0;
 
     const requirementCards = status.map(req => {
       let matches = [];
@@ -4537,9 +4796,11 @@ window.analyzeWishlist = async function() {
           `).join('')
         : `<div class="text-xs text-red-400">Missing in inventory</div>`;
 
-      const badgeClass = req.satisfied ? 'text-green-400' : 'text-red-400';
+      const hasSome = req.have > 0;
+      const badgeClass = req.satisfied ? 'text-green-400' : hasSome ? 'text-green-300' : 'text-red-400';
       const cardClass = req.satisfied
         ? 'border-green-500/40 bg-green-900/20'
+        : hasSome ? 'border-green-500/20 bg-green-900/10'
         : 'border-red-500/40 bg-red-900/20';
       return `
         <div class="border ${cardClass} rounded p-3 mb-3">
@@ -4552,25 +4813,169 @@ window.analyzeWishlist = async function() {
       `;
     }).join('');
 
-    const legendaryNote = analysis.item.isLegendary ? '' : '<div class="text-xs text-yellow-400 mt-1">Note: item is not marked legendary in dependencies.</div>';
+    const selectedHtml = selectedItems.map(item => `
+      <div class="text-xs text-gray-300">${escapeHtml(item.name)} x${item.qty}</div>
+    `).join('') || '<div class="text-xs text-gray-400">None</div>';
+    const missingTargetsHtml = missingTargets.length
+      ? `<div class="text-xs text-yellow-400 mt-1">Missing dependencies for: ${missingTargets.map(escapeHtml).join(', ')}</div>`
+      : '';
     results.innerHTML = `
       <div class="rpg-border rounded-lg p-4 bg-rpg-darker mb-4 rpg-glow">
         <div class="flex items-center justify-between">
           <div>
-            <div class="text-lg font-bold text-rpg-gold">${escapeHtml(analysis.item.name)}</div>
-            <div class="text-xs text-gray-400">ID: ${escapeHtml(analysis.item.id || '')} • Complexity: ${analysis.item.complexity || 0} • Craftable: ${craftableCount}</div>
-            ${legendaryNote}
+            <div class="text-lg font-bold text-rpg-gold">Wishlist Ingredients</div>
+            <div class="text-xs text-gray-400">User: ${escapeHtml(username)} • Craftable sets: ${craftableCount}</div>
+            ${missingTargetsHtml}
           </div>
           <div class="text-sm ${missingCount === 0 ? 'text-green-400' : 'text-red-400'}">
             ${missingCount === 0 ? 'All ingredients available' : `${missingCount} missing`}
           </div>
         </div>
       </div>
+      <div class="mb-4">
+        <div class="text-sm text-gray-400 mb-2">Selected Legendary Items</div>
+        ${selectedHtml}
+      </div>
       ${requirementCards || '<div class="text-center text-gray-400 mt-4">No requirements found.</div>'}
     `;
   } catch (error) {
     console.error('Wishlist analysis failed:', error);
     results.innerHTML = '<div class="text-center text-red-400 mt-4">Failed to analyze wishlist.</div>';
+  }
+};
+
+window.refreshWishlist = function() {
+  if (typeof window.analyzeWishlist === 'function') {
+    window.analyzeWishlist();
+  }
+};
+
+window.clearLegendarySet = function() {
+  const userSelect = document.getElementById('legendary-set-username');
+  const list = document.getElementById('legendary-set-list');
+  const results = document.getElementById('legendary-set-results');
+  if (userSelect) userSelect.value = '';
+  if (list) list.innerHTML = '<div class="text-center text-gray-400 mt-4">Select a user to load legendary items.</div>';
+  if (results) results.innerHTML = '<div class="text-center text-gray-400 mt-4">Select up to 8 items and analyze to see ingredients.</div>';
+  updateLegendarySetSummary();
+};
+
+window.analyzeLegendarySet = async function() {
+  setUserItemsTab('legendary-set');
+  const results = document.getElementById('legendary-set-results');
+  const userSelect = document.getElementById('legendary-set-username');
+  if (!results) return;
+
+  const username = userSelect?.value || '';
+  if (!username) {
+    results.innerHTML = '<div class="text-center text-gray-400 mt-4">Select a user first.</div>';
+    return;
+  }
+
+  const selected = Array.from(document.querySelectorAll('.legendary-set-checkbox:checked'));
+  if (selected.length === 0) {
+    results.innerHTML = '<div class="text-center text-gray-400 mt-4">Select at least 1 legendary item.</div>';
+    return;
+  }
+
+  results.innerHTML = '<div class="text-center text-gray-400 mt-4">Analyzing legendary set...</div>';
+
+  try {
+    const items = await ipcRenderer.invoke('get-keeper-items', {
+      username,
+      location: '',
+      search: ''
+    });
+
+    const depRowsResult = await ipcRenderer.invoke('execute-db-query', {
+      query: 'SELECT id, name, type, nodeType, isLegendary, children, complexity FROM encyclopedia_dependencies'
+    });
+    const depRows = depRowsResult?.rows || [];
+    if (!depRows.length) {
+      results.innerHTML = '<div class="text-center text-gray-400 mt-4">No dependency data found. Generate dependencies first.</div>';
+      return;
+    }
+
+    const aggregated = new Map();
+    const selectedItems = [];
+    const missingTargets = [];
+
+    selected.forEach(checkbox => {
+      const name = checkbox.dataset.name || '';
+      const row = checkbox.closest('div');
+      const qtyInput = row ? row.querySelector('.legendary-set-qty') : null;
+      const qty = Math.max(Number(qtyInput?.value) || 1, 1);
+      if (!name) return;
+      selectedItems.push({ name, qty });
+
+      const reqResult = getRequirementsForItemName(depRows, name);
+      if (!reqResult.item) {
+        missingTargets.push(name);
+        return;
+      }
+      (reqResult.requirements || []).forEach(req => {
+        const reqKey = `${req.type}|${req.key}`;
+        const current = aggregated.get(reqKey) || { ...req, quantity: 0 };
+        current.quantity += (req.quantity || 1) * qty;
+        aggregated.set(reqKey, current);
+      });
+    });
+
+    const aggregatedList = Array.from(aggregated.values());
+    if (aggregatedList.length === 0) {
+      results.innerHTML = '<div class="text-center text-gray-400 mt-4">No ingredients found for the selected items.</div>';
+      return;
+    }
+
+    const summary = summarizeRequirements(items || [], aggregatedList);
+    const status = summary.status || [];
+    const missingCount = status.filter(req => !req.satisfied).length;
+
+    const selectedHtml = selectedItems.map(item => `
+      <div class="text-xs text-gray-300">${escapeHtml(item.name)} x${item.qty}</div>
+    `).join('') || '<div class="text-xs text-gray-400">None</div>';
+
+    const requirementHtml = status.map(req => {
+      const badgeClass = req.satisfied ? 'text-green-400' : 'text-red-400';
+      const cardClass = req.satisfied
+        ? 'border-green-500/40 bg-green-900/20'
+        : 'border-red-500/40 bg-red-900/20';
+      return `
+        <div class="border ${cardClass} rounded p-3 mb-3">
+          <div class="flex items-center justify-between">
+            <div class="text-sm text-rpg-gold">${escapeHtml(req.name)} <span class="text-gray-400">(${req.type})</span></div>
+            <div class="text-xs ${badgeClass}">Have ${req.have} / Need ${req.quantity}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    const missingTargetsHtml = missingTargets.length
+      ? `<div class="text-xs text-yellow-400 mt-2">Missing dependencies for: ${missingTargets.map(escapeHtml).join(', ')}</div>`
+      : '';
+
+    results.innerHTML = `
+      <div class="rpg-border rounded-lg p-4 bg-rpg-darker mb-4 rpg-glow">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-lg font-bold text-rpg-gold">Legendary Set Ingredients</div>
+            <div class="text-xs text-gray-400">User: ${escapeHtml(username)} • Craftable sets: ${summary.craftableCount || 0}</div>
+            ${missingTargetsHtml}
+          </div>
+          <div class="text-sm ${missingCount === 0 ? 'text-green-400' : 'text-red-400'}">
+            ${missingCount === 0 ? 'All ingredients available' : `${missingCount} missing`}
+          </div>
+        </div>
+      </div>
+      <div class="mb-4">
+        <div class="text-sm text-gray-400 mb-2">Selected Legendary Items</div>
+        ${selectedHtml}
+      </div>
+      ${requirementHtml || '<div class="text-center text-gray-400 mt-4">No requirements found.</div>'}
+    `;
+  } catch (error) {
+    console.error('Legendary set analysis failed:', error);
+    results.innerHTML = '<div class="text-center text-red-400 mt-4">Failed to analyze legendary set.</div>';
   }
 };
 

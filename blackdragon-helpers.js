@@ -288,12 +288,19 @@ class BlackDragonHelpers {
     const qualityLower = (quality || '').toLowerCase();
     const epicQuality = ['epic', 'mythic', 'heroic', 'devine'];
     const hasEpicQuality = epicQuality.some(q => qualityLower.includes(q));
+    const lootListRaw = (config && config.lootItemList) ? String(config.lootItemList) : '';
+    const lootList = lootListRaw
+      .split(',')
+      .map(item => item.trim().toLowerCase())
+      .filter(Boolean);
+    const matchesLootList = lootList.some(item => name.includes(item));
     
     return config.all
       || name.includes('gold bar')
       || name.includes('antidote')
       || name.includes('undead crown')
       || name.includes('revival')
+      || matchesLootList
       || (config.pieceGear && name.includes('a piece of'))
       || (config.recipe && name.includes('recipe'))
       || (config.charm && name.includes('charm'))
