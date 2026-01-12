@@ -7,10 +7,10 @@ class BlackDragonHelpers {
     this.baseUrl = options.baseUrl || 'https://blackdragon.mobi';
     this.waitUntil = options.waitUntil || 'domcontentloaded';
     this.timeouts = {
-      short: 2000,
-      medium: 5000,
-      long: 15000,
-      nav: 15000,
+      short: 1000,
+      medium: 2000,
+      long: 1500,
+      nav: 1000,
       ...(options.timeouts || {})
     };
     this.delays = {
@@ -202,9 +202,12 @@ class BlackDragonHelpers {
     try {
       await this.waitForElement('body > div.main > strong', this.timeouts.medium);
       const text = await this.getTextContent('body > div.main > strong');
+      const text2 = await this.getTextContent('body > div.main > div:nth-child(3)');
       
       if ((text && text.includes('Congratulations! You won the battle!')) || 
-          (text && text.includes('You lost the battle.'))) {
+          (text && text.includes('You lost the battle.')) ||
+          (text2 && text2.includes('Please wait a bit before attacking again.'))) {
+            await this.sleep(200);
         await this.waitForElement('body > div.main > form > input', this.timeouts.short);
         await this.clickElement('body > div.main > form > input', { waitForNav: true });
         return 'continue';
@@ -237,7 +240,7 @@ class BlackDragonHelpers {
 
         const isValuable = this.isValuableLoot(nameFull, quality, config);
         
-        if (isValuable) {
+        if (isValuable && nameFull !='') {
           await this.waitForElement('body > div.main > form:nth-child(3) > input', this.timeouts.short);
           await this.clickElement("body > div.main > form:nth-child(3) > input", { waitForNav: true });
           
@@ -308,7 +311,7 @@ class BlackDragonHelpers {
       || (config.rune && (name.includes('rune ') || name.includes('level ')))
       || (config.epicGear && (hasEpicQuality || /\((iv|v|vi)\)/.test(name)))
       || (config.magicScroll && name.includes('magic scroll'))
-      || (config.monsterScroll && name.includes('s magic scroll'))
+      || (config.monsterScroll && name.includes('\'s') && name.includes('magic scroll'))
       || (config.staminaPotion && name.includes('stamina potion'))
       || (config.ancientPotion && name.includes('ancient potion'));
   }

@@ -445,6 +445,8 @@ function renderAccountTab(account) {
                 class="rpg-button px-3 py-1 rounded text-sm bg-cyan-900/50 border-cyan-500 text-cyan-200 hover:bg-cyan-700">📊 Fetch User Stats</button>
         <button onclick="openUserItems('${account.id}')" 
                 class="rpg-button px-3 py-1 rounded text-sm bg-indigo-900/50 border-indigo-500 text-indigo-200 hover:bg-indigo-700">📂 View User Items</button>
+        <button onclick="queueDeScrollTask('${account.id}')"
+                class="rpg-button px-3 py-1 rounded text-sm bg-cyan-900/50 border-cyan-500 text-cyan-200 hover:bg-cyan-700">🧭 De-Scroll</button>
         <button onclick="stopAccount('${account.id}')" ${isRunning ? '' : 'disabled'} 
                 class="rpg-button px-3 py-1 rounded text-sm ${isRunning ? '' : 'opacity-50 cursor-not-allowed'} bg-red-900/50 border-red-500 text-red-300 hover:bg-red-700">⏹️ Stop</button>
       </div>
@@ -3512,6 +3514,14 @@ window.fetchUserStats = async function(id) {
   renderTabs();
 };
 
+window.queueDeScrollTask = async function(id) {
+  const acc = accounts.find(a => a.id === id);
+  if (!acc) return;
+  await enqueueTask(id, 'de_scroll', { username: acc.username, detail: 'de-scroll' });
+  appendOutput(id, '🧭 Queued de-scroll task.\n');
+  renderTabs();
+};
+
 // ===== User Items Modal =====
 window.openUserItems = async function(accountId) {
   document.getElementById('user-items-modal').classList.remove('hidden');
@@ -3594,9 +3604,8 @@ window.loadUserItems = async function() {
     const rows = data.map(item => {
       const count = Number(item.inventory_count || 0);
       const capacity = Number(item.inventory_capacity || 0);
-      const canFetch = capacity > 0 && count < capacity;
       const isInventory = String(item.location || '').toLowerCase() === 'inventory';
-    const action = canFetch && !isInventory
+      const action = !isInventory
         ? `<button onclick="autoGetItem('${escapeAttribute(item.username)}','${escapeAttribute(item.location)}','${escapeAttribute(item.keeper)}','${escapeAttribute(item.itemid)}','${escapeAttribute(item.item_name)}')"
                  class="rpg-button px-2 py-1 rounded text-xs bg-emerald-900/50 border-emerald-500 text-emerald-200 hover:bg-emerald-700">Get</button>`
         : '';

@@ -265,6 +265,11 @@ function startTaskProcess(task) {
     child.send({ username: task.params.username });
     return child;
   }
+  if (task.type === 'de_scroll') {
+    const child = fork(path.join(__dirname, 'logics', 'de-scroll.js'));
+    child.send({ username: task.params.username });
+    return child;
+  }
   if (task.type === 'auto_get_item') {
     const child = fork(path.join(__dirname, 'logics', 'auto-get-item.js'));
     child.send({
