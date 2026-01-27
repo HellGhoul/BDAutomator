@@ -1,49 +1,5 @@
 {
    "epochs": [ {
-      "calculation_time": "13410625637170120",
-      "config_version": 2,
-      "model_version": "5",
-      "padded_top_topics_start_index": 0,
-      "taxonomy_version": 2,
-      "top_topics_and_observing_domains": [ {
-         "hashed_domains": [  ],
-         "topic": 297
-      }, {
-         "hashed_domains": [  ],
-         "topic": 531
-      }, {
-         "hashed_domains": [  ],
-         "topic": 162
-      }, {
-         "hashed_domains": [  ],
-         "topic": 618
-      }, {
-         "hashed_domains": [  ],
-         "topic": 352
-      } ]
-   }, {
-      "calculation_time": "13411244644821241",
-      "config_version": 2,
-      "model_version": "5",
-      "padded_top_topics_start_index": 0,
-      "taxonomy_version": 2,
-      "top_topics_and_observing_domains": [ {
-         "hashed_domains": [  ],
-         "topic": 157
-      }, {
-         "hashed_domains": [  ],
-         "topic": 154
-      }, {
-         "hashed_domains": [  ],
-         "topic": 185
-      }, {
-         "hashed_domains": [  ],
-         "topic": 549
-      }, {
-         "hashed_domains": [  ],
-         "topic": 233
-      } ]
-   }, {
       "calculation_time": "13412092986561784",
       "config_version": 2,
       "model_version": "5",
@@ -65,7 +21,29 @@
          "hashed_domains": [  ],
          "topic": 464
       } ]
+   }, {
+      "calculation_time": "13413913668575300",
+      "config_version": 2,
+      "model_version": "5",
+      "padded_top_topics_start_index": 0,
+      "taxonomy_version": 2,
+      "top_topics_and_observing_domains": [ {
+         "hashed_domains": [  ],
+         "topic": 180
+      }, {
+         "hashed_domains": [  ],
+         "topic": 91
+      }, {
+         "hashed_domains": [  ],
+         "topic": 448
+      }, {
+         "hashed_domains": [  ],
+         "topic": 561
+      }, {
+         "hashed_domains": [  ],
+         "topic": 621
+      } ]
    } ],
    "hex_encoded_hmac_key": "AADFB8CA12022373E541418FE6F14AF02454C70F36592441820F9CCA6029E790",
-   "next_scheduled_calculation_time": "13412697797036339"
+   "next_scheduled_calculation_time": "13414518468793518"
 }

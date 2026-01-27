@@ -1,6 +1,3 @@
-2026/01/05-20:23:04.151 3b24 Reusing MANIFEST C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\hell_fire\Default\shared_proto_db/MANIFEST-000001
-2026/01/05-20:23:04.152 3b24 Recovering log #4
-2026/01/05-20:23:04.154 3b24 Reusing old log C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\hell_fire\Default\shared_proto_db/000004.log 
-2026/01/05-20:23:16.989 7b00 Level-0 table #8: started
-2026/01/05-20:23:16.994 7b00 Level-0 table #8: 122059 bytes OK
-2026/01/05-20:23:16.998 7b00 Delete type=0 #4
+2026/01/26-22:07:41.959 154c Reusing MANIFEST C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\hell_fire\Default\shared_proto_db/MANIFEST-000001
+2026/01/26-22:07:41.960 154c Recovering log #7
+2026/01/26-22:07:41.961 154c Reusing old log C:\Users\PC\source\repos\BDAuto\BDAutomator\chrome-profiles\hell_fire\Default\shared_proto_db/000007.log 

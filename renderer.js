@@ -3662,6 +3662,7 @@ window.autoGetItem = async function(username, location, keeper, itemid, itemName
     location,
     keeper,
     itemid,
+    itemName,
     detail: itemName ? `${itemName} (${itemid})` : `item ${itemid}`
   });
   appendOutput(account.id, `📥 Queued auto get item ${itemid}.\n`);
@@ -4323,7 +4324,8 @@ window.analyzeCraftableItems = async function() {
                 username,
                 location: keeperTitled.location,
                 keeper: keeperTitled.keeper,
-                itemid: titledId
+                itemid: titledId,
+                itemName: titledName
               }
             });
             titledItems.push({ name: titledName, id: titledId });
@@ -4344,7 +4346,8 @@ window.analyzeCraftableItems = async function() {
                   username,
                   location: keeperBase.location,
                   keeper: keeperBase.keeper,
-                  itemid: baseId
+                  itemid: baseId,
+                  itemName: pair.base.name
                 }
               });
               baseEntry = keeperBase;
@@ -4365,7 +4368,8 @@ window.analyzeCraftableItems = async function() {
                   username,
                   location: keeperScroll.location,
                   keeper: keeperScroll.keeper,
-                  itemid: scrollId
+                  itemid: scrollId,
+                  itemName: `${pair.title.name} magic scroll`
                 }
               });
               scrollEntry = keeperScroll;
@@ -4599,7 +4603,8 @@ window.analyzeCraftableItems = async function() {
               username,
               location: keeperRecipe.location,
               keeper: keeperRecipe.keeper,
-              itemid: recipeId
+              itemid: recipeId,
+              itemName: recipeName
             }
           });
           recipeEntry = keeperRecipe;
@@ -4687,6 +4692,7 @@ window.queueCraftTask = async function(itemName, subtasks) {
 window.queueCraftTaskFromButton = function(button) {
   if (!button) return;
   const itemName = button.dataset.itemName || '';
+  const recipeName = button.dataset.recipeName || '';
   let subtasks = [];
   try {
     const raw = button.dataset.subtasks || '';
@@ -4695,6 +4701,21 @@ window.queueCraftTaskFromButton = function(button) {
     }
   } catch (error) {
     console.warn('Failed to parse craft subtasks:', error);
+  }
+  if (recipeName) {
+    subtasks = subtasks.map(subtask => {
+      const params = subtask?.params || {};
+      if (params.action === 'auto_get_item' && !params.itemName) {
+        return {
+          ...subtask,
+          params: {
+            ...params,
+            itemName: recipeName
+          }
+        };
+      }
+      return subtask;
+    });
   }
   queueCraftTask(itemName, subtasks);
 };

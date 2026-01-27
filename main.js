@@ -276,7 +276,8 @@ function startTaskProcess(task) {
       username: task.params.username,
       location: task.params.location,
       keeper: task.params.keeper,
-      itemid: task.params.itemid
+      itemid: task.params.itemid,
+      itemName: task.params.itemName
     });
     return child;
   }

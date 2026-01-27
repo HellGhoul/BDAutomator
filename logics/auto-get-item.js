@@ -86,7 +86,7 @@ async function startChromeForAccount(accountName) {
   });
 }
 
-async function runAutoGetItem({ username, location, keeper, itemid }) {
+async function runAutoGetItem({ username, location, keeper, itemid, itemName }) {
   let browser;
   const port = getPortForAccount(username);
 
@@ -133,25 +133,50 @@ async function runAutoGetItem({ username, location, keeper, itemid }) {
     ]);
   }
 
-  // Step 5: Find the page with the item id and click it.
-  const maxPage = await page.evaluate(() => {
-    const text = document.body?.innerText || '';
-    const match = text.match(/Page:\s*\d+\s*\/\s*(\d+)/i);
-    return match ? Number(match[1]) : 1;
-  });
+  // Step 4.1: Filter items by name if provided.
+  if (itemName) {
+    const nameInput = await page.$('input[name="name"]');
+    if (nameInput) {
+      await nameInput.click({ clickCount: 3 });
+      await nameInput.type(itemName, { delay: 10 });
+      const searchButton = await page.$('input.button[type="submit"][value*="Search"], input.button[type="submit"][value*="search"]');
+      if (searchButton) {
+        await Promise.all([
+          page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+          searchButton.click()
+        ]);
+      }
+    }
+  }
 
-  const baseUrl = page.url();
+  // Step 5: Find the page with the item id and click it.
   let found = false;
-  for (let currentPage = 1; currentPage <= maxPage; currentPage += 1) {
-    await helpers.navigateTo(`${baseUrl}/page=${currentPage}`);
-    const link = await page.$(`a[href*="id=${itemid}"]`);
-    if (link) {
-      await Promise.all([
-        page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
-        link.click()
-      ]);
-      found = true;
-      break;
+  const firstLink = await page.$(`a[href*="id=${itemid}"]`);
+  if (firstLink) {
+    await Promise.all([
+      page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+      firstLink.click()
+    ]);
+    found = true;
+  } else {
+    const maxPage = await page.evaluate(() => {
+      const text = document.body?.innerText || '';
+      const match = text.match(/Page:\s*\d+\s*\/\s*(\d+)/i);
+      return match ? Number(match[1]) : 1;
+    });
+
+    const baseUrl = page.url();
+    for (let currentPage = 1; currentPage <= maxPage; currentPage += 1) {
+      await helpers.navigateTo(`${baseUrl}/page=${currentPage}`);
+      const link = await page.$(`a[href*="id=${itemid}"]`);
+      if (link) {
+        await Promise.all([
+          page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+          link.click()
+        ]);
+        found = true;
+        break;
+      }
     }
   }
 

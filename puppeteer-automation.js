@@ -152,9 +152,11 @@ async function runAutomation({ username, password, config }) {
       
       if (result === 'continue') {
         // process.send && process.send('🔄 Battle ended, continuing...');
+        await helpers.sleep(500);
         await nextAttack();
+        
       } else if (result === 'looted') {
-            //process.send && process.send('💎 Valuable loot found!');
+            process.send && process.send('💎 Valuable loot found!');
         await choosing();
       } else if (result === 'continued') {
             await choosing();
@@ -169,7 +171,7 @@ async function runAutomation({ username, password, config }) {
       }
     } catch (error) {
       await helpers.goToMaps();
-      process.send && process.send('✅ Arrived at maps page, starting target selection...');
+      //process.send && process.send('✅ Arrived at maps page, starting target selection...');
       await choosing();
     }
   }

@@ -151,6 +151,7 @@ async function runAutomation({ username, password, config }) {
       
       if (result === 'continue') {
         process.send && process.send('🔄 Battle ended, continuing...');
+        await helpers.sleep(500);
         await nextAttack();
       } else if (result === 'looted') {
         //process.send && process.send('💎 Valuable loot found!');

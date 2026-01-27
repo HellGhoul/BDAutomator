@@ -308,7 +308,7 @@ class BlackDragonHelpers {
       || (config.recipe && name.includes('recipe'))
       || (config.charm && name.includes('charm'))
       || (config.jewel && (name.includes('jewel') || name.includes('elixir')))
-      || (config.rune && (name.includes('rune ') || name.includes('level ')))
+      || (config.rune && (name.includes('rune ')))
       || (config.epicGear && (hasEpicQuality || /\((iv|v|vi)\)/.test(name)))
       || (config.magicScroll && name.includes('magic scroll'))
       || (config.monsterScroll && name.includes('\'s') && name.includes('magic scroll'))
